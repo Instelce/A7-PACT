@@ -1,0 +1,12 @@
+{
+    "name": "celes/php-mvc",
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "authors": [],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
