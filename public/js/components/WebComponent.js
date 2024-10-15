@@ -41,7 +41,9 @@ export class WebComponent extends HTMLElement {
      * Style of the component
      * @return {string}
      */
-    style();
+    style() {
+        return ``;
+    }
 
     /**
      * Render the component
