@@ -4,8 +4,40 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7532fe84f202ca6849b8029e279e4b3a",
+    "content-hash": "ce52a3074c6125c6382440c421516588",
     "packages": [
+        {
+            "name": "felippe-regazio/php-hot-reloader",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/felippe-regazio/php-hot-reloader.git",
+                "reference": "416ad9f1ff4db236f4d76b91a769f8f9d53907f3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/felippe-regazio/php-hot-reloader/zipball/416ad9f1ff4db236f4d76b91a769f8f9d53907f3",
+                "reference": "416ad9f1ff4db236f4d76b91a769f8f9d53907f3",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HotReloader\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A class to add a complete live reload feature to any php project",
+            "support": {
+                "issues": "https://github.com/felippe-regazio/php-hot-reloader/issues",
+                "source": "https://github.com/felippe-regazio/php-hot-reloader/tree/master"
+            },
+            "time": "2021-04-20T16:12:37+00:00"
+        },
         {
             "name": "graham-campbell/result-type",
             "version": "v1.1.3",
@@ -470,7 +502,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "felippe-regazio/php-hot-reloader": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

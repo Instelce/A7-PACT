@@ -4,17 +4,22 @@
 export class WebComponent extends HTMLElement {
 
     /**
+     * @type {{name: string, value: string}[]}
+     */
+    styleVariables = [];
+
+    /**
      * Define observed attributes
      * @returns {*[]}
      */
-    static get observedAttributes() { return [] }
+    static get observedAttributes() {return []};
 
     constructor() {
         super();
 
         this.shadow = this.attachShadow({mode: "open"});
 
-        const style = document.createRange().createContextualFragment(this.style());
+        const style = document.createRange().createContextualFragment(this.styles());
         const node = document.createRange().createContextualFragment(this.render());
         this.shadow.append(style, node);
     }
@@ -22,7 +27,9 @@ export class WebComponent extends HTMLElement {
     /**
      * Callback when the component is connected to the DOM
      */
-    connectedCallback() {}
+    connectedCallback() {
+        this.loadStyleVariables();
+    }
 
     /**
      * Callback when the component is disconnected from the DOM
@@ -41,13 +48,30 @@ export class WebComponent extends HTMLElement {
      * Style of the component
      * @return {string}
      */
-    style();
+    styles() {}
 
     /**
      * Render the component
      * @returns {string}
      */
-    render() {
-        return ``;
+    render() {}
+
+    /**
+     * Add a style variable
+     * @param {string} name
+     * @param {string} value
+     */
+    addStyleVariable(name, value) {
+        this.styleVariables.push({name, value});
+    }
+
+    /**
+     * Generate the style variables
+     * @returns {string}
+     */
+    loadStyleVariables() {
+        this.styleVariables.forEach(({name, value}) => {
+            this.style.setProperty(`--${name}`, value);
+        })
     }
 }
