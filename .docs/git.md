@@ -7,8 +7,8 @@
 3. Ajouter vos modifications avec la commande `git add .`.
 4. Commiter vos modifications avec la commande `git commit -m "feat: message de commit"`. Suivez les [conventions de commit](https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13).
 5. Pusher vos modifications avec la commande `git push`.
-6. Créer une **pull request** sur la page de votre fork.
-7. Mergez votre pull request.
+6. Créer une **pull request** sur la page de votre fork en cliquant sur le bouton `Contribute` puis sur `Open pull request`.
+7. Mergez votre pull request en cliquant sur le bouton `Merge pull request`.
 
 ## Récupérer les modifications des autres
 

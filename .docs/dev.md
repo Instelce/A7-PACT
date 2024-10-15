@@ -23,3 +23,8 @@ Puis lancer le serveur PHP. Rendez-vous dans le dossier `public` et lancez la co
 ```
 php -S localhost:8080
 ```
+
+## Outils
+
+Sur phpstorm vous pouvez voir, modifier, supprimer les tables de la DB. Très pratique pour debugger. [Voir la vidéo](./videos/db-connection.mp4).
+
