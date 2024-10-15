@@ -3,6 +3,9 @@
 
 namespace app\core;
 
+/**
+ * Class DBModel, represents a database model
+ */
 abstract class DBModel extends Model
 {
     abstract public static function tableName(): string;

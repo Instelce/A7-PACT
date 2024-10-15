@@ -27,8 +27,7 @@ class Router
     }
 
     /**
-     * Retourne la vue correspondant à la route courante
-     * @return array|false|mixed|string|string[]
+     * Return the view of the current route
      */
     public function resolve()
     {
@@ -44,9 +43,9 @@ class Router
             return Application::$app->view->renderView($callback);
         }
 
-        // create instance of a Controller
         if (is_array($callback)) {
             /**
+             * New instance of the controller
              * @var Controller $controller
              */
             $controller = new $callback[0];
@@ -59,7 +58,7 @@ class Router
             }
         }
 
-        // call the controller method, and pass request and response to the method
+        // Call the callback function, and pass request and response to the method
         return call_user_func($callback, $this->request, $this->response);
     }
 

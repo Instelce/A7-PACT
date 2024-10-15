@@ -33,7 +33,7 @@ class View
 
     protected function renderOnlyView($view, $params) {
         foreach ($params as $key => $value) {
-            $$key = $value; // créer une variable qui a comme nom la valeur de la variable $key
+            $$key = $value; //
         }
 
         ob_start();

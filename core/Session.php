@@ -49,10 +49,10 @@ class Session
 
     public function __destruct()
     {
-        // iterate over marked to be removed messages
+        // Iterate over marked to be removed messages
         $flashMessages = $_SESSION[self::FLASH_KEY] ?? [];
         foreach ($flashMessages as $key => &$flashMessage) {
-            // mark to be removed
+            // Mark to be removed
             if (is_array($flashMessage)) {
                 if ($flashMessage['remove']) {
                     unset($flashMessages[$key]);

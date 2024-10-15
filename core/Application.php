@@ -23,6 +23,7 @@ class Application
     {
         self::$ROOT_DIR = $rootPath;
         self::$app = $this;
+        
         $this->request = new Request();
         $this->response = new Response();
         $this->router = new Router($this->request, $this->response);
@@ -31,7 +32,7 @@ class Application
         $this->userClass = $config['userClass'];
         $this->view = new View();
 
-        // select user
+        // Get the primary key of the user from the session
         $pkValue = $this->session->get('user');
         if ($pkValue) {
             $pk = $this->userClass::pk();
@@ -60,7 +61,7 @@ class Application
         $this->controller = $controller;
     }
 
-    public function login(DBModel $user)
+    public function login(DBModel $user): bool
     {
         $this->user = $user;
         $pk = $user->pk();
@@ -76,7 +77,7 @@ class Application
         $this->session->remove('user');
     }
 
-    public function isAuthenticated()
+    public function isAuthenticated(): bool
     {
         return $this->user !== null;
     }

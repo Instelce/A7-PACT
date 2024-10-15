@@ -22,5 +22,8 @@ use app\core\Application;
     <?php endif; ?>
     {{content}}
 </div>
+
+<script src="/js/main.js"></script>
+
 </body>
 </html>
