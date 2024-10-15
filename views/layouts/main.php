@@ -23,7 +23,7 @@ use app\core\Application;
     {{content}}
 </div>
 
-<script src="/js/main.js"></script>
+<script type="module" src="/js/main.js"></script>
 
 </body>
 </html>
