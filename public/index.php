@@ -7,11 +7,16 @@ use app\controllers\SiteController;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// setup env variables
+// Setup env variables
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
-// setup config
+// Setup hot reload
+if ($_ENV['APP_ENVIRONMENT'] === 'dev') {
+    new HotReloader\HotReloader('//localhost:8080/phrwatcher.php');
+}
+
+// Setup config
 $config = [
     'style' => __DIR__ . '/css/main.css',
     'userClass' => \app\models\User::class,
@@ -22,13 +27,12 @@ $config = [
     ]
 ];
 
-// setup app
+// Setup app
 $app = new Application(dirname(__DIR__), $config);
 
-// setup routes
 $app->router->get('/', [SiteController::class, 'home']);
 
-// auth routes
+// Auth routes
 $app->router->get('/login', [AuthController::class, 'login']);
 $app->router->post('/login', [AuthController::class, 'login']);
 $app->router->get('/register', [AuthController::class, 'register']);

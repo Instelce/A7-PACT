@@ -7,6 +7,7 @@
     },
     "authors": [],
     "require": {
-        "vlucas/phpdotenv": "^5.6"
+        "vlucas/phpdotenv": "^5.6",
+        "felippe-regazio/php-hot-reloader": "dev-master"
     }
 }
