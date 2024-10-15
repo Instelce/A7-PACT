@@ -23,7 +23,7 @@ class Database
         $appliedMigrations = $this->getAppliedMigrations();
 
         $newMigrations = [];
-        $files = scandir(Application::$ROOT_DIR."/migrations");
+        $files = scandir(Application::$ROOT_DIR . "/migrations");
         $toApplyMigrations = array_diff($files, $appliedMigrations);
 
         foreach ($toApplyMigrations as $migration) {
@@ -31,15 +31,14 @@ class Database
                 continue;
             }
 
-            require_once Application::$ROOT_DIR.'/migrations/'.$migration;
+            require_once Application::$ROOT_DIR . '/migrations/' . $migration;
             $className = pathinfo($migration, PATHINFO_FILENAME);
             $instance = new $className;
 
-            $this->log("Applying migration $migration".PHP_EOL);
+            $this->log("Applying migration $migration" . PHP_EOL);
             $instance->up();
-            $this->log("Applied migration $migration".PHP_EOL);
+            $this->log("Applied migration $migration" . PHP_EOL);
             $newMigrations[] = $migration;
-
         }
 
         if (!empty($newMigrations)) {
@@ -52,10 +51,10 @@ class Database
     public function createMigrationTable()
     {
         $this->pdo->exec("CREATE TABLE IF NOT EXISTS migrations (
-                id INT AUTO_INCREMENT PRIMARY KEY,
+                id SERIAL PRIMARY KEY,
                 migration VARCHAR(255),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            ) ENGINE=INNODB;");
+            );");
     }
 
     public function getAppliedMigrations()
@@ -73,8 +72,29 @@ class Database
         $statement->execute();
     }
 
-    protected function log($message) {
-        echo '['.date('Y-m-d H-i-s').'] - '.$message.PHP_EOL;
+    public function dropMigrations() {
+        $statement = $this->pdo->prepare("DROP TABLE migrations");
+        $statement->execute();
+
+        $files = scandir(Application::$ROOT_DIR . "/migrations");
+
+        foreach ($files as $migration) {
+            if ($migration === '.' || $migration === '..') {
+                continue;
+            }
+
+            require_once Application::$ROOT_DIR . '/migrations/' . $migration;
+            $className = pathinfo($migration, PATHINFO_FILENAME);
+            $instance = new $className;
+
+            $instance->drop();
+            $this->log("Drop migration $migration" . PHP_EOL);
+        }
+    }
+
+    protected function log($message)
+    {
+        echo '[' . date('Y-m-d H-i-s') . '] - ' . $message . PHP_EOL;
     }
 
     public function prepare($sql)
