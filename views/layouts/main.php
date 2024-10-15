@@ -25,9 +25,9 @@ use app\core\Application;
         {{content}}
     </div>
 
-    <app-input placeHolder="nom" icon="search" leftOrRight="right"></app-input>
+    <app-input placeholder="salarab" icon="Search" leftorright="rigth"></app-input>
     <script type="module" src="/js/main.js"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script type="module" src="/js/components/input.js"></script>
     <script type="module" src="/js/components/WebComponent.js"></script>
 

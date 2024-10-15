@@ -3,7 +3,14 @@ import { WebComponent } from './WebComponent.js';
 // Importer Lucide
 import 'https://unpkg.com/lucide@latest/dist/umd/lucide.js';
 
-class InputButton extends WebComponent {
+/**
+ * Input component
+ *
+ * @arg {string} placeholder - Placeholder text for the input field.
+ * @arg {string} icon - Name of the icon to display.
+ * @arg {string} leftorright - Position of the icon ('left' or 'right').
+ */
+export class InputButton extends WebComponent {
     static get observedAttributes() {
         return ['placeholder', 'icon', 'leftorright'];
     }
@@ -12,28 +19,42 @@ class InputButton extends WebComponent {
         super();
     }
 
-    style() {
+    connectedCallback() {
+        super.connectedCallback();
+        lucide.createIcons(); 
+    }
+
+    disconnectedCallback() {
+    }
+
+    attributeChangedCallback(oldValue, newValue) {
+        if (oldValue !== newValue) {
+            this.updateRender();
+        }
+    }
+
+    styles() {
         return `
             <style>
                 div.wrapper {
                     display: flex;
                     align-items: center;
                     border: 1px solid #ccc;
-                    border-radius: 5px;
-                    padding: 5px;
-                    width: 200px;
-                    height: 40px;
+                    border-radius: 200px;
+                    padding: 10px 20px;
+                    width: 160px;
+                    height: 20px;
+                    margin: 5px;
+                    text-color: #838383;
+
                 }
                 input {
                     border: none;
                     outline: none;
                     flex: 1;
+                    padding: 0;
                 }
-                div.icon-wrapper {
-                    display: flex;
-                    align-items: center;
-                    margin: 0 5px;
-                }
+
             </style>
         `;
     }
@@ -43,8 +64,8 @@ class InputButton extends WebComponent {
         const iconName = this.getAttribute('icon') || '';
         const iconPosition = this.getAttribute('leftorright') || 'left';
 
-        // Utiliser data-lucide pour les icônes
-        const iconHTML = iconName ? `<div class="icon-wrapper"><i data-lucide="${iconName}"></i></div>` : '';
+        
+        const iconHTML = iconName ? `<i data-lucide="${iconName}"></i>` : '';
         const inputHTML = `<input type="text" placeholder="${placeholder}" />`;
 
         if (iconPosition === 'left') {
@@ -64,18 +85,10 @@ class InputButton extends WebComponent {
         }
     }
 
-    connectedCallback() {
-        // Appeler lucide.createIcons() pour rendre les icônes
-        lucide.createIcons();
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue !== newValue) {
-            this.shadow.innerHTML = this.render();
-            lucide.createIcons(); // Rendre les icônes à chaque changement d'attribut
-        }
+    updateRender() {
+        this.shadow.innerHTML = this.styles() + this.render();
+        lucide.createIcons(); 
     }
 }
 
-// Définir le custom element
 window.customElements.define('app-input', InputButton);
