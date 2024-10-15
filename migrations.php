@@ -10,6 +10,7 @@ $dotenv->load();
 
 // setup config
 $config = [
+    'userClass' => \app\models\User::class,
     'db' => [
         'dsn' => $_ENV['DB_DSN'],
         'user' => $_ENV['DB_USER'],
@@ -20,4 +21,12 @@ $config = [
 // setup app
 $app = new Application(__DIR__, $config);
 
-$app->db->applyMigration();
+if ($argc === 2) {
+    if ($argv[1] === "drop") {
+        $app->db->dropMigrations();
+    } else {
+        echo "Invalid argument" . PHP_EOL;
+    }
+} else {
+    $app->db->applyMigration();
+}
