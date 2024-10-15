@@ -27,9 +27,6 @@ class Controller
         $this->middlewares[] = $middleware;
     }
 
-    /**
-     * @return array
-     */
     public function getMiddlewares(): array
     {
         return $this->middlewares;

@@ -37,7 +37,7 @@ class Request
     {
         $body = [];
 
-        // remove malicious text (XSS attack)
+        // Remove malicious text (XSS attack)
         if ($this->method() === "get") {
             foreach ($_GET as $key => $value) {
                 $body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);

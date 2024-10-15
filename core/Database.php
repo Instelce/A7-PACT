@@ -12,6 +12,7 @@ class Database
         $user = $config['user'] ?? '';
         $password = $config['password'] ?? '';
 
+        // Connect to the database with pdo
         $this->pdo = new \PDO($dsn, $user, $password);
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
