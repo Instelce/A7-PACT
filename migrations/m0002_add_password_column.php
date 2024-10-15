@@ -1,6 +1,5 @@
 <?php
 
-
 use app\core\Application;
 
 class m0002_add_password_column
