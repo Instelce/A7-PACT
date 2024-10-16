@@ -4,82 +4,122 @@ import { WebComponent } from './WebComponent.js';
  * Input component
  *
  * @arg {string} placeholder - Placeholder text for the input field.
- * @arg {boolean} hasbutton - Determines if the input field has an associated button.
- * @arg {boolean} rounded - Determines if the input field has rounded corners.
- * @arg {string} txtButton - Text to display on the button if `hasbutton` is true.
- * 
+ * @arg {string} name - Name of the input field.
+ * @arg {boolean} rounded - Toggle rounded corners for the input field.
+ * @arg {string} value - Value of the input
+ *
  * @extends {WebComponent}
  */
 export class Input extends WebComponent {
-    static get observedAttributes() {
-        return ['placeholder', 'hasbutton', 'rounded','txtButton'];
-    }
 
     constructor() {
         super();
-        this.attachShadow({ mode: 'open' });
-        this.updateRender();
     }
 
     connectedCallback() {
         super.connectedCallback();
+
+        let input = this.shadow.querySelector('input');
+        input.setAttribute('placeholder', this.placeholder);
+        input.setAttribute('name', this.name);
+        input.setAttribute('value', this.value);
     }
 
     disconnectedCallback() {
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue !== newValue) {
-            this.updateRender();
-        }
-    }
-
     styles() {
-        const rounded = this.getAttribute('rounded') === 'true' ? '200px' : '5px';
+        const rounded = this.isRounded ? 'var(--radius-rounded)' : 'var(--radius-small)';
         return `
             <style>
-                div {
+                .input-field {
                     display: flex;
+                    gap: .5rem;
                     align-items: center;
                     border: 1px solid #ccc;
                     border-radius: ${rounded};
-                    padding: 10px 20px;
-                    width: 160px;
-                    height: 20px;
-                    margin: 5px;
+                    padding: .5rem;
                     color: #838383;
+                    
+                    transition: box-shadow .2s;
                 }
+                
+                .input-field:has(input:focus) {
+                    box-shadow: 0 0 0 1px rgb(var(--color-gray-2));
+                }
+                
                 input {
+                    height: 100%;
+                    width: 100%;
                     border: none;
                     outline: none;
-                    flex: 1;
-                    padding: 5px;
-                    width: 100%;
+                    padding: .5rem;
+                    
+                    font-family: inherit;
+                    font-size: inherit;
                 }
-                x-button {
-                    width: 50px;
-                    height: 29px;
+                
+                .icon-left {
+                  padding-left: .5rem;
+                }
+                .icon-right {
+                  padding-right: .5rem;
+                }
+                
+                ::slotted([slot="helper"]) {
+                  color: rgb(var(--color-gray-4));
+                }
+                
+                ::slotted([slot="error"]) {
+                    color: rgb(var(--color-danger));
+                    font-weight: 500;
                 }
             </style>
         `;
     }
 
     render() {
-        const placeholder = this.getAttribute('placeholder');
-        const hasButton = this.getAttribute('hasbutton') === 'true';
-        const txtButton = this.getAttribute('txtButton');
-
         return `
-            <div>
-                <slot name="icon-left"></slot>
-                <input type="text" placeholder="${placeholder}" />
-                <slot name="icon-right"></slot>
-                ${hasButton ? `<x-button>${txtButton}</x-button>` : ''}
+            <div class="input-field">
+                ${this.hasIconLeft ? `<div class="icon-left">
+                    <slot name="icon-left"></slot>   
+                </div>` : ''}
+                
+                <input type="text" />
+                
+                <slot name="button"></slot>
+                
+                ${this.hasIconRight ? `<div class="icon-right">
+                    <slot name="icon-right"></slot>   
+                </div>` : ''}
             </div>
+            
+            <slot name="helper"></slot>
+            <slot name="error"></slot>
         `;
     }
-    
-    updateRender() {
-        this.shadowRoot.innerHTML = this.styles() + this.render();
+
+    get placeholder() {
+        return this.getAttribute('placeholder');
+    }
+
+    get name() {
+        return this.getAttribute('name');
+    }
+
+    get value() {
+        return this.getAttribute('value') || '';
+    }
+
+    get isRounded() {
+        return this.hasAttribute('rounded');
+    }
+
+    get hasIconLeft() {
+        return this.querySelector(`*[slot='icon-left']`) !== null;
+    }
+
+    get hasIconRight() {
+        return this.querySelector(`*[slot='icon-right']`) !== null;
     }
 }

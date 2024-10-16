@@ -57,6 +57,16 @@ export class WebComponent extends HTMLElement {
     render() {}
 
     /**
+     * Re-render the component
+     */
+    reRender() {
+        this.shadow.removeChild(this.shadow.childNodes);
+        const style = document.createRange().createContextualFragment(this.styles());
+        const node = document.createRange().createContextualFragment(this.render());
+        this.shadow.append(style, node);
+    }
+
+    /**
      * Add a style variable
      * @param {string} name
      * @param {string} value
