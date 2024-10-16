@@ -9,9 +9,10 @@ class m0004_create_table_offer_option {
             id SERIAL PRIMARY KEY,
             launch_date DATE NOT NULL,
             week_counter INT NOT NULL,
-            duration INT NOT NULL
+            duration INT NOT NULL,
+            offer_id INT NOT NULL,
                           
-            FOREIGN KEY (offer) 
+            FOREIGN KEY (offer_id) REFERENCES offer(id) 
         );";
         $db->pdo->exec($sql);
 

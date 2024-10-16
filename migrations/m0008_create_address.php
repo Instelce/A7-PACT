@@ -12,9 +12,10 @@ class m0008_create_address {
             city VARCHAR(255) NOT NULL,
             postal_code INT NOT NULL,
             longitude NUMERIC,
-            latitude NUMERIC
+            latitude NUMERIC,
+            offer_id INT NOT NULL,
                      
-            FOREIGN KEY (offer)
+            FOREIGN KEY (offer_id) REFERENCES offer(id)
         );";
         $db->pdo->exec($sql);
     }
