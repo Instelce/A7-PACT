@@ -74,4 +74,13 @@ export class WebComponent extends HTMLElement {
             this.style.setProperty(`--${name}`, value);
         })
     }
+
+    /**
+     * Returns true if connected as a pro
+     * @returns {boolean}
+     */
+    isPro()
+    {
+        return this.hasAttribute('pro');
+    }
 }

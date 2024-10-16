@@ -23,4 +23,6 @@ $this->title = "Home";
         <i slot="icon-right" data-lucide="circle-arrow-right"></i>
     </x-input>
     <x-slider label="Prix" type="minmax"></x-slider>
+    <x-checkbox labelTexte="WAZAA">WAZAA</x-checkbox>
+
 </div>
