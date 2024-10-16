@@ -1,4 +1,5 @@
 import { WebComponent } from '../WebComponent.js';
+import {useId} from "../../utils/id.js";
 
 /**
  * Input component
@@ -19,15 +20,23 @@ export class Input extends WebComponent {
     connectedCallback() {
         super.connectedCallback();
 
-        let input = this.shadow.querySelector('input');
-        input.setAttribute('placeholder', this.placeholder);
-        input.setAttribute('name', this.name);
-        input.setAttribute('value', this.value);
+        let input = this.querySelector('[slot="input"]');
 
+        // Focus input when clicking on the field
         let field = this.shadow.querySelector('.input-field');
         field.addEventListener('click', () => {
             input.focus();
-        })
+        });
+
+        // Add focus class when input is focused
+        input.addEventListener('focus', () => {
+            field.classList.add('focused');
+        });
+
+        // Remove focus class when input is blurred
+        input.addEventListener('blur', () => {
+            field.classList.remove('focused');
+        });
     }
 
     disconnectedCallback() {
@@ -49,11 +58,11 @@ export class Input extends WebComponent {
                     transition: box-shadow .2s;
                 }
                 
-                .input-field:has(input:focus) {
+                .input-field.focused {
                     box-shadow: 0 0 0 1px rgb(var(--color-gray-2));
                 }
                 
-                input {
+                ::slotted([slot="input"]) {
                     height: 100%;
                     width: 100%;
                     border: none;
@@ -90,8 +99,7 @@ export class Input extends WebComponent {
                     <slot name="icon-left"></slot>   
                 </div>` : ''}
                 
-                <input type="text" />
-                
+                <slot name="input"></slot>
                 <slot name="button"></slot>
                 
                 ${this.hasIconRight ? `<div class="icon-right">
@@ -103,6 +111,11 @@ export class Input extends WebComponent {
             <slot name="error"></slot>
         `;
     }
+
+
+    // ---------------------------------------------------------------------- //
+    // Getter and setter
+    // ---------------------------------------------------------------------- //
 
     get placeholder() {
         return this.getAttribute('placeholder');

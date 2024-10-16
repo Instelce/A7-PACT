@@ -1,4 +1,6 @@
 import {WebComponent} from "./WebComponent.js";
+import {useId} from "../utils/id.js";
+import {createSignal} from "../utils/signal.js";
 
 
 /**
@@ -12,16 +14,11 @@ import {WebComponent} from "./WebComponent.js";
  */
 export class Button extends WebComponent {
 
-    static get observedAttributes() {
-        return []
-    }
-
     constructor() {
         super();
 
         let button = this.shadow.querySelector('button');
         button.classList.add(this.color, this.size);
-        button.setAttribute('type', this.type);
 
         if (this.hasIconLeft) {
             button.classList.add('icon-left');
@@ -32,6 +29,13 @@ export class Button extends WebComponent {
         if (this.onlyIcon) {
             button.classList.add('only-icon');
         }
+
+        // Forward click event to external button
+        let externalButton = this.querySelector('button');
+        externalButton.setAttribute('type', this.type);
+        button.addEventListener('click', () => {
+            externalButton.click();
+        })
     }
 
     connectedCallback() {
@@ -176,6 +180,12 @@ export class Button extends WebComponent {
               <slot></slot>
               <slot name="icon-right"></slot>
             </button>
+        `;
+    }
+
+    noScope() {
+        return `
+            <button slot="hidden"></button>
         `;
     }
 

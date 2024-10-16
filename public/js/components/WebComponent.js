@@ -1,5 +1,9 @@
+import {useId} from "../utils/id.js";
+
 /**
  * Abstract class for web components
+ *
+ * @extends HTMLElement
  */
 export class WebComponent extends HTMLElement {
 
@@ -17,18 +21,23 @@ export class WebComponent extends HTMLElement {
     constructor() {
         super();
 
+        // Unique id for the component
+        this.id = useId();
+
         this.shadow = this.attachShadow({mode: "open"});
 
         const style = document.createRange().createContextualFragment(this.styles());
         const node = document.createRange().createContextualFragment(this.render());
         this.shadow.append(style, node);
+
+        this.#renderNoScope();
     }
 
     /**
      * Callback when the component is connected to the DOM
      */
     connectedCallback() {
-        this.loadStyleVariables();
+        this.#loadStyleVariables();
     }
 
     /**
@@ -57,13 +66,33 @@ export class WebComponent extends HTMLElement {
     render() {}
 
     /**
+     * Render outside shadow root the component
+     *
+     * @returns {string}
+     */
+    noScope() {}
+
+    #renderNoScope() {
+        this.innerHTML += this.noScope();
+        // this.innerHTML += `<div slot="hidden">${this.noScope()}</div>`;
+    }
+
+    /**
      * Re-render the component
      */
     reRender() {
-        this.shadow.removeChild(this.shadow.childNodes);
+        // Remove all children
+        let children = this.shadow.children;
+        for (let i = 0; i < children.length; i++) {
+            this.shadow.removeChild(children[i]);
+        }
+
+        // Add the new children
         const style = document.createRange().createContextualFragment(this.styles());
         const node = document.createRange().createContextualFragment(this.render());
         this.shadow.append(style, node);
+
+        this.#renderNoScope();
     }
 
     /**
@@ -79,7 +108,7 @@ export class WebComponent extends HTMLElement {
      * Generate the style variables
      * @returns {string}
      */
-    loadStyleVariables() {
+    #loadStyleVariables() {
         this.styleVariables.forEach(({name, value}) => {
             this.style.setProperty(`--${name}`, value);
         })
@@ -89,8 +118,7 @@ export class WebComponent extends HTMLElement {
      * Returns true if connected as a pro
      * @returns {boolean}
      */
-    isPro()
-    {
+    isPro() {
         return this.hasAttribute('pro');
     }
 }
