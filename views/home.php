@@ -16,11 +16,11 @@ $this->title = "Home";
     </x-button>
     <x-button color="danger">coucou</x-button>
     <x-button color="purple">coucou</x-button>
-    <x-input placeholder="ce input n'est pas rounded" hasbutton="true" txtbutton="search" rounded="false">
+    <x-input placeholder="ce input n'est pas rounded" hasbutton="false" txtbutton="search" rounded="false">
         <i slot="icon-left" data-lucide="search"></i>
-    </x-input>**/
+    </x-input>
     <x-input placeholder="ce input est rounded" rounded="true">
         <i slot="icon-right" data-lucide="circle-arrow-right"></i>
     </x-input>
-
+    <x-slider label="Prix" type="minmax"></x-slider>
 </div>
