@@ -7,6 +7,8 @@ import {WebComponent} from "./WebComponent.js";
  * @arg {string} type - Type of the button. Default is button
  * @arg {string} color - Color of the button. Default is blue
  * @arg {string} size - Size of the button. Default is medium (md)
+ * @arg {boolean} icon - Only show the icon
+ *
  */
 export class Button extends WebComponent {
 
@@ -25,6 +27,10 @@ export class Button extends WebComponent {
             button.classList.add('icon-left');
         } else if (this.hasIconRight) {
             button.classList.add('icon-right');
+        }
+
+        if (this.onlyIcon) {
+            button.classList.add('only-icon');
         }
     }
 
@@ -56,6 +62,7 @@ export class Button extends WebComponent {
             
                     display: flex;
                     align-items: center;
+                    justify-content: center;
                     gap: 1rem;
             
                     cursor: pointer;
@@ -121,6 +128,30 @@ export class Button extends WebComponent {
                     padding: 1rem 2.5rem;
                 }
                 
+                button.only-icon {
+                    padding: 0;
+                }
+                
+                button.only-icon.sm {
+                    width: 2.5rem;
+                    height: 2.5rem;
+                }
+                
+                button.only-icon.md {
+                    width: 3rem;
+                    height: 3rem;
+                }
+                
+                button.only-icon.lg {
+                    width: 3.5rem;
+                    height: 3.5rem;
+                }
+                
+                ::slotted(svg) {
+                    width: 1.2rem;
+                    height: 1.2rem;
+                }
+
                 button.icon-left {
                     padding-left: 1rem;
                 }
@@ -177,8 +208,8 @@ export class Button extends WebComponent {
     /**
      * @returns {boolean}
      */
-    get filled() {
-        return this.hasAttribute('fill');
+    get onlyIcon() {
+        return this.hasAttribute('icon');
     }
 
     get hasIconLeft() {

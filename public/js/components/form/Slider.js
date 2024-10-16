@@ -1,4 +1,4 @@
-import { WebComponent } from "./WebComponent.js";
+import { WebComponent } from "../WebComponent.js";
 
 /**
  * Button component

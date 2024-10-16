@@ -66,7 +66,7 @@ a {
 
 .container {
     width: 100%;
-    padding: 0 12%;
+    padding: 0 20%;
 }
 
 /* Tailwind */
@@ -168,6 +168,10 @@ a {
 
 .grid-row-4 {
     grid-template-rows: repeat(4, minmax(0, 1fr));
+}
+
+.place-items-center {
+    place-items: center;
 }
 
 

@@ -33,4 +33,14 @@ class SiteController extends Controller
 
         return $this->render("contact", ['model' => $contactForm]);
     }
+
+    public function storybook()
+    {
+        if ($_ENV['APP_ENVIRONMENT'] === 'dev') {
+            $this->setLayout("blank");
+            return $this->render("storybook");
+        } else {
+            return $this->render("404");
+        }
+    }
 }
