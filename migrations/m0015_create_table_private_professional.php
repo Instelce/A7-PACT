@@ -14,13 +14,14 @@ class m0015_create_table_private_professional
             code INT NOT NULL,
             denomination VARCHAR(100) UNIQUE NOT NULL,
             siren VARCHAR(14) UNIQUE NOT NULL,
-            CONSTRAINT professional_fk1 FOREIGN KEY (id) REFERENCES account(id),
-            CONSTRAINT professional_fk2 FOREIGN KEY (mail) REFERENCES user(mail),
-            CONSTRAINT professional_fk3 FOREIGN KEY (password) REFERENCES user(password),
-            CONSTRAINT professional_fk4 FOREIGN KEY (avatarUrl) REFERENCES user(avatarUrl),
-            CONSTRAINT professional_fk5 FOREIGN KEY (code) REFERENCES professional(code),
-            CONSTRAINT professional_fk6 FOREIGN KEY (denomination) REFERENCES user(denomination),
-            CONSTRAINT professional_fk7 FOREIGN KEY (siren) REFERENCES user(siren)
+            last_veto DATE NOT NULL,
+            CONSTRAINT private_professional_fk1 FOREIGN KEY (id) REFERENCES account(id),
+            CONSTRAINT private_professional_fk2 FOREIGN KEY (mail) REFERENCES user(mail),
+            CONSTRAINT private_professional_fk3 FOREIGN KEY (password) REFERENCES user(password),
+            CONSTRAINT private_professional_fk4 FOREIGN KEY (avatarUrl) REFERENCES user(avatarUrl),
+            CONSTRAINT private_professional_fk5 FOREIGN KEY (code) REFERENCES professional(code),
+            CONSTRAINT private_professional_fk6 FOREIGN KEY (denomination) REFERENCES user(denomination),
+            CONSTRAINT private_professional_fk7 FOREIGN KEY (siren) REFERENCES user(siren)
         );";
         $db->pdo->exec($sql);
     }
