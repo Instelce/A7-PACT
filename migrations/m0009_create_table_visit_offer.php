@@ -2,12 +2,13 @@
 
 use app\core\Application;
 
-class m0003_photoOffre{
+class m0009_create_table_visit_offer {
     public function up(){
-        $db = Application::$app->$db;
-        $sql = "CREATE TABLE photo(
+        $db = Application::$app->db;
+        $sql = "CREATE TABLE visit_offer (
             id SERIAL PRIMARY KEY,
-            url_photo VARCHAR(255),
+            duration NUMERIC NOT NULL,
+            guide BOOLEAN NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
@@ -15,7 +16,7 @@ class m0003_photoOffre{
     }
 
     public function down(){
-        $sql = "DROP TABLE photo;";
-        Application::$app->$db->pdo->exec($sql);
+        $sql = "DROP TABLE visit_offer;";
+        Application::$app->db->pdo->exec($sql);
     }
 }
