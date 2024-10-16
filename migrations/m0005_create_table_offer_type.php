@@ -8,9 +8,7 @@ class m0005_create_table_offer_type {
         $sql = "CREATE TABLE offer_type (
             id SERIAL PRIMARY KEY,
             type VARCHAR(255) NOT NULL,
-            price NUMERIC NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            price NUMERIC NOT NULL
         );";
         $db->pdo->exec($sql);
     }

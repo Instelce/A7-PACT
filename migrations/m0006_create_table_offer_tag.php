@@ -7,9 +7,7 @@ class m0006_create_table_offer_tag {
         $db = Application::$app->db;
         $sql = "CREATE TABLE offer_tag (
             id SERIAL PRIMARY KEY,
-            name INT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            name INT NOT NULL
         );";
         $db->pdo->exec($sql);
     }
