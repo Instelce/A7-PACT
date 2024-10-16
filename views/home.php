@@ -16,7 +16,7 @@ $this->title = "Home";
     </x-button>
     <x-button color="danger">coucou</x-button>
     <x-button color="purple">coucou</x-button>
-    <x-input placeholder="salut">
+    <x-input placeholder="salut" hasbutton="false">
         <i name="icon-right" data-lucide="search"></i>
     </x-input>
 
