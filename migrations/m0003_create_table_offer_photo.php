@@ -8,8 +8,9 @@ class m0003_create_table_offer_photo{
         $sql = "CREATE TABLE offer_photo (
             id SERIAL PRIMARY KEY,
             url_photo VARCHAR(255) NOT NULL,
-                         
-            FOREIGN KEY (offer) REFERENCES offer(id)
+            offer_id INT NOT NULL,
+ 
+            FOREIGN KEY (offer_id) REFERENCES offer(id)
         );";
         $db->pdo->exec($sql);
     }
