@@ -4,24 +4,19 @@ import { CheckBox } from "./components/checkbox.js";
 import { Navbar } from "./components/Navbar.js";
 import { Slider } from "./components/Slider.js";
 
-lucide.createIcons({
-    attrs: {
-        "stroke-width": 1,
-        width: "18px",
-        height: "18px",
-    },
-});
+// Setup lucide icons
+lucide.createIcons(
+    {
 
-lucide.createIcons({
-    attrs: {
-        "stroke-width": 1,
-        width: "18px",
-        height: "18px",
-    },
-});
+        attrs:{
+            'stroke-width': 1.5,
+            'width': '24px',
+            'height': '24px',
+        }
+    }
+);
 
 // Define the custom elements
-
 customElements.define("x-checkbox", CheckBox);
 customElements.define("x-input", Input);
 customElements.define("x-button", Button);
