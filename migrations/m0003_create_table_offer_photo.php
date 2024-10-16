@@ -2,13 +2,12 @@
 
 use app\core\Application;
 
-class m0007_tarif_public{
+class m0003_create_table_offer_photo{
     public function up(){
-        $db = Application::$app->$db;
-        $sql = "CREATE TABLE tarif(
+        $db = Application::$app->db;
+        $sql = "CREATE TABLE offer_photo (
             id SERIAL PRIMARY KEY,
-            denomination VARCHAR(255),
-            prix NUMERIC,
+            url_photo VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
@@ -16,7 +15,7 @@ class m0007_tarif_public{
     }
 
     public function down(){
-        $sql = "DROP TABLE tarif;";
-        Application::$app->$db->pdo->exec($sql);
+        $sql = "DROP TABLE offer_photo;";
+        Application::$app->db->pdo->exec($sql);
     }
 }
