@@ -4,7 +4,8 @@ use app\controllers\AuthController;
 use app\core\Application;
 use app\controllers\SiteController;
 
-require_once __DIR__.'/../vendor/autoload.php';
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 // Setup env variables
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
@@ -17,9 +18,9 @@ if ($_ENV['APP_ENVIRONMENT'] === 'dev') {
 
 // Setup config
 $config = [
-    'style' => __DIR__.'/css/main.css',
+    'style' => __DIR__ . '/css/main.css',
     'userClass' => \app\models\User::class,
-    'db' =>  [
+    'db' => [
         'dsn' => $_ENV['DB_DSN'],
         'user' => $_ENV['DB_USER'],
         'password' => $_ENV['DB_PASSWORD']
@@ -40,3 +41,4 @@ $app->router->get('/logout', [AuthController::class, 'logout']);
 $app->router->get('/profile', [AuthController::class, 'profile']);
 
 $app->run();
+
