@@ -15,6 +15,9 @@ use app\core\Application;
 </head>
 
 <body>
+
+<x-navbar></x-navbar>
+
     <div>
         <!-- Show alert -->
         <?php if (Application::$app->session->getFlash('success')): ?>
