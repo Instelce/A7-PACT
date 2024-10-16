@@ -2,7 +2,7 @@
 
 use app\core\Application;
 
-class m0003_photoOffre{
+class m0003_photo_offre{
     public function up(){
         $db = Application::$app->$db;
         $sql = "CREATE TABLE photo(
