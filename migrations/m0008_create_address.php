@@ -12,10 +12,7 @@ class m0008_create_address {
             city VARCHAR(255) NOT NULL,
             postal_code INT NOT NULL,
             longitude NUMERIC,
-            latitude NUMERIC,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (offer)
+            latitude NUMERIC
         );";
         $db->pdo->exec($sql);
     }

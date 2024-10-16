@@ -16,8 +16,11 @@ $this->title = "Home";
     </x-button>
     <x-button color="danger">coucou</x-button>
     <x-button color="purple">coucou</x-button>
-    <x-input placeholder="salut">
+    <x-input placeholder="ce input n'est pas rounded" hasbutton="true" rounded="false">
         <i name="icon-left" data-lucide="search"></i>
+    </x-input>
+    <x-input placeholder="ce input est rounded" hasbutton="false" rounded="true">
+        <i name="icon-right" data-lucide="circle-arrow-right"></i>
     </x-input>
 
 </div>

@@ -7,10 +7,7 @@ class m0006_taggage{
         $db = Application::$app->db;
         $sql = "CREATE TABLE taggage(
             id SERIAL PRIMARY KEY,
-            libelle INT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (offer)
+            name INT NOT NULL
         );";
         $db->pdo->exec($sql);
     }
