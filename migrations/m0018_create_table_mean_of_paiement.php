@@ -2,13 +2,12 @@
 
 use app\core\Application;
 
-class m0001_create_table_compte
+class m0001_create_table_mean_of_paiement
 {
     public function up() {
         $db = Application::$app->db;
-        $sql = "CREATE TABLE comptes (
-            id SERIAL PRIMARY KEY,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        $sql = "CREATE TABLE mean_of_paiement (
+            id_paiement SERIAL PRIMARY KEY,
         );";
         $db->pdo->exec($sql);
     }
@@ -16,7 +15,7 @@ class m0001_create_table_compte
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE comptes;";
+        $sql = "DROP TABLE mean_of_paiement;";
         $db->pdo->exec($sql);
     }
 }

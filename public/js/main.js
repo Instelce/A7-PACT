@@ -16,4 +16,3 @@ lucide.createIcons(
 // Define the custom elements
 customElements.define('x-input', Input);
 customElements.define('x-button', Button);
-customElements.define('x-Toggle', Toggle);
