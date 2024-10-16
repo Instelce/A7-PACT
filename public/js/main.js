@@ -1,6 +1,5 @@
 import {Button} from "./components/Button.js";
 import {Input} from "./components/Input.js";
-import {CheckBox} from "./components/checkbox.js";
 
 lucide.createIcons(
     {
@@ -15,7 +14,5 @@ lucide.createIcons(
 
 
 // Define the custom elements
-customElements.define('x-checkbox', CheckBox);
 customElements.define('x-input', Input);
 customElements.define('x-button', Button);
-
