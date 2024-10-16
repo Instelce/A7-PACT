@@ -16,7 +16,7 @@ $this->cssFile = "storybook";
             <h2>Button</h2>
         </header>
 
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-4">
             <div class="flex gap-2">
                 <x-button>Button</x-button>
                 <x-button color="purple">Button</x-button>
@@ -32,6 +32,9 @@ $this->cssFile = "storybook";
                 <x-button>
                     <i slot="icon-right" data-lucide="plus"></i>
                     Button
+                </x-button>
+                <x-button icon>
+                    <i data-lucide="plus"></i>
                 </x-button>
             </div>
 
@@ -55,7 +58,7 @@ $this->cssFile = "storybook";
             <h2>Input</h2>
         </header>
 
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-4">
             <div class="flex gap-2">
                 <x-input placeholder="Placeholder"></x-input>
                 <x-input placeholder="Placeholder" rounded></x-input>
@@ -72,10 +75,69 @@ $this->cssFile = "storybook";
 
             <div class="flex gap-2">
                 <x-input placeholder="Placeholder" rounded>
-                    <x-button slot="button" size="sm">
+                    <x-button slot="button" size="sm" icon>
                         <i data-lucide="search"></i>
                     </x-button>
                 </x-input>
+                <x-input placeholder="Search" rounded>
+                    <x-button slot="button" size="sm">
+                        Search
+                    </x-button>
+                </x-input>
+            </div>
+        </div>
+
+    </section>
+
+    <section>
+        <header>
+            <h2>Checkbox</h2>
+        </header>
+
+        <div class="flex flex-col gap-4">
+            <div class="flex gap-2">
+            </div>
+
+            <div class="flex gap-2">
+            </div>
+
+            <div class="flex gap-2">
+            </div>
+        </div>
+
+    </section>
+
+    <section>
+        <header>
+            <h2>Slider</h2>
+        </header>
+
+        <div class="flex flex-col gap-4">
+            <div class="flex gap-2">
+            </div>
+
+            <div class="flex gap-2">
+            </div>
+
+            <div class="flex gap-2">
+            </div>
+        </div>
+
+    </section>
+
+    <section>
+        <header>
+            <h2>Toggle</h2>
+        </header>
+
+        <div class="flex flex-col gap-4">
+            <div class="flex gap-2">
+            </div>
+
+            <div class="flex gap-2">
+            </div>
+
+            <div class="flex gap-2">
             </div>
         </div>
 

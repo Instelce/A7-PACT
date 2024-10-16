@@ -1,4 +1,4 @@
-import { WebComponent } from './WebComponent.js';
+import { WebComponent } from '../WebComponent.js';
 
 /**
  * Input component
@@ -23,6 +23,11 @@ export class Input extends WebComponent {
         input.setAttribute('placeholder', this.placeholder);
         input.setAttribute('name', this.name);
         input.setAttribute('value', this.value);
+
+        let field = this.shadow.querySelector('.input-field');
+        field.addEventListener('click', () => {
+            input.focus();
+        })
     }
 
     disconnectedCallback() {
