@@ -10,7 +10,8 @@ class m0009_create_table_visit_offer {
             duration NUMERIC NOT NULL,
             guide BOOLEAN NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (offer)
         );";
         $db->pdo->exec($sql);
     }

@@ -14,7 +14,8 @@ class m0008_create_address {
             longitude NUMERIC,
             latitude NUMERIC,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (offer)
         );";
         $db->pdo->exec($sql);
     }

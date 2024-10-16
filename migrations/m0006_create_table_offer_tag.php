@@ -2,20 +2,21 @@
 
 use app\core\Application;
 
-class m0006_create_table_offer_tag {
+class m0006_taggage{
     public function up(){
-        $db = Application::$app->db;
-        $sql = "CREATE TABLE offer_tag (
+        $db = Application::$app->$db;
+        $sql = "CREATE TABLE taggage(
             id SERIAL PRIMARY KEY,
-            name INT NOT NULL,
+            libelle INT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (offer)
         );";
         $db->pdo->exec($sql);
     }
 
     public function down(){
-        $sql = "DROP TABLE offer_tag;";
-        Application::$app->db->pdo->exec($sql);
+        $sql = "DROP TABLE taggage;";
+        Application::$app->$db->pdo->exec($sql);
     }
 }

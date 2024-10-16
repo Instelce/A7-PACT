@@ -11,7 +11,8 @@ class m0004_create_table_offer_option {
             week_counter INT,
             duration INT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (offer) RREFERENCES 
         );";
         $db->pdo->exec($sql);
     }
