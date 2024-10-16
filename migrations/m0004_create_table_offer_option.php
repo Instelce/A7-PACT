@@ -10,8 +10,11 @@ class m0004_create_table_offer_option {
             launch_date DATE NOT NULL,
             week_counter INT NOT NULL,
             duration INT NOT NULL
+                          
+            FOREIGN KEY (offer) 
         );";
         $db->pdo->exec($sql);
+
     }
 
     public function down(){

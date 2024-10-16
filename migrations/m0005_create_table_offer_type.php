@@ -9,6 +9,8 @@ class m0005_create_table_offer_type {
             id SERIAL PRIMARY KEY,
             type VARCHAR(255) NOT NULL,
             price NUMERIC NOT NULL
+                        
+            FOREIGN KEY (offer)
         );";
         $db->pdo->exec($sql);
     }

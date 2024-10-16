@@ -13,6 +13,8 @@ class m0008_create_address {
             postal_code INT NOT NULL,
             longitude NUMERIC,
             latitude NUMERIC
+                     
+            FOREIGN KEY (offer)
         );";
         $db->pdo->exec($sql);
     }
