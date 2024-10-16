@@ -1,4 +1,5 @@
 import { WebComponent } from './WebComponent.js';
+import { Button } from './Button.js';
 
 
 /**
@@ -9,7 +10,7 @@ import { WebComponent } from './WebComponent.js';
  */
 export class Input extends WebComponent {
     static get observedAttributes() {
-        return ['placeholder'];
+        return ['placeholder','hasbutton'];
     }
 
     constructor() {
@@ -34,7 +35,7 @@ export class Input extends WebComponent {
             <style>
                 div {
                     display: flex;
-                    align-items: center;
+                    align-items: space-between;
                     border: 1px solid #ccc;
                     border-radius: 200px;
                     padding: 10px 20px;
@@ -53,12 +54,33 @@ export class Input extends WebComponent {
                     width: 100%;
                 }
 
+                x-button {
+                width: 50px;
+                height: 29px;
+
+    }
             </style>
         `;
     }
 
     render() {
         const placeholder = this.getAttribute('placeholder');
+        const hasButton = this.getAttribute('hasbutton');
+        const rounded = this.getAttribute('rounded');
+        if (hasButton === 'true') {
+            
+            return `
+            <div >
+              <slot name="icon-left">
+              <slot>
+              </slot>
+              <input type="text" placeholder="${placeholder}" />
+                <x-button>YARZE</x-button>
+              <slot name="icon-right"></slot>
+            </div>
+            `;
+        }
+
        
             return `
             <div >
