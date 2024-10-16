@@ -7,9 +7,9 @@ class m0004_create_table_offer_option {
         $db = Application::$app->db;
         $sql = "CREATE TABLE offer_option (
             id SERIAL PRIMARY KEY,
-            launch_date DATE,
-            week_counter INT,
-            duration INT
+            launch_date DATE NOT NULL,
+            week_counter INT NOT NULL,
+            duration INT NOT NULL
         );";
         $db->pdo->exec($sql);
     }
