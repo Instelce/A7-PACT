@@ -2,13 +2,13 @@
 
 use app\core\Application;
 
-class m0005_typeOffre{
+class m0005_create_table_offer_type {
     public function up(){
-        $db = Application::$app->$db;
-        $sql = "CREATE TABLE offre(
+        $db = Application::$app->db;
+        $sql = "CREATE TABLE offer_type (
             id SERIAL PRIMARY KEY,
-            type VARCHAR(255),
-            prix NUMERIC,     
+            type VARCHAR(255) NOT NULL,
+            price NUMERIC NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
@@ -16,7 +16,7 @@ class m0005_typeOffre{
     }
 
     public function down(){
-        $sql = "DROP TABLE offre;";
-        Application::$app->$db->pdo->exec($sql);
+        $sql = "DROP TABLE offer_type;";
+        Application::$app->db->pdo->exec($sql);
     }
 }

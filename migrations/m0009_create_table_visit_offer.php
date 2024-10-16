@@ -2,14 +2,13 @@
 
 use app\core\Application;
 
-class m0004_option{
+class m0009_create_table_visit_offer {
     public function up(){
-        $db = Application::$app->$db;
-        $sql = "CREATE TABLE option (
+        $db = Application::$app->db;
+        $sql = "CREATE TABLE visit_offer (
             id SERIAL PRIMARY KEY,
-            dateLancement DATE,
-            compteurSemaines INT,
-            duree INT,
+            duration NUMERIC NOT NULL,
+            guide BOOLEAN NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
@@ -17,7 +16,7 @@ class m0004_option{
     }
 
     public function down(){
-        $sql = "DROP TABLE option;";
-        Application::$app->$db->pdo->exec($sql);
+        $sql = "DROP TABLE visit_offer;";
+        Application::$app->db->pdo->exec($sql);
     }
 }
