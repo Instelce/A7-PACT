@@ -6,7 +6,7 @@ class m0001_create_table_compte
 {
     public function up() {
         $db = Application::$app->db;
-        $sql = "CREATE TABLE comptes (
+        $sql = "CREATE TABLE compte (
             id SERIAL PRIMARY KEY,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
@@ -16,7 +16,7 @@ class m0001_create_table_compte
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE comptes;";
+        $sql = "DROP TABLE compte;";
         $db->pdo->exec($sql);
     }
 }
