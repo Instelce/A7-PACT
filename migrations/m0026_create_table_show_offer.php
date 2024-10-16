@@ -1,19 +1,19 @@
 <?php
 
+namespace app\migrations;
+
 use app\core\Application;
 
-// TODO : add language to offer
-
-class m0009_create_table_visit_offer
+class m0026_create_table_show_offer
 {
     public function up()
     {
         $db = Application::$app->db;
-        $sql = "CREATE TABLE visit_offer (
+        $sql = "CREATE TABLE show_offer (
             offer_id INT NOT NULL PRIMARY KEY,
-
-            duration NUMERIC NOT NULL,
-            guide BOOLEAN NOT NULL,
+            
+            duration FLOAT NOT NULL,
+            capacity INT NOT NULL,
             schedule_id INT NOT NULL,
             
             FOREIGN KEY (offer_id) REFERENCES offer(id),
@@ -24,7 +24,7 @@ class m0009_create_table_visit_offer
 
     public function down()
     {
-        $sql = "DROP TABLE visit_offer;";
+        $sql = "DROP TABLE show_offer;";
         Application::$app->db->pdo->exec($sql);
     }
 }

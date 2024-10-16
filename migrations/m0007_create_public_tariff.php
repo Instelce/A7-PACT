@@ -8,9 +8,7 @@ class m0007_create_public_tariff {
         $sql = "CREATE TABLE public_tariff (
             id SERIAL PRIMARY KEY,
             denomination VARCHAR(255) NOT NULL,
-            price NUMERIC NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            price NUMERIC NOT NULL
         );";
         $db->pdo->exec($sql);
     }

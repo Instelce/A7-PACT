@@ -9,9 +9,7 @@ class m0004_create_table_offer_option {
             id SERIAL PRIMARY KEY,
             launch_date DATE,
             week_counter INT,
-            duration INT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            duration INT
         );";
         $db->pdo->exec($sql);
     }

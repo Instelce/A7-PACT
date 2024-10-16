@@ -35,9 +35,14 @@ class Database
             $className = pathinfo($migration, PATHINFO_FILENAME);
             $instance = new $className;
 
-            $this->log("Applying migration $migration" . PHP_EOL);
-            $instance->up();
-            $this->log("Applied migration $migration" . PHP_EOL);
+            $this->inlineLog("Migration $migration");
+            try {
+                $instance->up();
+                echo " - Applied ✅" . PHP_EOL;
+            } catch (\Exception $e) {
+                echo " - Error ❌" . PHP_EOL;
+                echo $e->getMessage() . PHP_EOL . PHP_EOL;
+            }
             $newMigrations[] = $migration;
         }
 
@@ -73,8 +78,7 @@ class Database
     }
 
     public function dropMigrations() {
-        $statement = $this->pdo->prepare("DROP TABLE migrations");
-        $statement->execute();
+        $appliedMigrations = $this->getAppliedMigrations();
 
         $files = scandir(Application::$ROOT_DIR . "/migrations");
 
@@ -90,11 +94,19 @@ class Database
             $instance->drop();
             $this->log("Drop migration $migration" . PHP_EOL);
         }
+
+        $statement = $this->pdo->prepare("DROP TABLE migrations");
+        $statement->execute();
     }
 
     protected function log($message)
     {
         echo '[' . date('Y-m-d H-i-s') . '] - ' . $message . PHP_EOL;
+    }
+
+    protected function inlineLog($message)
+    {
+        echo '[' . date('Y-m-d H-i-s') . '] - ' . $message;
     }
 
     public function prepare($sql)
