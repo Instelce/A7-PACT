@@ -8,7 +8,8 @@ class m0001_create_table_account
         $db = Application::$app->db;
         $sql = "CREATE TABLE account (
             id SERIAL PRIMARY KEY,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
         $db->pdo->exec($sql);
     }

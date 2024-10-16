@@ -44,6 +44,10 @@
 
     --radius-rounded: 100rem;
     --radius-small: 5px;
+
+    /* Viewports */
+    --viewport-lg: 1440px;
+    --viewport-sm: 926px;
 }
 
 body {
