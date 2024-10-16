@@ -10,11 +10,18 @@ use app\models\ContactForm;
 
 class SiteController extends Controller
 {
-    public function home()
+    public function home(Request $request)
     {
         $params = [
             "name" => "Foufouille"
         ];
+        if ($request->isPost()) {
+            $data = $request->getBody();
+            $params = [
+                "name" => $data['name']
+            ];
+        }
+
         return $this->render("home", $params);
     }
 
