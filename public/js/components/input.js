@@ -49,7 +49,7 @@ export class Input extends WebComponent {
                     border: none;
                     outline: none;
                     flex: 1;
-                    padding: 0;
+                    padding: 5px;
                     width: 100%;
                 }
 
@@ -62,7 +62,7 @@ export class Input extends WebComponent {
        
             return `
             <div >
-              <slot name="icon-left"></slot>
+              <slot name="icon-left">
               <slot>
               </slot>
               <input type="text" placeholder="${placeholder}" />

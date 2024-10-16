@@ -1,7 +1,16 @@
 import {Button} from "./components/Button.js";
 import {Input} from "./components/Input.js";
 
-lucide.createIcons(); 
+lucide.createIcons(
+    {
+
+        attrs:{
+            'stroke-width': 1,
+            'width': '18px',
+            'height': '18px',
+        }
+    }
+); 
 
 
 // Define the custom elements
