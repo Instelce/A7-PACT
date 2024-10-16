@@ -36,10 +36,10 @@ if ($argc >= 2) {
         exec("sh scripts/dev");
     } else if ($argv[1] === "dev-db") {
         if ($argv[2] === "start") {
-            exec("docker-compose up -d");
+            exec("sudo docker compose up -d");
             echo "Development database started" . PHP_EOL;
         } else if ($argv[2] === "stop") {
-            exec("docker-compose down > /dev/null 2>&1 &");
+            exec("docker compose down > /dev/null 2>&1 &");
             echo "Development database stopped" . PHP_EOL;
         } else {
             echo "Invalid argument" . PHP_EOL;
