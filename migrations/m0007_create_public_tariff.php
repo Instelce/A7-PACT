@@ -9,6 +9,8 @@ class m0007_create_public_tariff {
             id SERIAL PRIMARY KEY,
             denomination VARCHAR(255) NOT NULL,
             price NUMERIC NOT NULL
+                           
+            FOREIGN KEY (offer) REFERENCES offer(id)  
         );";
         $db->pdo->exec($sql);
     }

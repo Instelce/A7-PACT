@@ -7,7 +7,9 @@ class m0003_create_table_offer_photo{
         $db = Application::$app->db;
         $sql = "CREATE TABLE offer_photo (
             id SERIAL PRIMARY KEY,
-            url_photo VARCHAR(255) NOT NULL
+            url_photo VARCHAR(255) NOT NULL,
+                         
+            FOREIGN KEY (offer) REFERENCES offer(id)
         );";
         $db->pdo->exec($sql);
     }
