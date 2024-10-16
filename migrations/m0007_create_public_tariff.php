@@ -2,13 +2,13 @@
 
 use app\core\Application;
 
-class m0005_typeOffre{
+class m0007_create_public_tariff {
     public function up(){
-        $db = Application::$app->$db;
-        $sql = "CREATE TABLE offre(
+        $db = Application::$app->db;
+        $sql = "CREATE TABLE public_tariff (
             id SERIAL PRIMARY KEY,
-            type VARCHAR(255),
-            prix NUMERIC,     
+            denomination VARCHAR(255) NOT NULL,
+            price NUMERIC NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
@@ -16,7 +16,7 @@ class m0005_typeOffre{
     }
 
     public function down(){
-        $sql = "DROP TABLE offre;";
-        Application::$app->$db->pdo->exec($sql);
+        $sql = "DROP TABLE public_tariff;";
+        Application::$app->db->pdo->exec($sql);
     }
 }
