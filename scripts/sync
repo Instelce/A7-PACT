@@ -1,0 +1,6 @@
+#!/bin/sh
+
+name=$(git config user.name)
+echo "Synchronizing your fork ($name/A7-PACT)";
+gh repo sync $name/A7-PACT -b main
+git pull

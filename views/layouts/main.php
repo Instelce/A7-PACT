@@ -11,7 +11,7 @@ use app\core\Application;
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo $this->title ?></title>
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/output.css">
 </head>
 
 <body>
