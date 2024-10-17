@@ -10,6 +10,7 @@ import {createSignal} from "../utils/signal.js";
  * @arg {string} color - Color of the button. Default is blue
  * @arg {string} size - Size of the button. Default is medium (md)
  * @arg {boolean} icon - Only show the icon
+ * @arg {string} href - Link to a page
  *
  */
 export class Button extends WebComponent {
@@ -36,6 +37,19 @@ export class Button extends WebComponent {
         button.addEventListener('click', () => {
             externalButton.click();
         })
+
+        // Forward click event to external button or handle redirection
+        button.addEventListener('click', () => {
+            if (this.href) {
+                // Redirect to the specified URL
+                window.location.href = this.href;
+            } else {
+                // Forward click event to external button if no href is defined
+                let externalButton = this.querySelector('button');
+                externalButton.setAttribute('type', this.type);
+                externalButton.click();
+            }
+        });
     }
 
     connectedCallback() {
@@ -228,5 +242,9 @@ export class Button extends WebComponent {
 
     get hasIconRight() {
         return this.querySelector('[slot="icon-right"]') !== null;
+    }
+
+    get href() {
+        return this.getAttribute('href');
     }
 }
