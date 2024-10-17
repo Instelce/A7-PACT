@@ -104,9 +104,29 @@ $this->cssFile = "storybook";
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
+                
+                <label>
+                    <input type="radio" name="test">
+                    gougou
+                </label>
+                <label>
+                    <input type="radio" name="test">
+                    gougou
+                </label>
+                
             </div>
 
             <div class="flex gap-2">
+                
+                <label>
+                    <input type="checkbox" id="bla">
+                    blablabla
+                </label>
+                <label>
+                    <input type="checkbox" id="bla">
+                    blablabla
+                </label>
+                
             </div>
 
             <div class="flex gap-2">

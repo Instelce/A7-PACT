@@ -1,7 +1,7 @@
 import {Footer} from "./components/Footer.js";
 import { Button } from "./components/Button.js";
 import { Input } from "./components/form/Input.js";
-import { Checkbox } from "./components/form/Checkbox.js";
+import { Checkbox } from "./components/form/CheckBox.js";
 import { Navbar } from "./components/Navbar.js";
 import { Slider } from "./components/form/Slider.js";
 import {Select} from "./components/form/Select.js";
