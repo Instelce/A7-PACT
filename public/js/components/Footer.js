@@ -3,11 +3,7 @@ import {WebComponent} from "./WebComponent.js";
 
 /**
  * footer component
-<<<<<<< HEAD
-=======
  *
- * @arg {string} user - User connected to the website. Default is visitor
->>>>>>> 3175943714acfda805b1415c163381eb7a40e285
  */
 export class Footer extends WebComponent {
 
@@ -17,11 +13,6 @@ export class Footer extends WebComponent {
 
     constructor() {
         super();
-<<<<<<< HEAD
-=======
-
-        this.resolveUser();
->>>>>>> 3175943714acfda805b1415c163381eb7a40e285
     }
 
     connectedCallback() {
@@ -37,7 +28,6 @@ export class Footer extends WebComponent {
     styles() {
         return `
             <style>              
-<<<<<<< HEAD
                 footer {
                     max-width: 840px;
                     width: 100%;
@@ -105,6 +95,7 @@ export class Footer extends WebComponent {
                 }
             
                 #links a {
+                    text-decoration: none;
                     margin-right: 10px;
                 }
             
@@ -176,16 +167,59 @@ export class Footer extends WebComponent {
                         flex-wrap: wrap;
                     }
                 }
-=======
-               
->>>>>>> 3175943714acfda805b1415c163381eb7a40e285
+                
+                
+                .blueLink {
+                    color: rgb(var(--color-blue-primary));
+                    position: relative;
+                }
+                
+                .blueLink::after {
+                    content: '';
+                    position: absolute;
+                    width: 100%;
+                    height: 1px;
+                    bottom: -2px;
+                    left: 0;
+                    background-color: rgb(var(--color-blue-primary));
+                    transform: scaleX(0);
+                    transform-origin: bottom right;
+                    transition: transform 0.25s ease-out;
+                }
+                
+                .blueLink:hover::after {
+                    transform: scaleX(1);
+                    transform-origin: bottom left;
+                }
+                
+                .purpleLink {
+                    color: rgb(var(--color-purple-primary));
+                    position: relative;
+                }
+                
+                .purpleLink::after {
+                    content: '';
+                    position: absolute;
+                    width: 100%;
+                    height: 1px;
+                    bottom: -2px;
+                    left: 0;
+                    background-color: rgb(var(--color-purple-primary));
+                    transform: scaleX(0);
+                    transform-origin: bottom right;
+                    transition: transform 0.25s ease-out;
+                }
+                
+                .purpleLink:hover::after {
+                    transform: scaleX(1);
+                    transform-origin: bottom left;
+                }
             </style>
         `;
     }
 
     render() {
         return `
-<<<<<<< HEAD
             <footer>
                 <div id="parts">
                     <div id="about">
@@ -209,10 +243,10 @@ export class Footer extends WebComponent {
                         <div>
                             <p>@ 2024 PACT Tous droits réservés.</p>
                             <div id="links">
-                                <a href="">Conditions d'utilisation</a>
-                                <a href="">Confidentialité et utilisation des cookies</a>
-                                <a href="">Plan du site</a>
-                                <a href="">Contactez-nous</a>
+                                <a class="blueLink" href="">Conditions d'utilisation</a>
+                                <a class="blueLink" href="">Confidentialité et utilisation des cookies</a>
+                                <a class="blueLink" href="">Plan du site</a>
+                                <a class="blueLink" href="">Contactez-nous</a>
                             </div>
                         </div>
                     </div>
@@ -235,58 +269,13 @@ export class Footer extends WebComponent {
         `;
     }
 
-
-=======
-            
-        `;
-    }
-
->>>>>>> 3175943714acfda805b1415c163381eb7a40e285
     // ---------------------------------------------------------------------- //
     // Other methods
     // ---------------------------------------------------------------------- //
 
-<<<<<<< HEAD
-=======
-    resolveUser() {
-        switch (this.user) {
-            case "pro":
-                this.addStyleVariable("logo", "");
-                this.addStyleVariable("color", "rgb(var(--color-purple-primary))");
-                this.addStyleVariable("border", "none");
-
-                this.addStyleVariable("color", "rgb(var(--color-purple-primary))");
-                this.addStyleVariable("border", "1px var(--color-purple-primary)) solid inside bottom");
-                break;
-            default:
-                this.addStyleVariable("logo", "");
-                this.addStyleVariable("color", "rgb(var(--color-blue-primary))");
-                this.addStyleVariable("border", "none");
-
-                this.addStyleVariable("color", "rgb(var(--color-blue-primary))");
-                this.addStyleVariable("border", "1px var(--color-blue-primary)) solid inside bottom");
-        }
-    }
->>>>>>> 3175943714acfda805b1415c163381eb7a40e285
 
     // ---------------------------------------------------------------------- //
     // Getter and setter
     // ---------------------------------------------------------------------- //
 
-<<<<<<< HEAD
-=======
-    /**
-     * @returns {"pro"|"visitor"}
-     */
-    get user() {
-
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    get connected() {
-
-    }
->>>>>>> 3175943714acfda805b1415c163381eb7a40e285
 }
