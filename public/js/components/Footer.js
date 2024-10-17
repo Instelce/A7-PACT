@@ -3,6 +3,11 @@ import {WebComponent} from "./WebComponent.js";
 
 /**
  * footer component
+<<<<<<< HEAD
+=======
+ *
+ * @arg {string} user - User connected to the website. Default is visitor
+>>>>>>> 3175943714acfda805b1415c163381eb7a40e285
  */
 export class Footer extends WebComponent {
 
@@ -12,6 +17,11 @@ export class Footer extends WebComponent {
 
     constructor() {
         super();
+<<<<<<< HEAD
+=======
+
+        this.resolveUser();
+>>>>>>> 3175943714acfda805b1415c163381eb7a40e285
     }
 
     connectedCallback() {
@@ -27,6 +37,7 @@ export class Footer extends WebComponent {
     styles() {
         return `
             <style>              
+<<<<<<< HEAD
                 footer {
                     max-width: 840px;
                     width: 100%;
@@ -165,12 +176,16 @@ export class Footer extends WebComponent {
                         flex-wrap: wrap;
                     }
                 }
+=======
+               
+>>>>>>> 3175943714acfda805b1415c163381eb7a40e285
             </style>
         `;
     }
 
     render() {
         return `
+<<<<<<< HEAD
             <footer>
                 <div id="parts">
                     <div id="about">
@@ -221,13 +236,57 @@ export class Footer extends WebComponent {
     }
 
 
+=======
+            
+        `;
+    }
+
+>>>>>>> 3175943714acfda805b1415c163381eb7a40e285
     // ---------------------------------------------------------------------- //
     // Other methods
     // ---------------------------------------------------------------------- //
 
+<<<<<<< HEAD
+=======
+    resolveUser() {
+        switch (this.user) {
+            case "pro":
+                this.addStyleVariable("logo", "");
+                this.addStyleVariable("color", "rgb(var(--color-purple-primary))");
+                this.addStyleVariable("border", "none");
+
+                this.addStyleVariable("color", "rgb(var(--color-purple-primary))");
+                this.addStyleVariable("border", "1px var(--color-purple-primary)) solid inside bottom");
+                break;
+            default:
+                this.addStyleVariable("logo", "");
+                this.addStyleVariable("color", "rgb(var(--color-blue-primary))");
+                this.addStyleVariable("border", "none");
+
+                this.addStyleVariable("color", "rgb(var(--color-blue-primary))");
+                this.addStyleVariable("border", "1px var(--color-blue-primary)) solid inside bottom");
+        }
+    }
+>>>>>>> 3175943714acfda805b1415c163381eb7a40e285
 
     // ---------------------------------------------------------------------- //
     // Getter and setter
     // ---------------------------------------------------------------------- //
 
+<<<<<<< HEAD
+=======
+    /**
+     * @returns {"pro"|"visitor"}
+     */
+    get user() {
+
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get connected() {
+
+    }
+>>>>>>> 3175943714acfda805b1415c163381eb7a40e285
 }

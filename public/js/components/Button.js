@@ -1,21 +1,55 @@
 import {WebComponent} from "./WebComponent.js";
+import {useId} from "../utils/id.js";
+import {createSignal} from "../utils/signal.js";
 
 
 /**
  * Button component
  *
+ * @arg {string} type - Type of the button. Default is button
  * @arg {string} color - Color of the button. Default is blue
+ * @arg {string} size - Size of the button. Default is medium (md)
+ * @arg {boolean} icon - Only show the icon
+ * @arg {string} href - Link to a page
+ *
  */
 export class Button extends WebComponent {
-
-    static get observedAttributes() {
-        return []
-    }
 
     constructor() {
         super();
 
-        this.resolveColor();
+        let button = this.shadow.querySelector('button');
+        button.classList.add(this.color, this.size);
+
+        if (this.hasIconLeft) {
+            button.classList.add('icon-left');
+        } else if (this.hasIconRight) {
+            button.classList.add('icon-right');
+        }
+
+        if (this.onlyIcon) {
+            button.classList.add('only-icon');
+        }
+
+        // Forward click event to external button
+        let externalButton = this.querySelector('button');
+        externalButton.setAttribute('type', this.type);
+        button.addEventListener('click', () => {
+            externalButton.click();
+        })
+
+        // Forward click event to external button or handle redirection
+        button.addEventListener('click', () => {
+            if (this.href) {
+                // Redirect to the specified URL
+                window.location.href = this.href;
+            } else {
+                // Forward click event to external button if no href is defined
+                let externalButton = this.querySelector('button');
+                externalButton.setAttribute('type', this.type);
+                externalButton.click();
+            }
+        });
     }
 
     connectedCallback() {
@@ -30,30 +64,125 @@ export class Button extends WebComponent {
 
     styles() {
         return `
-            <style>              
-               button {
-                padding: .8rem 2rem;
+            <style>
+                button {
+                    padding: .8rem 2rem;
+            
+                    background: rgb(var(--background));
+                    border: 1px solid rgb(var(--border));
+                    border-radius: var(--radius-rounded);
+                    outline: none;
+            
+                    font-size: inherit;
+                    font-weight: 500;
+                    white-space: nowrap;
+                    color: rgb(var(--color));
+            
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 1rem;
+            
+                    cursor: pointer;
+                    transition: color .2s, background .2s, border .2s, box-shadow .2s;
+                }
                 
-                background: var(--background);
-                border: 1px solid var(--border);
-                border-radius: var(--radius-rounded);
+                button:hover {
+                    background: rgb(var(--background-hover));
+                    border: 1px solid rgb(var(--border-hover));
+                    color: rgb(var(--color-hover));
+                }
                 
-                font-size: inherit;
-                color: var(--color);
-                font-weight: 500;
+                button:focus {
+                  box-shadow: 0 0 0 3px rgba(var(--background), .5);
+                  transform: scale(1.02);
+                }
+            
+                button.blue {
+                    --background: var(--color-blue-primary);
+                    --border: var(--color-blue-primary);
+                    --color: var(--color-white);
+                    --background-hover: var(--color-white);
+                    --border-hover: var(--color-blue-primary);
+                    --color-hover: var(--color-blue-primary);
+                }
+            
+                button.gray {
+                    --background: var(--color-white);
+                    --border: var(--color-gray-2);
+                    --color: var(--color-black);
+                    --background-hover: var(--color-gray-1);
+                    --border-hover: var(--color-gray-2);
+                    --color-hover: var(--color-black);
+                }
+            
+                button.danger {
+                    --background: var(--color-danger);
+                    --border: var(--color-danger);
+                    --color: var(--color-white);
+                    --background-hover: var(--color-white);
+                    --border-hover: var(--color-danger);
+                    --color-hover: var(--color-danger);
+                }
+            
+                button.purple {
+                    --background: var(--color-purple-primary);
+                    --border: var(--color-purple-primary);
+                    --color: var(--color-white);
+                    --background-hover: var(--color-white);
+                    --border-hover: var(--color-purple-primary);
+                    --color-hover: var(--color-purple-primary);
+                }
+
+                button.sm {
+                    padding: .5rem 1.5rem;
+                }
+            
+                button.md {
+                    padding: .8rem 2rem;
+                }
+            
+                button.lg {
+                    padding: 1rem 2.5rem;
+                }
                 
-                display:flex;
-                gap: 1rem;
+                button.only-icon {
+                    padding: 0;
+                }
                 
-                cursor: pointer;
-                transition: color .2s, background .2s, border .2s;
-               }
-               
-               button:hover {
-                background: var(--background-hover);
-                border: 1px solid var(--border-hover);
-                color: var(--color-hover);
-               }
+                button.only-icon.sm {
+                    width: 2.5rem;
+                    height: 2.5rem;
+                }
+                
+                button.only-icon.md {
+                    width: 3rem;
+                    height: 3rem;
+                }
+                
+                button.only-icon.lg {
+                    width: 3.5rem;
+                    height: 3.5rem;
+                }
+                
+                ::slotted(svg) {
+                    width: 1.2rem;
+                    height: 1.2rem;
+                }
+
+                button.icon-left {
+                    padding-left: 1rem;
+                }
+                
+                button.icon-right {
+                    padding-right: 1rem;
+                }
+                
+                ::slotted([slot="icon-left"]),
+                ::slotted([slot="icon-right"]) {
+                    width: 1.2rem;
+                    height: 1.2rem;
+                }
             </style>
         `;
     }
@@ -68,53 +197,23 @@ export class Button extends WebComponent {
         `;
     }
 
+    noScope() {
+        return `
+            <button slot="hidden"></button>
+        `;
+    }
+
     // ---------------------------------------------------------------------- //
     // Other methods
     // ---------------------------------------------------------------------- //
 
-    resolveColor() {
-        switch (this.color) {
-            case "gray":
-                this.addStyleVariable("background", "rgb(var(--color-white))");
-                this.addStyleVariable("border", "rgb(var(--color-gray-2))");
-                this.addStyleVariable("color", "rgb(var(--color-black))");
-
-                this.addStyleVariable("background-hover", "rgb(var(--color-gray-2))");
-                this.addStyleVariable("border-hover", "rgb(var(--color-gray-2))");
-                this.addStyleVariable("color-hover", "rgb(var(--color-black))");
-                break;
-            case "danger":
-                this.addStyleVariable("background", "rgb(var(--color-danger))");
-                this.addStyleVariable("border", "rgb(var(--color-danger))");
-                this.addStyleVariable("color", "rgb(var(--color-white))");
-
-                this.addStyleVariable("background-hover", "rgb(var(--color-white))");
-                this.addStyleVariable("border-hover", "rgb(var(--color-danger))");
-                this.addStyleVariable("color-hover", "rgb(var(--color-danger))");
-                break;
-            case "purple":
-                this.addStyleVariable("background", "rgb(var(--color-purple-primary))");
-                this.addStyleVariable("border", "rgb(var(--color-purple-primary))");
-                this.addStyleVariable("color", "rgb(var(--color-white))");
-
-                this.addStyleVariable("background-hover", "rgb(var(--color-white))");
-                this.addStyleVariable("border-hover", "rgb(var(--color-purple-primary))");
-                this.addStyleVariable("color-hover", "rgb(var(--color-purple-primary))");
-                break;
-            default:
-                this.addStyleVariable("background", "rgb(var(--color-blue-primary))");
-                this.addStyleVariable("border", "rgb(var(--color-blue-primary))");
-                this.addStyleVariable("color", "rgb(var(--color-white))");
-
-                this.addStyleVariable("background-hover", "rgb(var(--color-white))");
-                this.addStyleVariable("border-hover", "rgb(var(--color-blue-primary))");
-                this.addStyleVariable("color-hover", "rgb(var(--color-blue-primary))");
-        }
-    }
-
     // ---------------------------------------------------------------------- //
     // Getter and setter
     // ---------------------------------------------------------------------- //
+
+    get type() {
+        return this.getAttribute('type') ?? "button";
+    }
 
     /**
      * @returns {"gray"|"blue"|"purple"|"danger"}
@@ -124,11 +223,28 @@ export class Button extends WebComponent {
     }
 
     /**
-     * @returns {boolean}
+     * @returns {"sm"|"md"|"lg"}
      */
-    get filled() {
-        return this.hasAttribute('fill');
+    get size() {
+        return this.getAttribute('size') ?? "md";
     }
 
-    
+    /**
+     * @returns {boolean}
+     */
+    get onlyIcon() {
+        return this.hasAttribute('icon');
+    }
+
+    get hasIconLeft() {
+        return this.querySelector('[slot="icon-left"]') !== null;
+    }
+
+    get hasIconRight() {
+        return this.querySelector('[slot="icon-right"]') !== null;
+    }
+
+    get href() {
+        return this.getAttribute('href');
+    }
 }

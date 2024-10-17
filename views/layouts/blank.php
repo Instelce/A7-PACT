@@ -19,19 +19,11 @@ use app\core\Application;
 
 <body>
 
-<x-navbar></x-navbar>
-
     <div>
-        <!-- Show alert -->
-        <?php if (Application::$app->session->getFlash('success')): ?>
-            <div class="alert alert-success">
-                <?php echo Application::$app->session->getFlash('success') ?>
-            </div>
-        <?php endif; ?>
         {{content}}
     </div>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script type="module" src="/js/main.js"></script>
 
 </body>

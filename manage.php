@@ -44,9 +44,6 @@ if ($argc >= 2) {
         } else {
             echo "Invalid argument" . PHP_EOL;
         }
-    } else if ($argv[1] === "tw") {
-        echo "Starting tailwind watcher" . PHP_EOL;
-        exec("sh scripts/tailwind");
     } else if ($argv[1] === "sf") {
         echo shell_exec("sh scripts/sync");
     } else {

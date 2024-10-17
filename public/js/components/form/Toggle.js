@@ -1,4 +1,4 @@
-import { WebComponent } from './WebComponent.js';
+import {WebComponent} from '../WebComponent.js';
 
 /**
  * Input component
@@ -12,14 +12,16 @@ import { WebComponent } from './WebComponent.js';
  */
 export class Toggle extends WebComponent {
     static get observedAttributes() {
-        return ['placeholder', 'hasbutton', 'rounded','txtButton'];
+        return ['placeholder', 'hasbutton', 'rounded', 'txtButton'];
 
-        constructor() {
-            super();
-            this.attachShadow({ mode: 'open' });
-            this.updateRender();
-        }
     }
+
+    constructor() {
+        super();
+        this.attachShadow({mode: 'open'});
+        this.updateRender();
+    }
+
     styles() {
         const rounded = this.getAttribute('rounded') === 'true' ? '200px' : '5px';
         return `
