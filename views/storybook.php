@@ -104,9 +104,29 @@ $this->cssFile = "storybook";
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
+                
+                <label>
+                    <input type="radio" name="test">
+                    gougou
+                </label>
+                <label>
+                    <input type="radio" name="test">
+                    gougou
+                </label>
+                
             </div>
 
             <div class="flex gap-2">
+                
+                <label>
+                    <input type="checkbox" id="bla">
+                    blablabla
+                </label>
+                <label>
+                    <input type="checkbox" id="bla">
+                    blablabla
+                </label>
+                
             </div>
 
             <div class="flex gap-2">
@@ -176,6 +196,7 @@ $this->cssFile = "storybook";
             </div>
         </div>
     </section>
+</div>
 
     <section class="flex flex-col gap-4">
 
@@ -199,7 +220,7 @@ $this->cssFile = "storybook";
 
         <div class="flex gap-2">
             <x-search-page-card>
-                <img slot="image" src="/assets/images/7iles.jpeg" alt="Brehat">
+                <img slot="image" src="/assets/images/7iles.jpeg" alt="7iles">
                 <span slot="title">Excursion vers les 7 Iles</span>
                 <span slot="author">Alice Martin</span>
                 <span slot="type">Visite</span>
