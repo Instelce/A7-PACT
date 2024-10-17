@@ -74,7 +74,7 @@ $this->cssFile = "storybook";
                     <input slot="input" type="text" placeholder="Placeholder">
                 </x-input>
                 <x-input placeholder="Placeholder">
-                    <i slot="icon-right" data-lucide="search"></i>
+                    <i slot="icon-right" data-lucide="send"></i>
                     <input slot="input" type="text" placeholder="Placeholder">
                 </x-input>
             </div>
@@ -161,10 +161,10 @@ $this->cssFile = "storybook";
               <x-select>
                 <span slot="trigger">Select</span>
                 <div slot="options">
-                  <div>Option 1</div>
-                  <div>Option 2</div>
-                  <div>Option 3</div>
-                  <div>Option 4</div>
+                  <div class="option" data-value="value 1">Option 1</div>
+                  <div class="option" data-value="value 2">Option 2</div>
+                  <div class="option" data-value="value 3">Option 3</div>
+                  <div class="option" data-value="value 4">Option 4</div>
                 </div>
               </x-select>
             </div>

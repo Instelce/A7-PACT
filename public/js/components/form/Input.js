@@ -21,9 +21,9 @@ export class Input extends WebComponent {
         super.connectedCallback();
 
         let input = this.querySelector('[slot="input"]');
+        let field = this.shadow.querySelector('.input-field');
 
         // Focus input when clicking on the field
-        let field = this.shadow.querySelector('.input-field');
         field.addEventListener('click', () => {
             input.focus();
         });
@@ -37,6 +37,10 @@ export class Input extends WebComponent {
         input.addEventListener('blur', () => {
             field.classList.remove('focused');
         });
+
+        if (this.hasButton) {
+            field.classList.add('has-button')
+        }
     }
 
     disconnectedCallback() {
@@ -52,7 +56,7 @@ export class Input extends WebComponent {
                     align-items: center;
                     border: 1px solid #ccc;
                     border-radius: ${rounded};
-                    padding: .5rem;
+                    padding: .8rem 1rem;
                     color: #838383;
                     
                     transition: box-shadow .2s;
@@ -62,24 +66,33 @@ export class Input extends WebComponent {
                     box-shadow: 0 0 0 1px rgb(var(--color-gray-2));
                 }
                 
+                .input-field.has-button {
+                    padding: .3rem .3rem;
+                    padding-left: 1rem;
+                }
+                
+                .input:has(.icon-left) {
+                    padding-left: .5rem;
+                }
+                
+                .input:has(.icon-right) {
+                    padding-right: .5rem;
+                }
+                
                 ::slotted([slot="input"]) {
                     height: 100%;
                     width: 100%;
                     border: none;
                     outline: none;
-                    padding: .5rem;
                     
                     font-family: inherit;
                     font-size: inherit;
                 }
                 
-                .icon-left {
-                  padding-left: .5rem;
+                .icon-left, .icon-right {
+                  color: rgb(var(--color-black));
                 }
-                .icon-right {
-                  padding-right: .5rem;
-                }
-                
+
                 ::slotted([slot="helper"]) {
                   color: rgb(var(--color-gray-4));
                 }
@@ -139,5 +152,9 @@ export class Input extends WebComponent {
 
     get hasIconRight() {
         return this.querySelector(`*[slot='icon-right']`) !== null;
+    }
+
+    get hasButton() {
+        return this.querySelector(`*[slot='button']`) !== null;
     }
 }

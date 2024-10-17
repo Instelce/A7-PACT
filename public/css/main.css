@@ -4,6 +4,9 @@
 @import "fonts/satoshi.css";
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
+@import "form/button.css";
+@import "form.css";
+
 /* Variables */
 :root {
     --color-blue-primary: 0, 87, 255;
@@ -119,7 +122,14 @@ a {
     padding: 0 20%;
 }
 
-/* Tailwind */
+.hidden {
+    display: none;
+}
+
+.opacity-0 {
+    opacity: 0;
+}
+
 /* -------------------------------------------------------------------------- */
 /* LAYOUTS                                                                    */
 /* -------------------------------------------------------------------------- */
