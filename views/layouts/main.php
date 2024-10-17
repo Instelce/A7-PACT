@@ -56,52 +56,55 @@ use app\core\Application;
         <?php endif; ?>
         {{content}}
     </div>
-    <footer>
-        <div id="parts">
-            <div id="about">
-                <p>À propos</p>
-                <a href="">À propos de PACT</a>
-                <a href="">Règlements</a>
-            </div>
-            <div id="explore">
-                <p>Explorez</p>
-                <a href="">Écrire un avis</a>
-                <a href="">S'inscrire</a>
-            </div>
-            <div id="solutions">
-                <p>Utilisez nos solutions</p>
-                <a href="">Professionnel</a>
-            </div>
-        </div>
-        <nav>
-            <div id="conditions">
-                <img id="logo" src="/assets/images/logoSmallVisitor.svg" alt="Logo PACT">
-                <div>
-                    <p>@ 2024 PACT Tous droits réservés.</p>
-                    <div id="links">
-                        <a class="blueLink" href="">Conditions d'utilisation</a>
-                        <a class="blueLink" href="">Confidentialité et utilisation des cookies</a>
-                        <a class="blueLink" href="">Plan du site</a>
-                        <a class="blueLink" href="">Contactez-nous</a>
-                    </div>
+    <div id="containFoot">
+        <footer>
+            <div id="parts">
+                <div id="about">
+                    <p>À propos</p>
+                    <a href="">À propos de PACT</a>
+                    <a href="">Règlements</a>
+                </div>
+                <div id="explore">
+                    <p>Explorez</p>
+                    <a href="">Écrire un avis</a>
+                    <a href="">S'inscrire</a>
+                </div>
+                <div id="solutions">
+                    <p>Utilisez nos solutions</p>
+                    <a href="">Professionnel</a>
                 </div>
             </div>
-            <div id="networks">
-                <a href="https://www.instagram.com/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
-                <a href="https://www.facebook.com/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <nav>
+                <div id="conditions">
+                    <img id="logo" src="/assets/images/logoSmallVisitor.svg" alt="Logo PACT">
+                    <div>
+                        <p>@ 2024 PACT Tous droits réservés.</p>
+                        <div id="links">
+                            <a class="blueLink" href="">Conditions d'utilisation</a>
+                            <a class="blueLink" href="">Confidentialité et utilisation des cookies</a>
+                            <a class="blueLink" href="">Plan du site</a>
+                            <a class="blueLink" href="">Contactez-nous</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="networks">
+                    <a href="https://www.instagram.com/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+                    <a href="https://www.facebook.com/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+                </div>
+            </nav>
+            <div id="trip">
+                <img id="tripenarvor" src="/assets/images/TripEnArvorLogo.svg" alt="Logo TripEnArvor">
+                <p>Plateforme proposée par <b>TripEnArvor</b></p>
             </div>
-        </nav>
-        <div id="trip">
-            <img id="tripenarvor" src="/assets/images/TripEnArvorLogo.svg" alt="Logo TripEnArvor">
-            <p>Plateforme proposée par <b>TripEnArvor</b></p>
-        </div>
-        <div id="finance">
-            <p>Projet financé par la</p>
-            <a href="">Région Bretagne</a>
-            <p>et par le</p>
-            <a href="">Conseil Général des Côtes d’Armor.</a>
-        </div>
-    </footer>
+            <div id="finance">
+                <p>Projet financé par la</p>
+                <a href="">Région Bretagne</a>
+                <p>et par le</p>
+                <a href="">Conseil Général des Côtes d’Armor.</a>
+            </div>
+        </footer>
+    </div>
+
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 

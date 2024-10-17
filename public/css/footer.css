@@ -4,7 +4,7 @@ footer {
     display: flex;
     flex-direction: column;
     background-color: rgb(var(--color-footer),0.2);
-    padding: 25px 300px;
+    padding: 25px 25%;
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
@@ -108,52 +108,11 @@ nav {
     color: rgb(var(--color-black));
 }
 
-.blueLink {
-    color: rgb(var(--color-blue-primary));
-    position: relative;
+@media (max-width: 1200px) {
+    footer{
+        padding: 25px 15%;
+    }
 }
-
-.blueLink::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 1px;
-    bottom: -2px;
-    left: 0;
-    background-color: rgb(var(--color-blue-primary));
-    transform: scaleX(0);
-    transform-origin: bottom right;
-    transition: transform 0.25s ease-out;
-}
-
-.blueLink:hover::after {
-    transform: scaleX(1);
-    transform-origin: bottom left;
-}
-
-.purpleLink {
-    color: rgb(var(--color-purple-primary));
-    position: relative;
-}
-
-.purpleLink::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 1px;
-    bottom: -2px;
-    left: 0;
-    background-color: rgb(var(--color-purple-primary));
-    transform: scaleX(0);
-    transform-origin: bottom right;
-    transition: transform 0.25s ease-out;
-}
-
-.purpleLink:hover::after {
-    transform: scaleX(1);
-    transform-origin: bottom left;
-}
-
 
 @media (max-width: 768px) {
     footer {
