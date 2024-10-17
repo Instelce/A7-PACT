@@ -4,14 +4,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="../../public/css/main.css" rel="stylesheet">
+    <title><?php echo $this->title ?></title>
+    <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
 
     <div>
         {{content}}
     </div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <script type="module" src="/js/main.js"></script>
 
 </body>
 </html>

@@ -11,17 +11,25 @@ export class Select extends WebComponent {
 
         this.trigger = this.shadow.querySelector('.trigger');
         this.chevron = this.shadow.querySelector('.chevron');
-        this.options = this.querySelectorAll('[slot="options"] > *');
+        this.optionsContainer = this.querySelector('[slot="options"]');
+        this.optionsButton = this.querySelectorAll('[slot="options"] > *');
         this.triggerValue = this.querySelector('[slot="trigger"]');
 
         // Open the options when the trigger is clicked
         this.trigger.addEventListener('click', () => {
-            this.querySelector('[slot="options"]').classList.toggle('open');
+            this.optionsContainer.classList.toggle('open');
             this.chevron.classList.toggle('rotate');
         });
 
-        // Set the selected option at the beginning
-        this.options.forEach(option => {
+        // Set the role of the options container
+        this.optionsContainer.setAttribute('role', 'listbox');
+        this.trigger.setAttribute('aria-haspopup', 'listbox');
+
+        this.optionsButton.forEach(option => {
+            // Set role
+            option.setAttribute('role', 'option');
+
+            // Set the selected option at the beginning
             if (option.getAttribute('data-value') === this.input.value) {
                 this.triggerValue.innerHTML = option.textContent;
                 option.classList.add('selected');
@@ -29,7 +37,7 @@ export class Select extends WebComponent {
         });
 
         // Add the check icon to the options
-        this.options.forEach(option => {
+        this.optionsButton.forEach(option => {
             let check = document.createElement('div');
             check.classList.add('check');
             check.classList.add('opacity-0');
@@ -38,7 +46,7 @@ export class Select extends WebComponent {
         })
 
         // Set the selected option when clicked
-        this.options.forEach(option => {
+        this.optionsButton.forEach(option => {
             let check = option.querySelector('.check');
             option.addEventListener('click', () => {
                 if (!option.classList.contains('selected')) {
@@ -47,7 +55,7 @@ export class Select extends WebComponent {
                     this.querySelector('[slot="options"]').classList.remove('open');
                     this.chevron.classList.remove('rotate');
 
-                    this.options.forEach(option => {
+                    this.optionsButton.forEach(option => {
                         let check = option.querySelector('.check');
                         check.classList.add('opacity-0');
                         option.classList.remove('selected');
@@ -59,6 +67,13 @@ export class Select extends WebComponent {
             })
         })
 
+        // Click outside the select to close the options
+        document.addEventListener('click', (event) => {
+            if (!this.contains(event.target)) {
+                this.optionsContainer.classList.remove('open');
+                this.chevron.classList.remove('rotate');
+            }
+        })
     }
 
     connectedCallback() {

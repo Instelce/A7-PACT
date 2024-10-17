@@ -9,6 +9,7 @@
 
 @import "form/button.css";
 @import "form.css";
+@import "loader.css";
 
 /* Variables */
 :root {

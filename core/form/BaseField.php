@@ -19,18 +19,8 @@ abstract class BaseField
 
     public function __toString()
     {
-        return sprintf('
-            <div class="mb-3">
-                <label class="form-label">%s</label>
-                %s
-                <div class="invalid-feedback">
-                    %s
-                </div>
-            </div>
-        ',
-            $this->model->getLabel($this->attr) ?? ucfirst($this->attr),
+        return sprintf('%s',
             $this->renderInput(),
-            $this->model->getFirstError($this->attr)
         );
     }
 }

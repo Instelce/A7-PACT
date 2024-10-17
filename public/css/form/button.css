@@ -106,11 +106,10 @@ Default size is medium.
 }
 
 .button.only-icon.sm {
-    width: 2.5rem;
     height: 2.5rem;
 }
 
-.button.only-icon.md {
+.button.only-icon {
     width: 3rem;
     height: 3rem;
 }
@@ -120,7 +119,7 @@ Default size is medium.
     height: 3.5rem;
 }
 
-::slotted(svg) {
+.button svg {
     width: 1.2rem;
     height: 1.2rem;
 }
