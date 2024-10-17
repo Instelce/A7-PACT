@@ -15,13 +15,10 @@ export class Slider extends WebComponent {
         return `
         <style>
             .slider-container {
-                display: flex;
-                flex-direction: column;
-                width: 300px;
-                margin: 10px;
                 position: relative;
+                width: 300px;
+                margin: 20px;
             }
-
             .labels {
                 display: flex;
                 justify-content: space-between;
@@ -29,22 +26,15 @@ export class Slider extends WebComponent {
                 font-size: 14px;
                 margin-bottom: 5px;
             }
-
-            .value-label {
-                display: flex;
-                justify-content: end;
-                width: 80px;
-                gap: 2px;
-            }
-
             .slider {
                 -webkit-appearance: none;
                 width: 100%;
                 height: 8px;
                 background: transparent;
-                position: relative;
-                cursor: pointer;
+                position: absolute;
+                top: 10px;
                 z-index: 3; /* To ensure it is on top */
+                cursor: pointer;
             }
 
             .slider::-webkit-slider-thumb {
@@ -54,7 +44,6 @@ export class Slider extends WebComponent {
                 border-radius: 50%;
                 background: ${this.color};
                 cursor: pointer;
-                z-index: 5; /* Ensure it is on top */
             }
 
             .slider::-moz-range-thumb {
@@ -63,7 +52,6 @@ export class Slider extends WebComponent {
                 border-radius: 50%;
                 background: ${this.color};
                 cursor: pointer;
-                z-index: 5; /* Ensure it is on top */
             }
 
             .range {
@@ -71,11 +59,26 @@ export class Slider extends WebComponent {
                 height: 8px;
                 background-color: ${this.color};
                 border-radius: 5px;
-                top: 0;
+                top: 10px;
                 z-index: 2;
             }
 
-            
+            .thumb {
+                position: absolute;
+                top: 0;
+                height: 20px;
+                width: 20px;
+                border-radius: 50%;
+                background-color: white;
+                border: 2px solid ${this.color};
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            }
+
+            .value-label {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 30px;
+            }
         </style>
         `;
     }
