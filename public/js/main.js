@@ -2,6 +2,7 @@ import {Button} from "./components/Button.js";
 import {Input} from "./components/Input.js";
 import {CheckBox} from "./components/checkbox.js";
 import {Navbar} from "./components/Navbar.js";
+import {Footer} from "./components/Footer.js";
 
 lucide.createIcons(
     {
@@ -20,5 +21,7 @@ customElements.define('x-checkbox', CheckBox);
 customElements.define('x-input', Input);
 customElements.define('x-button', Button);
 customElements.define('x-navbar', Navbar);
+customElements.define('x-footer', Footer);
+
 
 
