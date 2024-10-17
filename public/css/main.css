@@ -153,6 +153,11 @@ h3{
 .opacity-0 {
     opacity: 0;
 }
+#containFoot{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
 
 /* -------------------------------------------------------------------------- */
 /* LAYOUTS                                                                    */

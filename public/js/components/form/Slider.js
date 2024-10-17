@@ -1,286 +1,225 @@
 import { WebComponent } from "../WebComponent.js";
 
 /**
- * Button component
+ * Slider component
  *
- * @arg {string} color - Color of the button. Default is blue
+ * @extends {WebComponent}
  */
 export class Slider extends WebComponent {
-    static get observedAttributes() {
-        return ["label", "min", "max", "type"];
-    }
-
     constructor() {
         super();
-
-        this.updateRender();
+        this.draggingHandle = null;
     }
 
     connectedCallback() {
         super.connectedCallback();
+        this.renderComponent();
+        this.addRangeEventListeners();
+    }
+    disconnectedCallback() {
     }
 
-    disconnectedCallback() {}
-
     attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue !== newValue) {
-            this.updateRender();
-        }
     }
 
     styles() {
         return `
-            <style>
-            .container {
-            width: 200px;
-            margin: 0 auto;
-
-
-
-
-
-    }
-            [slider] {
-            position: relative;
-            height: 14px;
-            border-radius: 10px;
-            text-align: left;
-            margin: 45px 0 10px 0;
+        <style>
+            .slider-container {
+                display: flex;
+                flex-direction: column;
+                width: 150px;
+                margin: 50px auto;
+                position: relative;
             }
-
-            [slider] > div {
-            position: absolute;
-            left: 13px;
-            right: 15px;
-            height: 14px;
+            .labels {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 14px;
+                margin-bottom: 10px;
             }
-
-            [slider] > div > [inverse-left] {
-            position: absolute;
-            left: 0;
-            height: 14px;
-            border-radius: 10px;
-            background-color: #CCC;
-            margin: 0 7px;
+            .range-slider {
+                position: relative;
+                display: flex;
+                align-items: center;
+                width: 100%;
+                height: 8px;
+                background-color: #E1E1E1;
+                border-radius: 100px;
             }
-
-            [slider] > div > [inverse-right] {
-            position: absolute;
-            right: 0;
-            height: 14px;
-            border-radius: 10px;
-            background-color: #CCC;
-            margin: 0 7px;
+            .range-slider-val-range {
+                position: absolute;
+                height: 100%;
+                background-color: ${this.color};
+                border-radius: 6px;
             }
-
-            [slider] > div > [range] {
-            position: absolute;
-            left: 0;
-            height: 14px;
-            border-radius: 14px;
-            background-color: #1ABC9C;
+            .range-slider-handle {
+                position: absolute;
+                width: 15px;
+                height: 15px;
+                background-color: #fff;
+                border: 3px solid ${this.color};
+                box-sizing: border-box;
+                border-radius: 50%;
+                cursor: pointer;
+                top: -4px;
+                margin-left: -7px;
             }
-
-            [slider] > div > [thumb] {
-            position: absolute;
-            top: -7px;
-            z-index: 2;
-            height: 28px;
-            width: 28px;
-            text-align: left;
-            margin-left: -11px;
-            cursor: pointer;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-            background-color: #FFF;
-            border-radius: 50%;
-            outline: none;
-            }
-
-            [slider] > input[type=range] {
-            position: absolute;
-            pointer-events: none;
-            -webkit-appearance: none;
-            z-index: 3;
-            height: 14px;
-            top: -2px;
-            width: 100%;
-            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-            filter: alpha(opacity=0);
-            -moz-opacity: 0;
-            -khtml-opacity: 0;
-            opacity: 0;
-            }
-
-            div[slider] > input[type=range]::-ms-track {
-            -webkit-appearance: none;
-            background: transparent;
-            color: transparent;
-            }
-
-            div[slider] > input[type=range]::-moz-range-track {
-            -moz-appearance: none;
-            background: transparent;
-            color: transparent;
-            }
-
-            div[slider] > input[type=range]:focus::-webkit-slider-runnable-track {
-            background: transparent;
-            border: transparent;
-            }
-
-            div[slider] > input[type=range]:focus {
-            outline: none;
-            }
-
-            div[slider] > input[type=range]::-ms-thumb {
-            pointer-events: all;
-            width: 28px;
-            height: 28px;
-            border-radius: 0px;
-            border: 0 none;
-            background: red;
-            }
-
-            div[slider] > input[type=range]::-moz-range-thumb {
-            pointer-events: all;
-            width: 28px;
-            height: 28px;
-            border-radius: 0px;
-            border: 0 none;
-            background: red;
-            }
-
-            div[slider] > input[type=range]::-webkit-slider-thumb {
-            pointer-events: all;
-            width: 28px;
-            height: 28px;
-            border-radius: 0px;
-            border: 0 none;
-            background: red;
-            -webkit-appearance: none;
-            }
-
-            div[slider] > input[type=range]::-ms-fill-lower {
-            background: transparent;
-            border: 0 none;
-            }
-
-            div[slider] > input[type=range]::-ms-fill-upper {
-            background: transparent;
-            border: 0 none;
-            }
-
-            div[slider] > input[type=range]::-ms-tooltip {
-            display: none;
-            }
-
-            [slider] > div > [sign] {
-            opacity: 0;
-            position: absolute;
-            margin-left: -11px;
-            top: -39px;
-            z-index: 3;
-            background-color: #1ABC9C;
-            color: #fff;
-            width: 28px;
-            height: 28px;
-            border-radius: 28px;
-            -webkit-border-radius: 28px;
-            align-items: center;
-            -webkit-justify-content: center;
-            justify-content: center;
-            text-align: center;
-            }
-
-            [slider] > div > [sign]:after {
-            position: absolute;
-            content: '';
-            left: 0;
-            border-radius: 16px;
-            top: 19px;
-            border-left: 14px solid transparent;
-            border-right: 14px solid transparent;
-            border-top-width: 16px;
-            border-top-style: solid;
-            border-top-color: #1ABC9C;
-            }
-
-            [slider] > div > [sign] > span {
-            font-size: 12px;
-            font-weight: 700;
-            line-height: 28px;
-            }
-
-            [slider]:hover > div > [sign] {
-            opacity: 1;
-            }
-            </style>
+        </style>
         `;
     }
 
     render() {
-        if (this.getAttribute("type") === "minmax") {
-            return `
-            <div class="container">
-            <div slider id="slider-distance">
-                <div>
-                    <div inverse-left style="width:70%;"></div>
-                    <div inverse-right style="width:70%;"></div>
-                    <div range style="left:30%;right:40%;"></div>
-                    <span thumb style="left:30%;"></span>
-                    <span thumb style="left:60%;"></span>
-                    <div sign style="left:30%;">
-                        <span id="value">30</span>
-                    </div>
-                    <div sign style="left:60%;">
-                        <span id="value">60</span>
-                    </div>
-                </div>
-                <input type="range" tabindex="0" value="30" max="100" min="0" step="1" oninput="
-                    this.value=Math.min(this.value,this.parentNode.childNodes[5].value-1);
-                    var value=(100/(parseInt(this.max)-parseInt(this.min)))*parseInt(this.value)-(100/(parseInt(this.max)-parseInt(this.min)))*parseInt(this.min);
-                    var children = this.parentNode.childNodes[1].childNodes;
-                    children[1].style.width=value+'%';
-                    children[5].style.left=value+'%';
-                    children[7].style.left=value+'%';
-                    children[11].style.left=value+'%';
-                    children[11].childNodes[1].innerHTML=this.value;" />
-                <input type="range" tabindex="0" value="60" max="100" min="0" step="1" oninput="
-                    this.value=Math.max(this.value,this.parentNode.childNodes[3].value-(-1));
-                    var value=(100/(parseInt(this.max)-parseInt(this.min)))*parseInt(this.value)-(100/(parseInt(this.max)-parseInt(this.min)))*parseInt(this.min);
-                    var children = this.parentNode.childNodes[1].childNodes;
-                    children[3].style.width=(100-value)+'%';
-                    children[5].style.right=(100-value)+'%';
-                    children[9].style.left=value+'%';
-                    children[13].style.left=value+'%';
-                    children[13].childNodes[1].innerHTML=this.value;" />
-            </div>
-        </div>
-            `;
-        } else {
-            return `
-            <div class="container">
+        return `
+            <div class="slider-container">
                 <div class="labels">
-                    <span>${this.getAttribute("label")}</span>
-                    <span>${document.getElementById("")}</span>
+                    <label>${this.label}</label>
+                    <div class="value-label">
+                        <span id="minValue">${this.min}</span>
+                        <span> - </span>
+                        <span id="maxValue">${this.max}</span>
+                    </div>
                 </div>
-                
-                <div>
-                    <div class="range">
-                    <input type="range">
-                    
+                <div id="RangeSlider" class="range-slider">
+                    <div class="range-slider-val-range"></div>
 
+                    <span class="range-slider-handle range-slider-handle-left" tabindex="0"></span>
+                    <span class="range-slider-handle range-slider-handle-right" tabindex="0"></span>
                 </div>
-
+                <input type="range" class="range-slider-input-left" min="${this.min}" max="${this.max}" value="${this.min}" style="display: none;">
+                <input type="range" class="range-slider-input-right" min="${this.min}" max="${this.max}" value="${this.max}" style="display: none;">
             </div>
-            `;
-        }
+        `;
     }
 
-    updateRender() {
-        this.shadowRoot.innerHTML = this.styles() + this.render();
+    renderComponent() {
+        this.shadow.innerHTML = this.styles() + this.render();
+        this.initializeSlider();
     }
+
     // ---------------------------------------------------------------------- //
     // Other methods
     // ---------------------------------------------------------------------- //
+
+    initializeSlider() {
+        const rangeSlider = this.shadow.querySelector('#RangeSlider');
+        const rangeSliderValRange = rangeSlider.querySelector('.range-slider-val-range');
+        const rangeSliderHandleLeft = rangeSlider.querySelector('.range-slider-handle-left');
+        const rangeSliderHandleRight = rangeSlider.querySelector('.range-slider-handle-right');
+
+        const minValue = this.min;
+        const maxValue = this.max;
+
+        const leftPosition = ((minValue - this.min) / (this.max - this.min)) * 100;
+        const rightPosition = ((maxValue - this.min) / (this.max - this.min)) * 100;
+
+        rangeSliderHandleLeft.style.left = `${leftPosition}%`;
+        rangeSliderHandleRight.style.left = `${rightPosition}%`;
+        rangeSliderValRange.style.left = `${leftPosition}%`;
+        rangeSliderValRange.style.width = `${rightPosition - leftPosition}%`;
+
+        this.updateDisplayedValues(minValue, maxValue);
+    }
+
+    updateDisplayedValues(minValue, maxValue) {
+        const minValueLabel = this.shadow.querySelector('#minValue');
+        const maxValueLabel = this.shadow.querySelector('#maxValue');
+        minValueLabel.innerText = minValue;
+        maxValueLabel.innerText = maxValue;
+    }
+
+    addRangeEventListeners() {
+        const rangeSlider = this.shadow.querySelector('#RangeSlider');
+        const rangeSliderHandleLeft = rangeSlider.querySelector('.range-slider-handle-left');
+        const rangeSliderHandleRight = rangeSlider.querySelector('.range-slider-handle-right');
+
+        rangeSliderHandleLeft.addEventListener('mousedown', (e) => this.handleMouseDown(e, 'left'));
+        rangeSliderHandleRight.addEventListener('mousedown', (e) => this.handleMouseDown(e, 'right'));
+
+        document.addEventListener('mouseup', () => this.stopDragging());
+    }
+
+    handleMouseDown(e, handle) {
+        e.preventDefault();
+        this.draggingHandle = handle;
+        document.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    }
+
+    handleMouseMove(e) {
+        const rangeSlider = this.shadow.querySelector('#RangeSlider');
+        const rangeSliderValRange = rangeSlider.querySelector('.range-slider-val-range');
+        const rangeSliderHandleLeft = rangeSlider.querySelector('.range-slider-handle-left');
+        const rangeSliderHandleRight = rangeSlider.querySelector('.range-slider-handle-right');
+        const rangeSliderInputLeft = this.shadow.querySelector('.range-slider-input-left');
+        const rangeSliderInputRight = this.shadow.querySelector('.range-slider-input-right');
+
+        const rangeSliderRect = rangeSlider.getBoundingClientRect();
+        const minValue = parseInt(rangeSliderInputLeft.value);
+        const maxValue = parseInt(rangeSliderInputRight.value);
+
+        let newValue = ((e.clientX - rangeSliderRect.left) / rangeSliderRect.width) * 100;
+        newValue = Math.max(0, Math.min(newValue, 100));
+
+        const scaledValue = Math.round(this.min + ((newValue / 100) * (this.max - this.min)));
+
+        if (this.draggingHandle === 'left') {
+            if (scaledValue < maxValue) {
+                const leftPosition = ((scaledValue - this.min) / (this.max - this.min)) * 100;
+                rangeSliderHandleLeft.style.left = `${leftPosition}%`;
+                rangeSliderValRange.style.left = `${leftPosition}%`;
+                rangeSliderValRange.style.width = `${((maxValue - scaledValue) / (this.max - this.min)) * 100}%`;
+                rangeSliderInputLeft.value = scaledValue; 
+                this.updateDisplayedValues(scaledValue, maxValue);
+            }
+        } else if (this.draggingHandle === 'right') {
+            if (scaledValue > minValue) {
+                const rightPosition = ((scaledValue - this.min) / (this.max - this.min)) * 100;
+                rangeSliderHandleRight.style.left = `${rightPosition}%`;
+                rangeSliderValRange.style.width = `${((scaledValue - minValue) / (this.max - this.min)) * 100}%`;
+                rangeSliderInputRight.value = scaledValue; 
+                this.updateDisplayedValues(minValue, scaledValue);
+            }
+        }
+
+        
+        const currentMaxPosition = parseFloat(rangeSliderHandleRight.style.left);
+        const currentMinPosition = parseFloat(rangeSliderHandleLeft.style.left);
+        rangeSliderValRange.style.width = `${currentMaxPosition - currentMinPosition}%`;
+    }
+
+    stopDragging() {
+        document.removeEventListener('mousemove', this.handleMouseMove.bind(this));
+        this.draggingHandle = null;
+    }
+    // ---------------------------------------------------------------------- //
+    // Getter and setter
+    // ---------------------------------------------------------------------- //
+    get label() {
+        return this.getAttribute("label") || "Label";
+    }
+    set label(value) {
+        this.setAttribute("label", value);
+    }
+
+    get min() {
+        return parseInt(this.getAttribute("min"));
+    }
+    set min(value) {
+        this.setAttribute("min", value);
+    }
+
+    get max() {
+        return parseInt(this.getAttribute("max"));
+    }
+    set max(value) {
+        this.setAttribute("max", value);
+    }
+
+    get color() {
+        return this.getAttribute("color");
+    }
+    set color(value) {
+        this.setAttribute("color", value);
+    }
 }
