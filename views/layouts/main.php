@@ -30,6 +30,10 @@ use app\core\Application;
         <?php endif; ?>
         {{content}}
     </div>
+    <div id="footer_bot">
+        <x-footer></x-footer>
+    </div>
+
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
     <script type="module" src="/js/main.js"></script>
