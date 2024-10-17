@@ -15,17 +15,17 @@ export class Navbar extends WebComponent {
         let menu = document.getElementById('menu');
         let closeMenu = document.getElementById('close-menu');
 
-        navIcon.addEventListener('click', function() {
-            navIcon.classList.toggle('open');
-            menu.classList.toggle('menu-hidden');
-            menu.classList.toggle('menu-visible');
-        });
-
-        closeMenu.addEventListener('click', function() {
-            menu.classList.remove('menu-visible');
-            menu.classList.add('menu-hidden');
-            navIcon.classList.remove('open');
-        });
+        // navIcon.addEventListener('click', function() {
+        //     navIcon.classList.toggle('open');
+        //     menu.classList.toggle('menu-hidden');
+        //     menu.classList.toggle('menu-visible');
+        // });
+        //
+        // closeMenu.addEventListener('click', function() {
+        //     menu.classList.remove('menu-visible');
+        //     menu.classList.add('menu-hidden');
+        //     navIcon.classList.remove('open');
+        // });
     }
 
     disconnectedCallback() {

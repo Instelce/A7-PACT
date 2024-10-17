@@ -31,7 +31,8 @@ $config = [
 $app = new Application(dirname(__DIR__), $config);
 
 $app->router->get('/', [SiteController::class, 'home']);
-$app->router->get('/storybook', 'storybook');
+$app->router->post('/', [SiteController::class, 'home']);
+$app->router->get('/storybook', [SiteController::class, 'storybook']);
 
 // Auth routes
 $app->router->get('/login', [AuthController::class, 'login']);

@@ -1,6 +1,6 @@
-import {WebComponent} from "./WebComponent.js";
+import {WebComponent} from "../WebComponent.js";
 
-export class CheckBox extends WebComponent {
+export class Checkbox extends WebComponent {
 
     static get observedAttributes() { return [] }
 
