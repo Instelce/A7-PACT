@@ -1,4 +1,5 @@
 @import "reset.css";
+@import "navbar.css";
 
 /* Import fonts */
 @import "fonts/satoshi.css";
@@ -121,7 +122,7 @@ a {
     padding: 0 20%;
 }
 
-#footer_bot{
+#footer_bot {
     position: relative;
     bottom: 0;
 }
