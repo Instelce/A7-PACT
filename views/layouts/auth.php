@@ -5,16 +5,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo $this->title ?></title>
-    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/dist/output.css" rel="stylesheet">
 </head>
 <body>
 
-    <div>
+    <main class="main-container">
         {{content}}
-    </div>
+    </main>
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-
     <script type="module" src="/js/main.js"></script>
 
 </body>

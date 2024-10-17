@@ -1,0 +1,48 @@
+
+
+/* Variables */
+:root {
+    --color-blue-primary: 0, 87, 255;
+    --color-blue-secondary: 0, 162, 255;
+    --color-blue-tertiary: 0, 212, 249;
+    --color-blue-light: 230, 239, 255;
+    --color-orange-primary: 255, 168, 0;
+    --color-orange-secondary: 255, 193, 78;
+    --color-orange-tertiary: 255, 215, 132;
+    --color-purple-primary: 201, 51, 231;
+    --color-purple-light: 250, 235, 253;
+    --color-footer: 255, 216, 132;
+
+    --color-danger: 255, 59, 48;
+    --color-warning: 255, 204, 0;
+    --color-success: 52, 199, 89;
+
+    --color-white: 255, 255, 255;
+    --color-gray-1: 225, 225, 225;
+    --color-gray-2: 187, 187, 187;
+    --color-gray-3: 131, 131, 131;
+    --color-gray-4: 82, 82, 82;
+    --color-black: 31, 31, 31;
+
+    --font-title: 'Satoshi', sans-serif;
+    --font-text: 'Lato', sans-serif;
+    --font-logo: 'Agbalumo', serif;
+
+    /* Type scale, u for up, d for down  */
+    --typescale-u6: 3.000rem;
+    --typescale-u5: 2.500rem;
+    --typescale-u4: 2.062rem;
+    --typescale-u3: 1.750rem;
+    --typescale-u2: 1.438rem;
+    --typescale-u1: 1.188rem;
+    --typescale-base: 1rem;
+    --typescale-d1: 0.812rem;
+    --typescale-d2: 0.688rem;
+
+    --radius-rounded: 100rem;
+    --radius-small: 5px;
+
+    /* Viewports */
+    --viewport-lg: 1440px;
+    --viewport-sm: 926px;
+}

@@ -44,6 +44,8 @@ if ($argc >= 2) {
         } else {
             echo "Invalid argument" . PHP_EOL;
         }
+    } else if ($argv[1] === "tw") {
+        shell_exec("sh scripts/tw");
     } else if ($argv[1] === "sf") {
         echo shell_exec("sh scripts/sync");
     } else {

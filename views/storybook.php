@@ -5,7 +5,7 @@ $this->title = "Storybook";
 $this->cssFile = "storybook";
 ?>
 
-<div class="container">
+<div class="main-container">
     <header>
         <h1>Storybook</h1>
         <p>Documentation of all our components.</p>

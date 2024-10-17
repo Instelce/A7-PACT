@@ -16,7 +16,6 @@ lucide.createIcons({
 
 
 customElements.define("x-input", Input);
-customElements.define("x-navbar", Navbar);
 customElements.define("x-slider", Slider);
 customElements.define("x-select", Select);
 customElements.define("x-search-page-card", SearchPageCard);
@@ -27,10 +26,12 @@ customElements.define("x-search-page-card", SearchPageCard);
 
 
 // Loader
-document.addEventListener("DOMContentLoaded", () => {
-    const loader = document.querySelector(".loader");
-    loader.classList.add("hidden");
-});
+const loader = document.querySelector(".loader");
+if (loader) {
+    document.addEventListener("DOMContentLoaded", () => {
+        loader.classList.add("hidden");
+    });
+}
 
 
 // Navbar
@@ -38,14 +39,18 @@ let navIcon = document.getElementById('nav-icon3');
 let menu = document.getElementById('menu');
 let closeMenu = document.getElementById('close-menu');
 
-navIcon.addEventListener('click', function () {
-    navIcon.classList.toggle('open');
-    menu.classList.toggle('menu-hidden');
-    menu.classList.toggle('menu-visible');
-});
+if (navIcon) {
+    navIcon.addEventListener('click', function () {
+        navIcon.classList.toggle('open');
+        menu.classList.toggle('menu-hidden');
+        menu.classList.toggle('menu-visible');
+    });
+}
 
-closeMenu.addEventListener('click', function () {
-    menu.classList.remove('menu-visible');
-    menu.classList.add('menu-hidden');
-    navIcon.classList.remove('open');
-});
+if (closeMenu) {
+    closeMenu.addEventListener('click', function () {
+        menu.classList.remove('menu-visible');
+        menu.classList.add('menu-hidden');
+        navIcon.classList.remove('open');
+    });
+}

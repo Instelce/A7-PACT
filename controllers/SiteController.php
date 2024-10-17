@@ -19,10 +19,6 @@ class SiteController extends Controller
         if ($request->isPost()) {
             $data = $request->getBody();
 
-            echo "<pre>";
-            var_dump($data);
-            echo "</pre>";
-
             $params = [
                 "name" => $data['name'],
                 "value" => $data['value']

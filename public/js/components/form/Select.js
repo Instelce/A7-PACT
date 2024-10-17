@@ -80,12 +80,6 @@ export class Select extends WebComponent {
         super.connectedCallback();
     }
 
-    disconnectedCallback() {
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-    }
-
     styles() {
         return `
         <style>

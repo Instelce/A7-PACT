@@ -124,10 +124,6 @@
     cursor: pointer;
 }
 
-x-button {
-    display: none;
-}
-
 .row {
     display: flex;
     justify-content: space-around;

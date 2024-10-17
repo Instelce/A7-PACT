@@ -107,6 +107,7 @@ export class Input extends WebComponent {
                     
                     font-family: inherit;
                     font-size: inherit;
+                    color: black;
                 }
                 
                 .icon-left, .icon-right {

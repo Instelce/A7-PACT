@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ "$1" = "-m" ]; then
+    tailwindcss -i public/css/main.css -o public/css/output.css --watch --minify
+else
+    tailwindcss -i public/css/main.css -o public/css/output.css --watch
+fi
