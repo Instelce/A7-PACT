@@ -11,28 +11,28 @@ export class Navbar extends WebComponent {
     connectedCallback() {
         super.connectedCallback();
 
-        let navIcon = document.getElementById('nav-icon3');
-        let menu = document.getElementById('menu');
-        let closeMenu = document.getElementById('close-menu');
+        let navIcon = this.shadow.getElementById('nav-icon3');
+        let menu = this.shadow.getElementById('menu');
+        let closeMenu = this.shadow.getElementById('close-menu');
 
-        // navIcon.addEventListener('click', function() {
-        //     navIcon.classList.toggle('open');
-        //     menu.classList.toggle('menu-hidden');
-        //     menu.classList.toggle('menu-visible');
-        // });
-        //
-        // closeMenu.addEventListener('click', function() {
-        //     menu.classList.remove('menu-visible');
-        //     menu.classList.add('menu-hidden');
-        //     navIcon.classList.remove('open');
-        // });
+        navIcon.addEventListener('click', function () {
+            navIcon.classList.toggle('open');
+            menu.classList.toggle('menu-hidden');
+            menu.classList.toggle('menu-visible');
+        });
+
+        closeMenu.addEventListener('click', function () {
+            menu.classList.remove('menu-visible');
+            menu.classList.add('menu-hidden');
+            navIcon.classList.remove('open');
+        });
     }
 
     disconnectedCallback() {
         super.disconnectedCallback();
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {}
+    attributeChangedCallback(name, oldValue, newValue) { }
 
     styles() {
         return `
@@ -176,7 +176,7 @@ export class Navbar extends WebComponent {
                 .row{
                     display: flex;
                     justify-content: space-around;
-                    align-items: baseline;
+                    align-items: center;
                     gap: 30px;
                 }
             
@@ -218,19 +218,25 @@ export class Navbar extends WebComponent {
                 <span></span>
             </div>
             <div>
+            <a href="/">
                 <img id="logo" src="../../assets/images/logoBlue.png" alt="">
-            </div>
+            </a>
+                </div>
             <div class="row">
-                <x-button>Connexion</x-button>
+                <a href="/">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </a>
+                <a href="/login">
+                    <x-button>Connexion</x-button>
+                </a>
             </div>
         </nav>
     
         <div id="menu" class="menu-hidden">
             <ul>
-                <li><a href="#link1">Lien 1</a></li>
-                <li><a href="#link2">Lien 2</a></li>
-                <li><a href="#link3">Lien 3</a></li>
-                <li><a href="#link4">Lien 4</a></li>
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/">Rechercher</a></li>
+                <li><a href="/login">Connexion</a></li>
             </ul>
         </div>
         
