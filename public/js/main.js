@@ -7,16 +7,17 @@ import { Slider } from "./components/form/Slider.js";
 import {Select} from "./components/form/Select.js";
 
 
-// Setup lucide icons
+
 lucide.createIcons(
     {
+
         attrs:{
-            'stroke-width': 1.5,
-            'width': '24px',
-            'height': '24px',
+            'stroke-width': 1,
+            'width': '18px',
+            'height': '18px',
         }
     }
-);
+); 
 
 
 
