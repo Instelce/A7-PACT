@@ -15,6 +15,7 @@
     --color-orange-tertiary: 255, 215, 132;
     --color-purple-primary: 201, 51, 231;
     --color-purple-light: 250, 235, 253;
+    --color-footer: 255, 216, 132;
 
     --color-danger: 255, 59, 48;
     --color-warning: 255, 204, 0;
@@ -66,6 +67,52 @@ body {
 a {
     text-decoration: none;
     color: inherit;
+}
+
+.blueLink {
+    color: rgb(var(--color-blue-primary));
+    position: relative;
+}
+
+.blueLink::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: rgb(var(--color-blue-primary));
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+
+.blueLink:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+.purpleLink {
+    color: rgb(var(--color-purple-primary));
+    position: relative;
+}
+
+.purpleLink::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: rgb(var(--color-purple-primary));
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+
+.purpleLink:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
 }
 
 .container {

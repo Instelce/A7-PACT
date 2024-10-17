@@ -226,9 +226,7 @@ export class Navbar extends WebComponent {
                 <a href="/">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 </a>
-                <a href="/login">
-                    <x-button>Connexion</x-button>
-                </a>
+                <x-button href="/login">Connexion</x-button>
             </div>
         </nav>
     
