@@ -1,5 +1,6 @@
 @import "reset.css";
 @import "navbar.css";
+@import "footer.css";
 
 /* Import fonts */
 @import "fonts/satoshi.css";
@@ -120,11 +121,6 @@ a {
 .container {
     width: 100%;
     padding: 0 20%;
-}
-
-#footer_bot {
-    position: relative;
-    bottom: 0;
 }
 
 /* Tailwind */
