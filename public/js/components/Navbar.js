@@ -15,17 +15,7 @@ export class Navbar extends WebComponent {
         let menu = this.shadow.getElementById('menu');
         let closeMenu = this.shadow.getElementById('close-menu');
 
-        navIcon.addEventListener('click', function () {
-            navIcon.classList.toggle('open');
-            menu.classList.toggle('menu-hidden');
-            menu.classList.toggle('menu-visible');
-        });
 
-        closeMenu.addEventListener('click', function () {
-            menu.classList.remove('menu-visible');
-            menu.classList.add('menu-hidden');
-            navIcon.classList.remove('open');
-        });
     }
 
     disconnectedCallback() {

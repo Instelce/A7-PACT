@@ -6,7 +6,7 @@ import {useId} from "../../utils/id.js";
  *
  * @arg {string} placeholder - Placeholder text for the input field.
  * @arg {string} name - Name of the input field.
- * @arg {boolean} rounded - Toggle rounded corners for the input field.
+ * @arg {boolean} rounded - ToggleSwitch rounded corners for the input field.
  * @arg {string} value - Value of the input
  *
  * @extends {WebComponent}

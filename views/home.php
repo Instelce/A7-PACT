@@ -14,3 +14,7 @@ $this->title = "Home";
     </x-input>
     <x-button type="submit">Changer</x-button>
 </form>
+
+<div>
+    <x-tswitch>Label</x-tswitch>
+</div>
