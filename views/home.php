@@ -25,3 +25,7 @@ $this->title = "Home";
         Changer
     </button>
 </form>
+
+<div>
+    <x-tswitch>Label</x-tswitch>
+</div>
