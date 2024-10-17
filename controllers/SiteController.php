@@ -10,11 +10,18 @@ use app\models\ContactForm;
 
 class SiteController extends Controller
 {
-    public function home()
+    public function home(Request $request)
     {
         $params = [
             "name" => "Foufouille"
         ];
+        if ($request->isPost()) {
+            $data = $request->getBody();
+            $params = [
+                "name" => $data['name']
+            ];
+        }
+
         return $this->render("home", $params);
     }
 
@@ -32,5 +39,15 @@ class SiteController extends Controller
         }
 
         return $this->render("contact", ['model' => $contactForm]);
+    }
+
+    public function storybook()
+    {
+        if ($_ENV['APP_ENVIRONMENT'] === 'dev') {
+            $this->setLayout("blank");
+            return $this->render("storybook");
+        } else {
+            return $this->render("404");
+        }
     }
 }

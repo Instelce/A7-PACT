@@ -25,9 +25,3 @@ $this->title = "Home";
     <x-checkbox labelTexte="WAZAA">WAZAA</x-checkbox>
 
 </div>
-
-<div>
-    <x-toggle>
-        Label
-    </x-toggle>
-</div>

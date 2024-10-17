@@ -5,9 +5,10 @@ namespace app\core;
 class View
 {
     public string $title = '';
+    // Name of the custom css file for the view
+    public string $cssFile = '';
 
-
-    public function renderView(string $view, array $params)
+    public function renderView(string $view, array $params = [])
     {
         $viewContent = $this->renderOnlyView($view, $params);
         $layoutContent = $this->layoutContent();
@@ -31,7 +32,7 @@ class View
         return ob_get_clean();
     }
 
-    protected function renderOnlyView($view, $params) {
+    protected function renderOnlyView($view, $params = []) {
         foreach ($params as $key => $value) {
             $$key = $value; //
         }
