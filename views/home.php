@@ -4,24 +4,17 @@ $this->title = "Home";
 
 ?>
 
-<h1>Home </h1>
-<h2>coucou <?php echo $name ?></h2>
+<a class="my-2" href="/storybook">Voir le storybook</a>
 
-<div class="flex gap-2">
-    <x-button>coucou</x-button>
+<h2 class="my-2">Coucou <?php echo $name ?></h2>
 
-    <x-button color="gray">
-        <i slot="icon-right" data-lucide="alarm-clock-minus"></i>
-        coucou
-    </x-button>
-    <x-button color="danger">coucou</x-button>
-    <x-button color="purple">coucou</x-button>
-    <x-input placeholder="ce input n'est pas rounded" hasbutton="true" txtbutton="search" rounded="false">
-        <i slot="icon-left" data-lucide="search"></i>
+<form action="" method="post" class="flex my-4 items-center gap-4">
+    <x-input>
+        <input slot="input" type="text" name="name" placeholder="Nom">
     </x-input>
-    <x-input placeholder="ce input est rounded" rounded="true">
-        <i slot="icon-right" data-lucide="circle-arrow-right"></i>
-    </x-input>
-    <x-checkbox labelTexte="WAZAA">WAZAA</x-checkbox>
+    <x-button type="submit">Changer</x-button>
+</form>
 
+<div>
+    <x-tswitch>Label</x-tswitch>
 </div>

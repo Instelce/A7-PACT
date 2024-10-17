@@ -1,74 +1,85 @@
-import { WebComponent } from './WebComponent.js';
+import { WebComponent } from '../WebComponent.js';
 
 /**
  * Input component
  *
  * @extends {WebComponent}
  */
-export class Toggle extends WebComponent {
+export class ToggleSwitch extends WebComponent {
     constructor() {
         super();
     }
     styles() {
-        const rounded = this.getAttribute('rounded') === 'true' ? '200px' : '5px';
         return `
             <style>
-                input[type=checkbox]{
-                    height: 0;
-                    width: 0;
-                    visibility: hidden;
-                }
-                
-                label {
-                    cursor: pointer;
-                    text-indent: -9999px;
-                    width: 200px;
-                    height: 100px;
-                    background: grey;
-                    display: block;
-                    border-radius: 100px;
+                .switch {
                     position: relative;
+                    display: inline-block;
+                    width: 60px;
+                    height: 34px;
                 }
                 
-                label:after {
-                    content: '';
+                .switch input { 
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
+                
+                .slider {
                     position: absolute;
-                    top: 5px;
-                    left: 5px;
-                    width: 90px;
-                    height: 90px;
-                    background: #fff;
-                    border-radius: 90px;
-                    transition: 0.3s;
+                    cursor: pointer;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #ccc;
+                    -webkit-transition: .4s;
+                    transition: .4s;
                 }
                 
-                input:checked + label {
-                    background: #bada55;
+                .slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 26px;
+                    width: 26px;
+                    left: 4px;
+                    bottom: 4px;
+                    background-color: white;
+                    -webkit-transition: .4s;
+                    transition: .4s;
                 }
                 
-                input:checked + label:after {
-                    left: calc(100% - 5px);
-                    transform: translateX(-100%);
+                input:checked + .slider {
+                    background-color: #2196F3;
                 }
                 
-                label:active:after {
-                    width: 130px;
+                input:focus + .slider {
+                    box-shadow: 0 0 1px #2196F3;
                 }
                 
-                body {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
+                input:checked + .slider:before {
+                    -webkit-transform: translateX(26px);
+                    -ms-transform: translateX(26px);
+                    transform: translateX(26px);
+                }
+                
+                /* Rounded sliders */
+                .slider.round {
+                    border-radius: 34px;
+                }
+                
+                .slider.round:before {
+                    border-radius: 50%;
                 }
             </style>
         `;
     }
     render() {
         return `
-        <div>
-            <slot></slot>
-        </div>   
+            <label class="switch">
+                <input type="checkbox">
+                <span class="slider round"></span>
+            </label>
         `;
     }
 }
