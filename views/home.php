@@ -18,4 +18,3 @@ $this->title = "Home";
 <div>
   <x-tswitch>Label</x-tswitch>
 </div>
-<x-slider color="Blue" label="Prix" min="10" max="1000" type="minmax"></x-slider>
