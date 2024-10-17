@@ -18,36 +18,36 @@ $this->cssFile = "storybook";
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-                <x-button>Button</x-button>
-                <x-button color="purple">Button</x-button>
-                <x-button color="danger">Button</x-button>
-                <x-button color="gray">Button</x-button>
+                <button class="button">Button</button>
+                <button class="button purple">Button</button>
+                <button class="button danger">Button</button>
+                <button class="button gray">Button</button>
             </div>
 
             <div class="flex gap-2">
-                <x-button>
-                    <i slot="icon-left" data-lucide="plus"></i>
-                    Button
-                </x-button>
-                <x-button>
-                    <i slot="icon-right" data-lucide="plus"></i>
-                    Button
-                </x-button>
-                <x-button icon>
+                <button class="button icon-left">
                     <i data-lucide="plus"></i>
-                </x-button>
+                    Button
+                </button>
+                <button class="button icon-right">
+                    Button
+                    <i data-lucide="plus"></i>
+                </button>
+                <button class="button only-icon">
+                    <i data-lucide="plus"></i>
+                </button>
             </div>
 
             <div class="flex gap-2">
-                <x-button size="lg">
+                <button class="button lg">
                     Button
-                </x-button>
-                <x-button size="md">
+                </button>
+                <button class="button md">
                     Button
-                </x-button>
-                <x-button size="sm">
+                </button>
+                <button class="button sm">
                     Button
-                </x-button>
+                </button>
             </div>
         </div>
 
@@ -74,7 +74,7 @@ $this->cssFile = "storybook";
                     <input slot="input" type="text" placeholder="Placeholder">
                 </x-input>
                 <x-input placeholder="Placeholder">
-                    <i slot="icon-right" data-lucide="search"></i>
+                    <i slot="icon-right" data-lucide="send"></i>
                     <input slot="input" type="text" placeholder="Placeholder">
                 </x-input>
             </div>
@@ -82,15 +82,39 @@ $this->cssFile = "storybook";
             <div class="flex gap-2">
                 <x-input placeholder="Placeholder" rounded>
                     <input slot="input" type="text" placeholder="Placeholder">
-                    <x-button slot="button" size="sm" icon>
+                    <button slot="button" class="button only-icon sm">
                         <i data-lucide="search"></i>
-                    </x-button>
+                    </button>
                 </x-input>
                 <x-input placeholder="Search" rounded>
                     <input slot="input" type="text" placeholder="Placeholder">
-                    <x-button slot="button" size="sm">
+                    <button slot="button" class="button sm">
                         Search
-                    </x-button>
+                    </button>
+                </x-input>
+            </div>
+
+            <div class="flex gap-2">
+                <x-input>
+                    <input slot="input" type="text" placeholder="Placeholder">
+                    <p slot="helper">Helper</p>
+                </x-input>
+                <x-input>
+                    <input slot="input" type="text" placeholder="Placeholder">
+                    <p slot="error">Erreur</p>
+                </x-input>
+                <x-input>
+                    <input slot="input" type="text" placeholder="Placeholder">
+                    <p slot="helper">Helper</p>
+                    <p slot="error">Erreur</p>
+                </x-input>
+            </div>
+
+            <div class="flex gap-2">
+                <x-input>
+                    <p slot="label">Label</p>
+                    <input slot="input" id="toto" type="text" placeholder="Placeholder" required>
+                    <p slot="helper">Helper</p>
                 </x-input>
             </div>
         </div>
@@ -174,20 +198,20 @@ $this->cssFile = "storybook";
 
     <section>
         <header>
-            <h2>Toggle</h2>
+            <h2>Select</h2>
         </header>
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-                <x-select>
-                    <span slot="trigger">Select</span>
-                    <div slot="options">
-                        <div>Option 1</div>
-                        <div>Option 2</div>
-                        <div>Option 3</div>
-                        <div>Option 4</div>
-                    </div>
-                </x-select>
+              <x-select>
+                <span slot="trigger">Select</span>
+                <div slot="options">
+                  <div class="option" data-value="value 1">Option 1</div>
+                  <div class="option" data-value="value 2">Option 2</div>
+                  <div class="option" data-value="value 3">Option 3</div>
+                  <div class="option" data-value="value 4">Option 4</div>
+                </div>
+              </x-select>
             </div>
 
             <div class="flex gap-2">

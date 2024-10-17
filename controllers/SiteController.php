@@ -13,12 +13,19 @@ class SiteController extends Controller
     public function home(Request $request)
     {
         $params = [
-            "name" => "Foufouille"
+            "name" => "Foufouille",
+            "value" => "1"
         ];
         if ($request->isPost()) {
             $data = $request->getBody();
+
+            echo "<pre>";
+            var_dump($data);
+            echo "</pre>";
+
             $params = [
-                "name" => $data['name']
+                "name" => $data['name'],
+                "value" => $data['value']
             ];
         }
 

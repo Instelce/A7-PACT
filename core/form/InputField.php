@@ -27,11 +27,27 @@ class InputField extends BaseField
 
     public function renderInput(): string
     {
-        return sprintf('<input type="%s" name="%s" value="%s" class="form-control %s">',
-            $this->type,
-            $this->attr,
-            $this->model->{$this->attr},
-            $this->model->hasError($this->attr) ? 'is-invalid' : ''
+        return sprintf('<x-input>
+                    <p slot="label">%s</p>
+                    <input slot="input" id="%s" type="%s" name="%s" value="%s" placeholder="Placeholder" required>
+                    %s
+        </x-input>',
+            $this->model->hasError($this->attr) ? 'is-invalid' : '', // other class
+            $this->model->getLabel($this->attr) ?? ucfirst($this->attr), // label
+            $this->attr, // id
+            $this->type, // type
+            $this->attr, // name
+            $this->model->{$this->attr}, // value
+            $this->renderError()
         );
     }
+
+    protected function renderError()
+    {
+        return sprintf('<p slot="error">%s</p>', $this->model->getFirstError($this->attr));
+    }
 }
+
+//                    <p slot="helper">%s</p>
+//    $this->model->getLabel($this->attr) ?? ucfirst($this->attr)
+//$this->model->getFirstError($this->attr)
