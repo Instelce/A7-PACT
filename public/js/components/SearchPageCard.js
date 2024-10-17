@@ -59,7 +59,7 @@ export class SearchPageCard extends WebComponent {
                     font-family: var(--font-text);
                     font-size: 0.8em;
                     margin: 0;
-                    color: #525252;
+                    color: var(--color-gray-4);
                 }
         
                 svg{
