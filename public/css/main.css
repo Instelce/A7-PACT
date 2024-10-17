@@ -72,6 +72,25 @@ a {
     color: inherit;
 }
 
+h1{
+    font-family: var(--font-title);
+    font-size: 1.75em;
+    font-weight: 600;
+}
+
+h2{
+    font-family: var(--font-text);
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+h3{
+    font-family: var(--font-text);
+    font-size: 1em;
+    font-weight: 500;
+}
+
+
 .blueLink {
     color: rgb(var(--color-blue-primary));
     position: relative;
@@ -123,7 +142,6 @@ a {
     padding: 0 20%;
 }
 
-/* Tailwind */
 /* -------------------------------------------------------------------------- */
 /* LAYOUTS                                                                    */
 /* -------------------------------------------------------------------------- */
