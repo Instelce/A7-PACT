@@ -27,7 +27,8 @@ export class Footer extends WebComponent {
 
     styles() {
         return `
-            <style>              
+            <style>
+                
                 footer {
                     max-width: 840px;
                     width: 100%;
@@ -39,13 +40,13 @@ export class Footer extends WebComponent {
                     justify-content: flex-start;
                     align-items: center;
                     gap: 10px;
+                    font-family: var(--font-text);
+                    font-size: var(--typescale-d1);
+                    color: rgb(var(--color-gray-4));
                 }
                 
                 p {
-                    margin: 0;
-                    color: rgb(var(--color-gray-4));
-                    font-size: var(--typescale-base);
-                    font-family: var(--font-text);
+                    margin: 0;           
                 }
                 
                 #parts {
@@ -56,7 +57,7 @@ export class Footer extends WebComponent {
             
                 #parts p {
                     margin-bottom: 5px;
-                    font-size: var(--typescale-u1);
+                    font-size: var(--typescale-base);
                 }
             
                 #parts a {
@@ -105,6 +106,13 @@ export class Footer extends WebComponent {
                     align-items: center;
                     order: 1;
                 }
+                
+                #networks a{
+                    padding: 10px;
+                    border: solid 1px rgb(var(--color-gray-2));
+                    border-radius: 100%;
+                    color: rgb(var(--color-black));
+                }
             
                 #trip {
                     display: flex;
@@ -130,44 +138,6 @@ export class Footer extends WebComponent {
                 #finance a {
                     color: rgb(var(--color-black));
                 }
-            
-                @media (max-width: 768px) {
-                    footer {
-                        width: 100%;
-                        height: auto;
-                        padding: 20px;
-                        justify-content: center;
-                        gap: 20px;
-                    }
-            
-                    #parts {
-                        flex-direction: column;
-                        gap: 20px;
-                    }
-            
-                    nav {
-                        flex-direction: column;
-                        gap: 20px;
-                    }
-            
-                    #conditions {
-                        width: 100%;
-                        order: 1;
-                    }
-            
-                    #networks {
-                        justify-content: flex-start;
-                        align-items: center;
-                        order: 0;
-                    }
-            
-                    #trip, #finance {
-                        width: 100%;
-                        margin-left: 0;
-                        flex-wrap: wrap;
-                    }
-                }
-                
                 
                 .blueLink {
                     color: rgb(var(--color-blue-primary));
@@ -214,6 +184,45 @@ export class Footer extends WebComponent {
                     transform: scaleX(1);
                     transform-origin: bottom left;
                 }
+                
+            
+                @media (max-width: 768px) {
+                    footer {
+                        width: 100%;
+                        height: auto;
+                        padding: 20px;
+                        justify-content: center;
+                        gap: 20px;
+                    }
+            
+                    #parts {
+                        flex-direction: column;
+                        gap: 20px;
+                    }
+            
+                    nav {
+                        flex-direction: column;
+                        gap: 20px;
+                    }
+            
+                    #conditions {
+                        width: 100%;
+                        order: 1;
+                    }
+            
+                    #networks {
+                        justify-content: flex-start;
+                        align-items: center;
+                        order: 0;
+                    }
+                    
+            
+                    #trip, #finance {
+                        width: 100%;
+                        margin-left: 0;
+                        flex-wrap: wrap;
+                    }
+                }
             </style>
         `;
     }
@@ -251,8 +260,8 @@ export class Footer extends WebComponent {
                         </div>
                     </div>
                     <div id="networks">
-                        <a href=""><img src="images/insta.png" alt="Instagram"></a>
-                        <a href=""><img src="images/facebook.png" alt="Facebook"></a>
+                        <a href="https://www.instagram.com/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+                        <a href="https://www.facebook.com/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
                     </div>
                 </nav>
                 <div id="trip">
