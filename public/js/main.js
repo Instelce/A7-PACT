@@ -4,6 +4,8 @@ import { Checkbox } from "./components/form/Checkbox.js";
 import { Navbar } from "./components/Navbar.js";
 import { Slider } from "./components/form/Slider.js";
 import {Select} from "./components/form/Select.js";
+import {SearchPageCard} from "./components/SearchPageCard.js";
+
 
 // Setup lucide icons
 lucide.createIcons(
@@ -23,3 +25,5 @@ customElements.define("x-button", Button);
 customElements.define("x-navbar", Navbar);
 customElements.define("x-slider", Slider);
 customElements.define("x-select", Select);
+customElements.define("x-search-page-card", SearchPageCard);
+

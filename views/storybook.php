@@ -177,4 +177,39 @@ $this->cssFile = "storybook";
         </div>
     </section>
 
+    <section class="flex flex-col gap-4">
+
+        <header>
+            <h2>Search Page Card</h2>
+        </header>
+
+        <div class="flex gap-2">
+            <x-search-page-card>
+                <img slot="image" src="/assets/images/brehat.jpeg" alt="Brehat">
+                <span slot="title">Balade familiale à vélo "Qui m’aime me suive"</span>
+                <span slot="author">Jean Bergeron</span>
+                <span slot="type">Activité</span>
+                <span slot="price">À partir de 0€</span>
+                <span slot="location">Bréhat</span>
+                <span slot="locationDistance">À 15 min de chez vous</span>
+                <span slot="date">Il y a 1 j</span>
+            </x-search-page-card>
+
+        </div>
+
+        <div class="flex gap-2">
+            <x-search-page-card>
+                <img slot="image" src="/assets/images/7iles.jpeg" alt="Brehat">
+                <span slot="title">Excursion vers les 7 Iles</span>
+                <span slot="author">Alice Martin</span>
+                <span slot="type">Visite</span>
+                <span slot="price">Dès 21.50 € / personne</span>
+                <span slot="location">Perros-Guirec</span>
+                <span slot="locationDistance">À 1h de chez vous</span>
+                <span slot="date">Il y a 7j</span>
+            </x-search-page-card>
+        </div>
+
+    </section>
+
 </div>
