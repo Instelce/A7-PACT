@@ -1,4 +1,4 @@
-import { WebComponent } from '../WebComponent.js';
+import { WebComponent } from "../WebComponent.js";
 
 /**
  * Slider component
@@ -28,7 +28,7 @@ export class Slider extends WebComponent {
     // ---------------------------------------------------------------------- //
     // Styles and Rendering
     // ---------------------------------------------------------------------- //
-    
+
     styles() {
         return `
         <style>
@@ -36,7 +36,7 @@ export class Slider extends WebComponent {
                 display: flex;
                 flex-direction: column;
                 width: 300px;
-                margin: 10px;
+                margin: 100px;
                 position: relative;
             }
             .labels {
@@ -44,7 +44,7 @@ export class Slider extends WebComponent {
                 justify-content: space-between;
                 align-items: center;
                 font-size: 14px;
-                margin-bottom: 5px;
+               
             }
             .value-label {
                 display: flex;
@@ -52,19 +52,30 @@ export class Slider extends WebComponent {
                 width: 80px;
                 gap: 2px;
             }
-            .slider {
+            .slider#minSlider {
+                position:absolute; ;
+                margin-top: 23px;
+                -webkit-appearance: none;
+                width: 100%;
+                height: 8px;
+                background: #E1E1E1;
+                border-radius: 100px;
+                cursor: pointer;
+                z-index: 1;
+            }
+            .slider#maxSlider {
                 position: absolute;
                 margin-top: 23px;
                 -webkit-appearance: none;
                 width: 100%;
                 height: 8px;
-                background: grey;
+                background: #E1E1E1;
                 border-radius: 100px;
-                top: 0;
                 cursor: pointer;
-                z-index: 2;
-            }
+                z-index: 1;
+    }
             .slider::-webkit-slider-thumb {
+                position : relative;
                 -webkit-appearance: none;
                 width: 16px;
                 height: 16px;
@@ -72,39 +83,51 @@ export class Slider extends WebComponent {
                 background: white;
                 border: 2px solid ${this.color};
                 cursor: pointer;
-                margin-top: -4px;
+                
                 margin-left: -2px;
+                z-index: 7;
             }
             .range {
                 position: relative;
-                height: 8px;
+                height: 8.5px;
                 background-color: ${this.color};
                 border-radius: 5px;
-                top: 0;
-                z-index: 2;
+                top: 6px;
+                z-index: 1;
             }
         </style>
         `;
     }
 
     render() {
-        if (this.type.toLowerCase() === 'minmax') {
+        if (this.type.toLowerCase() === "minmax") {
             return `
-            <div class="slider-container">
-                <div class="labels">
-                    <label>${this.label}</label>
-                    <div class="value-label">
-                        <span id="minValue">${this.min}</span>
-                        <span> - </span>
-                        <span id="maxValue">${this.max}</span>
-                    </div>
-                </div>
-                <input type="range" min="${this.min}" max="${this.max}" value="${this.min}" class="slider" id="minSlider">
-                <input type="range" min="${this.min}" max="${this.max}" value="${this.max}" class="slider" id="maxSlider">
-                <div class="range" id="range"></div>
-                <div class="thumb" id="minThumb" style="left: ${this.getPercentage(this.min)}%;"></div>
-                <div class="thumb" id="maxThumb" style="left: ${this.getPercentage(this.max)}%;"></div>
-            </div>
+<div class="slider-container">
+    <div class="labels">
+        <label>${this.label}</label>
+        <div class="value-label">
+            <span id="minValue">${this.min}</span>
+            <span> - </span>
+            <span id="maxValue">${this.max}</span>
+        </div>
+    </div>
+    <input type="range" min="${this.min}" max="${this.max}" value="${
+                this.min
+            }" class="slider"
+           id="minSlider">
+    <input type="range" min="${this.min}" max="${this.max}" value="${
+                this.max
+            }" class="slider"
+           id="maxSlider">
+    <div class="thumb" id="minThumb" style="left: ${this.getPercentage(
+        this.min
+    )}%;"></div>
+    <div class="thumb" id="maxThumb" style="left: ${this.getPercentage(
+        this.max
+    )}%;"></div>
+    <div class="range" id="range"></div>
+
+</div>
             `;
         } else {
             return `
@@ -115,10 +138,14 @@ export class Slider extends WebComponent {
                         <span id="value">this.value</span>
                     </div>
                 </div>
-                <input type="range" min="${this.min}" max="${this.max}" value="${this.min}" class="slider" id="minSlider">
-                <div class="range" id="range"></div>
-                <div class="thumb" id="minThumb" style="left: ${this.getPercentage(this.min)}%;"></div>
-                <div class="thumb" id="maxThumb" style="left: ${this.getPercentage(this.max)}%;"></div>
+                <input type="range" min="${this.min}" max="${
+                this.max
+            }" value="${this.min}" class="slider" id="minSlider">
+                <div class="range" id="range"></div>    
+                <div class="thumb" id="minThumb" style="left: ${this.getPercentage(
+                    this.min
+                )}%;"></div>
+
             </div>
             `;
         }
@@ -138,11 +165,11 @@ export class Slider extends WebComponent {
     }
 
     updateTrack() {
-        const minSlider = this.shadow.querySelector('#minSlider');
-        const maxSlider = this.shadow.querySelector('#maxSlider');
-        const range = this.shadow.querySelector('#range');
-        const minThumb = this.shadow.querySelector('#minThumb');
-        const maxThumb = this.shadow.querySelector('#maxThumb');
+        const minSlider = this.shadow.querySelector("#minSlider");
+        const maxSlider = this.shadow.querySelector("#maxSlider");
+        const range = this.shadow.querySelector("#range");
+        const minThumb = this.shadow.querySelector("#minThumb");
+        const maxThumb = this.shadow.querySelector("#maxThumb");
 
         const minValue = parseInt(minSlider.value);
         const maxValue = parseInt(maxSlider.value);
@@ -156,22 +183,22 @@ export class Slider extends WebComponent {
         minThumb.style.left = `${minPercent}%`;
         maxThumb.style.left = `${maxPercent}%`;
 
-        this.shadow.querySelector('#minValue').textContent = minValue;
-        this.shadow.querySelector('#maxValue').textContent = maxValue;
+        this.shadow.querySelector("#minValue").textContent = minValue;
+        this.shadow.querySelector("#maxValue").textContent = maxValue;
     }
 
     addRangeEventListeners() {
-        const minSlider = this.shadow.querySelector('#minSlider');
-        const maxSlider = this.shadow.querySelector('#maxSlider');
+        const minSlider = this.shadow.querySelector("#minSlider");
+        const maxSlider = this.shadow.querySelector("#maxSlider");
 
-        minSlider.addEventListener('input', () => {
+        minSlider.addEventListener("input", () => {
             if (parseInt(minSlider.value) > parseInt(maxSlider.value)) {
                 minSlider.value = maxSlider.value;
             }
             this.updateTrack();
         });
 
-        maxSlider.addEventListener('input', () => {
+        maxSlider.addEventListener("input", () => {
             if (parseInt(maxSlider.value) < parseInt(minSlider.value)) {
                 maxSlider.value = minSlider.value;
             }
@@ -184,40 +211,34 @@ export class Slider extends WebComponent {
     // ---------------------------------------------------------------------- //
 
     get type() {
-        return this.getAttribute('type');
+        return this.getAttribute("type");
     }
     set type(value) {
-        this.setAttribute('type', value
-        );
+        this.setAttribute("type", value);
     }
     get label() {
-        return this.getAttribute('label') || 'Label';
+        return this.getAttribute("label") || "Label";
     }
     set label(value) {
-        this.setAttribute('label', value);
+        this.setAttribute("label", value);
     }
     get min() {
-        return parseInt(this.getAttribute('min'));
+        return parseInt(this.getAttribute("min"));
     }
-
     set min(value) {
-        this.setAttribute('min', value);
+        this.setAttribute("min", value);
     }
-
     get max() {
-        return parseInt(this.getAttribute('max'));
+        return parseInt(this.getAttribute("max"));
     }
-
     set max(value) {
-        this.setAttribute('max', value);
+        this.setAttribute("max", value);
     }
-
     get color() {
-        return this.getAttribute('color') || 'blue';
+        return this.getAttribute("color") || "blue";
     }
-
     set color(value) {
-        this.setAttribute('color', value);
+        this.setAttribute("color", value);
     }
 
     reRender() {

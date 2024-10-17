@@ -17,4 +17,4 @@ $this->title = "Home";
   <x-button type="submit">Changer</x-button>
 </form>
 
-<x-slider color="blue" label="Prix" min="10" max="100" type="minmax"></x-slider>
+<x-slider color="Blue" label="Prix" min="10" max="1000" type="minmax"></x-slider>
