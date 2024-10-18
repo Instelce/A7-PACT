@@ -13,7 +13,7 @@ footer {
     color: rgb(var(--color-gray-4));
 }
 
-p {
+footer p {
     margin: 0;
 }
 
@@ -38,7 +38,7 @@ p {
     flex-direction: column;
 }
 
-nav {
+footer nav {
     width: 100%;
     display: flex;
     justify-content: space-between;
