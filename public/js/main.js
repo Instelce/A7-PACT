@@ -1,13 +1,15 @@
 import { Input } from "./components/form/Input.js";
 import { Slider } from "./components/form/Slider.js";
-import {SearchPageCard} from "./components/SearchPageCard.js";
+import { SearchPageCard } from "./components/SearchPageCard.js";
 import {Select} from "./components/form/Select.js";
+import {Carousel} from "./components/Carousel.js";
 // import {Tabs} from "./components/tabs/Tabs";
 // import {Tab} from "./components/tabs/Tab";
+import { Acordeon } from "./components/form/Acordeon.js";
 
 // Do not change
 lucide.createIcons({
-    attrs:{
+    attrs: {
         'stroke-width': 1.5,
         'width': '24px',
         'height': '24px'
@@ -19,6 +21,8 @@ customElements.define("x-input", Input);
 customElements.define("x-slider", Slider);
 customElements.define("x-select", Select);
 customElements.define("x-search-page-card", SearchPageCard);
+customElements.define("x-acordeon", Acordeon);
+customElements.define("x-carousel", Carousel);
 
 
 // customElements.define('x-tabs', Tabs);
