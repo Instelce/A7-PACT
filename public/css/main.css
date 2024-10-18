@@ -9,7 +9,9 @@
 @import "form/form.css";
 @import "form/button.css";
 @import "form/option.css";
-@import "form/checkbox.css";
+@import "form/checkboxNormal.css";
+@import "form/sectionHeader.css";
+@import "form/switch.css";
 
 /* Import fonts */
 @import "fonts/satoshi.css";
@@ -73,6 +75,10 @@ a {
     display: block;
     position: relative;
     padding: 2rem 20%;
+}
+
+.heightTop{
+    height: 56px;
 }
 
 @media only screen and (max-width: 728px) {

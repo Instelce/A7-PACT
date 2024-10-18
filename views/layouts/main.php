@@ -24,6 +24,8 @@ use app\core\Application;
 
 <body>
 
+<div class="heightTop"></div>
+
 <!-- Loader -->
 <div class="loader">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -37,7 +39,7 @@ use app\core\Application;
 
 <!-- Navbar -->
 <nav class="navbar">
-    <div class="nav-burger">
+    <div class="nav-burger" id="nav-burger">
         <span></span>
         <span></span>
         <span></span>
@@ -158,6 +160,8 @@ use app\core\Application;
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script type="module" src="/js/main.js"></script>
+
+
 
 </body>
 
