@@ -64,4 +64,5 @@ th:has(.table-head) {
 td:has(.table-input),
 td:has(.table-button) {
     padding: 0;
+    height: fit-content;
 }

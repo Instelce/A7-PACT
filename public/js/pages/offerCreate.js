@@ -1,6 +1,14 @@
 
 
 // -------------------------------------------------------------------------- //
+// Set sidebar top position
+// -------------------------------------------------------------------------- //
+let sidebar = document.querySelector('#sidebar');
+let navbar = document.querySelector('.navbar');
+
+sidebar.style.top = `${navbar.offsetHeight}px`;
+
+// -------------------------------------------------------------------------- //
 // Load option date picker
 // -------------------------------------------------------------------------- //
 
@@ -131,4 +139,28 @@ priceAddButton.addEventListener('click', (e) => {
             </td>
         </tr>
     `;
+})
+
+
+// -------------------------------------------------------------------------- //
+// Photo upload
+// -------------------------------------------------------------------------- //
+
+let photoInput = document.querySelector('#photo-input');
+let photosContainer = document.querySelector('#photos');
+
+photoInput.addEventListener('change', (e) => {
+    let files = e.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            photosContainer.innerHTML += `
+                <div>
+                  <img src="${e.target.result}" alt="Photo" class="w-20 h-20 object-cover rounded-lg">
+                </div>
+            `;
+        }
+        reader.readAsDataURL(files[i]);
+    }
 })
