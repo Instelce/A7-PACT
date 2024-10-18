@@ -4,7 +4,7 @@ use app\core\Application;
 
 // TODO : add language to offer
 
-class m0009_create_table_visit_offer
+class m0022_create_table_visit_offer
 {
     public function up()
     {
