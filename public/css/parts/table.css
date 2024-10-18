@@ -1,0 +1,67 @@
+
+table.table {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+    border-collapse: collapse;
+}
+
+.table th,
+.table tr,
+.table td {
+    padding: 0.5rem;
+    border: 1px solid rgb(var(--color-gray-2));
+}
+
+.table .table-head {
+    width: 100%;
+    padding: .5rem;
+    font-weight: 400;
+    text-align: center;
+    border: none;
+    background-color: rgb(var(--color-gray-1));
+    color: rgb(var(--color-gray-4));
+}
+
+th:has(.table-head) {
+    border: none;
+}
+
+.table.center td {
+    text-align: center;
+}
+
+
+/* Table form */
+.table-input {
+    width: 100%;
+    padding: 1rem 1rem;
+    border: none;
+}
+
+.table-input:hover {
+    background-color: rgba(var(--color-gray-1), .5);
+}
+
+.table-button {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: none;
+    color: rgb(var(--color-purple-primary));
+    cursor: pointer;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.table-button:hover {
+    background-color: rgba(var(--color-purple-primary), .1);
+}
+
+td:has(.table-input),
+td:has(.table-button) {
+    padding: 0;
+}

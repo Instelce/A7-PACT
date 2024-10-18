@@ -26,30 +26,36 @@ class Offer extends DBModel
 
     public static function tableName(): string
     {
-        // TODO: Implement tableName() method.
         return 'offer';
     }
 
     public function attributes(): array
     {
-        // TODO: Implement attributes() method.
         return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'created_at', 'updated_at'];
     }
 
-    public static function pk(): string
+    public function updateAttributes(): array
     {
-        // TODO: Implement pk() method.
-        return 'id';
+        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'created_at', 'updated_at'];
     }
 
     public function rules(): array
     {
-        // TODO: Implement rules() method.
         return [
             'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
             'summary' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]],
             'description' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 1024]],
+            'website' => [],
+        ];
+    }
 
+    public function labels(): array
+    {
+        return [
+            'title' => 'Titre',
+            'summary' => 'Résumé',
+            'website' => 'Site web',
+            'phone_number' => 'Numéro de téléphone',
         ];
     }
 }

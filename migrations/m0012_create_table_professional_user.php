@@ -21,7 +21,7 @@ class m0012_create_table_professional_user
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE professional_user;";
+        $sql = "DROP TABLE professional_user CASCADE;";
         $db->pdo->exec($sql);
     }
 }

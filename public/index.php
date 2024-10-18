@@ -12,9 +12,9 @@ $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
 // Setup hot reload
-if ($_ENV['APP_ENVIRONMENT'] === 'dev') {
-    new HotReloader\HotReloader('//localhost:8080/phrwatcher.php');
-}
+//if ($_ENV['APP_ENVIRONMENT'] === 'dev') {
+//    new HotReloader\HotReloader('//localhost:8080/phrwatcher.php');
+//}
 
 // Setup config
 $config = [
@@ -33,14 +33,17 @@ $app = new Application(dirname(__DIR__), $config);
 $app->router->get('/', [SiteController::class, 'home']);
 $app->router->post('/', [SiteController::class, 'home']);
 $app->router->get('/storybook', [SiteController::class, 'storybook']);
-$app->router->get('/research', [SiteController::class, 'research']);
+$app->router->get('/recherche', [SiteController::class, 'research']);
+
+// Offer routes
+$app->router->get('/offres/creation', [\app\controllers\OfferController::class, 'create']);
 
 // Auth routes
-$app->router->get('/login', [AuthController::class, 'login']);
-$app->router->post('/login', [AuthController::class, 'login']);
-$app->router->get('/register', [AuthController::class, 'register']);
-$app->router->post('/register', [AuthController::class, 'register']);
-$app->router->get('/logout', [AuthController::class, 'logout']);
+$app->router->get('/connexion', [AuthController::class, 'login']);
+$app->router->post('/connexion', [AuthController::class, 'login']);
+$app->router->get('/inscription', [AuthController::class, 'register']);
+$app->router->post('/inscription', [AuthController::class, 'register']);
+$app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/profile', [AuthController::class, 'profile']);
 
 $app->run();

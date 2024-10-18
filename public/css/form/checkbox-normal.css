@@ -9,7 +9,7 @@
                     
 **************************************************************************/
 
-input.checkboxNormal[type="checkbox"]
+input.checkbox[type="checkbox"]
 {
     -webkit-appearance: none;
     appearance: none;
@@ -20,22 +20,22 @@ input.checkboxNormal[type="checkbox"]
 
     font: inherit;
     color: rgb(var(--color-gray-2));
-    width: 2em;
-    height: 2em;
+    width: 1.5em;
+    height: 1.5em;
     border: 1px solid rgb(var(--color-gray-2));
     border-radius: 0.15em;
 }
     
-input.checkboxNormal[type="checkbox"]::before 
+input.checkbox[type="checkbox"]::before
 {
     content: "";
-    width: 2em;
-    height: 2em;
+    width: 1.5em;
+    height: 1.5em;
     transform: scale(0);
     transition: 120ms ease-in-out;
 }
 
-input.checkboxNormal[type="checkbox"]:checked::before
+input.checkbox[type="checkbox"]:checked::before
 {
     transform: scale(0.7);
     transition: 120ms ease-in-out;
@@ -66,8 +66,8 @@ input[type="radio"]
 
     font: inherit;
     color: rgb(var(--color-gray-2));
-    width: 2em;
-    height: 2em;
+    width: 1.5em;
+    height: 1.5em;
     border: 1px solid rgb(var(--color-gray-2));
     border-radius: 1em;
 }
@@ -75,8 +75,8 @@ input[type="radio"]
 input[type="radio"]::before 
 {
     content: "";
-    width: 2em;
-    height: 2em;
+    width: 1.5em;
+    height: 1.5em;
     transform: scale(0);
     transition: 120ms transform ease-in-out;
     box-shadow: inset 1em 1em var(--form-control-color);
@@ -90,7 +90,7 @@ input[type="radio"]:checked::before
 }
 
 
-label.checkboxNormal
+label.checkbox
 {
     display: flex;
     align-items: center;

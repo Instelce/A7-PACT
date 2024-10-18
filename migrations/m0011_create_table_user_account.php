@@ -21,7 +21,7 @@ class m0011_create_table_user_account
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE user_account;";
+        $sql = "DROP TABLE user_account CASCADE;";
         $db->pdo->exec($sql);
     }
 }

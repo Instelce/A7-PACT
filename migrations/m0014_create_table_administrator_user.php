@@ -17,7 +17,7 @@ class m0014_create_table_administrator_user
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE administrator_user;";
+        $sql = "DROP TABLE administrator_user CASCADE;";
         $db->pdo->exec($sql);
     }
 }

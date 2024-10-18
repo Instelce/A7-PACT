@@ -64,19 +64,27 @@ export class Input extends WebComponent {
         const rounded = this.isRounded ? 'var(--radius-rounded)' : 'var(--radius-small)';
         return `
             <style>
+                :host {
+                    width: 100%;
+                }
                 .input-container {
+                    width: 100%;
                     display: flex;
                     flex-direction: column;
                     gap: .5rem;
                 }
                 
                 .input-field {
+                    width: 100%;
+                    padding: .8rem 1rem;
+                    box-sizing: border-box;
+                    
                     display: flex;
                     gap: .5rem;
                     align-items: center;
+                    
                     border: 1px solid #ccc;
                     border-radius: ${rounded};
-                    padding: .8rem 1rem;
                     color: #838383;
                     
                     transition: box-shadow .2s;
@@ -104,6 +112,8 @@ export class Input extends WebComponent {
                     width: 100%;
                     border: none;
                     outline: none;
+                    -webkit-appearance: none;
+                    appearance: none;
                     
                     font-family: inherit;
                     font-size: inherit;
@@ -137,8 +147,13 @@ export class Input extends WebComponent {
                 
                 .error {
                     margin-top: .5rem;
+                    margin-bottom: .5rem;
                     color: rgb(var(--color-danger));
                     font-weight: 500;
+                }
+                
+                :host([data-invalid]) .input-field {
+                  border: 1px solid rgb(var(--color-danger));
                 }
             </style>
         `;

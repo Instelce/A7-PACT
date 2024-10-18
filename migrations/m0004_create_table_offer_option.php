@@ -19,7 +19,7 @@ class m0004_create_table_offer_option {
     }
 
     public function down(){
-        $sql = "DROP TABLE offer_option;";
+        $sql = "DROP TABLE offer_option CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

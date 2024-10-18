@@ -20,7 +20,7 @@ class m0017_create_table_notification
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE notification;";
+        $sql = "DROP TABLE notification CASCADE;";
         $db->pdo->exec($sql);
     }
 }

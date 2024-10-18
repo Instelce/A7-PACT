@@ -19,7 +19,7 @@ class m0010_create_table_anonymous_account
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE anonymous_account;";
+        $sql = "DROP TABLE anonymous_account CASCADE;";
         $db->pdo->exec($sql);
     }
 }

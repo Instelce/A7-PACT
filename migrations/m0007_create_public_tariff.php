@@ -17,7 +17,7 @@ class m0007_create_public_tariff {
     }
 
     public function down(){
-        $sql = "DROP TABLE public_tariff;";
+        $sql = "DROP TABLE public_tariff CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

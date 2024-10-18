@@ -1,5 +1,7 @@
 <?php
 
+/** @var $this \app\core\View */
+
 use app\core\Application;
 
 ?>
@@ -10,7 +12,7 @@ use app\core\Application;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo $this->title ?></title>
+    <title><?php echo $this->title ?> | PACT</title>
 
     <!-- Styles -->
     <link rel="stylesheet" href="/css/dist/output.css">
@@ -24,7 +26,7 @@ use app\core\Application;
 
 <body>
 
-<div class="heightTop"></div>
+<div class="height-top"></div>
 
 <!-- Loader -->
 <div class="loader">
@@ -47,11 +49,11 @@ use app\core\Application;
     </div>
     <div>
         <a href="/">
-            <img id="logo" src="/assets/images/logoVisitor.svg" alt="">
+            <img id="logo" src="/assets/images/logoVisitor.svg" alt="" width="100">
         </a>
     </div>
     <div class="row">
-        <a href="/">
+        <a href="/recherche">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
@@ -60,7 +62,7 @@ use app\core\Application;
                 <path d="m21 21-4.3-4.3"/>
             </svg>
         </a>
-        <a href="/login" class="button">Connexion</a>
+        <a href="/connexion" class="button">Connexion</a>
     </div>
 </nav>
 
@@ -110,12 +112,12 @@ use app\core\Application;
                  alt="Logo PACT">
             <div class="flex flex-col gap-1">
                 <p>@ 2024 PACT Tous droits réservés.</p>
-                <div>
-                    <a class="blueLink" href="">Conditions d'utilisation</a>
-                    <a class="blueLink" href="">Confidentialité et
+                <div id="links">
+                    <a class="link small" href="">Conditions d'utilisation</a>
+                    <a class="link small" href="">Confidentialité et
                         utilisation des cookies</a>
-                    <a class="blueLink" href="">Plan du site</a>
-                    <a class="blueLink" href="">Contactez-nous</a>
+                    <a class="link small" href="">Plan du site</a>
+                    <a class="link small" href="">Contactez-nous</a>
                 </div>
             </div>
         </div>
@@ -161,8 +163,8 @@ use app\core\Application;
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script type="module" src="/js/main.js"></script>
 
-
-
+<?php if ($this->jsFile) ?>
+    <script type="module" src="/js/pages/<?php echo $this->jsFile ?>.js"></script>
 </body>
 
 </html>

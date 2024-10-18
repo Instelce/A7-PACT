@@ -41,6 +41,8 @@ if (loader) {
 
 
 // Navbar
+let navbar = document.querySelector('.navbar');
+let heightTop = document.querySelector('.height-top');
 let navIcon = document.getElementById('nav-burger');
 let menu = document.getElementById('menu');
 
@@ -50,4 +52,8 @@ if (navIcon) {
         menu.classList.toggle('menu-hidden');
         menu.classList.toggle('menu-visible');
     });
+}
+
+if (navbar && heightTop) {
+    heightTop.style.height = navbar.offsetHeight + 'px';
 }

@@ -23,7 +23,7 @@ class m0013_create_table_member_user
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE member_user;";
+        $sql = "DROP TABLE member_user CASCADE;";
         $db->pdo->exec($sql);
     }
 }

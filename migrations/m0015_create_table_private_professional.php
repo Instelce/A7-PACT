@@ -19,7 +19,7 @@ class m0015_create_table_private_professional
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE private_professional;";
+        $sql = "DROP TABLE private_professional CASCADE;";
         $db->pdo->exec($sql);
     }
 }

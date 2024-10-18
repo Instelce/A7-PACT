@@ -6,6 +6,7 @@ export class Select extends WebComponent {
         super();
 
         this.input = this.querySelector('input');
+        this.input.id = this.id;
         this.input.setAttribute('name', this.getAttribute('name'));
         this.input.setAttribute('value', this.getAttribute('value'));
 
@@ -48,6 +49,7 @@ export class Select extends WebComponent {
         // Set the selected option when clicked
         this.optionsButton.forEach(option => {
             let check = option.querySelector('.check');
+
             option.addEventListener('click', () => {
                 if (!option.classList.contains('selected')) {
                     this.input.value = option.getAttribute('data-value');
@@ -63,6 +65,9 @@ export class Select extends WebComponent {
 
                     check.classList.remove('opacity-0');
                     option.classList.add('selected');
+
+                    // Displatch change event when the value changes
+                    this.input.dispatchEvent(new Event('change'));
                 }
             })
         })
@@ -117,12 +122,24 @@ export class Select extends WebComponent {
                 background: white;
                 z-index: 100;
                 overflow: hidden;
-                display: none;
+                /*display: none;*/
+                display:flex;
                 flex-direction: column;
+                pointer-events: none;
+                opacity: 0;
+                transform: translateY(-.5rem);
+                transition: opacity .1s, transform .1s;
             }
             
             ::slotted([slot="options"].open) {
-                display:flex;
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+            
+            ::slotted([slot="label"]) {
+                display: block;
+                margin-bottom: .5rem;
             }
             
             .chevron {
@@ -138,6 +155,7 @@ export class Select extends WebComponent {
 
     render() {
         return `
+            <slot name="label"></slot>
             <div class="select">
                 <button class="trigger">
                     <slot name="trigger"></slot>

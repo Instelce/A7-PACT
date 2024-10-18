@@ -15,7 +15,7 @@ class m0018_create_table_mean_of_payment
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE mean_of_payment;";
+        $sql = "DROP TABLE mean_of_payment CASCADE;";
         $db->pdo->exec($sql);
     }
 }

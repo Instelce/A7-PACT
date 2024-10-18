@@ -22,7 +22,7 @@ class m0026_create_table_show_offer
 
     public function down()
     {
-        $sql = "DROP TABLE show_offer;";
+        $sql = "DROP TABLE show_offer CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }
