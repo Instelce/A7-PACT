@@ -121,28 +121,76 @@ export class Carousel extends WebComponent {
     }
 
     button {
-        margin-left: 10px;
+        margin-left: 15px;
         margin-right: 15px;
         width: 50px;
         height: 50px;
-        border-radius: 50%;
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        font-size: 24px;
+        
         display: flex;
         justify-content: center;
         align-items: center;
-        cursor: pointer;
-        transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
         pointer-events: auto;
     }
+    
+   .button {
+    --background: var(--color-blue-primary);
+    --border: var(--color-blue-primary);
+    --color: var(--color-white);
+    --background-hover: var(--color-white);
+    --border-hover: var(--color-blue-primary);
+    --color-hover: var(--color-blue-primary);
 
-    button:hover {
-        background-color: #f1f1f1;
-        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    padding: .8rem 2rem;
+
+    background: rgb(var(--background));
+    border: 1px solid rgb(var(--border));
+    border-radius: var(--radius-rounded);
+    outline: none;
+
+    font-size: inherit;
+    font-weight: 500;
+    white-space: nowrap;
+    color: rgb(var(--color));
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    cursor: pointer;
+    transition: color .2s, background .2s, border .2s, box-shadow .2s;
+}
+
+    .button:hover {
+        background: rgb(var(--background-hover));
+        border: 1px solid rgb(var(--border-hover));
+        color: rgb(var(--color-hover));
     }
+    
+    .button.only-icon {
+        padding: 0;
+    }
+    
+    .button.only-icon.sm {
+        height: 2.5rem;
+    }
+    
+    .button.only-icon {
+        width: 3rem;
+        height: 3rem;
+    }
+    
+    .button.only-icon.lg {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+    
+    .button:focus {
+        box-shadow: 0 0 0 3px rgba(var(--background), .5);
+        transform: scale(1.02);
+    }
+
 </style>
         `;
     }
@@ -154,8 +202,8 @@ export class Carousel extends WebComponent {
     </div>
 
     <div class="controls">
-        <button id="prev">&lt;</button>
-        <button id="next">&gt;</button>
+        <button id="prev" class="button only-icon">&lt;</button>        
+        <button id="next" class="button only-icon">&gt;</button>  
     </div>
 </div>
         `;
