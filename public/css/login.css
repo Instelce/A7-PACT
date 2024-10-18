@@ -1,13 +1,21 @@
 #contain-log{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-content: center;
     width: 500px;
+    margin: auto;
+    margin-top: 20%;
 }
 
-.head1{
+.head-1{
     font-family: var(--font-title);
-    font-size: var(--typescale-u6);
+    font-size: var(--typescale-u5);
     font-weight: 600;
+    margin-bottom: 10%;
+    text-align: center;
 }
+
+@media only screen and (max-width: 768px){
+    #contain-log{
+        width: 350px;
+        margin-top: 40%;
+    }
+}
+
