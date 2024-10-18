@@ -7,7 +7,7 @@ use app\core\Controller;
 use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
-use app\models\LoginForm;
+use app\forms\LoginForm;
 use app\models\User;
 
 class AuthController extends Controller
@@ -28,7 +28,6 @@ class AuthController extends Controller
                 exit;
             }
         }
-        $this->setLayout('auth');
         return $this->render('login', ['model' => $loginForm]);
     }
 
@@ -50,7 +49,6 @@ class AuthController extends Controller
             ]);
         }
 
-        $this->setLayout('auth');
         return $this->render('register', [
             'model' => $user
         ]);

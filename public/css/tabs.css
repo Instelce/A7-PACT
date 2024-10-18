@@ -1,0 +1,71 @@
+
+x-tabs {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+x-tabs xtab {
+    flex-basis: 100%;
+}
+
+x-tab {
+    background: white;
+    padding: 1rem 2rem;
+    border-bottom: 2px solid rgb(var(--color-gray-2));
+
+    transition: border .2s;
+}
+
+x-tab[selected] {
+    border-bottom: 2px solid rgb(var(--color-blue-primary));
+}
+
+x-tabs:not(:defined),
+x-tab:not(:defined),
+x-panel:not(:defined) {
+    display: block;
+}
+
+/* Vertical tabs */
+x-tabs.column {
+    flex-direction: row;
+}
+
+x-tabs.column x-tab {
+    display: flex;
+    gap: 1rem;
+    border: none;
+    position: relative;
+    border-radius: var(--radius-small);
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem 1rem 1rem;
+}
+
+x-tabs.column x-tab svg {
+    stroke-width: 1.5;
+    width: 2rem;
+}
+
+x-tabs.column x-tab[selected] {
+    background: rgba(var(--color-blue-primary), .1);
+    font-weight: 700;
+}
+
+x-tabs.column x-tab::before {
+    content: "";
+    width: 3px;
+    height: 80%;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+x-tabs.column x-tab[selected]::before {
+    background: rgb(var(--color-blue-primary));
+    border-radius: var(--radius-rounded);
+}
+

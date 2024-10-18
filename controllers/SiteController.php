@@ -53,4 +53,8 @@ class SiteController extends Controller
             return $this->render("404");
         }
     }
+    public function research()
+    {
+        return $this->render("research");
+    }
 }

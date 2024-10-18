@@ -1,19 +1,20 @@
 footer {
     width: 100%;
-    height: 300px;
+    padding: 1rem 20% 4rem;
+
     display: flex;
     flex-direction: column;
-    background-color: rgb(var(--color-footer),0.2);
-    padding: 25px 25%;
     justify-content: flex-start;
     align-items: center;
-    gap: 10px;
+    gap: 2rem;
+
+    background-color: rgb(var(--color-footer),0.2);
     font-family: var(--font-text);
     font-size: var(--typescale-d1);
     color: rgb(var(--color-gray-4));
 }
 
-p {
+footer p {
     margin: 0;
 }
 
@@ -30,7 +31,8 @@ p {
 
 #parts a {
     text-decoration: none;
-    color : rgb(var(--color-black))
+    color : rgb(var(--color-black));
+    margin-bottom: .2rem;
 }
 
 #about, #explore, #solutions {
@@ -38,7 +40,7 @@ p {
     flex-direction: column;
 }
 
-nav {
+footer nav {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -114,7 +116,7 @@ nav {
     }
 }
 
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
     footer {
         width: 100%;
         height: auto;

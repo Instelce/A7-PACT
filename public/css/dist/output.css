@@ -594,7 +594,7 @@ div[slot="options"] > div .check svg {
                     
 **************************************************************************/
 
-input[type="checkbox"]
+input.checkboxNormal[type="checkbox"]
 {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -610,7 +610,7 @@ input[type="checkbox"]
   border-radius: 0.15em;
 }
 
-input[type="checkbox"]::before 
+input.checkboxNormal[type="checkbox"]::before 
 {
   content: "";
   width: 2em;
@@ -619,7 +619,7 @@ input[type="checkbox"]::before
   transition: 120ms ease-in-out;
 }
 
-input[type="checkbox"]:checked::before
+input.checkboxNormal[type="checkbox"]:checked::before
 {
   transform: scale(0.7);
   transition: 120ms ease-in-out;
@@ -671,10 +671,91 @@ input[type="radio"]:checked::before
   border-radius: 1em;
 }
 
-label
+label.checkboxNormal
 {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionHeader
+{
+  margin-top: 25px;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid rgb(var(--color-gray-2));
+  font-size: var(--typescale-u2);
+}
+
+/* Pour Mobile 
+@media (max-width: 599px) {
+truc {
+
+}
+}
+
+/* Pour Tablettes 
+@media (min-width: 600px) and (max-width: 899px) {
+truc {
+
+}
+}
+*/
+
+/* Pour petits Laptops 
+@media (min-width: 900px) and (max-width: 1199px) {
+truc {
+
+}
+}
+*/
+
+input.switch[type=checkbox]{
+  visibility: hidden;
+}
+
+label.switch {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 4em;
+  height: 2em;
+  background: #fff;
+  display: block;
+  border: 1px solid rgb(var(--color-gray-2));
+  border-radius: 100px;
+  position: relative;
+}
+
+label.switch:after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 1.5em;
+  height: 1.5em;
+  background: rgb(var(--color-gray-3));
+  border-radius: 90px;
+  transition: 0.5s;
+}
+
+input.switch:checked + label.switch:after
+{
+  background: #fff;
+}
+
+input.switch:checked + label {
+  transition: 0.5s;
+  background: rgb(var(--color-purple-primary));
+}
+
+input.switch:checked + label:after {
+  left: calc(100% - 5px);
+  transform: translateX(-100%);
+}
+
+label.switch:active:after {
+  width: 130px;
 }
 
 /* Import fonts */
