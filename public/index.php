@@ -33,6 +33,7 @@ $app = new Application(dirname(__DIR__), $config);
 $app->router->get('/', [SiteController::class, 'home']);
 $app->router->post('/', [SiteController::class, 'home']);
 $app->router->get('/storybook', [SiteController::class, 'storybook']);
+$app->router->get('/research', [SiteController::class, 'research']);
 
 // Auth routes
 $app->router->get('/login', [AuthController::class, 'login']);
