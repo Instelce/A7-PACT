@@ -1,7 +1,5 @@
 <?php
 
-namespace app\migrations;
-
 use app\core\Application;
 
 class m0024_create_table_attraction_park_offer

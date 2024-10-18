@@ -1,7 +1,5 @@
 <?php
 
-namespace app\migrations;
-
 use app\core\Application;
 
 class m0027_create_table_visit_language
