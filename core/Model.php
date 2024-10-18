@@ -75,8 +75,16 @@ abstract class Model
                     }
                 }
 
-                if ($rule_name === self::RULE_DATE && !checkdate($value['month'], $value['day'], $value['year'])) {
-                    $this->addErrorForRule($attr, self::RULE_DATE, $rule);
+                if ($rule_name === self::RULE_DATE) {
+                    $pattern = '/^\d{4}-\d{2}-\d{2}$/';
+                    if (!preg_match($pattern, $value)) {
+                        $this->addError($attr, self::RULE_MATCH, $rule);
+                    } else {
+                        [$year, $month, $day] = explode('-', $value);
+                        if (!checkdate($month, $day, $year)) {
+                            $this->addError($attr, self::RULE_MATCH);
+                        }
+                    }
                 }
             }
         }
