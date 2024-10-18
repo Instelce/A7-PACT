@@ -11,6 +11,7 @@ abstract class Model
     public const RULE_MATCH = 'match';
     public const RULE_UNIQUE = 'unique';
     public const RULE_DATE = 'date';
+    public const RULE_EXP_DATE = 'exp_date';
 
     public array $errors = [];
 
@@ -75,8 +76,22 @@ abstract class Model
                     }
                 }
 
-                if ($rule_name === self::RULE_DATE && !checkdate($value['month'], $value['day'], $value['year'])) {
-                    $this->addErrorForRule($attr, self::RULE_DATE, $rule);
+                if ($rule_name === self::RULE_DATE) {
+                    $pattern = '/^\d{2}-\d{2}-\d{4}$/';
+                    if (!preg_match($pattern, $value)) {
+                        $this->addError($attr, self::RULE_MATCH, $rule);
+                    } else {
+                        [$day, $month, $year] = explode('-', $value);
+                        if (!checkdate($month, $day, $year)) {
+                            $this->addError($attr, self::RULE_MATCH);
+                        }
+                    }
+                }
+                if ($rule_name === self::RULE_EXP_DATE) {
+                    $pattern = '/^\d{2}/\d{2}$/';
+                    if (!preg_match($pattern, $value)) {
+                        $this->addError($attr, self::RULE_MATCH, $rule);
+                    }
                 }
             }
         }
@@ -107,7 +122,8 @@ abstract class Model
             self::RULE_MAX => 'La taille maximum de ce champs est de {max} caractères',
             self::RULE_MATCH => 'Ce champs doit être le même que {match}',
             self::RULE_UNIQUE => '{field} existe déjà',
-            self::RULE_DATE => 'Format de date incorrecte'
+            self::RULE_DATE => 'Format de date incorrecte',
+            self::RULE_EXP_DATE => 'Format de date d\'expiration incorrecte'
         ];
     }
 

@@ -9,7 +9,6 @@ class PublicProfessional extends DBModel
   public int $pub_pro_id = 0;
 
 
-
   public static function tableName(): string
   {
     return 'public_professional';
