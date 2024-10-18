@@ -223,6 +223,22 @@ $this->cssFile = "storybook";
             </div>
         </div>
     </section>
+        <section>
+        <header>
+            <h2>Acordeon</h2>
+        </header>
+
+        <div class="flex flex-col gap-4">
+            <div class="flex gap-2">
+                <x-acordeon text="Acordeon">
+                    <div slot="content">
+                        <p>Bravo vous avez réussie a ouvrir l'accordeon ! maintenant vous pouvez le fermez.</p>
+                    </div>
+                </x-acordeon>
+            </div>
+        </div>
+
+    </section>
 </div>
 
 <section class="flex flex-col gap-4">
