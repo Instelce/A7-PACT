@@ -18,24 +18,24 @@ footer p {
     margin: 0;
 }
 
-#parts {
+.footer-parts {
     width: 100%;
     display: flex;
     justify-content: space-between;
 }
 
-#parts p {
+.footer-parts p {
     margin-bottom: 5px;
     font-size: var(--typescale-base);
 }
 
-#parts a {
+.footer-parts a {
     text-decoration: none;
     color : rgb(var(--color-black));
     margin-bottom: .2rem;
 }
 
-#about, #explore, #solutions {
+.footer-parts div {
     display: flex;
     flex-direction: column;
 }
@@ -46,7 +46,7 @@ footer nav {
     justify-content: space-between;
 }
 
-#conditions {
+.footer-conditions {
     display: flex;
     gap: 20px;
     align-items: center;
@@ -54,50 +54,50 @@ footer nav {
     order: 0;
 }
 
-#logo {
+footer #logo {
     width: 85px;
     height: auto;
     object-fit: contain;
 }
 
-#links {
+.footer-conditions > div > div {
     display: flex;
     flex-wrap: wrap;
 }
 
-#links a {
+.footer-conditions > div > div a {
     text-decoration: none;
     margin-right: 10px;
 }
 
-#networks {
+.footer-networks {
     display: flex;
     gap: 10px;
     align-items: center;
     order: 1;
 }
 
-#networks a{
+.footer-networks a{
     padding: 10px;
     border: solid 1px rgb(var(--color-gray-2));
     border-radius: 100%;
     color: rgb(var(--color-black));
 }
 
-#trip {
+.footer-trip {
     display: flex;
     gap: 20px;
     align-items: center;
     width: 100%;
 }
 
-#trip img {
+.footer-trip img {
     object-fit: contain;
     width: 30px;
     margin-left: 53px;
 }
 
-#finance {
+.footer-finance {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -106,7 +106,7 @@ footer nav {
     margin-left: 206px;
 }
 
-#finance a {
+.footer-finance a {
     color: rgb(var(--color-black));
 }
 
@@ -125,7 +125,7 @@ footer nav {
         gap: 20px;
     }
 
-    #parts {
+    .footer-parts {
         flex-direction: column;
         gap: 20px;
     }
@@ -135,19 +135,19 @@ footer nav {
         gap: 20px;
     }
 
-    #conditions {
+    .footer-conditions {
         width: 100%;
         order: 1;
     }
 
-    #networks {
+    .footer-networks {
         justify-content: flex-start;
         align-items: center;
         order: 0;
     }
 
 
-    #trip, #finance {
+    .footer-trip, .footer-finance {
         width: 100%;
         margin-left: 0;
         flex-wrap: wrap;
