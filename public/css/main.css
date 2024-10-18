@@ -75,13 +75,13 @@ a {
     padding: 2rem 20%;
 }
 
-@media only screen and (min-width: var(--viewport-sm)) {
+@media only screen and (max-width: 728px) {
     .main-container {
         padding: 0 20px;
     }
 }
 
-@media only screen and (min-width: var(--viewport-lg)) {
+@media only screen and (min-width: 1440px) {
     .main-container {
         padding: 0 18%;
     }
