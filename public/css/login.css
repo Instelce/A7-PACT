@@ -1,0 +1,13 @@
+#contain-log{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    width: 500px;
+}
+
+.head1{
+    font-family: var(--font-title);
+    font-size: var(--typescale-u6);
+    font-weight: 600;
+}

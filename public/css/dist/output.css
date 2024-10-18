@@ -260,7 +260,7 @@ footer {
   color: rgb(var(--color-gray-4));
 }
 
-p {
+footer p {
   margin: 0;
 }
 
@@ -285,7 +285,7 @@ p {
   flex-direction: column;
 }
 
-nav {
+footer nav {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -377,7 +377,7 @@ nav {
     gap: 20px;
   }
 
-  nav {
+  footer nav {
     flex-direction: column;
     gap: 20px;
   }

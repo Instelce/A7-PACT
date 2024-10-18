@@ -23,12 +23,12 @@ class LoginForm extends Model
         $user = User::findOne(['email' => $this->email]);
 
         if (!$user) {
-            $this->addError('email', 'User does not exist with this email address');
+            $this->addError('email', 'Utilisateur inexistant avec cette adresse email.');
             return false;
         }
 
         if (!password_verify($this->password, $user->password)) {
-            $this->addError('password', 'Password is incorrect');
+            $this->addError('password', 'Mot-de-passe incorrect.');
             return false;
         }
 
@@ -38,7 +38,7 @@ class LoginForm extends Model
     public function labels(): array
     {
         return [
-            'email' => 'Your email'
+            'email' => 'E-mail'
         ];
     }
 }
