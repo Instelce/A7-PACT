@@ -308,6 +308,18 @@ $this->jsFile = "offerCreate";
 
             <div class="flex flex-col gap-2">
 
+              <!-- Uploader -->
+              <label for="photo-input" class="image-uploader">
+                <input type="file" accept="image/*" id="photo-input" hidden>
+
+                <i data-lucide="upload"></i>
+                <p>Faire glisser des fichiers pour les uploader</p>
+                <span class="button gray">Selectionner les fichier à uploader</span>
+              </label>
+
+              <!-- Photos -->
+              <div id="photos" class="grid grid-cols-3 gap-2"></div>
+
             </div>
         </section>
 
