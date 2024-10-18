@@ -22,7 +22,7 @@ export class WebComponent extends HTMLElement {
         super();
 
         // Unique id for the component
-        this.id = useId();
+        // this.id = useId();
 
         this.shadow = this.attachShadow({mode: "open"});
 

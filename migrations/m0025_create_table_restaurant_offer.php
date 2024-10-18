@@ -21,7 +21,7 @@ class m0025_create_table_restaurant_offer
 
     public function down()
     {
-        $sql = "DROP TABLE restaurant_offer;";
+        $sql = "DROP TABLE restaurant_offer CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

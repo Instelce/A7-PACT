@@ -1,17 +1,20 @@
 @import "variables.css";
 @import "reset.css";
-@import "navbar.css";
-@import "footer.css";
-@import "loader.css";
+@import "parts/navbar.css";
+@import "parts/footer.css";
+@import "parts/loader.css";
 
-@import "tabs.css";
+@import "parts/tabs.css";
+@import "parts/link.css";
+@import "parts/table.css";
 
 @import "form/form.css";
 @import "form/button.css";
 @import "form/option.css";
-@import "form/checkboxNormal.css";
-@import "form/sectionHeader.css";
+@import "form/checkbox-normal.css";
+@import "form/section-header.css";
 @import "form/switch.css";
+@import "form/input.css";
 
 /* Import fonts */
 @import "fonts/satoshi.css";
@@ -75,6 +78,7 @@ a {
     display: block;
     position: relative;
     padding: 2rem 20%;
+    margin: 2rem 0;
 }
 
 .heightTop{
@@ -90,6 +94,23 @@ a {
 @media only screen and (min-width: 1440px) {
     .main-container {
         padding: 0 20%;
+    }
+}
+
+
+.hidden-anim {
+    animation: to-hidden 4s forwards;
+}
+
+@keyframes to-hidden {
+    0% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
     }
 }
 

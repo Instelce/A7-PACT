@@ -20,7 +20,7 @@ class m0024_create_table_attraction_park_offer
 
     public function down()
     {
-        $sql = "DROP TABLE attraction_park_offer;";
+        $sql = "DROP TABLE attraction_park_offer CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

@@ -9,28 +9,24 @@ class OfferTag extends DBModel
     public int $id = 0;
     public string $name = '';
     public int $offer_id = 0;
+
     public static function tableName(): string
     {
-        // TODO: Implement tableName() method.
-        return 'taggage';
+        return 'offer_tag';
     }
 
     public function attributes(): array
     {
-        // TODO: Implement attributes() method.
         return ['name', 'offer_id'];
     }
 
-    public static function pk(): string
+    public function updateAttributes(): array
     {
-        // TODO: Implement pk() method.
-        return 'id';
-
+        return [];
     }
 
     public function rules(): array
     {
-        // TODO: Implement rules() method.
         return [
             'name' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50]],
             'offer_id' => [self::RULE_REQUIRED]

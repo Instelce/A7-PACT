@@ -7,6 +7,8 @@ class View
     public string $title = '';
     // Name of the custom css file for the view
     public string $cssFile = '';
+    // Name of the custom js file for the view
+    public string $jsFile = '';
 
     public function renderView(string $view, array $params = [])
     {

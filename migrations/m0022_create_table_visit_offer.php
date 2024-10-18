@@ -24,7 +24,7 @@ class m0022_create_table_visit_offer
 
     public function down()
     {
-        $sql = "DROP TABLE visit_offer;";
+        $sql = "DROP TABLE visit_offer CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

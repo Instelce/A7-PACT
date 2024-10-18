@@ -29,7 +29,7 @@ class InputField extends BaseField
     {
         return sprintf('<x-input %s>
                     <p slot="label">%s</p>
-                    <input slot="input" id="%s" type="%s" name="%s" value="%s" placeholder="%s" required>
+                    <input slot="input" id="%s" type="%s" name="%s" value="%s" placeholder="%s" %s>
                     %s
         </x-input>',
             $this->model->hasError($this->attr) ? 'data-invalid' : '', // other class
@@ -39,6 +39,7 @@ class InputField extends BaseField
             $this->attr, // name
             $this->model->{$this->attr}, // value
             $this->attr, // placeholder
+            $this->model->rules()[$this->attr] === Model::RULE_REQUIRED ? 'required' : '', // required or not
             $this->renderError()
         );
     }

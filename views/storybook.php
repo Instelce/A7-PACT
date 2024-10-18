@@ -73,20 +73,20 @@ $this->cssFile = "storybook";
                     <i slot="icon-left" data-lucide="search"></i>
                     <input slot="input" type="text" placeholder="Placeholder">
                 </x-input>
-                <x-input placeholder="Placeholder">
+                <x-input>
                     <i slot="icon-right" data-lucide="send"></i>
                     <input slot="input" type="text" placeholder="Placeholder">
                 </x-input>
             </div>
 
             <div class="flex gap-2">
-                <x-input placeholder="Placeholder" rounded>
+                <x-input rounded>
                     <input slot="input" type="text" placeholder="Placeholder">
                     <button slot="button" class="button only-icon sm">
                         <i data-lucide="search"></i>
                     </button>
                 </x-input>
-                <x-input placeholder="Search" rounded>
+                <x-input rounded>
                     <input slot="input" type="text" placeholder="Placeholder">
                     <button slot="button" class="button sm">
                         Search
@@ -117,6 +117,14 @@ $this->cssFile = "storybook";
                     <p slot="helper">Helper</p>
                 </x-input>
             </div>
+
+            <div class="flex gap-2">
+                <x-input>
+                    <p slot="label">Label</p>
+                    <textarea slot="input" id="toto" type="text" placeholder="Placeholder" required></textarea>
+                    <p slot="helper">Helper</p>
+                </x-input>
+            </div>
         </div>
 
     </section>
@@ -128,19 +136,17 @@ $this->cssFile = "storybook";
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-                <input class="checkboxNormal" type="checkbox" id="bla">
-                <label class="checkboxNormal">blablabla</label>
-                <input class="checkboxNormal" type="checkbox" id="bla">
-                <label class="checkboxNormal">blablabla</label>
+                <input class="checkbox" type="checkbox" id="bla">
+                <label class="checkbox">blablabla</label>
+                <input class="checkbox" type="checkbox" id="bla">
+                <label class="checkbox">blablabla</label>
             </div>
 
             <div class="flex gap-2">
                 <input class="checkboxNormal" type="radio" id="tezt" name="test">
-                <label class="checkboxNormal" for="tezt">gougou</label>
+                <label class="checkbox" for="tezt">gougou</label>
                 <input class="checkboxNormal" type="radio" id="tezt" name="test">
-                <label class="checkboxNormal" for="tezt">gougou</label>
-
-                
+                <label class="checkbox" for="tezt">gougou</label>
             </div>
 
             <div class="flex gap-2">
@@ -156,7 +162,7 @@ $this->cssFile = "storybook";
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-                <h2 class="sectionHeader">c'est un test !</h2>
+                <h2 class="section-header">c'est un test !</h2>
             </div>
         </div>
 

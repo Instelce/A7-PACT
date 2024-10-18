@@ -9,7 +9,7 @@ class m0006_create_table_offer_tag
     {
 
         $db = Application::$app->db;
-        $sql = "CREATE TABLE taggage(
+        $sql = "CREATE TABLE offer_tag (
             id SERIAL PRIMARY KEY,
             name VARCHAR(50) NOT NULL,
             offer_id INT  NOT NULL,
@@ -21,7 +21,7 @@ class m0006_create_table_offer_tag
 
     public function down()
     {
-        $sql = "DROP TABLE taggage;";
+        $sql = "DROP TABLE offer_tag CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

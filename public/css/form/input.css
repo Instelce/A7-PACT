@@ -1,0 +1,26 @@
+
+/* Remove date icon on input field */
+/*input[type="date"]::-webkit-calendar-picker-indicator {*/
+/*    display: none;*/
+/*}*/
+
+input {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+input[type="time"] {
+    -webkit-appearance: none;
+    appearance: none;
+
+    border: none;
+}
+
+
+/* Reset textarea */
+textarea {
+    resize: vertical;
+}

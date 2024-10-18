@@ -20,7 +20,7 @@ class m0020_create_table_cb_mean_of_payement
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE cb_mean_of_payment;";
+        $sql = "DROP TABLE cb_mean_of_payment CASCADE;";
         $db->pdo->exec($sql);
     }
 }

@@ -18,7 +18,7 @@ class m0028_create_table_offer_period
 
     public function down()
     {
-        $sql = "DROP TABLE offer_period;";
+        $sql = "DROP TABLE offer_period CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

@@ -21,7 +21,7 @@ class m0008_create_address {
     }
 
     public function down(){
-        $sql = "DROP TABLE address;";
+        $sql = "DROP TABLE address CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

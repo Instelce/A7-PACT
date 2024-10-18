@@ -22,7 +22,7 @@ class m0009_create_table_offer_schedule
 
     public function down()
     {
-        $sql = "DROP TABLE offer_schedule;";
+        $sql = "DROP TABLE offer_schedule CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

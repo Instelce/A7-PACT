@@ -89,10 +89,10 @@ class Database
 
             require_once Application::$ROOT_DIR . '/migrations/' . $migration;
             $className = pathinfo($migration, PATHINFO_FILENAME);
-            $instance = new $className;
+            $instance = new $className();
 
-            $instance->drop();
-            $this->log("Drop migration $migration" . PHP_EOL);
+            $instance->down();
+            $this->log("Drop migration $migration");
         }
 
         $statement = $this->pdo->prepare("DROP TABLE migrations");

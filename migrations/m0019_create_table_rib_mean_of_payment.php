@@ -19,7 +19,7 @@ class m0019_create_table_rib_mean_of_payment
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE rib_mean_of_payment;";
+        $sql = "DROP TABLE rib_mean_of_payment CASCADE;";
         $db->pdo->exec($sql);
     }
 }

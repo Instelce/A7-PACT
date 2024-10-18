@@ -17,7 +17,7 @@ class m0021_create_table_paypal_mean_of_payment
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE paypal_mean_of_payment;";
+        $sql = "DROP TABLE paypal_mean_of_payment CASCADE;";
         $db->pdo->exec($sql);
     }
 }
