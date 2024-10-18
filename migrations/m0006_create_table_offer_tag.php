@@ -2,8 +2,10 @@
 
 use app\core\Application;
 
-class m0006_taggage{
-    public function up(){
+class m0006_taggage
+{
+    public function up()
+    {
         $db = Application::$app->db;
         $sql = "CREATE TABLE taggage(
             id SERIAL PRIMARY KEY,
@@ -15,7 +17,8 @@ class m0006_taggage{
         $db->pdo->exec($sql);
     }
 
-    public function down(){
+    public function down()
+    {
         $sql = "DROP TABLE taggage;";
         Application::$app->db->pdo->exec($sql);
     }
