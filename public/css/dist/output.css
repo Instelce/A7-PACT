@@ -94,69 +94,68 @@ td,th{
 }
 
 .navbar {
+  padding: 8px;
+  position: fixed;
+  top: 0;
+  z-index: 1001;
+  background-color: white;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0 25px;
-  z-index: 1001;
-  position: relative;
-  background-color: white;
-  top: 0;
+  width: 100%;
 }
 
-#nav-icon3 {
+.navbar .nav-burger {
   width: 35px;
   height: 30px;
   position: relative;
-  margin: 0;
+  z-index: 1002;
   transform: rotate(0deg);
   transition: .5s ease-in-out;
   cursor: pointer;
-  z-index: 1002;
 }
 
-#nav-icon3 span {
+.nav-burger span {
   display: block;
   position: absolute;
   height: 2px;
   width: 100%;
   background: black;
   border-radius: 3px;
-  opacity: 1;
   left: 0;
   transform: rotate(0deg);
   transition: .25s ease-in-out;
 }
 
-#nav-icon3 span:nth-child(1) {
+.navbar .nav-burger span:nth-child(1) {
   top: 0px;
 }
 
-#nav-icon3 span:nth-child(2),
-#nav-icon3 span:nth-child(3) {
+.navbar .nav-burger span:nth-child(2),
+.navbar .nav-burger span:nth-child(3) {
   top: 13px;
 }
 
-#nav-icon3 span:nth-child(4) {
+.navbar .nav-burger span:nth-child(4) {
   top: 26px;
 }
 
-#nav-icon3.open span:nth-child(1) {
+.navbar .nav-burger.open span:nth-child(1) {
   top: 13px;
   width: 0%;
   left: 50%;
 }
 
-#nav-icon3.open span:nth-child(2) {
+.navbar .nav-burger.open span:nth-child(2) {
   transform: rotate(45deg);
 }
 
-#nav-icon3.open span:nth-child(3) {
+.navbar .nav-burger.open span:nth-child(3) {
   transform: rotate(-45deg);
 }
 
-#nav-icon3.open span:nth-child(4) {
+.navbar .nav-burger.open span:nth-child(4) {
   top: 13px;
   width: 0%;
   left: 50%;
@@ -165,7 +164,7 @@ td,th{
 #menu {
   position: fixed;
   top: 0;
-  left: -100%;
+  left: -105%;
   width: 100vw;
   height: 100vh;
   background-color: white;
@@ -205,15 +204,6 @@ td,th{
   left: -100%;
 }
 
-.close-menu {
-  font-size: 40px;
-  color: black;
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  cursor: pointer;
-}
-
 .row {
   display: flex;
   justify-content: space-around;
@@ -229,38 +219,29 @@ td,th{
 
 @media only screen and (min-width: 1440px) {
   .navbar {
-    padding: 0 20px;
+    padding: 1rem 20%;
   }
 
-  menu {
+  .navbar .nav-burger {
     display: none;
-  }
-
-  #nav-icon3 {
-    display: none;
-  }
-
-  x-button {
-    display: block;
   }
 }
 
 footer {
   width: 100%;
-  height: 300px;
+  padding: 1rem 20% 4rem;
   display: flex;
   flex-direction: column;
-  background-color: rgb(var(--color-footer),0.2);
-  padding: 25px 25%;
   justify-content: flex-start;
   align-items: center;
-  gap: 10px;
+  gap: 2rem;
+  background-color: rgb(var(--color-footer),0.2);
   font-family: var(--font-text);
   font-size: var(--typescale-d1);
   color: rgb(var(--color-gray-4));
 }
 
-p {
+footer p {
   margin: 0;
 }
 
@@ -277,7 +258,8 @@ p {
 
 #parts a {
   text-decoration: none;
-  color : rgb(var(--color-black))
+  color : rgb(var(--color-black));
+  margin-bottom: .2rem;
 }
 
 #about, #explore, #solutions {
@@ -285,7 +267,7 @@ p {
   flex-direction: column;
 }
 
-nav {
+footer nav {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -363,7 +345,7 @@ nav {
   }
 }
 
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   footer {
     width: 100%;
     height: auto;
@@ -421,10 +403,106 @@ nav {
   }
 }
 
+x-tabs {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+x-tabs xtab {
+  flex-basis: 100%;
+}
+
+x-tab {
+  background: white;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid rgb(var(--color-gray-2));
+  transition: border .2s;
+}
+
+x-tab[selected] {
+  border-bottom: 2px solid rgb(var(--color-blue-primary));
+}
+
+x-tabs:not(:defined),
+x-tab:not(:defined),
+x-panel:not(:defined) {
+  display: block;
+}
+
+/* Vertical tabs */
+
+x-tabs.column {
+  flex-direction: row;
+}
+
+x-tabs.column x-tab {
+  gap: 1rem;
+  border: none;
+  position: relative;
+  border-radius: var(--radius-small);
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem 1rem 1rem;
+}
+
+x-tabs.column x-tab svg {
+  stroke-width: 1.5;
+  width: 2rem;
+}
+
+x-tabs.column x-tab[selected] {
+  background: rgba(var(--color-blue-primary), .1);
+  font-weight: 700;
+}
+
+x-tabs.column x-tab::before {
+  content: "";
+  width: 3px;
+  height: 80%;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+x-tabs.column x-tab[selected]::before {
+  background: rgb(var(--color-blue-primary));
+  border-radius: var(--radius-rounded);
+}
+
 form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.form-container {
+  margin: 0 15%;
+}
+
+.form-page {
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.form-page form {
+  width: 100%;
+}
+
+.form-page h1 {
+  margin-bottom: 2rem;
+}
+
+.form-page .form-inputs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
 }
 
 /*
@@ -988,6 +1066,7 @@ body {
   font-family: var(--font-text);
   font-size: 16px;
   color: rgb(var(--color-black));
+  display: block;
 }
 
 a {
@@ -997,7 +1076,7 @@ a {
 
 .heading-1 {
   font-family: var(--font-title);
-  font-size: 1.75em;
+  font-size: var(--typescale-u4);
   font-weight: 600;
 }
 
@@ -1021,30 +1100,29 @@ a {
   opacity: 0;
 }
 
-#containFoot{
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-}
-
 /* Container */
 
 .main-container {
   width: 100%;
+  min-height: 80vh;
   display: block;
   position: relative;
   padding: 2rem 20%;
 }
 
-@media only screen and (min-width: var(--viewport-sm)) {
+.heightTop{
+  height: 56px;
+}
+
+@media only screen and (max-width: 728px) {
   .main-container {
     padding: 0 20px;
   }
 }
 
-@media only screen and (min-width: var(--viewport-lg)) {
+@media only screen and (min-width: 1440px) {
   .main-container {
-    padding: 0 18%;
+    padding: 0 20%;
   }
 }
 
@@ -1106,8 +1184,16 @@ a {
   display: none;
 }
 
+.flex-shrink{
+  flex-shrink: 1;
+}
+
 .transform{
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.resize{
+  resize: both;
 }
 
 .flex-col{
@@ -1116,6 +1202,10 @@ a {
 
 .flex-wrap{
   flex-wrap: wrap;
+}
+
+.gap-1{
+  gap: 0.25rem;
 }
 
 .gap-2{
