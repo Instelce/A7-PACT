@@ -86,29 +86,29 @@ use app\core\Application;
 
 
 <footer>
-    <div id="parts">
-        <div id="about">
+    <div class="footer-parts">
+        <div>
             <p>À propos</p>
             <a href="">À propos de PACT</a>
             <a href="">Règlements</a>
         </div>
-        <div id="explore">
+        <div>
             <p>Explorez</p>
             <a href="">Écrire un avis</a>
             <a href="">S'inscrire</a>
         </div>
-        <div id="solutions">
+        <div>
             <p>Utilisez nos solutions</p>
             <a href="">Professionnel</a>
         </div>
     </div>
     <nav>
-        <div id="conditions">
+        <div class="footer-conditions">
             <img id="logo" src="/assets/images/logoSmallVisitor.svg"
                  alt="Logo PACT">
             <div class="flex flex-col gap-1">
                 <p>@ 2024 PACT Tous droits réservés.</p>
-                <div id="links">
+                <div>
                     <a class="blueLink" href="">Conditions d'utilisation</a>
                     <a class="blueLink" href="">Confidentialité et
                         utilisation des cookies</a>
@@ -117,7 +117,7 @@ use app\core\Application;
                 </div>
             </div>
         </div>
-        <div id="networks">
+        <div class="footer-networks">
             <a href="https://www.instagram.com/"
                class="button gray only-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -144,12 +144,12 @@ use app\core\Application;
             </a>
         </div>
     </nav>
-    <div id="trip">
+    <div class="footer-trip">
         <img id="tripenarvor" src="/assets/images/TripEnArvorLogo.svg"
              alt="Logo TripEnArvor">
         <p>Plateforme proposée par <b>TripEnArvor</b></p>
     </div>
-    <div id="finance">
+    <div class="footer-finance">
         <p>Projet financé par la <a>Région Bretagne</a> et par le <a>Conseil
                 général des Côtes d'Armor</a>.</p>
     </div>
