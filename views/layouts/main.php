@@ -14,6 +14,8 @@ use app\core\Application;
 
     <!-- Styles -->
     <link rel="stylesheet" href="/css/dist/output.css">
+    <link rel="stylesheet" href="/css/main.css">
+
     <?php if ($this->cssFile): ?>
         <link rel="stylesheet"
               href="/css/pages/<?php echo $this->cssFile ?>.css">
@@ -146,10 +148,14 @@ use app\core\Application;
                  alt="Logo TripEnArvor">
             <p>Plateforme proposée par <b>TripEnArvor</b></p>
         </div>
-</div>
-</nav>
-</footer>
-
+        <div id="finance">
+            <p>Projet financé par la </p>
+            <a>Région Bretagne</a>
+            <p> et par le </p>
+            <a>Conseil général des Côtes d'Armor</a>
+            <p>.</p>
+        </div>
+    </footer>
 </div>
 
 

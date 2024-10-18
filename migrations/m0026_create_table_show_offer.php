@@ -1,7 +1,5 @@
 <?php
 
-namespace app\migrations;
-
 use app\core\Application;
 
 class m0026_create_table_show_offer

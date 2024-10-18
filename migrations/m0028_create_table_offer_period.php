@@ -1,7 +1,5 @@
 <?php
 
-namespace app\migrations;
-
 use app\core\Application;
 
 class m0028_create_table_offer_period

@@ -2,7 +2,7 @@
 
 use app\core\Application;
 
-class m0022_create_table_offer_schedule
+class m0009_create_table_offer_schedule
 {
     public function up()
     {
