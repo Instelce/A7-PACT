@@ -10,7 +10,7 @@ class VisitOffer extends DBModel
     public const GUIDE = 1;
     public int $offer_id = 0;
     public float $duration = 0.0;
-    public int $guide = this::NO_GUIDE;
+    public int $guide = self::NO_GUIDE;
     public int $schedule_id = 0;
 
 
