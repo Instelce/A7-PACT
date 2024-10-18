@@ -166,10 +166,12 @@ $this->cssFile = "storybook";
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-                <x-slider color="#0057FF" label="Prix" min="0" max="238" type="minmax"></x-slider>
+                <x-slider color="#0057FF" label="Prix" min="0" max="55" type=""></x-slider>
+
             </div>
 
             <div class="flex gap-2">
+                <x-slider color="#C933E7" label="Prix" min="0" max="200" type="double"></x-slider>
             </div>
 
             <div class="flex gap-2">
@@ -203,15 +205,15 @@ $this->cssFile = "storybook";
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-              <x-select>
-                <span slot="trigger">Select</span>
-                <div slot="options">
-                  <div class="option" data-value="value 1">Option 1</div>
-                  <div class="option" data-value="value 2">Option 2</div>
-                  <div class="option" data-value="value 3">Option 3</div>
-                  <div class="option" data-value="value 4">Option 4</div>
-                </div>
-              </x-select>
+                <x-select>
+                    <span slot="trigger">Select</span>
+                    <div slot="options">
+                        <div class="option" data-value="value 1">Option 1</div>
+                        <div class="option" data-value="value 2">Option 2</div>
+                        <div class="option" data-value="value 3">Option 3</div>
+                        <div class="option" data-value="value 4">Option 4</div>
+                    </div>
+                </x-select>
             </div>
 
             <div class="flex gap-2">
