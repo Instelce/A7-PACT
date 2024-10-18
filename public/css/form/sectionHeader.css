@@ -1,0 +1,35 @@
+.sectionHeader
+{
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    width: 100%;
+    display: flex;
+    border-bottom: 1px solid rgb(var(--color-gray-2));
+    font-size: var(--typescale-u2);
+}
+
+  
+/* Pour Mobile 
+@media (max-width: 599px) {
+truc {
+
+}
+}
+
+/* Pour Tablettes 
+@media (min-width: 600px) and (max-width: 899px) {
+truc {
+
+}
+}
+*/
+
+/* Pour petits Laptops 
+@media (min-width: 900px) and (max-width: 1199px) {
+truc {
+
+}
+}
+*/
+  

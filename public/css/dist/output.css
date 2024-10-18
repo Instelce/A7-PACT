@@ -1,0 +1,1166 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+/* Variables */
+
+:root {
+  --color-blue-primary: 0, 87, 255;
+  --color-blue-secondary: 0, 162, 255;
+  --color-blue-tertiary: 0, 212, 249;
+  --color-blue-light: 230, 239, 255;
+  --color-orange-primary: 255, 168, 0;
+  --color-orange-secondary: 255, 193, 78;
+  --color-orange-tertiary: 255, 215, 132;
+  --color-purple-primary: 201, 51, 231;
+  --color-purple-light: 250, 235, 253;
+  --color-footer: 255, 216, 132;
+  --color-danger: 255, 59, 48;
+  --color-warning: 255, 204, 0;
+  --color-success: 52, 199, 89;
+  --color-white: 255, 255, 255;
+  --color-gray-1: 225, 225, 225;
+  --color-gray-2: 187, 187, 187;
+  --color-gray-3: 131, 131, 131;
+  --color-gray-4: 82, 82, 82;
+  --color-black: 31, 31, 31;
+  --font-title: 'Satoshi', sans-serif;
+  --font-text: 'Lato', sans-serif;
+  --font-logo: 'Agbalumo', serif;
+  /* Type scale, u for up, d for down  */
+  --typescale-u6: 3.000rem;
+  --typescale-u5: 2.500rem;
+  --typescale-u4: 2.062rem;
+  --typescale-u3: 1.750rem;
+  --typescale-u2: 1.438rem;
+  --typescale-u1: 1.188rem;
+  --typescale-base: 1rem;
+  --typescale-d1: 0.812rem;
+  --typescale-d2: 0.688rem;
+  --radius-rounded: 100rem;
+  --radius-small: 5px;
+  /* Viewports */
+  --viewport-lg: 1440px;
+  --viewport-sm: 926px;
+}
+
+/*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
+
+html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{
+  margin:0;
+  padding:0
+}
+
+h1,h2,h3,h4,h5,h6{
+  font-size:100%;
+  font-weight:normal
+}
+
+ul{
+  list-style:none
+}
+
+button,input,select{
+  margin:0
+}
+
+html{
+  box-sizing:border-box
+}
+
+*,*::before,*::after{
+  box-sizing:inherit
+}
+
+img,video{
+  height:auto;
+  max-width:100%
+}
+
+iframe{
+  border:0
+}
+
+table{
+  border-collapse:collapse;
+  border-spacing:0
+}
+
+td,th{
+  padding:0
+}
+
+#logo {
+  padding-top: 5px;
+  height: 64px;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 25px;
+  z-index: 1001;
+  position: relative;
+  background-color: white;
+  top: 0;
+}
+
+#nav-icon3 {
+  width: 35px;
+  height: 30px;
+  position: relative;
+  margin: 0;
+  transform: rotate(0deg);
+  transition: .5s ease-in-out;
+  cursor: pointer;
+  z-index: 1002;
+}
+
+#nav-icon3 span {
+  display: block;
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  background: black;
+  border-radius: 3px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: .25s ease-in-out;
+}
+
+#nav-icon3 span:nth-child(1) {
+  top: 0px;
+}
+
+#nav-icon3 span:nth-child(2),
+#nav-icon3 span:nth-child(3) {
+  top: 13px;
+}
+
+#nav-icon3 span:nth-child(4) {
+  top: 26px;
+}
+
+#nav-icon3.open span:nth-child(1) {
+  top: 13px;
+  width: 0%;
+  left: 50%;
+}
+
+#nav-icon3.open span:nth-child(2) {
+  transform: rotate(45deg);
+}
+
+#nav-icon3.open span:nth-child(3) {
+  transform: rotate(-45deg);
+}
+
+#nav-icon3.open span:nth-child(4) {
+  top: 13px;
+  width: 0%;
+  left: 50%;
+}
+
+#menu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  z-index: 1000;
+  transition: left 0.5s ease;
+  padding: 50px;
+  box-sizing: border-box;
+}
+
+#menu.menu-visible {
+  left: 0;
+}
+
+#menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+#menu ul li {
+  margin: 20px 0;
+}
+
+#menu ul li a {
+  text-decoration: none;
+  color: black;
+  font-size: 24px;
+  text-align: center;
+  display: block;
+}
+
+.menu-hidden {
+  left: -100%;
+}
+
+.close-menu {
+  font-size: 40px;
+  color: black;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 30px;
+}
+
+@media only screen and (min-width: 768px) {
+  .navbar {
+    padding: 0 20%;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .navbar {
+    padding: 0 20px;
+  }
+
+  menu {
+    display: none;
+  }
+
+  #nav-icon3 {
+    display: none;
+  }
+
+  x-button {
+    display: block;
+  }
+}
+
+footer {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(var(--color-footer),0.2);
+  padding: 25px 25%;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-text);
+  font-size: var(--typescale-d1);
+  color: rgb(var(--color-gray-4));
+}
+
+p {
+  margin: 0;
+}
+
+#parts {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+#parts p {
+  margin-bottom: 5px;
+  font-size: var(--typescale-base);
+}
+
+#parts a {
+  text-decoration: none;
+  color : rgb(var(--color-black))
+}
+
+#about, #explore, #solutions {
+  display: flex;
+  flex-direction: column;
+}
+
+nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+#conditions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  width: 70%;
+  order: 0;
+}
+
+#logo {
+  width: 85px;
+  height: auto;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+#links {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#links a {
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+#networks {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  order: 1;
+}
+
+#networks a{
+  padding: 10px;
+  border: solid 1px rgb(var(--color-gray-2));
+  border-radius: 100%;
+  color: rgb(var(--color-black));
+}
+
+#trip {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+}
+
+#trip img {
+  -o-object-fit: contain;
+     object-fit: contain;
+  width: 30px;
+  margin-left: 53px;
+}
+
+#finance {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+  width: 100%;
+  margin-left: 206px;
+}
+
+#finance a {
+  color: rgb(var(--color-black));
+}
+
+@media (max-width: 1200px) {
+  footer{
+    padding: 25px 15%;
+  }
+}
+
+@media (max-width: 768px) {
+  footer {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  #parts {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  #conditions {
+    width: 100%;
+    order: 1;
+  }
+
+  #networks {
+    justify-content: flex-start;
+    align-items: center;
+    order: 0;
+  }
+
+  #trip, #finance {
+    width: 100%;
+    margin-left: 0;
+    flex-wrap: wrap;
+  }
+}
+
+.loader {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  position: fixed;
+}
+
+.loader svg {
+  color: rgb(var(--color-blue-primary));
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/*
+
+Button component
+
+Default color is blue.
+Default size is medium.
+
+.button
+    .gray
+    .danger
+    .purple
+    .sm
+    .md
+    .lg
+    .only-icon
+        .sm
+        .md
+        .lg
+    .icon-left
+    .icon-right
+
+ */
+
+.button {
+  --background: var(--color-blue-primary);
+  --border: var(--color-blue-primary);
+  --color: var(--color-white);
+  --background-hover: var(--color-white);
+  --border-hover: var(--color-blue-primary);
+  --color-hover: var(--color-blue-primary);
+  padding: .8rem 2rem;
+  background: rgb(var(--background));
+  border: 1px solid rgb(var(--border));
+  border-radius: var(--radius-rounded);
+  outline: none;
+  font-size: inherit;
+  font-weight: 500;
+  white-space: nowrap;
+  color: rgb(var(--color));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: color .2s, background .2s, border .2s, box-shadow .2s;
+}
+
+.button:hover {
+  background: rgb(var(--background-hover));
+  border: 1px solid rgb(var(--border-hover));
+  color: rgb(var(--color-hover));
+}
+
+.button:focus {
+  box-shadow: 0 0 0 3px rgba(var(--background), .5);
+  transform: scale(1.02);
+}
+
+.button.gray {
+  --background: var(--color-white);
+  --border: var(--color-gray-2);
+  --color: var(--color-black);
+  --background-hover: var(--color-gray-1);
+  --border-hover: var(--color-gray-2);
+  --color-hover: var(--color-black);
+}
+
+.button.danger {
+  --background: var(--color-danger);
+  --border: var(--color-danger);
+  --color: var(--color-white);
+  --background-hover: var(--color-white);
+  --border-hover: var(--color-danger);
+  --color-hover: var(--color-danger);
+}
+
+.button.purple {
+  --background: var(--color-purple-primary);
+  --border: var(--color-purple-primary);
+  --color: var(--color-white);
+  --background-hover: var(--color-white);
+  --border-hover: var(--color-purple-primary);
+  --color-hover: var(--color-purple-primary);
+}
+
+.button.sm {
+  padding: .5rem 1.5rem;
+}
+
+.button.md {
+  padding: .8rem 2rem;
+}
+
+.button.lg {
+  padding: 1rem 2.5rem;
+}
+
+.button.only-icon {
+  padding: 0;
+}
+
+.button.only-icon.sm {
+  height: 2.5rem;
+}
+
+.button.only-icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.button.only-icon.lg {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.button svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.button.icon-left {
+  padding-left: 1rem;
+}
+
+.button.icon-right {
+  padding-right: 1rem;
+}
+
+div[slot="options"] > div {
+  padding: .8rem 1.5rem .8rem .5rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+div[slot="options"] > div:hover {
+  background-color: rgba(var(--color-gray-1), .5);
+}
+
+div[slot="options"] > div.selected {
+  background-color: rgb(var(--color-gray-1));
+}
+
+div[slot="options"] > div .check {
+  order: -1;
+  width: 1rem;
+  display: block;
+}
+
+div[slot="options"] > div .check svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/**************************************************************************
+
+                FOR THE CHECKBOX YOU CAN COPY THAT LINE
+
+                    <label>
+                        <input type="checkbox" id="bla">
+                        text
+                    </label>
+                    
+**************************************************************************/
+
+input.checkboxNormal[type="checkbox"]
+{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
+  margin: 5px;
+  display: grid;
+  place-content: center;
+  font: inherit;
+  color: rgb(var(--color-gray-2));
+  width: 2em;
+  height: 2em;
+  border: 1px solid rgb(var(--color-gray-2));
+  border-radius: 0.15em;
+}
+
+input.checkboxNormal[type="checkbox"]::before 
+{
+  content: "";
+  width: 2em;
+  height: 2em;
+  transform: scale(0);
+  transition: 120ms ease-in-out;
+}
+
+input.checkboxNormal[type="checkbox"]:checked::before
+{
+  transform: scale(0.7);
+  transition: 120ms ease-in-out;
+  background-color: rgb(var(--color-purple-primary));
+  border-radius: 0.15em;
+}
+
+/**************************************************************************
+
+            FOR THE RADIO BUTTON VERSION YOU CAN COPY THAT LINE
+
+                    <label>
+                        <input type="radio" name="test">
+                        text
+                    </label>
+
+**************************************************************************/
+
+input[type="radio"]
+{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
+  margin: 5px;
+  display: grid;
+  place-content: center;
+  font: inherit;
+  color: rgb(var(--color-gray-2));
+  width: 2em;
+  height: 2em;
+  border: 1px solid rgb(var(--color-gray-2));
+  border-radius: 1em;
+}
+
+input[type="radio"]::before 
+{
+  content: "";
+  width: 2em;
+  height: 2em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--form-control-color);
+}
+
+input[type="radio"]:checked::before
+{
+  transform: scale(0.7);
+  background-color: rgb(var(--color-purple-primary));
+  border-radius: 1em;
+}
+
+label.checkboxNormal
+{
+  display: flex;
+  align-items: center;
+}
+
+.sectionHeader
+{
+  margin-top: 25px;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid rgb(var(--color-gray-2));
+  font-size: var(--typescale-u2);
+}
+
+/* Pour Mobile 
+@media (max-width: 599px) {
+truc {
+
+}
+}
+
+/* Pour Tablettes 
+@media (min-width: 600px) and (max-width: 899px) {
+truc {
+
+}
+}
+*/
+
+/* Pour petits Laptops 
+@media (min-width: 900px) and (max-width: 1199px) {
+truc {
+
+}
+}
+*/
+
+input.switch[type=checkbox]{
+  visibility: hidden;
+}
+
+label.switch {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 4em;
+  height: 2em;
+  background: #fff;
+  display: block;
+  border: 1px solid rgb(var(--color-gray-2));
+  border-radius: 100px;
+  position: relative;
+}
+
+label.switch:after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 1.5em;
+  height: 1.5em;
+  background: rgb(var(--color-gray-3));
+  border-radius: 90px;
+  transition: 0.5s;
+}
+
+input.switch:checked + label.switch:after
+{
+  background: #fff;
+}
+
+input.switch:checked + label {
+  transition: 0.5s;
+  background: rgb(var(--color-purple-primary));
+}
+
+input.switch:checked + label:after {
+  left: calc(100% - 5px);
+  transform: translateX(-100%);
+}
+
+label.switch:active:after {
+  width: 130px;
+}
+
+/* Import fonts */
+
+/**
+ * @license
+ *
+ * Font Family: Satoshi
+ * Designed by: Deni Anggara
+ * URL: https://www.fontshare.com/fonts/satoshi
+ * © 2024 Indian Type Foundry
+ *
+ * Font Styles:
+ * Satoshi Variable(Variable font)
+ * Satoshi Variable Italic(Variable font)
+ * Satoshi Light
+ * Satoshi Light Italic
+ * Satoshi Regular
+ * Satoshi Italic
+ * Satoshi Medium
+ * Satoshi Medium Italic
+ * Satoshi Bold
+ * Satoshi Bold Italic
+ * Satoshi Black
+ * Satoshi Black Italic
+ *
+*/
+
+/**
+* This is a variable font
+* You can controll variable axes as shown below:
+* font-variation-settings: 'wght' 900.0;
+*
+* available axes:
+
+* 'wght' (range from 300.0 to 900.0)
+
+*/
+
+@font-face {
+  font-family: 'Satoshi-Variable';
+
+  src: url('/assets/fonts/satoshi/Satoshi-Variable.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-Variable.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-Variable.ttf') format('truetype');
+
+  font-weight: 300 900;
+
+  font-display: swap;
+
+  font-style: normal;
+}
+
+/**
+* This is a variable font
+* You can controll variable axes as shown below:
+* font-variation-settings: 'wght' 900.0;
+*
+* available axes:
+
+* 'wght' (range from 300.0 to 900.0)
+
+*/
+
+@font-face {
+  font-family: 'Satoshi-VariableItalic';
+
+  src: url('/assets/fonts/satoshi/Satoshi-VariableItalic.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-VariableItalic.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-VariableItalic.ttf') format('truetype');
+
+  font-weight: 300 900;
+
+  font-display: swap;
+
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Satoshi-Light';
+
+  src: url('/assets/fonts/satoshi/Satoshi-Light.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-Light.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-Light.ttf') format('truetype');
+
+  font-weight: 300;
+
+  font-display: swap;
+
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi-LightItalic';
+
+  src: url('/assets/fonts/satoshi/Satoshi-LightItalic.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-LightItalic.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-LightItalic.ttf') format('truetype');
+
+  font-weight: 300;
+
+  font-display: swap;
+
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Satoshi-Regular';
+
+  src: url('/assets/fonts/satoshi/Satoshi-Regular.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-Regular.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-Regular.ttf') format('truetype');
+
+  font-weight: 400;
+
+  font-display: swap;
+
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi-Italic';
+
+  src: url('/assets/fonts/satoshi/Satoshi-Italic.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-Italic.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-Italic.ttf') format('truetype');
+
+  font-weight: 400;
+
+  font-display: swap;
+
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Satoshi-Medium';
+
+  src: url('/assets/fonts/satoshi/Satoshi-Medium.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-Medium.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-Medium.ttf') format('truetype');
+
+  font-weight: 500;
+
+  font-display: swap;
+
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi-MediumItalic';
+
+  src: url('/assets/fonts/satoshi/Satoshi-MediumItalic.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-MediumItalic.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-MediumItalic.ttf') format('truetype');
+
+  font-weight: 500;
+
+  font-display: swap;
+
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Satoshi-Bold';
+
+  src: url('/assets/fonts/satoshi/Satoshi-Bold.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-Bold.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-Bold.ttf') format('truetype');
+
+  font-weight: 700;
+
+  font-display: swap;
+
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi-BoldItalic';
+
+  src: url('/assets/fonts/satoshi/Satoshi-BoldItalic.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-BoldItalic.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-BoldItalic.ttf') format('truetype');
+
+  font-weight: 700;
+
+  font-display: swap;
+
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Satoshi-Black';
+
+  src: url('/assets/fonts/satoshi/Satoshi-Black.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-Black.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-Black.ttf') format('truetype');
+
+  font-weight: 900;
+
+  font-display: swap;
+
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi-BlackItalic';
+
+  src: url('/assets/fonts/satoshi/Satoshi-BlackItalic.woff2') format('woff2'),
+       url('/assets/fonts/satoshi/Satoshi-BlackItalic.woff') format('woff'),
+       url('/assets/fonts/satoshi/Satoshi-BlackItalic.ttf') format('truetype');
+
+  font-weight: 900;
+
+  font-display: swap;
+
+  font-style: italic;
+}
+
+* {
+  outline: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  font-family: var(--font-text);
+  font-size: 16px;
+  color: rgb(var(--color-black));
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.heading-1 {
+  font-family: var(--font-title);
+  font-size: 1.75em;
+  font-weight: 600;
+}
+
+.heading-2 {
+  font-family: var(--font-text);
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
+.heading-3 {
+  font-family: var(--font-text);
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.hidden {
+  display: none;
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+
+#containFoot{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+/* Container */
+
+.main-container {
+  width: 100%;
+  display: block;
+  position: relative;
+  padding: 2rem 20%;
+}
+
+@media only screen and (min-width: var(--viewport-sm)) {
+  .main-container {
+    padding: 0 20px;
+  }
+}
+
+@media only screen and (min-width: var(--viewport-lg)) {
+  .main-container {
+    padding: 0 18%;
+  }
+}
+
+.container{
+  width: 100%;
+}
+
+@media (min-width: 640px){
+  .container{
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px){
+  .container{
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px){
+  .container{
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px){
+  .container{
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px){
+  .container{
+    max-width: 1536px;
+  }
+}
+
+.static{
+  position: static;
+}
+
+.absolute{
+  position: absolute;
+}
+
+.relative{
+  position: relative;
+}
+
+.block{
+  display: block;
+}
+
+.flex{
+  display: flex;
+}
+
+.hidden{
+  display: none;
+}
+
+.transform{
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.flex-col{
+  flex-direction: column;
+}
+
+.flex-wrap{
+  flex-wrap: wrap;
+}
+
+.gap-2{
+  gap: 0.5rem;
+}
+
+.gap-4{
+  gap: 1rem;
+}
+
+.rounded{
+  border-radius: 0.25rem;
+}
+
+.border{
+  border-width: 1px;
+}
+
+.underline{
+  text-decoration-line: underline;
+}
+
+.opacity-0{
+  opacity: 0;
+}
+
+.shadow{
+  --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.outline{
+  outline-style: solid;
+}
+
+.blur{
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.transition{
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}

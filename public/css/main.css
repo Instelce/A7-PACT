@@ -9,7 +9,9 @@
 @import "form/form.css";
 @import "form/button.css";
 @import "form/option.css";
-@import "form/checkbox.css";
+@import "form/checkboxNormal.css";
+@import "form/sectionHeader.css";
+@import "form/switch.css";
 
 /* Import fonts */
 @import "fonts/satoshi.css";

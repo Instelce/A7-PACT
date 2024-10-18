@@ -128,32 +128,35 @@ $this->cssFile = "storybook";
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-
-                <label>
-                    <input type="radio" name="test">
-                    gougou
-                </label>
-                <label>
-                    <input type="radio" name="test">
-                    gougou
-                </label>
-
+                <input class="checkboxNormal" type="checkbox" id="bla">
+                <label class="checkboxNormal">blablabla</label>
+                <input class="checkboxNormal" type="checkbox" id="bla">
+                <label class="checkboxNormal">blablabla</label>
             </div>
 
             <div class="flex gap-2">
+                <input class="checkboxNormal" type="radio" id="tezt" name="test">
+                <label class="checkboxNormal" for="tezt">gougou</label>
+                <input class="checkboxNormal" type="radio" id="tezt" name="test">
+                <label class="checkboxNormal" for="tezt">gougou</label>
 
-                <label>
-                    <input type="checkbox" id="bla">
-                    blablabla
-                </label>
-                <label>
-                    <input type="checkbox" id="bla">
-                    blablabla
-                </label>
-
+                
             </div>
 
             <div class="flex gap-2">
+            </div>
+        </div>
+
+    </section>
+
+    <section>
+        <header>
+            <h2>Section Header</h2>
+        </header>
+
+        <div class="flex flex-col gap-4">
+            <div class="flex gap-2">
+                <h2 class="sectionHeader">c'est un test !</h2>
             </div>
         </div>
 
@@ -187,6 +190,8 @@ $this->cssFile = "storybook";
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
+                <input class="switch" type="checkbox" id="switchtest" />
+                <label class="switch" for="switchtest">Toggle</label>
             </div>
 
             <div class="flex gap-2">
