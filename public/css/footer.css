@@ -114,7 +114,7 @@ footer nav {
     }
 }
 
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
     footer {
         width: 100%;
         height: auto;

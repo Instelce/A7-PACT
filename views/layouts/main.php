@@ -14,6 +14,8 @@ use app\core\Application;
 
     <!-- Styles -->
     <link rel="stylesheet" href="/css/dist/output.css">
+    <link rel="stylesheet" href="/css/main.css">
+
     <?php if ($this->cssFile): ?>
         <link rel="stylesheet"
               href="/css/pages/<?php echo $this->cssFile ?>.css">
