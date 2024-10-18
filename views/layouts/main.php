@@ -37,7 +37,7 @@ use app\core\Application;
 
 <!-- Navbar -->
 <nav class="navbar">
-    <div class="nav-burger">
+    <div class="nav-burger" id="nav-burger">
         <span></span>
         <span></span>
         <span></span>
@@ -158,6 +158,8 @@ use app\core\Application;
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script type="module" src="/js/main.js"></script>
+
+
 
 </body>
 
