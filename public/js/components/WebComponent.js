@@ -51,7 +51,7 @@ export class WebComponent extends HTMLElement {
      * @param oldValue
      * @param newValue
      */
-    attributeChangedCallback (name, oldValue, newValue) {}
+    attributeChangedCallback(name, oldValue, newValue) {}
 
     /**
      * Style of the component

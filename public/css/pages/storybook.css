@@ -26,6 +26,7 @@ section::after {
     position: absolute;
     background: rgb(var(--color-gray-1));
     margin-top: 2rem;
+    bottom: 0;
 }
 
 section > header {
