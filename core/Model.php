@@ -10,6 +10,7 @@ abstract class Model
     public const RULE_MAX = 'max';
     public const RULE_MATCH = 'match';
     public const RULE_UNIQUE = 'unique';
+    public const RULE_DATE = 'date';
 
     public array $errors = [];
 
@@ -73,6 +74,10 @@ abstract class Model
                         $this->addErrorForRule($attr, self::RULE_UNIQUE, ['field' => ucfirst($attr)]);
                     }
                 }
+
+                if ($rule_name === self::RULE_DATE && !checkdate($value['month'], $value['day'], $value['year'])) {
+                    $this->addErrorForRule($attr, self::RULE_DATE, $rule);
+                }
             }
         }
 
@@ -102,6 +107,7 @@ abstract class Model
             self::RULE_MAX => 'La taille maximum de ce champs est de {max} caractères',
             self::RULE_MATCH => 'Ce champs doit être le même que {match}',
             self::RULE_UNIQUE => '{field} existe déjà',
+            self::RULE_DATE => 'Format de date incorrecte'
         ];
     }
 
