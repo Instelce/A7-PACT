@@ -37,7 +37,7 @@ use app\core\Application;
 
 <!-- Navbar -->
 <nav class="navbar">
-    <div id="nav-icon3">
+    <div class="nav-burger">
         <span></span>
         <span></span>
         <span></span>
@@ -58,7 +58,7 @@ use app\core\Application;
                 <path d="m21 21-4.3-4.3"/>
             </svg>
         </a>
-        <x-button href="/login">Connexion</x-button>
+        <a href="/login" class="button">Connexion</a>
     </div>
 </nav>
 
@@ -107,7 +107,7 @@ use app\core\Application;
             <div id="conditions">
                 <img id="logo" src="/assets/images/logoSmallVisitor.svg"
                      alt="Logo PACT">
-                <div>
+                <div class="flex flex-col gap-1">
                     <p>@ 2024 PACT Tous droits réservés.</p>
                     <div id="links">
                         <a class="blueLink" href="">Conditions d'utilisation</a>
@@ -119,7 +119,8 @@ use app\core\Application;
                 </div>
             </div>
             <div id="networks">
-                <a href="https://www.instagram.com/">
+                <a href="https://www.instagram.com/"
+                   class="button gray only-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24"
                          height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1"
@@ -131,7 +132,8 @@ use app\core\Application;
                         <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
                     </svg>
                 </a>
-                <a href="https://www.facebook.com/">
+                <a href="https://www.facebook.com/"
+                   class="button gray only-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24"
                          height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1"
@@ -149,18 +151,14 @@ use app\core\Application;
             <p>Plateforme proposée par <b>TripEnArvor</b></p>
         </div>
         <div id="finance">
-            <p>Projet financé par la </p>
-            <a>Région Bretagne</a>
-            <p> et par le </p>
-            <a>Conseil général des Côtes d'Armor</a>
-            <p>.</p>
+            <p>Projet financé par la <a>Région Bretagne</a> et par le <a>Conseil
+                    général des Côtes d'Armor</a>.</p>
         </div>
     </footer>
 </div>
 
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-
 <script type="module" src="/js/main.js"></script>
 
 </body>

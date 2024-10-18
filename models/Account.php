@@ -9,7 +9,6 @@ class Account extends DBModel
     public string $created_at = '';
     public string $updated_at = '';
 
-
     public static function tableName(): string
     {
         // TODO: Implement tableName() method
