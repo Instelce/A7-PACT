@@ -11,7 +11,7 @@ class m0017_create_table_notification
             send_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             reception_day DATE NOT NULL,
             open_at TIMESTAMP NOT NULL,
-            read BOOLEAN NOT NULL,
+            is_read BOOLEAN NOT NULL,
             content VARCHAR(255) NOT NULL
         );";
         $db->pdo->exec($sql);

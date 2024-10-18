@@ -8,7 +8,7 @@ class m0027_create_table_visit_language
     {
         $db = Application::$app->db;
         $sql = "CREATE TABLE visit_language (
-            id SERIAL PRIMARY KEY,
+            language_id SERIAL PRIMARY KEY,
             offer_id INT NOT NULL,
             
             language VARCHAR(255) NOT NULL,
