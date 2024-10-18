@@ -5,42 +5,40 @@ use app\core\DBModel;
 
 class Notification extends DBModel
 {
+    public const IS_READ = 1;
 
+    public const IS_NOT_READ = 0;
+    public int $notif_id = 0;
     public string $send_at = '';
     public string $reception_day = '';
     public string $open_at = '';
-    public bool $read = false;
+    public int $is_read = self::IS_NOT_READ;
     public string $content = '';
 
 
 
     public static function tableName(): string
     {
-        // TODO: Implement tableName() method
-        return 'account';
+        return 'notification';
     }
 
     public function attributes(): array
     {
-        // TODO: Implement attributes() method.
         return ['send_at', 'reception_day', 'open_at', 'read', 'content'];
     }
 
     public static function pk(): string
     {
-        // TODO: Implement pk() method.
         return 'notif_id';
     }
 
     public function rules(): array
     {
-        // TODO: Implement rules() method.
         return [
-            'send_at' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50]],
-            'firstname' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50]],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50], [self::RULE_UNIQUE]],
-            'pseudo' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50], [self::RULE_UNIQUE]],
-            'allows_notifications' => [self::RULE_REQUIRED]
+            'reception_day' => [self::RULE_REQUIRED, self::RULE_DATE],
+            'open_at' => [self::RULE_REQUIRED],
+            'is_read' => [self::RULE_REQUIRED],
+            'content' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
         ];
 
     }
