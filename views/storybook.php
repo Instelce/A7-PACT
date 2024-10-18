@@ -223,7 +223,106 @@ $this->cssFile = "storybook";
             </div>
         </div>
     </section>
-        <section>
+
+    <section class="flex flex-col gap-4">
+
+        <header>
+            <h2>Search Page Card</h2>
+        </header>
+
+        <div class="flex gap-2">
+            <x-search-page-card>
+                <img slot="image" src="/assets/images/brehat.jpeg" alt="Brehat">
+                <span slot="title">Balade familiale à vélo "Qui m’aime me suive"</span>
+                <span slot="author">Jean Bergeron</span>
+                <span slot="type">Activité</span>
+                <span slot="price">À partir de 0€</span>
+                <span slot="location">Bréhat</span>
+                <span slot="locationDistance">À 15 min de chez vous</span>
+                <span slot="date">Il y a 1 j</span>
+            </x-search-page-card>
+
+        </div>
+
+        <div class="flex gap-2">
+            <x-search-page-card>
+                <img slot="image" src="/assets/images/7iles.jpeg" alt="7iles">
+                <span slot="title">Excursion vers les 7 Iles</span>
+                <span slot="author">Alice Martin</span>
+                <span slot="type">Visite</span>
+                <span slot="price">Dès 21.50 € / personne</span>
+                <span slot="location">Perros-Guirec</span>
+                <span slot="locationDistance">À 1h de chez vous</span>
+                <span slot="date">Il y a 7j</span>
+            </x-search-page-card>
+        </div>
+    </section>
+
+    <section>
+        <header>
+            <h2>Tabs</h2>
+        </header>
+
+        <div class="flex flex-col gap-4">
+            <div class="flex gap-2">
+                <x-tabs>
+
+                    <x-tab role="heading" slot="tab">
+                        Tab 1
+                    </x-tab>
+                    <x-tab-panel role="region" slot="panel">
+                        <p>Content 1</p>
+                    </x-tab-panel>
+
+                    <x-tab role="heading" slot="tab">Tab 2</x-tab>
+                    <x-tab-panel role="region" slot="panel">
+                        <p>Content 2</p>
+                    </x-tab-panel>
+
+                    <x-tab role="heading" slot="tab">Tab 3</x-tab>
+                    <x-tab-panel role="region" slot="panel">
+                        <p>Content 3</p>
+                    </x-tab-panel>
+
+                </x-tabs>
+            </div>
+
+            <div class="flex gap-2">
+                <x-tabs class="column">
+
+                    <x-tab role="heading" slot="tab">
+                        <i data-lucide="user"></i>
+                        Tab 1
+                    </x-tab>
+                    <x-tab-panel role="region" slot="panel">
+                        <p>Content 1</p>
+                    </x-tab-panel>
+
+                    <x-tab role="heading" slot="tab">
+                        <i data-lucide="euro"></i>
+                        Tab 2
+                    </x-tab>
+                    <x-tab-panel role="region" slot="panel">
+                        <p>Content 2</p>
+                    </x-tab-panel>
+
+                    <x-tab role="heading" slot="tab">
+                        <i data-lucide="key"></i>
+                        Tab 3
+                    </x-tab>
+                    <x-tab-panel role="region" slot="panel">
+                        <p>Content 3</p>
+                    </x-tab-panel>
+
+                </x-tabs>
+            </div>
+
+            <div class="flex gap-2">
+            </div>
+        </div>
+    </section>
+
+    <section class="flex flex-col gap-4">
         <header>
             <h2>Acordeon</h2>
         </header>
@@ -237,65 +336,30 @@ $this->cssFile = "storybook";
                 </x-acordeon>
             </div>
         </div>
+    </section>
 
+
+    <section class="flex flex-col gap-4">
+        <header>
+            <h2>Carousel</h2>
+        </header>
+
+        <div class="flex gap-2">
+            <x-carousel>
+                <img slot="image" src="/assets/images/exemples/brehat.jpeg" alt="img1">
+                <img slot="image" src="/assets/images/exemples/7iles.jpeg" alt="img2">
+                <img slot="image" src="/assets/images/exemples/PG1.jpeg" alt="img3">
+                <img slot="image" src="/assets/images/exemples/PG2.jpeg" alt="img4">
+                <img slot="image" src="/assets/images/exemples/PG3.jpeg" alt="img5">
+                <img slot="image" src="/assets/images/exemples/PG4.jpeg" alt="img6">
+                <img slot="image" src="/assets/images/exemples/PG5.webp" alt="img7">
+                <img slot="image" src="/assets/images/exemples/PG6.jpg" alt="img8">
+                <img slot="image" src="/assets/images/exemples/PG7.jpeg" alt="img9">
+                <img slot="image" src="/assets/images/exemples/PG8.jpg" alt="img10">
+                <img slot="image" src="/assets/images/exemples/PG9.jpg" alt="img11">
+            </x-carousel>
+
+        </div>
     </section>
 </div>
 
-<section class="flex flex-col gap-4">
-
-    <header>
-        <h2>Search Page Card</h2>
-    </header>
-
-    <div class="flex gap-2">
-        <x-search-page-card>
-            <img slot="image" src="/assets/images/exemples/brehat.jpeg" alt="Brehat">
-            <span slot="title">Balade familiale à vélo "Qui m’aime me suive"</span>
-            <span slot="author">Jean Bergeron</span>
-            <span slot="type">Activité</span>
-            <span slot="price">À partir de 0€</span>
-            <span slot="location">Bréhat</span>
-            <span slot="locationDistance">À 15 min de chez vous</span>
-            <span slot="date">Il y a 1 j</span>
-        </x-search-page-card>
-
-    </div>
-
-    <div class="flex gap-2">
-        <x-search-page-card>
-            <img slot="image" src="/assets/images/exemples/7iles.jpeg" alt="7iles">
-            <span slot="title">Excursion vers les 7 Iles</span>
-            <span slot="author">Alice Martin</span>
-            <span slot="type">Visite</span>
-            <span slot="price">Dès 21.50 € / personne</span>
-            <span slot="location">Perros-Guirec</span>
-            <span slot="locationDistance">À 1h de chez vous</span>
-            <span slot="date">Il y a 7j</span>
-        </x-search-page-card>
-    </div>
-
-</section>
-
-<section class="flex flex-col gap-4">
-
-    <header>
-        <h2>Carousel</h2>
-    </header>
-
-    <div class="flex gap-2">
-        <x-carousel>
-            <img slot="image" src="/assets/images/exemples/brehat.jpeg" alt="img1">
-            <img slot="image" src="/assets/images/exemples/7iles.jpeg" alt="img2">
-            <img slot="image" src="/assets/images/exemples/PG1.jpeg" alt="img3">
-            <img slot="image" src="/assets/images/exemples/PG2.jpeg" alt="img4">
-            <img slot="image" src="/assets/images/exemples/PG3.jpeg" alt="img5">
-            <img slot="image" src="/assets/images/exemples/PG4.jpeg" alt="img6">
-            <img slot="image" src="/assets/images/exemples/PG5.webp" alt="img7">
-            <img slot="image" src="/assets/images/exemples/PG6.jpg" alt="img8">
-            <img slot="image" src="/assets/images/exemples/PG7.jpeg" alt="img9">
-            <img slot="image" src="/assets/images/exemples/PG8.jpg" alt="img10">
-            <img slot="image" src="/assets/images/exemples/PG9.jpg" alt="img11">
-        </x-carousel>
-
-    </div>
-</section>

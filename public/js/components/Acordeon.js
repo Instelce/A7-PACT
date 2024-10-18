@@ -9,7 +9,7 @@
 ///    </div>
 ///</x-acordeon>
 
-import { WebComponent } from "../WebComponent.js";
+import { WebComponent } from "./WebComponent.js";
 /**
  * Input component
  *

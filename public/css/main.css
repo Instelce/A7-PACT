@@ -5,6 +5,8 @@
 @import "loader.css";
 @import "login.css";
 
+@import "tabs.css";
+
 @import "form/form.css";
 @import "form/button.css";
 @import "form/option.css";

@@ -363,7 +363,7 @@ footer nav {
   }
 }
 
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   footer {
     width: 100%;
     height: auto;
@@ -377,7 +377,7 @@ footer nav {
     gap: 20px;
   }
 
-  footer nav {
+  nav {
     flex-direction: column;
     gap: 20px;
   }
@@ -419,6 +419,96 @@ footer nav {
   100% {
     transform: rotate(360deg);
   }
+}
+
+#contain-log{
+  width: 500px;
+  margin: auto;
+  margin-top: 20%;
+}
+
+.head-1{
+  font-family: var(--font-title);
+  font-size: var(--typescale-u5);
+  font-weight: 600;
+  margin-bottom: 10%;
+  text-align: center;
+}
+
+@media only screen and (max-width: 768px){
+  #contain-log{
+    width: 350px;
+    margin-top: 40%;
+  }
+}
+
+x-tabs {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+x-tabs xtab {
+  flex-basis: 100%;
+}
+
+x-tab {
+  background: white;
+  padding: 1rem 2rem;
+  border-bottom: 2px solid rgb(var(--color-gray-2));
+  transition: border .2s;
+}
+
+x-tab[selected] {
+  border-bottom: 2px solid rgb(var(--color-blue-primary));
+}
+
+x-tabs:not(:defined),
+x-tab:not(:defined),
+x-panel:not(:defined) {
+  display: block;
+}
+
+/* Vertical tabs */
+
+x-tabs.column {
+  flex-direction: row;
+}
+
+x-tabs.column x-tab {
+  gap: 1rem;
+  border: none;
+  position: relative;
+  border-radius: var(--radius-small);
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem 1rem 1rem;
+}
+
+x-tabs.column x-tab svg {
+  stroke-width: 1.5;
+  width: 2rem;
+}
+
+x-tabs.column x-tab[selected] {
+  background: rgba(var(--color-blue-primary), .1);
+  font-weight: 700;
+}
+
+x-tabs.column x-tab::before {
+  content: "";
+  width: 3px;
+  height: 80%;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+x-tabs.column x-tab[selected]::before {
+  background: rgb(var(--color-blue-primary));
+  border-radius: var(--radius-rounded);
 }
 
 form {
@@ -955,13 +1045,13 @@ a {
   padding: 2rem 20%;
 }
 
-@media only screen and (min-width: var(--viewport-sm)) {
+@media only screen and (max-width: 728px) {
   .main-container {
     padding: 0 20px;
   }
 }
 
-@media only screen and (min-width: var(--viewport-lg)) {
+@media only screen and (min-width: 1440px) {
   .main-container {
     padding: 0 18%;
   }
@@ -1013,16 +1103,6 @@ a {
   position: relative;
 }
 
-.my-2{
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.my-4{
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
 .block{
   display: block;
 }
@@ -1035,8 +1115,16 @@ a {
   display: none;
 }
 
+.flex-shrink{
+  flex-shrink: 1;
+}
+
 .transform{
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.resize{
+  resize: both;
 }
 
 .flex-col{
@@ -1045,10 +1133,6 @@ a {
 
 .flex-wrap{
   flex-wrap: wrap;
-}
-
-.items-center{
-  align-items: center;
 }
 
 .gap-2{
