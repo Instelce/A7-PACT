@@ -2,8 +2,12 @@
 
 use app\core\Application;
 
-class m0006_create_table_offer_tag{
-    public function up(){
+
+class m0006_create_table_offer_tag
+{
+    public function up()
+    {
+
         $db = Application::$app->db;
         $sql = "CREATE TABLE taggage(
             id SERIAL PRIMARY KEY,
@@ -15,7 +19,8 @@ class m0006_create_table_offer_tag{
         $db->pdo->exec($sql);
     }
 
-    public function down(){
+    public function down()
+    {
         $sql = "DROP TABLE taggage;";
         Application::$app->db->pdo->exec($sql);
     }
