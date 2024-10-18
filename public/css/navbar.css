@@ -4,38 +4,35 @@
 }
 
 .navbar {
-    position: relative;
+    padding: 8px;
+    position: fixed;
     top: 0;
     z-index: 1001;
-
     background-color: white;
-
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .navbar .nav-burger {
     width: 35px;
     height: 30px;
     position: relative;
-    margin: 0;
     z-index: 1002;
-
     transform: rotate(0deg);
     transition: .5s ease-in-out;
     cursor: pointer;
 }
 
-.navbar .nav-burger span {
+.nav-burger span {
     display: block;
     position: absolute;
     height: 2px;
     width: 100%;
     background: black;
     border-radius: 3px;
-    opacity: 1;
     left: 0;
     transform: rotate(0deg);
     transition: .25s ease-in-out;
@@ -77,7 +74,7 @@
 #menu {
     position: fixed;
     top: 0;
-    left: -100%;
+    left: -105%;
     width: 100vw;
     height: 100vh;
     background-color: white;
@@ -117,15 +114,6 @@
     left: -100%;
 }
 
-.close-menu {
-    font-size: 40px;
-    color: black;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    cursor: pointer;
-}
-
 .row {
     display: flex;
     justify-content: space-around;
@@ -140,20 +128,11 @@
 }
 
 @media only screen and (min-width: 1440px) {
-
     .navbar {
         padding: 1rem 20%;
     }
 
-    menu {
-        display: none;
-    }
-
     .navbar .nav-burger {
         display: none;
-    }
-
-    x-button {
-        display: block;
     }
 }
