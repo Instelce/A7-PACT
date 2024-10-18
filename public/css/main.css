@@ -3,7 +3,6 @@
 @import "navbar.css";
 @import "footer.css";
 @import "loader.css";
-@import "login.css";
 
 @import "tabs.css";
 
@@ -31,6 +30,8 @@ body {
     font-family: var(--font-text);
     font-size: 16px;
     color: rgb(var(--color-black));
+
+    display: block;
 }
 
 a {
@@ -40,7 +41,7 @@ a {
 
 .heading-1 {
     font-family: var(--font-title);
-    font-size: 1.75em;
+    font-size: var(--typescale-u4);
     font-weight: 600;
 }
 
@@ -64,15 +65,11 @@ a {
     opacity: 0;
 }
 
-#containFoot{
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-}
 
 /* Container */
 .main-container {
     width: 100%;
+    min-height: 80vh;
     display: block;
     position: relative;
     padding: 2rem 20%;
@@ -86,7 +83,7 @@ a {
 
 @media only screen and (min-width: 1440px) {
     .main-container {
-        padding: 0 18%;
+        padding: 0 20%;
     }
 }
 
