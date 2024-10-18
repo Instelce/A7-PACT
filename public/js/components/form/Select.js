@@ -41,7 +41,9 @@ export class Select extends WebComponent {
         this.optionsButton.forEach(option => {
             let check = document.createElement('div');
             check.classList.add('check');
-            check.classList.add('opacity-0');
+            if (option.getAttribute('data-value') !== this.input.value) {
+                check.classList.add('opacity-0');
+            }
             check.innerHTML = this.renderCheck();
             option.appendChild(check);
         })
