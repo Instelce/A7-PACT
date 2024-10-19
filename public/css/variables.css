@@ -39,6 +39,7 @@
 
     --radius-rounded: 100rem;
     --radius-small: 5px;
+    --radius-medium: 20px;
 
     /* Viewports */
     --viewport-lg: 1440px;

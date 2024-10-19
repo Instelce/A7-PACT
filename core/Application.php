@@ -3,6 +3,9 @@
 namespace app\core;
 
 
+use app\core\exception\NotFoundException;
+use app\core\exceptions\ForbiddenException;
+
 class Application
 {
     public static string $ROOT_DIR;
@@ -44,7 +47,15 @@ class Application
         try {
             echo $this->router->resolve();
         } catch (\Exception $e) {
-            $this->response->setStatusCode(500);
+            // Set the status code
+            if ($e instanceof NotFoundException) {
+                $this->response->setStatusCode($e->getCode());
+            } elseif ($e instanceof ForbiddenException) {
+                $this->response->setStatusCode($e->getCode());
+            } else {
+                $this->response->setStatusCode(500);
+            }
+
             echo $this->view->renderView('_error', [
                 'exception' => $e
             ]);

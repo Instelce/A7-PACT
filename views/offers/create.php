@@ -239,54 +239,55 @@ $this->jsFile = "offerCreate";
 
             </div>
 
-            <div class="flex gap-4 mt-4">
+            <div id="price-fields" class="flex flex-col gap-4 hidden">
+                <div class="flex gap-4 mt-4">
 
-                <x-select id="price-low" name="price-low" value="1">
-                    <label slot="label">Bas</label>
-                    <span slot="trigger">€</span>
-                    <div slot="options">
-                        <div data-value="1">€</div>
-                        <div data-value="2">€€</div>
-                        <div data-value="3">€€€</div>
-                    </div>
-                </x-select>
+                    <x-select id="price-low" name="price-low" value="1" class="w-full">
+                        <label slot="label">Gamme de prix</label>
+                        <span slot="trigger">€</span>
+                        <div slot="options">
+                            <div data-value="1">€ - menu à moins de 25€</div>
+                            <div data-value="2">€€ - entre 25 et 40€</div>
+                            <div data-value="3">€€€ - au-delà de 40€</div>
+                        </div>
+                    </x-select>
 
-                <x-select id="price-low" name="price-low" value="3">
-                    <label slot="label">Haut</label>
-                    <span slot="trigger">€</span>
-                    <div slot="options">
-                        <div data-value="2">€€</div>
-                        <div data-value="3">€€€</div>
-                        <div data-value="4">€€€€</div>
-                    </div>
-                </x-select>
+                    <!--                <x-select id="price-low" name="price-low" value="3">-->
+                    <!--                    <label slot="label">Haut</label>-->
+                    <!--                    <span slot="trigger">€</span>-->
+                    <!--                    <div slot="options">-->
+                    <!--                        <div data-value="2">€€</div>-->
+                    <!--                        <div data-value="3">€€€</div>-->
+                    <!--                        <div data-value="4">€€€€</div>-->
+                    <!--                    </div>-->
+                    <!--                </x-select>-->
 
-            </div>
+                </div>
 
-            <!-- Price table -->
-            <table id="price-table" class="table center mt-4 hidden">
-                <thead>
-                <tr>
-                    <th class="table-head" colspan="2">Grille tarifaire</th>
-                </tr>
-                <tr>
-                    <th>Dénomination</th>
-                    <th>Prix</th>
-                </tr>
-                </thead>
-
-                <tbody id="prices-rows">
+                <!-- Price table -->
+                <table class="table center">
+                    <thead>
                     <tr>
-                        <td>
-                            <input id="price-name" name="prices[]" type="text" placeholder="Nom" class="table-input">
-                        </td>
-                        <td>
-                            <input id="price-value" name="prices[]" type="number" placeholder="Prix" class="table-input">
-                        </td>
+                        <th class="table-head" colspan="2">Grille tarifaire</th>
                     </tr>
-                </tbody>
+                    <tr>
+                        <th>Dénomination</th>
+                        <th>Prix</th>
+                    </tr>
+                    </thead>
 
-                <tfoot>
+                    <tbody id="prices-rows">
+                        <tr>
+                            <td>
+                                <input id="price-name" name="prices[]" type="text" placeholder="Nom" class="table-input">
+                            </td>
+                            <td>
+                                <input id="price-value" name="prices[]" type="number" placeholder="Prix" class="table-input">
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <tfoot>
                     <tr>
                         <td colspan="2">
                             <button id="add-price-row" class="table-button">
@@ -295,9 +296,12 @@ $this->jsFile = "offerCreate";
                             </button>
                         </td>
                     </tr>
-                </tfoot>
-            </table>
+                    </tfoot>
+                </table>
+            </div>
+
         </section>
+
 
         <!-- ------------------------------------------------------------------- -->
         <!-- Photos                                                              -->
@@ -306,7 +310,7 @@ $this->jsFile = "offerCreate";
         <section>
             <h2 class="section-header">Photos ou illustrations</h2>
 
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-4">
 
               <!-- Uploader -->
               <label for="photo-input" class="image-uploader">
@@ -318,7 +322,9 @@ $this->jsFile = "offerCreate";
               </label>
 
               <!-- Photos -->
-              <div id="photos" class="grid grid-cols-3 gap-2"></div>
+              <div id="photos" class="grid grid-cols-3 gap-2">
+                  <div class="drag-line hidden"></div>
+              </div>
 
             </div>
         </section>
@@ -326,7 +332,12 @@ $this->jsFile = "offerCreate";
         <?php \app\core\form\Form::end(); ?>
     </div>
 
-    <!-- Sidebar -->
+
+
+    <!-- ------------------------------------------------------------------- -->
+    <!-- Sidebar                                                             -->
+    <!-- ------------------------------------------------------------------- -->
+
     <aside id="sidebar" class="sticky col-span-2 h-fit mt-4">
         <div class="mb-4 flex flex-col gap-2">
           <h3 class="font-bold indent-6">Résumé</h3>
@@ -351,9 +362,9 @@ $this->jsFile = "offerCreate";
           </div>
         </div>
         <div class="flex flex-col gap-2">
-            <a href="" class="button gray">Annuler</a>
-            <a href="" class="button gray">Preview de l'offre</a>
-            <a href="" class="button purple">Aller au paiement</a>
+            <a href="/dashboard" class="button gray">Annuler</a>
+            <a href="/offres/preview" class="button gray" aria-disabled>Preview de l'offre</a>
+            <a href="/offres/1/paiement" class="button purple" aria-disabled>Aller au paiement</a>
         </div>
     </aside>
 

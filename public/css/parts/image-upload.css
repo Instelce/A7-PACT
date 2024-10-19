@@ -26,3 +26,70 @@
     width: 40px;
     height: 40px;
 }
+
+.image-uploader.over {
+    border-color: rgb(var(--color-gray-2));
+    background: rgba(var(--color-success), .2);
+}
+
+/* Photos container */
+#photos.over {
+    padding: .5rem;
+    border: 1px solid rgb(var(--color-gray-2));
+    border-radius: var(--radius-small);
+}
+
+
+/* Image card */
+.uploaded-image-card {
+    width: 100%;
+    height: 300px;
+    display: flex;
+
+    border: 1px solid rgb(var(--color-gray-1));
+    border-radius: var(--radius-medium);
+    overflow: hidden;
+
+    background: white;
+}
+
+.uploaded-image-card .image-container {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-medium);
+    overflow: hidden;
+}
+
+.uploaded-image-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.uploaded-image-card .card-buttons {
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.uploaded-image-card.dragging {
+    border: 2px dashed rgb(var(--color-gray-1));
+}
+
+/* Drag button */
+.photo-drag {
+    cursor: grab !important;
+}
+
+/* Line for dragging */
+.drag-line {
+    width: 100%;
+    height: 40px;
+    border: 1px solid rgb(var(--color-gray-2));
+    border-radius: var(--radius-medium);
+
+    /* hash pattern */
+    background-image: linear-gradient(45deg, rgb(var(--color-gray-2)) 25%, transparent 25%, transparent 50%, rgb(var(--color-gray-2)) 50%, rgb(var(--color-gray-2)) 75%, transparent 75%, transparent);
+}
