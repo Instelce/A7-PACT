@@ -38,8 +38,8 @@ class InputField extends BaseField
             $this->type, // type
             $this->attr, // name
             $this->model->{$this->attr}, // value
-            $this->attr, // placeholder
-            $this->model->rules()[$this->attr] === Model::RULE_REQUIRED ? 'required' : '', // required or not
+            $this->model->getPlaceholder($this->attr) ?? '', // placeholder
+            $this->model->rules()[$this->attr][0] === Model::RULE_REQUIRED ? 'required' : '', // required or not
             $this->renderError()
         );
     }

@@ -1,7 +1,8 @@
 <?php
 
-namespace app\models;
+namespace app\models\offer;
 use app\core\DBModel;
+
 class AttractionParkOffer extends DBModel {
     public int $offer_id = 0;
     public string $url_image_park_map ='';

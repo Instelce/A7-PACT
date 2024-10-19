@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\models\offer;
 
 use app\core\DBModel;
 
@@ -42,10 +42,11 @@ class Offer extends DBModel
     public function rules(): array
     {
         return [
-            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
-            'summary' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]],
-            'description' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 1024]],
-            'website' => [],
+//            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
+//            'summary' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]],
+//            'description' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 1024]],
+//            'website' => [],
+//            'phone_number' => [],
         ];
     }
 
@@ -57,5 +58,28 @@ class Offer extends DBModel
             'website' => 'Site web',
             'phone_number' => 'Numéro de téléphone',
         ];
+    }
+
+    public function type(): OfferType
+    {
+        return OfferType::findOne(['offer_id' => $this->id]);
+    }
+
+    public function option(): OfferOption
+    {
+        return OfferOption::findOne(['offer_id' => $this->id]);
+    }
+
+    public function tags(): array
+    {
+        return OfferTag::findAll(['offer_id' => $this->id]);
+    }
+
+    /**
+     * @return OfferPhoto[]
+     */
+    public function photos(): array
+    {
+        return OfferPhoto::findAll(['offer_id' => $this->id]);
     }
 }

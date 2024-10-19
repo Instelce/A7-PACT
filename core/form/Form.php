@@ -6,9 +6,9 @@ use app\core\Model;
 
 class Form
 {
-    public static function begin($action, $method, $class='')
+    public static function begin($action, $method, $id = '', $class='')
     {
-        echo "<form action='$action' method='$method' class='$class'>";
+        echo "<form action='$action' method='$method' id='$id' class='$class'>";
         return new Form();
     }
 

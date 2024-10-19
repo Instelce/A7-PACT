@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\models\account;
 use app\core\DBModel;
 
 class UserAccount extends DBModel

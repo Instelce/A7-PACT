@@ -37,6 +37,7 @@ $app->router->get('/recherche', [SiteController::class, 'research']);
 
 // Offer routes
 $app->router->get('/offres/creation', [\app\controllers\OfferController::class, 'create']);
+$app->router->post('/offres/creation', [\app\controllers\OfferController::class, 'create']);
 
 // Auth routes
 $app->router->get('/connexion', [AuthController::class, 'login']);

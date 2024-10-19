@@ -9,6 +9,8 @@ export class Select extends WebComponent {
         this.input.id = this.id;
         this.input.setAttribute('name', this.getAttribute('name'));
         this.input.setAttribute('value', this.getAttribute('value'));
+        if (this.hasAttribute('required'))
+            this.input.setAttribute('required', '');
 
         this.trigger = this.shadow.querySelector('.trigger');
         this.chevron = this.shadow.querySelector('.chevron');
@@ -29,6 +31,7 @@ export class Select extends WebComponent {
         this.optionsButton.forEach(option => {
             // Set role
             option.setAttribute('role', 'option');
+            option.setAttribute('focusable', 'true');
 
             // Set the selected option at the beginning
             if (option.getAttribute('data-value') === this.input.value) {
@@ -81,6 +84,28 @@ export class Select extends WebComponent {
                 this.chevron.classList.remove('rotate');
             }
         })
+
+        // Keyboard navigation
+        this.trigger.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowDown') {
+                this.optionsContainer.classList.add('open');
+                this.chevron.classList.add('rotate');
+                this.optionsButton[0].focus();
+            }
+
+            if (event.key === 'Escape') {
+                this.optionsContainer.classList.remove('open');
+                this.chevron.classList.remove('rotate');
+            }
+        });
+
+        // Add required asterisk
+        if (this.hasAttribute('required')) {
+            let label = this.querySelector('[slot="label"]');
+            label.innerHTML += `
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-gray-4))" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-asterisk"><path d="M12 6v12"/><path d="M17.196 9 6.804 15"/><path d="m6.804 9 10.392 6"/></svg>
+            `;
+        }
     }
 
     connectedCallback() {
@@ -150,6 +175,12 @@ export class Select extends WebComponent {
             
             .chevron.rotate {
                 transform: rotate(180deg);
+            }
+            
+            ::slotted([slot="label"]) {
+                display: flex;
+                align-items: center;
+                gap: .5rem;
             }
         </style>
         `;

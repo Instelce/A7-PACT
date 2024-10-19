@@ -1,5 +1,5 @@
 <?php
-namespace app\models;
+namespace app\models\account;
 use app\core\DBModel;
 
 class AnonymousAccount extends DBModel
