@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\models\user;
 use app\core\DBModel;
 
 class AdministratorUser extends DBModel

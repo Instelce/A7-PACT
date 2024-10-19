@@ -1,10 +1,14 @@
 <?php
-/** @var $model \app\models\Offer */
-/** @var $offerTags \app\models\OfferTag[] */
+/** @var $model \app\models\offer\Offer */
+/** @var $offerTags \app\models\offer\OfferTag[] */
 /** @var $this \app\core\View */
+
+use app\core\form\Form;
 
 $this->title = "Création d'une offre";
 $this->jsFile = "offerCreate";
+
+$form = new Form();
 
 ?>
 
@@ -17,7 +21,7 @@ $this->jsFile = "offerCreate";
 <div class="grid grid-cols-5 gap-4">
     <div class="w-full flex flex-col col-span-3">
 
-        <?php $form = \app\core\form\Form::begin('', '', 'flex flex-col gap-12') ?>
+        <form action="" method="post" id="create-offer" class="flex flex-col gap-12" enctype="multipart/form-data">
 
         <!-- ------------------------------------------------------------------- -->
         <!-- Type of the offer (type: 'standard' | 'premium')                    -->
@@ -110,12 +114,12 @@ $this->jsFile = "offerCreate";
               <x-input>
                 <p slot="label">Date d'action</p>
                 <!--<i slot="icon-right" data-lucide="calendar-days"></i>-->
-                <input slot="input" type="date" placeholder="Placeholder">
+                <input slot="input" type="date">
               </x-input>
               <x-input>
                 <p slot="label">Date d'arrêt</p>
                 <!--<i slot="icon-right" data-lucide="calendar-days"></i>-->
-                <input slot="input" type="date" placeholder="Placeholder">
+                <input slot="input" type="date">
               </x-input>
             </div>
           </div>
@@ -135,7 +139,7 @@ $this->jsFile = "offerCreate";
                 <?php echo $form->textarea($model, 'summary') ?>
 
                 <!-- Category of the offer -->
-                <x-select id="category" name="category">
+                <x-select id="category" name="category" required>
                   <label slot="label">Catégorie</label>
                   <span slot="trigger">Choisir une categorie</span>
                   <div slot="options">
@@ -242,7 +246,7 @@ $this->jsFile = "offerCreate";
             <div id="price-fields" class="flex flex-col gap-4 hidden">
                 <div class="flex gap-4 mt-4">
 
-                    <x-select id="price-low" name="price-low" value="1" class="w-full">
+                    <x-select id="price-low" name="price-range" value="1" class="w-full">
                         <label slot="label">Gamme de prix</label>
                         <span slot="trigger">€</span>
                         <div slot="options">
@@ -314,7 +318,7 @@ $this->jsFile = "offerCreate";
 
               <!-- Uploader -->
               <label for="photo-input" class="image-uploader">
-                <input type="file" accept="image/*" id="photo-input" hidden>
+                <input type="file" accept="image/*" id="photo-input" multiple hidden>
 
                 <i data-lucide="upload"></i>
                 <p>Faire glisser des fichiers pour les uploader</p>
@@ -329,7 +333,7 @@ $this->jsFile = "offerCreate";
             </div>
         </section>
 
-        <?php \app\core\form\Form::end(); ?>
+        </form>
     </div>
 
 
@@ -364,7 +368,7 @@ $this->jsFile = "offerCreate";
         <div class="flex flex-col gap-2">
             <a href="/dashboard" class="button gray">Annuler</a>
             <a href="/offres/preview" class="button gray" aria-disabled>Preview de l'offre</a>
-            <a href="/offres/1/paiement" class="button purple" aria-disabled>Aller au paiement</a>
+            <button class="button purple" form="create-offer" type="submit">Aller au paiement</button>
         </div>
     </aside>
 

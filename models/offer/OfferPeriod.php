@@ -1,7 +1,8 @@
 <?php
 
-namespace app\models;
+namespace app\models\offer;
 use app\core\DBModel;
+
 class OfferPeriod extends DBModel {
     public int $period_id = 0;
     public string $start_date ='';

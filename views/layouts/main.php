@@ -14,6 +14,8 @@ use app\core\Application;
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo $this->title ?> | PACT</title>
 
+    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
+
     <!-- Styles -->
     <link rel="stylesheet" href="/css/dist/output.css">
     <link rel="stylesheet" href="/css/main.css">

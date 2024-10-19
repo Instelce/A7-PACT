@@ -1,42 +1,45 @@
 <?php
 
-namespace app\models;
+namespace app\models\offer;
 
 use app\core\DBModel;
 
-class OfferOption extends DBModel
+class VisitOffer extends DBModel
 {
-    public int $id = 0;
-    public string $launch_date = '';
-    public int $week_counter = 0;
-    public int $duration = 0;
+    public const NO_GUIDE = 0;
+    public const GUIDE = 1;
     public int $offer_id = 0;
+    public float $duration = 0.0;
+    public int $guide = self::NO_GUIDE;
+    public int $schedule_id = 0;
+
+
     public static function tableName(): string
     {
         // TODO: Implement tableName() method.
-        return 'offer_option';
+        return 'visit_offer';
     }
 
     public function attributes(): array
     {
         // TODO: Implement attributes() method.
-        return ['launch_date', 'week_counter', 'duration', 'offer_id'];
+        return ['offer_id', 'duration', 'guide', 'schedule_id'];
     }
 
     public static function pk(): string
     {
         // TODO: Implement pk() method.
-        return 'id';
+        return 'offer_id';
     }
 
     public function rules(): array
     {
         // TODO: Implement rules() method.
         return [
-            'launch_date' => [self::RULE_REQUIRED],
-            'week_counter' => [self::RULE_REQUIRED],
-            'duration' => [self::RULE_REQUIRED],
             'offer_id' => [self::RULE_REQUIRED],
+            'duration' => [self::RULE_REQUIRED],
+            'guide' => [self::RULE_REQUIRED],
+            'schedule_id' => [self::RULE_REQUIRED]
         ];
     }
 }

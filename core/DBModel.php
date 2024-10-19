@@ -12,7 +12,9 @@ abstract class DBModel extends Model
 
     abstract public function attributes(): array;
 
-    abstract public function updateAttributes(): array;
+    public function updateAttributes(): array {
+        return $this->attributes();
+    }
 
     public static function pk(): string
     {

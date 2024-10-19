@@ -1,7 +1,8 @@
 <?php
 
-namespace app\models;
+namespace app\models\offer;
 use app\core\DBModel;
+
 class ActivityOffer extends DBModel {
     public int $offer_id = 0;
     public float $duration =0.0;

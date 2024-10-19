@@ -1,24 +1,23 @@
 <?php
 
-namespace app\models;
+namespace app\models\offer;
 
 use app\core\DBModel;
 
-class OfferType extends DBModel
+class OfferTag extends DBModel
 {
     public int $id = 0;
-    public string $type = '';
-    public float $price = 0.0;
+    public string $name = '';
     public int $offer_id = 0;
 
     public static function tableName(): string
     {
-        return 'offer_type';
+        return 'offer_tag';
     }
 
     public function attributes(): array
     {
-        return ['type', 'price', 'offer_id'];
+        return ['name', 'offer_id'];
     }
 
     public function updateAttributes(): array
@@ -29,8 +28,7 @@ class OfferType extends DBModel
     public function rules(): array
     {
         return [
-            'type' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
-            'price' => [self::RULE_REQUIRED],
+            'name' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50]],
             'offer_id' => [self::RULE_REQUIRED]
         ];
     }

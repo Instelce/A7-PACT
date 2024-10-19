@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\models\user\professional;
 use app\core\DBModel;
 
 class PrivateProfessional extends DBModel

@@ -31,9 +31,19 @@ abstract class Model
         return [];
     }
 
+    public function placeholders(): array
+    {
+        return [];
+    }
+
     public function getLabel($attr)
     {
         return $this->labels()[$attr];
+    }
+
+    public function getPlaceholder($attr)
+    {
+        return $this->placeholders()[$attr];
     }
 
     public function validate()

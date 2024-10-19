@@ -16,7 +16,7 @@ class TextareaField extends BaseField
     {
         return sprintf('<x-input %s>
                     <p slot="label">%s</p>
-                    <textarea slot="input" id="%s" type="%s" name="%s" value="%s" placeholder="%s" required></textarea>
+                    <textarea slot="input" id="%s" type="%s" name="%s" value="%s" placeholder="%s" %s></textarea>
                     %s
         </x-input>',
             $this->model->hasError($this->attr) ? 'data-invalid' : '', // other class
@@ -25,7 +25,8 @@ class TextareaField extends BaseField
             $this->type, // type
             $this->attr, // name
             $this->model->{$this->attr}, // value
-            $this->attr, // placeholder
+            $this->model->getPlaceholder($this->attr) ?? '', // placeholder
+            $this->model->rules()[$this->attr][0] === Model::RULE_REQUIRED ? 'required' : '', // required or not
             $this->renderError()
         );
     }
