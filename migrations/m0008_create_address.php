@@ -8,13 +8,13 @@ class m0008_create_address {
         $sql = "CREATE TABLE address (
             id SERIAL PRIMARY KEY,
             number INT NOT NULL,
-            name VARCHAR(255) NOT NULL,
+            street VARCHAR(255) NOT NULL,
             city VARCHAR(255) NOT NULL,
             postal_code INT NOT NULL,
             longitude NUMERIC,
             latitude NUMERIC,
             offer_id INT NOT NULL,
-                     
+
             FOREIGN KEY (offer_id) REFERENCES offer(id)
         );";
         $db->pdo->exec($sql);
