@@ -9,7 +9,6 @@ class OfferType extends DBModel
     public int $id = 0;
     public string $type = '';
     public float $price = 0.0;
-    public int $offer_id = 0;
 
     public static function tableName(): string
     {

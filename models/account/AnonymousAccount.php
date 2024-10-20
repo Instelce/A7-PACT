@@ -4,7 +4,7 @@ use app\core\DBModel;
 
 class AnonymousAccount extends DBModel
 {
-  public int $anonymous_id = 0;
+  public int $account_id = 0;
   public string $pseudo = '';
 
   public static function tableName(): string
@@ -14,12 +14,18 @@ class AnonymousAccount extends DBModel
 
   public function attributes(): array
   {
-    return ['anonymous_id', 'pseudo'];
+    return ['account_id', 'pseudo'];
   }
 
   public static function pk(): string
   {
-    return 'anonymous_id';
+    return 'account_id';
+  }
+
+  public function save(): true
+  {
+
+      return true;
   }
 
   public function rules(): array
@@ -27,5 +33,10 @@ class AnonymousAccount extends DBModel
     return [
       'pseudo' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 15]]
     ];
+  }
+
+  public function account(): Account
+  {
+      return Account::findOne(['id' => $this->account_id]);
   }
 }

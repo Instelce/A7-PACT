@@ -17,9 +17,12 @@ class OfferController extends Controller
             var_dump($_FILES);
             var_dump($request->getBody());
             echo "</pre>";
-            exit;
 
             $offer->loadData($request->getBody());
+
+            if ($offer->validate() && $offer->save()) {
+                return $response->redirect('/offers/create');
+            }
         }
 
         return $this->render('offers/create', [

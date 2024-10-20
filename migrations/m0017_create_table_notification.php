@@ -7,7 +7,7 @@ class m0017_create_table_notification
     public function up() {
         $db = Application::$app->db;
         $sql = "CREATE TABLE notification (
-            notif_id SERIAL PRIMARY KEY,
+            id SERIAL PRIMARY KEY,
             send_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             reception_day DATE NOT NULL,
             open_at TIMESTAMP NOT NULL,

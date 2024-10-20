@@ -5,7 +5,7 @@ use app\core\DBModel;
 
 class UserAccount extends DBModel
 {
-  public int $user_id = 0;
+  public int $account_id = 0;
   public string $mail = '';
   public string $password = '';
   public string $avatarUrl = '';
@@ -17,14 +17,13 @@ class UserAccount extends DBModel
 
   public function attributes(): array
   {
-    return ['user_id', 'mail', 'password', 'avatarUrl'];
+    return ['account_id', 'mail', 'password', 'avatarUrl'];
   }
 
   public static function pk(): string
   {
-    return 'user_id';
+    return 'account_id';
   }
-
 
   public function rules(): array
   {
@@ -35,6 +34,8 @@ class UserAccount extends DBModel
     ];
   }
 
-
+  public function account(): Account {
+    return Account::findOne(['id' => $this->account_id]);
+  }
 }
 

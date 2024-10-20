@@ -112,14 +112,14 @@ $form = new Form();
             <!-- Start end end DATE of the option -->
             <div id="option-dates" class="flex gap-4 mt-2 w-full hidden">
               <x-input>
-                <p slot="label">Date d'action</p>
+                <p slot="label">Date de lancement</p>
                 <!--<i slot="icon-right" data-lucide="calendar-days"></i>-->
-                <input slot="input" type="date">
+                <input slot="input" type="date" name="option-launch-date">
               </x-input>
               <x-input>
-                <p slot="label">Date d'arrêt</p>
+                <p slot="label">Nombre de semaine</p>
                 <!--<i slot="icon-right" data-lucide="calendar-days"></i>-->
-                <input slot="input" type="date">
+                <input slot="input" type="number" name="option-duration" max="4" min="1" value="1">
               </x-input>
             </div>
           </div>
@@ -135,8 +135,8 @@ $form = new Form();
 
             <div class="flex flex-col gap-2">
                 <?php echo $form->field($model, 'title') ?>
-                <?php echo $form->textarea($model, 'description') ?>
                 <?php echo $form->textarea($model, 'summary') ?>
+                <?php echo $form->textarea($model, 'description') ?>
 
                 <!-- Category of the offer -->
                 <x-select id="category" name="category" required>
@@ -163,44 +163,6 @@ $form = new Form();
 
 
         <!-- ------------------------------------------------------------------- -->
-        <!-- Schedules                                                           -->
-        <!-- ------------------------------------------------------------------- -->
-
-        <section>
-            <h2 class="section-header">Horaires</h2>
-
-            <div class="flex flex-col gap-4">
-                <!-- Toggle schedule -->
-                <div class="flex items-center gap-4">
-                    <div class="flex">
-                        <input class="switch" type="checkbox" id="enable-schedule" />
-                        <label class="switch" for="enable-schedule"></label>
-                    </div>
-
-                    <label for="enable-schedule">Activer les horaires</label>
-                </div>
-
-                <!-- Schedule table -->
-                <table id="schedule-table" class="table center hidden">
-                    <thead>
-                        <tr>
-                            <th class="table-head" colspan="3">Grille des horaires</th>
-                        </tr>
-                        <tr>
-                            <th>Jour</th>
-                            <th>Ouverture</th>
-                            <th>Fermeture</th>
-                        </tr>
-                    </thead>
-
-                    <!-- Days of the week are generated in the offerCreate.js -->
-                    <tbody id="schedules-rows"></tbody>
-                </table>
-            </div>
-        </section>
-
-
-        <!-- ------------------------------------------------------------------- -->
         <!-- Localisation                                                        -->
         <!-- ------------------------------------------------------------------- -->
 
@@ -219,6 +181,34 @@ $form = new Form();
             </div>
         </section>
 
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- Schedules                                                           -->
+        <!-- ------------------------------------------------------------------- -->
+
+        <section id="schedules-section" class="hidden">
+            <h2 class="section-header">Horaires</h2>
+
+            <div class="flex flex-col gap-4">
+
+                <!-- Schedule table -->
+                <table id="schedule-table" class="table center">
+                    <thead>
+                        <tr>
+                            <th class="table-head" colspan="3">Grille des horaires</th>
+                        </tr>
+                        <tr>
+                            <th>Jour</th>
+                            <th>Ouverture</th>
+                            <th>Fermeture</th>
+                        </tr>
+                    </thead>
+
+                    <!-- Days of the week are generated in the offerCreate.js -->
+                    <tbody id="schedules-rows"></tbody>
+                </table>
+            </div>
+        </section>
 
         <!-- ------------------------------------------------------------------- -->
         <!-- Price                                                               -->
@@ -255,16 +245,6 @@ $form = new Form();
                             <div data-value="3">€€€ - au-delà de 40€</div>
                         </div>
                     </x-select>
-
-                    <!--                <x-select id="price-low" name="price-low" value="3">-->
-                    <!--                    <label slot="label">Haut</label>-->
-                    <!--                    <span slot="trigger">€</span>-->
-                    <!--                    <div slot="options">-->
-                    <!--                        <div data-value="2">€€</div>-->
-                    <!--                        <div data-value="3">€€€</div>-->
-                    <!--                        <div data-value="4">€€€€</div>-->
-                    <!--                    </div>-->
-                    <!--                </x-select>-->
 
                 </div>
 
@@ -337,23 +317,22 @@ $form = new Form();
     </div>
 
 
-
     <!-- ------------------------------------------------------------------- -->
     <!-- Sidebar                                                             -->
     <!-- ------------------------------------------------------------------- -->
 
-    <aside id="sidebar" class="sticky col-span-2 h-fit mt-4">
-        <div class="mb-4 flex flex-col gap-2">
+    <aside id="sidebar" class="sticky col-span-2 h-fit mt-4 flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
           <h3 class="font-bold indent-6">Résumé</h3>
 
           <div class="px-6 py-4 border border-solid border-gray-1 rounded-3xl">
             <div class="flex justify-between text-gray-4">
               <p>Cout de l’offre sans options</p>
-              <span>4,98 €</span>
+              <span id="price-without-option">4,98 €</span>
             </div>
             <div class="flex justify-between text-gray-4">
               <p>Cout de l’offre avec options</p>
-              <span>7,96 €</span>
+              <span id="price-with-option">7,96 €</span>
             </div>
             <div class="flex justify-between text-gray-4">
               <p>Réduction</p>
@@ -361,10 +340,17 @@ $form = new Form();
             </div>
             <div class="flex justify-between font-bold">
               <p>Sous-total</p>
-              <span>7,96 €</span>
+              <span id="price-subtotal">7,96 €</span>
             </div>
           </div>
         </div>
+
+        <x-input rounded>
+            <p slot="label">Code promo</p>
+            <input slot="input" type="text" placeholder="Entrez votre code promo">
+            <button slot="button" class="button gray sm no-border">Appliquer</button>
+        </x-input>
+
         <div class="flex flex-col gap-2">
             <a href="/dashboard" class="button gray">Annuler</a>
             <a href="/offres/preview" class="button gray" aria-disabled>Preview de l'offre</a>

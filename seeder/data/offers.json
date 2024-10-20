@@ -6,6 +6,11 @@
         "likes": 20,
         "website": "https://www.creperiefontainedujerzual.fr/",
         "phone_number": "+33 02 96 85 45 33",
+        "type": "standard",
+        "option": {
+            "launch_date": "14-11-2024",
+            "duration": 2
+        },
         "address": {
             "number": 21,
             "street": "B Rue du Jerzual",
@@ -33,6 +38,6 @@
         ]
     },
     {
-        
+
     }
 ]

@@ -1,10 +1,12 @@
 // -------------------------------------------------------------------------- //
 // Set sidebar top position
 // -------------------------------------------------------------------------- //
+
 let sidebar = document.querySelector('#sidebar');
 let navbar = document.querySelector('.navbar');
 
 sidebar.style.top = `${navbar.offsetHeight}px`;
+
 
 // -------------------------------------------------------------------------- //
 // Load option date picker
@@ -26,6 +28,7 @@ function updateDatesVisibility() {
         datesContainer.classList.remove('hidden');
     }
 }
+
 
 // -------------------------------------------------------------------------- //
 // Load tags in order to selected category
@@ -55,25 +58,27 @@ categoryInput.addEventListener('change', (e) => {
             </div>
         `;
     })
+
+
+    // -------------------------------------------------------------------------- //
+    // Toggle SCHEDULE section visibility in order to selected category
+    // -------------------------------------------------------------------------- //
+
+    let scheduleSection = document.querySelector('#schedules-section');
+
+    if (categoryInput.value === 'restaurant' || categoryInput.value === 'activity' || categoryInput.value === 'attraction-park') {
+        scheduleSection.classList.remove('hidden');
+    } else {
+        scheduleSection.classList.add('hidden');
+    }
 })
 
 
 // -------------------------------------------------------------------------- //
-// Toggle schedule table visibility
+// Fill the SCHEDULE table with all the days of the week
 // -------------------------------------------------------------------------- //
 
 let scheduleTable = document.querySelector('#schedule-table');
-let scheduleSwitch = document.querySelector('#enable-schedule');
-
-scheduleSwitch.addEventListener('change', (e) => {
-    scheduleTable.classList.toggle('hidden');
-})
-
-
-// -------------------------------------------------------------------------- //
-// Fill the schedule table with all the days of the week
-// -------------------------------------------------------------------------- //
-
 let days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 let scheduleTableBody = scheduleTable.querySelector('tbody#schedules-rows');
 
@@ -83,12 +88,12 @@ days.forEach(day => {
             <td>${day}</td>
             <td>
                 <div class="flex justify-center">
-                    <input type="time" name="schedules[${day}][open][]">
+                    <input type="time" name="schedules[${day}][open]">
                 </div>
             </td>
             <td>
                 <div class="flex justify-center">
-                    <input type="time" name="schedules[${day}][close][]">
+                    <input type="time" name="schedules[${day}][close]">
                 </div>
             </td>
         </tr>
@@ -240,7 +245,6 @@ photoInput.addEventListener('change', (e) => {
     }
 })
 
-
 function dragStart(e) {
     e.target.classList.add('dragging');
 }
@@ -309,3 +313,41 @@ dragZone.addEventListener("drop", (e) => {
 
     draggable.classList.remove("hidden");
 })
+
+
+// -------------------------------------------------------------------------- //
+// Calculate prices
+// -------------------------------------------------------------------------- //
+
+let typeStandardInput = document.querySelector('#type-standard');
+let typePremiumInput = document.querySelector('#type-premium');
+
+let priceWithoutOption = document.querySelector('#price-without-option');
+let priceWithOption = document.querySelector('#price-with-option');
+let priceSubTotal = document.querySelector('#price-subtotal');
+
+let offerPrices = {
+    "standard": 4.98,
+    "premium": 7.98,
+}
+
+let optionPrices = {
+    "no": 0,
+    "en-relief": 2.98,
+    "a-la-une": 4.98,
+}
+
+typeStandardInput.addEventListener('input', updatePrices);
+typePremiumInput.addEventListener('input', updatePrices);
+noOption.addEventListener('input', updatePrices);
+enreliefOption.addEventListener('input', updatePrices);
+alauneOption.addEventListener('input', updatePrices);
+
+function updatePrices() {
+    let type = typeStandardInput.checked ? "standard" : "premium";
+    let option = noOption.checked ? "no" : enreliefOption.checked ? "en-relief" : "a-la-une";
+
+    priceWithoutOption.textContent = `${offerPrices[type]} €`;
+    priceWithOption.textContent = `${(offerPrices[type] + optionPrices[option]).toFixed(2)} €`;
+    priceSubTotal.textContent = `${(offerPrices[type] + optionPrices[option]).toFixed(2)} €`;
+}
