@@ -28,3 +28,10 @@ php -S localhost:8080
 
 Sur phpstorm vous pouvez voir, modifier, supprimer les tables de la DB. Très pratique pour debugger. [Voir la vidéo](./videos/db-connection.mp4).
 
+## Générer des données de test
+
+Pour générer des données de test, lancer la commande suivante.
+
+```
+php seeder/seeder.php
+```
