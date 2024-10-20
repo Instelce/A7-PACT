@@ -22,6 +22,7 @@ class Offer extends DBModel
     public string $website = '';
     public string $phone_number = '';
     public int $offer_type_id = 0;
+    public int $professional_id = 0;
     public string $created_at = '';
     public string $updated_at = '';
 
@@ -32,12 +33,12 @@ class Offer extends DBModel
 
     public function attributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'created_at', 'updated_at'];
+        return ['id', 'title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'professional_id'];
     }
 
     public function updateAttributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'created_at', 'updated_at'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number'];
     }
 
     public function rules(): array

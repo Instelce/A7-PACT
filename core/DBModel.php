@@ -27,8 +27,26 @@ abstract class DBModel extends Model
     public function save(): true
     {
         $tableName = $this->tableName();
-        $attributes = $this->updateAttributes();
+        $attributes = $this->attributes();
         $params = array_map(fn($attr) => ":$attr", $attributes);
+
+        // If a model has created_at or updated_at class attribute are not set, set them to the current time
+        if (property_exists($this, 'created_at') && !$this->created_at) {
+            $this->created_at = date('Y-m-d');
+        }
+        if (property_exists($this, 'updated_at')) {
+            $this->updated_at = date('Y-m-d');
+        }
+
+        // Add the created_at and updated_at attributes to the model
+        if (property_exists($this, 'created_at') && !in_array('created_at', $attributes)) {
+            $attributes[] = 'created_at';
+            $params[] = ':created_at';
+        }
+        if (property_exists($this, 'updated_at') && !in_array('updated_at', $attributes)) {
+            $attributes[] = 'updated_at';
+            $params[] = ':updated_at';
+        }
 
         // Prepare the statement
         $statement = self::prepare("INSERT INTO $tableName (".implode(",", $attributes).") VALUES (".implode(",", $params).")");

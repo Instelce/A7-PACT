@@ -12,10 +12,8 @@ class m0026_create_table_show_offer
             
             duration FLOAT NOT NULL,
             capacity INT NOT NULL,
-            schedule_id INT NOT NULL,
             
-            FOREIGN KEY (offer_id) REFERENCES offer(id),
-            FOREIGN KEY (schedule_id) REFERENCES offer_schedule(id)
+            FOREIGN KEY (offer_id) REFERENCES offer(id)
         );";
         $db->pdo->exec($sql);
     }
