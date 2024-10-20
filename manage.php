@@ -1,6 +1,7 @@
 <?php
 
 use app\core\Application;
+use app\models\account\Account;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -13,7 +14,7 @@ if ($argc >= 2) {
     if ($argv[1] === "migration") {
 
         $config = [
-            'userClass' => \app\models\User::class,
+            'userClass' => Account::class,
             'db' => [
                 'dsn' => $_ENV['DB_DSN'],
                 'user' => $_ENV['DB_USER'],

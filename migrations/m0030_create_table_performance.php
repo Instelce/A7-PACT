@@ -10,7 +10,7 @@ class m0030_create_table_performance
     {
         $db = Application::$app->db;
         $sql = "CREATE TABLE performance (
-            performance_id SERIAL PRIMARY KEY,
+            id SERIAL PRIMARY KEY,
             name VARCHAR(128) NOT NULL  
         );";
         $db->pdo->exec($sql);

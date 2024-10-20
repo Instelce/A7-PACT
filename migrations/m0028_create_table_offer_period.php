@@ -8,10 +8,10 @@ class m0028_create_table_offer_period
     {
         $db = Application::$app->db;
         $sql = "CREATE TABLE offer_period (
-            period_id SERIAL PRIMARY KEY,
+            id SERIAL PRIMARY KEY,
             
             start_date DATE NOT NULL,
-            end_date DATE NOT NULL       
+            end_date DATE NOT NULL
         );";
         $db->pdo->exec($sql);
     }

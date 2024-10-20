@@ -21,6 +21,7 @@ class Offer extends DBModel
     public int $click_counter = 0;
     public string $website = '';
     public string $phone_number = '';
+    public int $offer_type_id = 0;
     public string $created_at = '';
     public string $updated_at = '';
 
@@ -62,7 +63,7 @@ class Offer extends DBModel
 
     public function type(): OfferType
     {
-        return OfferType::findOne(['offer_id' => $this->id]);
+        return OfferType::findOne(['id' => $this->offer_type_id]);
     }
 
     public function option(): OfferOption
@@ -72,7 +73,7 @@ class Offer extends DBModel
 
     public function tags(): array
     {
-        return OfferTag::findAll(['offer_id' => $this->id]);
+        return OfferTag::find(['offer_id' => $this->id]);
     }
 
     /**
@@ -80,6 +81,6 @@ class Offer extends DBModel
      */
     public function photos(): array
     {
-        return OfferPhoto::findAll(['offer_id' => $this->id]);
+        return OfferPhoto::find(['offer_id' => $this->id]);
     }
 }
