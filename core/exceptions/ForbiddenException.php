@@ -4,6 +4,6 @@ namespace app\core\exceptions;
 
 class ForbiddenException extends \Exception
 {
-    protected $message = "You don't have permission to access this page";
+    protected $message = "Vous n'avez pas la permission d'accéder à cette page.";
     protected $code = 403;
 }

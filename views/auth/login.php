@@ -10,7 +10,7 @@ $this->title = 'Connexion';
     <?php $form = \app\core\form\Form::begin('', 'post') ?>
 
     <div class="form-inputs">
-        <?php echo $form->field($model, 'email') ?>
+        <?php echo $form->field($model, 'mail') ?>
         <?php echo $form->field($model, 'password')->passwordField() ?>
     </div>
 

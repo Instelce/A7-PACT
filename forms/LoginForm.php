@@ -4,27 +4,31 @@ namespace app\forms;
 
 use app\core\Application;
 use app\core\Model;
+use app\models\account\UserAccount;
 use app\models\User;
 
 class LoginForm extends Model
 {
-    public string $email = '';
+    public string $mail = '';
     public string $password = '';
 
     public function rules(): array
     {
         return [
-            'email' => [self::RULE_REQUIRED, self::RULE_MAIL],
+            'mail' => [self::RULE_REQUIRED, self::RULE_MAIL],
             'password' => [self::RULE_REQUIRED]
         ];
     }
 
     public function login()
     {
-        $user = User::findOne(['email' => $this->email]);
+        /**
+         * @var UserAccount $user
+         */
+        $user = UserAccount::findOne(['mail' => $this->mail]);
 
         if (!$user) {
-            $this->addError('email', 'Utilisateur inexistant avec cette adresse email.');
+            $this->addError('mail', 'Aucun compte n\'a été trouvé avec cet e-mail.');
             return false;
         }
 
@@ -39,8 +43,16 @@ class LoginForm extends Model
     public function labels(): array
     {
         return [
-            'email' => 'E-mail',
+            'mail' => 'E-mail',
             'password' => 'Mot de passe',
+        ];
+    }
+
+    public function placeholders(): array
+    {
+        return [
+            'mail' => 'example@email.com',
+            'password' => '********',
         ];
     }
 }

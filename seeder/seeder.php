@@ -26,8 +26,9 @@ $db = $app->db;
 $db->pdo->exec("TRUNCATE TABLE offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account CASCADE;");
 
 // Create four users (admin, member, public-pro, private-pro)
+$password = password_hash("1234", PASSWORD_DEFAULT);
 $db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4);");
-$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl) VALUES (1, 'admin@example.com', '1234', 'https://placehold.co/400'), (2, 'member@example.com', '1234', 'https://placehold.co/400'), (3, 'public-pro@example.com', '1234', 'https://placehold.co/400'), (4, 'private-pro@example.com', '1234', 'https://placehold.co/400');");
+$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl) VALUES (1, 'admin@example.com', '". $password ."', 'https://placehold.co/400'), (2, 'member@example.com', '". $password ."', 'https://placehold.co/400'), (3, 'public-pro@example.com', '". $password ."', 'https://placehold.co/400'), (4, 'private-pro@example.com', '". $password ."', 'https://placehold.co/400');");
 
 $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Doe', 'John', '0123456789', 'johndoe', TRUE);");
@@ -41,7 +42,6 @@ $db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 
 // Create random offers for testing
 for ($i = 0; $i < 10; $i++) {
     $offer = new Offer();
-    $offer->id = $i + 1;
     $offer->title = "Offer $i";
     $offer->summary = "Summary $i";
     $offer->description = "Description $i";
@@ -58,11 +58,20 @@ for ($i = 0; $i < 10; $i++) {
     $offer->save();
 }
 
+// Retrieve the offers ids
+$offers_ids = $db->pdo->query("SELECT id FROM offer;")->fetchAll();
+
+function getOfferId($i)
+{
+    global $offers_ids;
+    return $offers_ids[$i - 1]['id'];
+}
+
 // Create specific offers (visit, restaurant, show, attraction_park, activity)
-$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration,  guide) VALUES (1, 2, false);");
-$db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, minimum_price, maximum_price) VALUES (2, 'https://placehold.co/400', 10, 30);");
-$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity) VALUES (3, 3, 30);");
-$db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (4, 'https://placehold.co/400', 10, 10);");
-$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age, price) VALUES (5, 2, 10, 10.99);");
+$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration,  guide) VALUES (". getOfferId(1) . ", 2, false);");
+$db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, minimum_price, maximum_price) VALUES (". getOfferId(2) . ", 'https://placehold.co/400', 10, 30);");
+$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity) VALUES (". getOfferId(3) . ", 3, 30);");
+$db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (". getOfferId(4) . ", 'https://placehold.co/400', 10, 10);");
+$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age, price) VALUES (". getOfferId(5) . ", 2, 10, 10.99);");
 
 echo "Database seeded successfully.\n";

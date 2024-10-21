@@ -2,7 +2,7 @@
 
 use app\core\Application;
 
-class m0001_create_table_account
+class m0006_create_table_account
 {
     public function up()
     {
@@ -12,20 +12,24 @@ class m0001_create_table_account
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+
         CREATE TABLE anonymous_account (
-            account_id INT NOT NULL PRIMARY KEY,
+            account_id INT PRIMARY KEY,
             pseudo VARCHAR(15) NOT NULL,
             
-            CONSTRAINT anonymous_account_fk FOREIGN KEY (account_id) REFERENCES account(id)
+            FOREIGN KEY (account_id) REFERENCES account (id)
         );
+
         CREATE TABLE user_account (
             account_id INT PRIMARY KEY,
             
             mail VARCHAR(100) UNIQUE NOT NULL,
             password VARCHAR(100) NOT NULL,
             avatarUrl VARCHAR(255) NOT NULL,
+            address_id INT NOT NULL,
             
-            CONSTRAINT user_account_fk FOREIGN KEY (account_id) REFERENCES account(id)
+            FOREIGN KEY (account_id) REFERENCES account(id),
+            FOREIGN KEY (address_id) REFERENCES address(id)
         );
         CREATE TABLE administrator_user (
             user_id INT PRIMARY KEY,
@@ -56,8 +60,10 @@ class m0001_create_table_account
             pro_id INT PRIMARY KEY,
             
             last_veto DATE NOT NULL,
+            payment_id INT NOT NULL,
             
-            CONSTRAINT private_professional_fk FOREIGN KEY (pro_id) REFERENCES professional_user(user_id)
+            CONSTRAINT private_professional_fk FOREIGN KEY (pro_id) REFERENCES professional_user(user_id),
+            FOREIGN KEY (payment_id) REFERENCES mean_of_payment(id)
         );
         CREATE TABLE public_professional (
             pro_id INT PRIMARY KEY,

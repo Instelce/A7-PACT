@@ -2,17 +2,17 @@
 
 use app\core\Application;
 
-class m0023_create_table_activity_offer
+class m0014_create_table_restaurant_offer
 {
     public function up()
     {
         $db = Application::$app->db;
-        $sql = "CREATE TABLE activity_offer (
+        $sql = "CREATE TABLE restaurant_offer (
             offer_id INT NOT NULL PRIMARY KEY,
             
-            duration FLOAT NOT NULL,
-            required_age INT NOT NULL,
-            price FLOAT NOT NULL,
+            url_image_carte VARCHAR(255) NOT NULL,
+            minimum_price NUMERIC NOT NULL,
+            maximum_price NUMERIC NOT NULL,
             
             FOREIGN KEY (offer_id) REFERENCES offer(id)
         );";
@@ -21,7 +21,7 @@ class m0023_create_table_activity_offer
 
     public function down()
     {
-        $sql = "DROP TABLE activity_offer;";
+        $sql = "DROP TABLE restaurant_offer CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

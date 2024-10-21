@@ -29,4 +29,8 @@ class PublicProfessional extends DBModel
   {
     return [];
   }
+
+  public function professional(): ProfessionalUser {
+      return ProfessionalUser::findOne(['pro_id' => $this->pub_pro_id]);
+  }
 }

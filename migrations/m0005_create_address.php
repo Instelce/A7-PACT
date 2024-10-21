@@ -2,7 +2,7 @@
 
 use app\core\Application;
 
-class m0008_create_address {
+class m0005_create_address {
     public function up(){
         $db = Application::$app->db;
         $sql = "CREATE TABLE address (
@@ -12,10 +12,7 @@ class m0008_create_address {
             city VARCHAR(255) NOT NULL,
             postal_code INT NOT NULL,
             longitude NUMERIC,
-            latitude NUMERIC,
-            offer_id INT NOT NULL,
-
-            FOREIGN KEY (offer_id) REFERENCES offer(id)
+            latitude NUMERIC
         );";
         $db->pdo->exec($sql);
     }

@@ -9,13 +9,18 @@ import {Tab} from "./components/tabs/Tab.js";
 import {Panel} from "./components/tabs/Panel.js";
 
 // Do not change
-lucide.createIcons({
-    attrs: {
-        'stroke-width': 1.5,
-        'width': '24px',
-        'height': '24px'
-    }
-});
+try {
+    lucide.createIcons({
+        attrs: {
+            'stroke-width': 1.5,
+            'width': '24px',
+            'height': '24px'
+        }
+    });
+} catch (e) {
+    console.log("Please connect you to a wifi network");
+}
+
 
 
 customElements.define("x-input", Input);

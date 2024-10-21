@@ -3,7 +3,7 @@
 use app\controllers\AuthController;
 use app\core\Application;
 use app\controllers\SiteController;
-use app\models\account\Account;
+use app\models\account\UserAccount;
 
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -19,8 +19,6 @@ $dotenv->load();
 
 // Setup config
 $config = [
-    'style' => __DIR__ . '/css/main.css',
-    'userClass' => Account::class,
     'db' => [
         'dsn' => $_ENV['DB_DSN'],
         'user' => $_ENV['DB_USER'],
