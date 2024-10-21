@@ -2,6 +2,7 @@
 
 namespace app\models\user;
 use app\core\DBModel;
+use app\models\account\UserAccount;
 
 class MemberUser extends DBModel
 {
@@ -49,5 +50,8 @@ class MemberUser extends DBModel
     ];
   }
 
+  public function user(): UserAccount {
+      return UserAccount::findOne(['account_id' => $this->member_id]);
+  }
 
 }

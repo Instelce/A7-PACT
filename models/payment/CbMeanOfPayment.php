@@ -35,4 +35,8 @@ class CbMeanOfPayment extends DBModel
             'cvv' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 3]]
         ];
     }
+
+    public function mean_of_payment(): MeanOfPayment {
+        return MeanOfPayment::findOne(['payment_id' => $this->cb_id]);
+    }
 }

@@ -32,6 +32,9 @@ class RibMeanOfPayment extends DBModel
             'iban' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 34]],
             'bic' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 11]]
         ];
+    }
 
+    public function mean_of_payment(): MeanOfPayment {
+        return MeanOfPayment::findOne(['payment_id' => $this->rib_id]);
     }
 }

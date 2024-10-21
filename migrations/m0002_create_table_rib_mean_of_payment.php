@@ -2,7 +2,7 @@
 
 use app\core\Application;
 
-class m0019_create_table_rib_mean_of_payment
+class m0002_create_table_rib_mean_of_payment
 {
     public function up() {
         $db = Application::$app->db;

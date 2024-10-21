@@ -2,6 +2,7 @@
 
 namespace app\models\user;
 use app\core\DBModel;
+use app\models\account\UserAccount;
 
 class AdministratorUser extends DBModel
 {
@@ -26,6 +27,10 @@ class AdministratorUser extends DBModel
   public function rules(): array
   {
     return [];
+  }
+
+  public function user(): UserAccount {
+      return UserAccount::findOne(['account_id' => $this->admin_id]);
   }
 }
 

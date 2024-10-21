@@ -2,7 +2,7 @@
 
 use app\core\Application;
 
-class m0020_create_table_cb_mean_of_payement
+class m0003_create_table_cb_mean_of_payement
 {
     public function up() {
         $db = Application::$app->db;

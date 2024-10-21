@@ -2,7 +2,7 @@
 
 use app\core\Application;
 
-class m0021_create_table_paypal_mean_of_payment
+class m0004_create_table_paypal_mean_of_payment
 {
     public function up() {
         $db = Application::$app->db;
