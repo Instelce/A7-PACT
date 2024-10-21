@@ -6,8 +6,7 @@ use app\core\DBModel;
 class PublicProfessional extends DBModel
 {
 
-  public int $pub_pro_id = 0;
-
+  public int $pro_id = 0;
 
   public static function tableName(): string
   {
@@ -16,14 +15,13 @@ class PublicProfessional extends DBModel
 
   public function attributes(): array
   {
-    return ['pub_pro_id'];
+    return [];
   }
 
   public static function pk(): string
   {
-    return 'pub_pro_id';
+    return 'pro_id';
   }
-
 
   public function rules(): array
   {
@@ -31,6 +29,6 @@ class PublicProfessional extends DBModel
   }
 
   public function professional(): ProfessionalUser {
-      return ProfessionalUser::findOne(['pro_id' => $this->pub_pro_id]);
+      return ProfessionalUser::findOne(['pro_id' => $this->pro_id]);
   }
 }

@@ -14,28 +14,18 @@ class Address extends DBModel
     public float $longitude = 0.0;
     public float $latitude = 0.0;
 
-
     public static function tableName(): string
     {
-        // TODO: Implement tableName() method.
         return 'address';
     }
 
     public function attributes(): array
     {
-        // TODO: Implement attributes() method.
         return ['number', 'street', 'city', 'postal_code', 'longitude', 'latitude'];
-    }
-
-    public static function pk(): string
-    {
-        // TODO: Implement pk() method.
-        return 'id';
     }
 
     public function rules(): array
     {
-        // TODO: Implement rules() method.
         return [
             'number' => [self::RULE_REQUIRED],
             'street' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],

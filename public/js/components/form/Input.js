@@ -120,6 +120,11 @@ export class Input extends WebComponent {
                     color: black;
                 }
                 
+                ::slotted([slot="input"])::placeholder {
+                  font-style: italic;
+                  color: rgb(var(--color-gray-3));
+                }
+                
                 .icon-left, .icon-right {
                   color: rgb(var(--color-black));
                 }

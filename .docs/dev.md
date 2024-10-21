@@ -35,3 +35,14 @@ Pour générer des données de test, lancer la commande suivante.
 ```
 php seeder/seeder.php
 ```
+
+## Se connecter à un des comptes
+
+Voici les identifiants des comptes de test.
+
+- Admin : `admin@test.com`
+- Member : `member@test.com`
+- Private professional : `private-pro@test.com`
+- Public professional : `public-pro@test.com`
+
+Le mot de passe de tous ces comptes est `1234`

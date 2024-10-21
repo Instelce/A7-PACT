@@ -4,6 +4,7 @@ namespace app\models\offer;
 
 use app\core\DBModel;
 use app\models\Address;
+use app\models\user\professional\ProfessionalUser;
 
 class Offer extends DBModel
 {
@@ -24,9 +25,11 @@ class Offer extends DBModel
     public string $phone_number = '';
     public int $offer_type_id = 0;
     public int $professional_id = 0;
-    //    public string $created_at = '';
-//    public string $updated_at = '';
     public int $address_id = 0;
+
+//    public string $created_at = '';
+//    public string $updated_at = '';
+
     public static function tableName(): string
     {
         return 'offer';
@@ -45,7 +48,7 @@ class Offer extends DBModel
     public function rules(): array
     {
         return [
-            //            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
+//            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
 //            'summary' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]],
 //            'description' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 1024]],
 //            'website' => [],
@@ -91,4 +94,22 @@ class Offer extends DBModel
         return OfferPhoto::find(['offer_id' => $this->id]);
     }
 
+    public function professional(): ProfessionalUser
+    {
+        return ProfessionalUser::findOneByPk($this->professional_id);
+    }
+
+    public function addPhoto(string $url) {
+        $photo = new OfferPhoto();
+        $photo->offer_id = $this->id;
+        $photo->url_photo = $url;
+        $photo->save();
+    }
+
+    public function removePhoto(int $photoId) {
+        $photo = OfferPhoto::findOne(['id' => $photoId, 'offer_id' => $this->id]);
+        if ($photo) {
+            $photo->delete();
+        }
+    }
 }
