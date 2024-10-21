@@ -6,7 +6,6 @@ use app\models\account\UserAccount;
 
 class MemberUser extends DBModel
 {
-
   public const NO_NOTIFICATIONS = 0;
   public const ALLOW_NOTIFICATIONS = 1;
 
@@ -15,15 +14,13 @@ class MemberUser extends DBModel
   public string $firstname = '';
   public string $phone = '';
   public string $pseudo = '';
-
   public int $allows_notifications = self::NO_NOTIFICATIONS;
 
   public static function tableName(): string
   {
     return 'member_user';
   }
-
-
+  
   public function attributes(): array
   {
     return ['lastname', 'firstname', 'phone', 'pseudo', 'allows_notifications'];

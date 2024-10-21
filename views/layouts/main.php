@@ -55,7 +55,7 @@ use app\core\Application;
         </a>
 
         <?php if (Application::$app->isAuthenticated()) { ?>
-            <p><?php echo Application::$app->user->getType() . " connecté"?></p>
+            <p><?php echo Application::$app->userType . " connecté"?></p>
         <?php } ?>
     </div>
     <div class="row">

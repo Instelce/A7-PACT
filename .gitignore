@@ -2,3 +2,4 @@
 .env
 vendor
 seeder/env
+public/css/dist
