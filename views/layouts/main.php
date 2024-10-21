@@ -49,10 +49,14 @@ use app\core\Application;
         <span></span>
         <span></span>
     </div>
-    <div>
+    <div class="flex gap-4 items-center">
         <a href="/">
             <img id="logo" src="/assets/images/logoVisitor.svg" alt="" width="100">
         </a>
+
+        <?php if (Application::$app->isAuthenticated()) { ?>
+            <p><?php echo Application::$app->user->getType() . " connecté"?></p>
+        <?php } ?>
     </div>
     <div class="row">
         <a href="/recherche">
@@ -64,7 +68,13 @@ use app\core\Application;
                 <path d="m21 21-4.3-4.3"/>
             </svg>
         </a>
-        <a href="/connexion" class="button">Connexion</a>
+
+        <?php if (Application::$app->isAuthenticated()) { ?>
+            <a href="/deconnexion" class="link">Déconnexion</a>
+        <?php } else { ?>
+            <a href="/connexion" class="button">Connexion</a>
+        <?php } ?>
+
     </div>
 </nav>
 

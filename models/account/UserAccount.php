@@ -45,17 +45,17 @@ class UserAccount extends DBModel
 
     public function isMember(): bool
     {
-        return MemberUser::findOne(['account_id' => $this->account_id]) !== null;
+        return MemberUser::findOneByPk($this->account_id) !== null;
     }
 
     public function isProfessional(): bool
     {
-        return ProfessionalUser::findOne(['account_id' => $this->account_id]) !== null;
+        return ProfessionalUser::findOneByPk($this->account_id) !== null;
     }
 
     public function isAdministrator(): bool
     {
-        return AdministratorUser::findOne(['account_id' => $this->account_id]) !== null;
+        return AdministratorUser::findOneByPk($this->account_id) !== null;
     }
 
     /**
