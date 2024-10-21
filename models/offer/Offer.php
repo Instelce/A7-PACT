@@ -3,6 +3,7 @@
 namespace app\models\offer;
 
 use app\core\DBModel;
+use app\models\Address;
 
 class Offer extends DBModel
 {
@@ -25,7 +26,7 @@ class Offer extends DBModel
     public int $professional_id = 0;
 //    public string $created_at = '';
 //    public string $updated_at = '';
-
+    public int $address_id = 0;
     public static function tableName(): string
     {
         return 'offer';
@@ -33,12 +34,12 @@ class Offer extends DBModel
 
     public function attributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'professional_id'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'offer_type_id', 'professional_id', 'address_id'];
     }
 
     public function updateAttributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'address_id'];
     }
 
     public function rules(): array
@@ -70,6 +71,11 @@ class Offer extends DBModel
     public function option(): OfferOption
     {
         return OfferOption::findOne(['offer_id' => $this->id]);
+    }
+
+    public function address(): Address
+    {
+        return Address::findOne(['address_id' => $this->id]);
     }
 
     public function tags(): array
