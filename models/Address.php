@@ -8,7 +8,7 @@ class Address extends DBModel
 {
     public int $id = 0;
     public int $number = 0;
-    public string $name = '';
+    public string $street = '';
     public string $city = '';
     public int $postal_code = 0;
     public float $longitude = 0.0;
@@ -24,7 +24,7 @@ class Address extends DBModel
     public function attributes(): array
     {
         // TODO: Implement attributes() method.
-        return ['number', 'name', 'city', 'postal_code', 'longitude', 'latitude'];
+        return ['number', 'street', 'city', 'postal_code', 'longitude', 'latitude'];
     }
 
     public static function pk(): string
@@ -38,7 +38,7 @@ class Address extends DBModel
         // TODO: Implement rules() method.
         return [
             'number' => [self::RULE_REQUIRED],
-            'name' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
+            'street' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
             'city' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
             'postal_code' => [self::RULE_REQUIRED]
         ];
