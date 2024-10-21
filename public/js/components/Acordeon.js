@@ -61,6 +61,7 @@ export class Acordeon extends WebComponent {
                 padding: 0.5rem 0;
                 background: none;
                 font-size: inherit;
+                font-weight: bold;
                 cursor: pointer;
                 display: flex;
                 justify-content: space-between;

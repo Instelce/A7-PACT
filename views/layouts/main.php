@@ -135,6 +135,7 @@ use app\core\Application;
         </div>
         <div class="footer-networks">
             <a href="https://www.instagram.com/"
+               target="_blank"
                class="button gray only-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24"
                      height="24" viewBox="0 0 24 24" fill="none"
@@ -148,6 +149,7 @@ use app\core\Application;
                 </svg>
             </a>
             <a href="https://www.facebook.com/"
+               target="_blank"
                class="button gray only-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24"
                      height="24" viewBox="0 0 24 24" fill="none"

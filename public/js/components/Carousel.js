@@ -81,7 +81,6 @@ export class Carousel extends WebComponent {
     }
 
     .slider-container {
-        margin: 10px;
         display: flex;
         height: 100%;
         overflow-x: scroll;
@@ -121,8 +120,8 @@ export class Carousel extends WebComponent {
     }
 
     button {
-        margin-left: 15px;
-        margin-right: 15px;
+        margin-left: 10px;
+        margin-right: 10px;
         width: 50px;
         height: 50px;
         
