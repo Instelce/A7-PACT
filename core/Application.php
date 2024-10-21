@@ -23,8 +23,7 @@ class Application
     public ?Controller $controller = null;
     public View $view;
     public Session $session;
-    public string $userClass;
-    public ?DBModel $user = null;
+    public ?UserAccount $user = null;
 
     /**
      * @var 'visitor'|'member'|'professional'|'admin'
@@ -41,16 +40,20 @@ class Application
         $this->router = new Router($this->request, $this->response);
         $this->db = new Database($config['db']);
         $this->session = new Session();
-        $this->userClass = $config['userClass'];
         $this->view = new View();
+
+        echo "<pre>";
+        var_dump($_SESSION);
+        echo "</pre>";
 
         // Get the primary key of the user from the session
         $pkValue = $this->session->get('user');
 
         if ($pkValue) {
+            echo "connected";
             $this->userType = $this->session->get('userType');
-            $pk = $this->userClass::pk();
-            $this->user = $this->userClass::findOne([$pk => $pkValue]);
+            $pk = UserAccount::pk();
+            $this->user = UserAccount::findOne([$pk => $pkValue]);
         } else {
             $this->userType = 'visitor';
         }
@@ -87,18 +90,21 @@ class Application
 
     /**
      * @param UserAccount $userAccount
-     * @param 'member'|'professional'|'admin' $userType
      * @return bool
      */
-    public function login(UserAccount $userAccount, string $userType): bool
+    public function login(UserAccount $userAccount): bool
     {
         $this->user = $userAccount;
         $this->userType = $userAccount->getType();
         $pk = $userAccount->pk();
         $pkValue = $userAccount->{$pk};
 
+        echo "<pre>";
+        var_dump($userAccount);
+        echo "</pre>";
+
         $this->session->set('user', $pkValue);
-        $this->session->set('userType', $userType);
+        $this->session->set('userType', $this->userType);
 
         return true;
     }
@@ -117,17 +123,17 @@ class Application
     /**
      * Retrieve the user model
      *
-     * @return DBModel|null
+     * @return UserAccount|null
      */
-    public function user(): ?DBModel
+    public function getUser(): ?UserAccount
     {
         if ($this->user) {
             if ($this->userType === 'member') {
-                return MemberUser::findOneByPk($this->user->id);
+                return MemberUser::findOneByPk($this->user->account_id);
             } else if ($this->userType === 'professional') {
-                return ProfessionalUser::findOneByPk($this->user->id);
+                return ProfessionalUser::findOneByPk($this->user->account_id);
             } else if ($this->userType === 'admin') {
-                return AdministratorUser::findOneByPk($this->user->id);
+                return AdministratorUser::findOneByPk($this->user->account_id);
             }
         }
 

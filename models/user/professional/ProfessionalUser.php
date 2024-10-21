@@ -7,7 +7,7 @@ use http\Client\Curl\User;
 class ProfessionalUser extends DBModel
 {
 
-  public int $pro_id = 0;
+  public int $user_id = 0;
   public int $code = 0;
   public string $denomination = '';
   public string $siren = '';
@@ -19,14 +19,13 @@ class ProfessionalUser extends DBModel
 
   public function attributes(): array
   {
-    return ['pro_id', 'code', 'denomination', 'siren'];
+    return ['code', 'denomination', 'siren'];
   }
 
   public static function pk(): string
   {
-    return 'pro_id';
+    return 'user_id';
   }
-
 
   public function rules(): array
   {

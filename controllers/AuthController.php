@@ -8,6 +8,7 @@ use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\forms\LoginForm;
+use app\models\account\UserAccount;
 use app\models\User;
 
 class AuthController extends Controller
@@ -28,12 +29,12 @@ class AuthController extends Controller
                 exit;
             }
         }
-        return $this->render('login', ['model' => $loginForm]);
+        return $this->render('auth/login', ['model' => $loginForm]);
     }
 
     public function register(Request $request)
     {
-        $user = new User();
+        $user = new UserAccount();
 
         if ($request->isPost()) {
             $user->loadData($request->getBody());
@@ -44,12 +45,12 @@ class AuthController extends Controller
                 exit;
             }
 
-            return $this->render('register', [
+            return $this->render('auth/register', [
                 'model' => $user
             ]);
         }
 
-        return $this->render('register', [
+        return $this->render('auth/register', [
             'model' => $user
         ]);
     }

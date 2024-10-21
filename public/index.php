@@ -19,8 +19,6 @@ $dotenv->load();
 
 // Setup config
 $config = [
-    'style' => __DIR__ . '/css/main.css',
-    'userClass' => UserAccount::class,
     'db' => [
         'dsn' => $_ENV['DB_DSN'],
         'user' => $_ENV['DB_USER'],

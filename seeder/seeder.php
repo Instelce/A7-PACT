@@ -26,8 +26,9 @@ $db = $app->db;
 $db->pdo->exec("TRUNCATE TABLE offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account CASCADE;");
 
 // Create four users (admin, member, public-pro, private-pro)
+$password = password_hash("1234", PASSWORD_DEFAULT);
 $db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4);");
-$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl) VALUES (1, 'admin@example.com', '1234', 'https://placehold.co/400'), (2, 'member@example.com', '1234', 'https://placehold.co/400'), (3, 'public-pro@example.com', '1234', 'https://placehold.co/400'), (4, 'private-pro@example.com', '1234', 'https://placehold.co/400');");
+$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl) VALUES (1, 'admin@example.com', '". $password ."', 'https://placehold.co/400'), (2, 'member@example.com', '". $password ."', 'https://placehold.co/400'), (3, 'public-pro@example.com', '". $password ."', 'https://placehold.co/400'), (4, 'private-pro@example.com', '". $password ."', 'https://placehold.co/400');");
 
 $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Doe', 'John', '0123456789', 'johndoe', TRUE);");
