@@ -1,15 +1,29 @@
+/*
+
+Its the normal checkbox button.
+"/switch.css" also uses a checkbox. so be careful and don't forget
+to use the class "checkboxNormal".
+
+if it isn't specified specified. A normal checkbbox will appear.
+
+It only exists for the pro version in the current version.
+
+Please consult yann for more information regarding its creation
 /**************************************************************************
 
                 FOR THE CHECKBOX YOU CAN COPY THAT LINE
 
-                    <label>
-                        <input type="checkbox" id="bla">
-                        text
-                    </label>
+            <input class="checkboxNormal" type="checkbox" id="bla">
+            <label class="checkboxNormal">lorem</label>
+
+    The id is necessery in order to tick the correct parameters.
+    each checkbox needs its own id to be recognized, never forget that.            
                     
 **************************************************************************/
-
 input.checkbox[type="checkbox"]
+
+
+input.checkboxNormal[type="checkbox"]
 {
     -webkit-appearance: none;
     appearance: none;
@@ -48,10 +62,20 @@ input.checkbox[type="checkbox"]:checked::before
 
             FOR THE RADIO BUTTON VERSION YOU CAN COPY THAT LINE
 
-                    <label>
-                        <input type="radio" name="test">
-                        text
-                    </label>
+        <input class="checkboxNormal" type="radio" id="tezt" name="test">
+        <label class="checkboxNormal" for="tezt">gougou</label>
+
+    
+    Don't forget use the type radio, even though the class is currently
+    called "checkboxNormal".
+
+    Name is really important to make the radio button works properly.
+    If it isn't specified, it will work like a checkbox which can't be
+    unticked.
+
+    Id works the same way
+    The id is necessery in order to tick the correct parameters.
+    each checkbox needs its own id to be recognized, never forget that.  
 
 **************************************************************************/
 

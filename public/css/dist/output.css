@@ -473,6 +473,7 @@ x-tabs.column x-tab[selected]::before {
   border-radius: var(--radius-rounded);
 }
 
+<<<<<<< Updated upstream
 .link {
   --color: rgb(var(--color-blue-primary));
   width: -moz-fit-content;
@@ -604,15 +605,26 @@ td:has(.table-button) {
 /* General form style */
 
 .form form {
+=======
+form {
+>>>>>>> Stashed changes
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
+<<<<<<< Updated upstream
 /* A page which only contains a form */
 
 .form-page {
   margin: 0 15%;
+=======
+.form-container {
+  margin: 0 15%;
+}
+
+.form-page {
+>>>>>>> Stashed changes
   margin-top: 4rem;
   display: flex;
   flex-direction: column;
@@ -635,6 +647,7 @@ td:has(.table-button) {
   gap: .4rem;
 }
 
+<<<<<<< Updated upstream
 /* Helper text */
 
 .helper {
@@ -654,6 +667,8 @@ td:has(.table-button) {
   color: rgb(var(--color-gray-4));
 }
 
+=======
+>>>>>>> Stashed changes
 /*
 
 Button component
@@ -975,16 +990,17 @@ label.switch:after {
   height: 1.5em;
   background: rgb(var(--color-gray-3));
   border-radius: 90px;
-  transition: 0.5s;
+  transition: 0.3s;
 }
 
 input.switch:checked + label.switch:after
 {
+  transition: 0.3s;
   background: #fff;
 }
 
 input.switch:checked + label {
-  transition: 0.5s;
+  transition: 0.3s;
   background: rgb(var(--color-purple-primary));
 }
 
@@ -993,6 +1009,7 @@ input.switch:checked + label:after {
   transform: translateX(-100%);
 }
 
+<<<<<<< Updated upstream
 label.switch:active:after {
   width: 130px;
 }
@@ -1027,6 +1044,8 @@ textarea {
   resize: vertical;
 }
 
+=======
+>>>>>>> Stashed changes
 /* Import fonts */
 
 /**
@@ -1302,10 +1321,13 @@ a {
   margin: 2rem 0;
 }
 
+<<<<<<< Updated upstream
 .heightTop{
   height: 56px;
 }
 
+=======
+>>>>>>> Stashed changes
 @media only screen and (max-width: 728px) {
   .main-container {
     padding: 0 20px;
@@ -1315,6 +1337,7 @@ a {
 @media only screen and (min-width: 1440px) {
   .main-container {
     padding: 0 20%;
+<<<<<<< Updated upstream
   }
 }
 
@@ -1333,6 +1356,8 @@ a {
 
   100% {
     opacity: 0;
+=======
+>>>>>>> Stashed changes
   }
 }
 
@@ -1447,6 +1472,7 @@ a {
   display: none;
 }
 
+<<<<<<< Updated upstream
 .h-fit{
   height: -moz-fit-content;
   height: fit-content;
@@ -1456,6 +1482,8 @@ a {
   width: 100%;
 }
 
+=======
+>>>>>>> Stashed changes
 .flex-shrink{
   flex-shrink: 1;
 }
@@ -1468,6 +1496,7 @@ a {
   resize: both;
 }
 
+<<<<<<< Updated upstream
 .grid-cols-2{
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -1476,6 +1505,8 @@ a {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+=======
+>>>>>>> Stashed changes
 .flex-col{
   flex-direction: column;
 }
@@ -1484,6 +1515,7 @@ a {
   flex-wrap: wrap;
 }
 
+<<<<<<< Updated upstream
 .items-center{
   align-items: center;
 }
@@ -1496,14 +1528,19 @@ a {
   justify-content: space-between;
 }
 
+=======
+>>>>>>> Stashed changes
 .gap-1{
   gap: 0.25rem;
 }
 
+<<<<<<< Updated upstream
 .gap-12{
   gap: 3rem;
 }
 
+=======
+>>>>>>> Stashed changes
 .gap-2{
   gap: 0.5rem;
 }

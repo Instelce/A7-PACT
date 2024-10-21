@@ -1,3 +1,31 @@
+/*
+
+Its the switch buttons,  which you can toggle and untoggle.
+It originaly is a checkbox. So its very important to use the 
+class "switch" and not to confound with checkboxNormal.
+
+If it isn't specified, it won't work.
+
+It only exists for the pro version in the current version.
+
+Please consult Yann for more informations regarding its creation.
+
+
+/**************************************************************************
+
+                FOR THE CHECKBOX YOU CAN COPY THAT LINE
+
+            <input class="switch" type="checkbox" id="switchtest" />
+            <label class="switch" for="switchtest">Toggle</label>
+
+	The id works the same way that checkboxNormal's 
+    The id is necessery in order to tick the correct parameters.
+    each checkbox needs its own id to be recognized, never forget that.            
+                    
+**************************************************************************/
+
+
+
 input.switch[type=checkbox]{
 	visibility: hidden;
     height: 0;
@@ -25,24 +53,21 @@ label.switch:after {
 	height: 1.5em;
 	background: rgb(var(--color-gray-3));
 	border-radius: 90px;
-	transition: 0.5s;
+	transition: 0.3s;
 }
 
 input.switch:checked + label.switch:after
 {
+	transition: 0.3s;
 	background: #fff;
 }
 
 input.switch:checked + label {
-	transition: 0.5s;
+	transition: 0.3s;
 	background: rgb(var(--color-purple-primary));
 }
 
 input.switch:checked + label:after {
 	left: calc(100% - 5px);
 	transform: translateX(-100%);
-}
-
-label.switch:active:after {
-	width: 130px;
 }
