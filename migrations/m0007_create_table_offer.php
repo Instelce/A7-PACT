@@ -6,7 +6,14 @@ class m0007_create_table_offer
 {
     public function up() {
         $db = Application::$app->db;
-        $sql = "CREATE TABLE offer (
+        $sql = "
+        CREATE TABLE offer_type (
+            id SERIAL PRIMARY KEY,
+            type VARCHAR(255) NOT NULL,
+            price NUMERIC NOT NULL 
+        );
+
+        CREATE TABLE offer (
             id SERIAL PRIMARY KEY,
             title VARCHAR(60) NOT NULL,
             summary VARCHAR(128) NOT NULL,
@@ -21,13 +28,16 @@ class m0007_create_table_offer
             phone_number VARCHAR(10),
             professional_id INT NOT NULL,
             address_id INT NOT NULL,
+            offer_type_id INT NOT NULL,
             
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             
             FOREIGN KEY (professional_id) REFERENCES professional_user(user_id),
-            FOREIGN KEY (address_id) REFERENCES address(id)
+            FOREIGN KEY (address_id) REFERENCES address(id),
+            FOREIGN KEY (offer_type_id) REFERENCES offer_type(id)
         );
+
         CREATE TABLE offer_option (
             id SERIAL PRIMARY KEY,
             type VARCHAR(20) NOT NULL,
@@ -38,15 +48,6 @@ class m0007_create_table_offer
             FOREIGN KEY (offer_id) REFERENCES offer(id) 
         );
 
-        CREATE TABLE offer_type (
-            id SERIAL PRIMARY KEY,
-            type VARCHAR(255) NOT NULL,
-            price NUMERIC NOT NULL,
-            
-            offer_id INT NOT NULL,
-            
-            FOREIGN KEY (offer_id) REFERENCES offer(id) 
-        );
 
         CREATE TABLE offer_photo (
             id SERIAL PRIMARY KEY,
