@@ -24,7 +24,7 @@ abstract class DBModel extends Model
     /**
      * Save the model to the database
      */
-    public function save(): true
+    public function save(): bool
     {
         $tableName = $this->tableName();
         $attributes = $this->attributes();
@@ -54,6 +54,14 @@ abstract class DBModel extends Model
         // Load the model values into the statement
         foreach ($attributes as $attribute) {
             $statement->bindValue(":$attribute", $this->{$attribute});
+        }
+
+        // Bind created_at and updated_at values
+        if (property_exists($this, 'created_at')) {
+            $statement->bindValue(':created_at', $this->created_at);
+        }
+        if (property_exists($this, 'updated_at')) {
+            $statement->bindValue(':updated_at', $this->updated_at);
         }
 
         $statement->execute();
