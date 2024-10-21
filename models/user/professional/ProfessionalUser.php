@@ -1,6 +1,8 @@
 <?php
 namespace app\models\user\professional;
 use app\core\DBModel;
+use app\models\account\UserAccount;
+use http\Client\Curl\User;
 
 class ProfessionalUser extends DBModel
 {
@@ -35,5 +37,7 @@ class ProfessionalUser extends DBModel
     ];
   }
 
-
+  public function user(): UserAccount {
+      return UserAccount::findOne(['account_id' => $this->pro_id]);
+  }
 }

@@ -4,7 +4,7 @@ use app\core\Application;
 
 // TODO : add language to offer
 
-class m0022_create_table_visit_offer
+class m0016_create_table_visit_offer
 {
     public function up()
     {
@@ -15,7 +15,10 @@ class m0022_create_table_visit_offer
             duration NUMERIC NOT NULL,
             guide BOOLEAN NOT NULL,
             
-            FOREIGN KEY (offer_id) REFERENCES offer(id)
+            period_id INT,
+            
+            FOREIGN KEY (offer_id) REFERENCES offer(id),
+            FOREIGN KEY (period_id) REFERENCES offer_period(id)
         );";
         $db->pdo->exec($sql);
     }

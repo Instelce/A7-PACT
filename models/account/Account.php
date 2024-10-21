@@ -32,7 +32,8 @@ class Account extends DBModel
     {
         // TODO: Implement rules() method.
         return [
-
+            'create_at' => [self::RULE_REQUIRED, self::RULE_DATE],
+            'update_at' => [self::RULE_REQUIRED, self::RULE_DATE]
         ];
 
     }

@@ -2,7 +2,7 @@
 
 use app\core\Application;
 
-class m0017_create_table_notification
+class m0008_create_table_notification
 {
     public function up() {
         $db = Application::$app->db;

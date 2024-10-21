@@ -2,7 +2,7 @@
 
 use app\core\Application;
 
-class m0007_create_public_tariff {
+class m0010_create_public_tariff {
     public function up(){
         $db = Application::$app->db;
         $sql = "CREATE TABLE public_tariff (

@@ -2,17 +2,18 @@
 
 use app\core\Application;
 
-class m0026_create_table_show_offer
+class m0013_create_table_attraction_park_offer
 {
     public function up()
     {
         $db = Application::$app->db;
-        $sql = "CREATE TABLE show_offer (
+        $sql = "CREATE TABLE attraction_park_offer (
             offer_id INT NOT NULL PRIMARY KEY,
-            
-            duration FLOAT NOT NULL,
-            capacity INT NOT NULL,
-            
+
+            url_image_park_map VARCHAR(255) NOT NULL,
+            attraction_number INT NOT NULL,
+            required_age INT NOT NULL,
+
             FOREIGN KEY (offer_id) REFERENCES offer(id)
         );";
         $db->pdo->exec($sql);
@@ -20,7 +21,7 @@ class m0026_create_table_show_offer
 
     public function down()
     {
-        $sql = "DROP TABLE show_offer CASCADE;";
+        $sql = "DROP TABLE attraction_park_offer CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

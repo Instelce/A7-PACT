@@ -2,7 +2,7 @@
 
 use app\core\Application;
 
-class m0027_create_table_visit_language
+class m0017_create_table_visit_language
 {
     public function up()
     {
@@ -14,6 +14,16 @@ class m0027_create_table_visit_language
             language VARCHAR(255) NOT NULL,
             
             FOREIGN KEY (offer_id) REFERENCES offer(id)
+        );
+
+        CREATE TABLE is_talked (
+            id SERIAL PRIMARY KEY,
+            
+            visit_id INT NOT NULL,
+            language_id INT NOT NULL,
+            
+            FOREIGN KEY (visit_id) REFERENCES visit_offer(offer_id),
+            FOREIGN KEY (language_id) REFERENCES visit_language(language_id)
         );";
         $db->pdo->exec($sql);
     }

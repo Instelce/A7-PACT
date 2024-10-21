@@ -30,4 +30,8 @@ class PaypalMeanOfPayment extends DBModel
             'paypal_url' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]]
         ];
     }
+
+    public function mean_of_payment(): MeanOfPayment {
+        return MeanOfPayment::findOne(['payment_id' => $this->paypal_id]);
+    }
 }
