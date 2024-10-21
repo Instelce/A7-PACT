@@ -27,17 +27,38 @@ $password = password_hash("1234", PASSWORD_DEFAULT);
 
 $db->pdo->exec("TRUNCATE TABLE offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account CASCADE;");
 
+//create mean of payment
+$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1);");
+$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'CarteBancaire', '1548759863254125', '07/25', '123');");
+
+//create adress users
+$db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
+                                                                    (11,68, 'Avenue Millies Lacroix', 'Eaubonne', 95600,2.2779189 ,48.992128), 
+                                                                    (12,90,'rue de Lille','Asnières-sur-Seine',92600,2.285369,48.914155),
+                                                                    (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
+                                                                    (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451)ON CONFLICT (id) DO NOTHING;");
+
+//create adress offres
+$db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
+                                                                    (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
+                                                                    (22, 1, 'Rue de la Corderie', 'Lannion', 22300, -3.4597, 48.7326);");
+//create users
 $db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4);");
-$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl) VALUES 
-                                                                     (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg'), 
-                                                                     (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae'), 
-                                                                     (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg'),
-                                                                     (4, 'FredLeChat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole');");
+$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl, address_id) VALUES 
+                                                                     (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11), 
+                                                                     (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',12), 
+                                                                     (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg',13),
+                                                                     (4, 'FredLeChat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14);");
+
 $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
+
 $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VeilleArbre', TRUE);");
+
 $db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034'), (4, 7421, 'Fred port', '65941542000012');");
+
 $db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3);");
-$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto) VALUES (4, '2024-11-30');");
+
+$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto,payment_id) VALUES (4, '2024-11-30',1);");
 
 //create offres
 $db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.99), (2, 'premium', 7.99);");
@@ -58,6 +79,7 @@ $offre->website = 'https://www.facebook.com/people/Caf%C3%A9-Des-Halles/10006409
 $offre->phone_number = '0296371642';
 $offre->offer_type_id = 1;
 $offre->professional_id = 3;
+$offre->address_id = 21;
 $offre->save();
 
 
@@ -80,6 +102,7 @@ $offre->website = 'https://www.levillagegaulois.org/php/home.php';
 $offre->phone_number = '02 96 91 83 95';
 $offre->offer_type_id = 2;
 $offre->professional_id = 4;
+$offre->address_id = 22;
 $offre->save();
 
 
@@ -116,5 +139,3 @@ $photosGaulois3 = new OfferPhoto();
 $photosGaulois3->url_photo = 'https://www.levillagegaulois.org/php/img/accueil/accueil.jpg';
 $photosGaulois3->offer_id = 2;
 $photosGaulois3->save();
-
-

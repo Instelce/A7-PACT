@@ -4,7 +4,8 @@ use app\core\Application;
 
 class m0007_create_table_offer
 {
-    public function up() {
+    public function up()
+    {
         $db = Application::$app->db;
         $sql = "
         CREATE TABLE offer_type (
@@ -16,7 +17,7 @@ class m0007_create_table_offer
         CREATE TABLE offer (
             id SERIAL PRIMARY KEY,
             title VARCHAR(60) NOT NULL,
-            summary VARCHAR(128) NOT NULL,
+            summary VARCHAR(384) NOT NULL,
             description VARCHAR(1024) NOT NULL,
             likes INT DEFAULT 0,
             offline BOOLEAN DEFAULT TRUE,
@@ -59,7 +60,8 @@ class m0007_create_table_offer
         $db->pdo->exec($sql);
     }
 
-    public function down() {
+    public function down()
+    {
         $db = Application::$app->db;
         $sql = "DROP TABLE offer_type CASCADE,
                 DROP TABLE offer CASCADE,
