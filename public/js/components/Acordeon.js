@@ -1,7 +1,3 @@
-/// Template of web component
-/// Use this template to create a new web component
-/// Watch the video in the documentation to create a new template file in intellij / phpstorm.
-
 /// Composant call
 ///<x-acordeon text="Acordeon">
 ///    <div slot="content">
@@ -21,16 +17,15 @@ import { WebComponent } from "./WebComponent.js";
  */
 export class Acordeon extends WebComponent {
 
-    static get observedAttributes() { return [] }
+    static get observedAttributes() { return [] } // Attributes to observe
 
     constructor() {
         super();
-        let topPart = this.shadowRoot.querySelector("#topPart");
+        let topPart = this.shadowRoot.querySelector("#topPart");//script menu burger, html element recuperator
         let content = this.shadowRoot.querySelector("#content");
         let arrow = this.shadowRoot.querySelector("#arrow");
 
-
-        topPart.addEventListener('click', function () {
+        topPart.addEventListener('click', function () {//on click switch open or not, for the animation of the arrow and content hidden or visible
             arrow.classList.toggle('open');
             content.classList.toggle('content-hidden');
             content.classList.toggle('content-visible');
@@ -38,14 +33,14 @@ export class Acordeon extends WebComponent {
     }
 
     connectedCallback() {
-        super.connectedCallback();
+        super.connectedCallback(); // Called when the element is added to the DOM
     }
 
     disconnectedCallback() {
-        super.connectedCallback();
+        super.connectedCallback(); // Called when the element is removed from the DOM
     }
 
-    attributeChangedCallback(name, oldValue, newValue) { }
+    attributeChangedCallback(name, oldValue, newValue) { } // Called when an observed attribute has been added, removed, updated, or replaced
 
     styles() {
         return `
@@ -117,7 +112,7 @@ export class Acordeon extends WebComponent {
     // Getter and setter
     // ---------------------------------------------------------------------- //
     get text() {
-        return this.getAttribute('text');
+        return this.getAttribute('text'); // Get the value of the 'text' attribute
     }
 
 }
