@@ -26,7 +26,8 @@ class m0009_create_table_offer_tag
 
     public function down()
     {
-        $sql = "DROP TABLE offer_tag CASCADE;";
+        $sql = "DROP TABLE offer_tag CASCADE,
+                DROP TABLE is_tagged CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

@@ -30,7 +30,8 @@ class m0017_create_table_visit_language
 
     public function down()
     {
-        $sql = "DROP TABLE visit_language CASCADE;";
+        $sql = "DROP TABLE visit_language CASCADE,
+                DROP TABLE is_talked CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

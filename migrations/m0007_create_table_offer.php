@@ -61,7 +61,10 @@ class m0007_create_table_offer
 
     public function down() {
         $db = Application::$app->db;
-        $sql = "DROP TABLE offer CASCADE;";
+        $sql = "DROP TABLE offer_type CASCADE,
+                DROP TABLE offer CASCADE,
+                DROP TABLE offer_option CASCADE,
+                DROP TABLE offer_photo CASCADE;";
         $db->pdo->exec($sql);
     }
 }
