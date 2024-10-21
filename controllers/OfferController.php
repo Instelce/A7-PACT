@@ -2,8 +2,10 @@
 
 namespace app\controllers;
 
+use app\core\Application;
 use app\core\Controller;
 use app\core\middlewares\AuthMiddleware;
+use app\core\middlewares\BackOfficeMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\models\offer\Offer;
@@ -14,9 +16,11 @@ class OfferController extends Controller
     public function __construct()
     {
         $this->registerMiddleware(new AuthMiddleware(['create']));
+        $this->registerMiddleware(new BackOfficeMiddleware(['create']));
     }
 
     public function create(Request $request, Response $response) {
+        $this->setLayout('back-office');
         $offer = new Offer();
 
         if ($request->isPost()) {
@@ -32,6 +36,7 @@ class OfferController extends Controller
             $offer->loadData($request->getBody());
             $offer->offline_date = date('Y-m-d');
             $offer->last_online_date = null;
+            $offer->professional_id = Application::$app->user->account_id;
 
             if ($offer->validate()) {
                 echo "Offer is valid";

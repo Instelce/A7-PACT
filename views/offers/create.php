@@ -3,6 +3,7 @@
 /** @var $offerTags \app\models\offer\OfferTag[] */
 /** @var $this \app\core\View */
 
+use app\core\Application;
 use app\core\form\Form;
 
 $this->title = "Création d'une offre";
@@ -33,36 +34,54 @@ $form = new Form();
             <!-- Choice for a PRIVATE professional -->
             <div class="flex flex-col gap-4">
 
-              <!-- Standard offer -->
-              <div class="flex justify-between">
-                  <div class="flex gap-2">
-                      <input type="radio" id="type-standard" name="type" value="standard" checked>
-                      <label for="type-standard" class="flex flex-col gap-1">
-                        Offre standard
-                        <small class="helper">Permet de prendre une option</small>
-                      </label>
+                <?php if (Application::$app->user->isPrivateProfessional()) { ?>
+
+                  <!-- Standard offer -->
+                  <div class="flex justify-between">
+                      <div class="flex gap-2">
+                          <input type="radio" id="type-standard" name="type" value="standard" checked>
+                          <label for="type-standard" class="flex flex-col gap-1">
+                            Offre standard
+                            <small class="helper">Permet de prendre une option</small>
+                          </label>
+                      </div>
+
+                      <span class="price-bubble">4,98 €</span>
                   </div>
 
-                  <span class="price-bubble">4,98 €</span>
-              </div>
+                  <!-- Premium offer -->
+                  <div class="flex justify-between items-center">
+                      <div class="flex gap-2 items-center">
+                          <input type="radio" id="type-premium" name="type" value="premium">
+                          <label for="type-premium" class="flex flex-col gap-1">
+                            Offre premium
+                            <small class="helper">Avantage de l’offre standard <br>
+                              Permet de blacklister 3 avis néfaste à votre offre
+                              sur 12 mois glissants</small>
+                          </label>
+                      </div>
 
-              <!-- Premium offer -->
-              <div class="flex justify-between items-center">
-                  <div class="flex gap-2 items-center">
-                      <input type="radio" id="type-premium" name="type" value="premium">
-                      <label for="type-premium" class="flex flex-col gap-1">
-                        Offre premium
-                        <small class="helper">Avantage de l’offre standard <br>
-                          Permet de blacklister 3 avis néfaste à votre offre
-                          sur 12 mois glissants</small>
-                      </label>
+                      <span class="price-bubble">7,98 €</span>
                   </div>
 
-                  <span class="price-bubble">7,98 €</span>
-              </div>
+                <?php } else { ?>
+
+                    <!-- Free offer -->
+                    <div class="flex justify-between items-center">
+                        <div class="flex gap-2 items-center">
+                            <input type="radio" id="type-free" name="type" value="free">
+                            <label for="type-premium" class="flex flex-col gap-1">
+                                Offre gratuite
+                            </label>
+                        </div>
+
+                        <span class="price-bubble">0 €</span>
+                    </div>
+
+                <?php } ?>
+
             </div>
 
-            <!-- TODO: Do PUBLIC professional choices -->
         </section>
 
 
@@ -70,60 +89,62 @@ $form = new Form();
         <!-- Option of the offer (option: 'no' | 'en-relief' | 'a-la-une')       -->
         <!-- ------------------------------------------------------------------- -->
 
-        <section>
-          <h2 class="section-header">Option <span class="text-gray-3 ml-1">- Uniquement visible par vous</span></h2>
+        <?php if (Application::$app->user->isPrivateProfessional()) { ?>
+            <section>
+              <h2 class="section-header">Option <span class="text-gray-3 ml-1">- Uniquement visible par vous</span></h2>
 
-          <div class="flex flex-col gap-4">
+              <div class="flex flex-col gap-4">
 
-            <!-- No option -->
-            <div class="flex gap-2 items-center">
-                <input type="radio" id="type-no" name="option" value="no" checked>
-                <label for="type-no" class="flex flex-col gap-1">
-                  Aucune option
-                </label>
-            </div>
-
-            <!-- En relief option -->
-            <div class="flex justify-between items-center">
+                <!-- No option -->
                 <div class="flex gap-2 items-center">
-                  <input type="radio" id="type-in-relief" name="option" value="en-relief">
-                  <label for="type-in-relief" class="flex flex-col gap-1">
-                    Option “En Relief”
-                    <small class="helper">Met l’offre en exergue lors de son affichage dans les listes</small>
-                  </label>
+                    <input type="radio" id="type-no" name="option" value="no" checked>
+                    <label for="type-no" class="flex flex-col gap-1">
+                      Aucune option
+                    </label>
                 </div>
 
-                <span class="price-bubble">+ 2,98 €</span>
-            </div>
+                <!-- En relief option -->
+                <div class="flex justify-between items-center">
+                    <div class="flex gap-2 items-center">
+                      <input type="radio" id="type-in-relief" name="option" value="en-relief">
+                      <label for="type-in-relief" class="flex flex-col gap-1">
+                        Option “En Relief”
+                        <small class="helper">Met l’offre en exergue lors de son affichage dans les listes</small>
+                      </label>
+                    </div>
 
-            <!-- A la une option -->
-            <div class="flex justify-between items-center">
-                <div class="flex gap-2 items-center">
-                  <input type="radio" id="type-a-la-une" name="option" value="a-la-une">
-                  <label for="type-a-la-une" class="flex flex-col gap-1">
-                    Option “A la Une”
-                    <small class="helper">Avantage de “En relief” <br>
-                      Met l’offre en avant sur la page d’accueil</small>
-                  </label>
+                    <span class="price-bubble">+ 2,98 €</span>
                 </div>
-                <span class="price-bubble">+ 4,98 €</span>
-            </div>
 
-            <!-- Start end end DATE of the option -->
-            <div id="option-dates" class="flex gap-4 mt-2 w-full hidden">
-              <x-input>
-                <p slot="label">Date de lancement</p>
-                <!--<i slot="icon-right" data-lucide="calendar-days"></i>-->
-                <input slot="input" type="date" name="option-launch-date">
-              </x-input>
-              <x-input>
-                <p slot="label">Nombre de semaine</p>
-                <!--<i slot="icon-right" data-lucide="calendar-days"></i>-->
-                <input slot="input" type="number" name="option-duration" max="4" min="1" value="1">
-              </x-input>
-            </div>
-          </div>
-        </section>
+                <!-- A la une option -->
+                <div class="flex justify-between items-center">
+                    <div class="flex gap-2 items-center">
+                      <input type="radio" id="type-a-la-une" name="option" value="a-la-une">
+                      <label for="type-a-la-une" class="flex flex-col gap-1">
+                        Option “A la Une”
+                        <small class="helper">Avantage de “En relief” <br>
+                          Met l’offre en avant sur la page d’accueil</small>
+                      </label>
+                    </div>
+                    <span class="price-bubble">+ 4,98 €</span>
+                </div>
+
+                <!-- Start end end DATE of the option -->
+                <div id="option-dates" class="flex gap-4 mt-2 w-full hidden">
+                  <x-input>
+                    <p slot="label">Date de lancement</p>
+                    <!--<i slot="icon-right" data-lucide="calendar-days"></i>-->
+                    <input slot="input" type="date" name="option-launch-date">
+                  </x-input>
+                  <x-input>
+                    <p slot="label">Nombre de semaine</p>
+                    <!--<i slot="icon-right" data-lucide="calendar-days"></i>-->
+                    <input slot="input" type="number" name="option-duration" max="4" min="1" value="1">
+                  </x-input>
+                </div>
+              </div>
+            </section>
+        <?php } ?>
 
 
         <!-- ------------------------------------------------------------------- -->
@@ -170,14 +191,26 @@ $form = new Form();
             <h2 class="section-header">Localisation</h2>
 
             <div class="flex flex-col gap-2">
-                <x-input>
-                    <p slot="label">Ville</p>
-                    <input slot="input" type="text" placeholder="" required>
-                </x-input>
-                <x-input>
-                    <p slot="label">Rue / Lieu-dit</p>
-                    <input slot="input" type="text" placeholder="" required>
-                </x-input>
+                <div class="flex gap-4">
+                    <x-input class="w-[200px]">
+                        <p slot="label">Numéro de rue</p>
+                        <input slot="input" type="number" placeholder="2" required>
+                    </x-input>
+                    <x-input>
+                        <p slot="label">Nom de la rue</p>
+                        <input slot="input" type="text" placeholder="Rue Edouard Branly" required>
+                    </x-input>
+                </div>
+                <div class="flex gap-4">
+                    <x-input class="w-[200px]">
+                        <p slot="label">Code postal</p>
+                        <input slot="input" type="text" placeholder="22300" required>
+                    </x-input>
+                    <x-input>
+                        <p slot="label">Ville</p>
+                        <input slot="input" type="text" placeholder="Lannion" required>
+                    </x-input>
+                </div>
             </div>
         </section>
 

@@ -115,9 +115,9 @@ class Application
     /**
      * Retrieve the user model
      *
-     * @return UserAccount|null
+     * @return DBModel|null
      */
-    public function getUser(): ?UserAccount
+    public function getUser(): ?DBModel
     {
         if ($this->user) {
             if ($this->userType === 'member') {

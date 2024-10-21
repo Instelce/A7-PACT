@@ -5,7 +5,9 @@ namespace app\models\account;
 use app\core\DBModel;
 use app\models\user\AdministratorUser;
 use app\models\user\MemberUser;
+use app\models\user\professional\PrivateProfessional;
 use app\models\user\professional\ProfessionalUser;
+use app\models\user\professional\PublicProfessional;
 
 class UserAccount extends DBModel
 {
@@ -51,6 +53,16 @@ class UserAccount extends DBModel
     public function isProfessional(): bool
     {
         return ProfessionalUser::findOneByPk($this->account_id) !== false;
+    }
+
+    public function isPrivateProfessional(): bool
+    {
+        return $this->isProfessional() && PrivateProfessional::findOneByPk($this->account_id) !== false;
+    }
+
+    public function isPublicProfessional(): bool
+    {
+        return $this->isProfessional() && !PublicProfessional::findOneByPk($this->account_id) !== false;
     }
 
     public function isAdministrator(): bool

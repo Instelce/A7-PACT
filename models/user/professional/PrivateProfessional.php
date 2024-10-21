@@ -6,7 +6,7 @@ use app\core\DBModel;
 class PrivateProfessional extends DBModel
 {
 
-    public int $priv_pro_id = 0;
+    public int $pro_id = 0;
 
     public string $last_veto = '';
 
@@ -18,23 +18,22 @@ class PrivateProfessional extends DBModel
 
     public function attributes(): array
     {
-        return ['priv_pro_id', 'last_veto'];
+        return ['last_veto'];
     }
 
     public static function pk(): string
     {
-        return 'priv_pro_id';
+        return 'pro_id';
     }
-
 
     public function rules(): array
     {
-    return [
-        'last_veto' => [self::RULE_REQUIRED]
-    ];
+        return [
+            'last_veto' => [self::RULE_REQUIRED]
+        ];
     }
 
     public function professional(): ProfessionalUser {
-        return ProfessionalUser::findOne(['pro_id' => $this->priv_pro_id]);
+        return ProfessionalUser::findOne(['pro_id' => $this->pro_id]);
     }
 }

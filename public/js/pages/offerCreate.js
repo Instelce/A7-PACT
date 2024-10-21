@@ -17,9 +17,11 @@ const enreliefOption = document.querySelector('#type-in-relief');
 const alauneOption = document.querySelector('#type-a-la-une');
 const datesContainer = document.querySelector('#option-dates');
 
-noOption.addEventListener('input', updateDatesVisibility);
-enreliefOption.addEventListener('input', updateDatesVisibility);
-alauneOption.addEventListener('input', updateDatesVisibility);
+if (noOption && enreliefOption && alauneOption) {
+    noOption.addEventListener('input', updateDatesVisibility);
+    enreliefOption.addEventListener('input', updateDatesVisibility);
+    alauneOption.addEventListener('input', updateDatesVisibility);
+}
 
 function updateDatesVisibility() {
     if (noOption.checked) {
@@ -337,11 +339,13 @@ let optionPrices = {
     "a-la-une": 4.98,
 }
 
-typeStandardInput.addEventListener('input', updatePrices);
-typePremiumInput.addEventListener('input', updatePrices);
-noOption.addEventListener('input', updatePrices);
-enreliefOption.addEventListener('input', updatePrices);
-alauneOption.addEventListener('input', updatePrices);
+if (typeStandardInput && typePremiumInput) {
+    typeStandardInput.addEventListener('input', updatePrices);
+    typePremiumInput.addEventListener('input', updatePrices);
+    noOption.addEventListener('input', updatePrices);
+    enreliefOption.addEventListener('input', updatePrices);
+    alauneOption.addEventListener('input', updatePrices);
+}
 
 function updatePrices() {
     let type = typeStandardInput.checked ? "standard" : "premium";

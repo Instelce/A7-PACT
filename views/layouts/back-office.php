@@ -49,9 +49,11 @@ use app\core\Application;
         <span></span>
     </div>
     <div class="flex gap-4 items-center">
-        <a href="/">
-            <img id="logo" src="/assets/images/logoVisitor.svg" alt="" width="100">
+        <a href="/" class="mr-4">
+            <img id="logo" src="/assets/images/logoPro.svg" alt="" width="100">
         </a>
+
+        <a href="/dashboard" class="link pro">Mon dashboard</a>
 
         <!-- For dev -->
         <?php if (Application::$app->isAuthenticated()) { ?>
@@ -67,18 +69,19 @@ use app\core\Application;
         <?php } ?>
     </div>
     <div class="row">
-        <a href="/recherche">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                 class="lucide lucide-search">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="m21 21-4.3-4.3"/>
-            </svg>
-        </a>
+<!--        <a href="/recherche">-->
+<!--            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"-->
+<!--                 viewBox="0 0 24 24" fill="none" stroke="currentColor"-->
+<!--                 stroke-width="1" stroke-linecap="round" stroke-linejoin="round"-->
+<!--                 class="lucide lucide-search">-->
+<!--                <circle cx="11" cy="11" r="8"/>-->
+<!--                <path d="m21 21-4.3-4.3"/>-->
+<!--            </svg>-->
+<!--        </a>-->
 
         <?php if (Application::$app->isAuthenticated()) { ?>
-            <a href="/deconnexion" class="link">Déconnexion</a>
+            <a href="/deconnexion" class="link pro">Déconnexion</a>
+            <a href="/profile" class="button gray only-icon"><i data-lucide="user"></i></a>
         <?php } else { ?>
             <a href="/connexion" class="button">Connexion</a>
         <?php } ?>
@@ -113,31 +116,31 @@ use app\core\Application;
     <div class="footer-parts">
         <div>
             <p>À propos</p>
-            <a href="" class="link simple">À propos de PACT</a>
-            <a href="" class="link simple">Règlements</a>
+            <a href="">À propos de PACT</a>
+            <a href="">Règlements</a>
         </div>
         <div>
             <p>Explorez</p>
-            <a href="" class="link simple">Écrire un avis</a>
-            <a href="" class="link simple">S'inscrire</a>
+            <a href="">Écrire un avis</a>
+            <a href="">S'inscrire</a>
         </div>
         <div>
             <p>Utilisez nos solutions</p>
-            <a href="" class="link simple">Professionnel</a>
+            <a href="">Professionnel</a>
         </div>
     </div>
     <nav>
         <div class="footer-conditions">
-            <img id="logo" src="/assets/images/logoSmallVisitor.svg"
+            <img id="logo" src="/assets/images/logoSmallPro.svg"
                  alt="Logo PACT">
             <div class="flex flex-col gap-1">
                 <p>@ 2024 PACT Tous droits réservés.</p>
                 <div id="links">
-                    <a class="link small" href="">Conditions d'utilisation</a>
-                    <a class="link small" href="">Confidentialité et
+                    <a class="link small pro" href="">Conditions d'utilisation</a>
+                    <a class="link small pro" href="">Confidentialité et
                         utilisation des cookies</a>
-                    <a class="link small" href="">Plan du site</a>
-                    <a class="link small" href="">Contactez-nous</a>
+                    <a class="link small pro" href="">Plan du site</a>
+                    <a class="link small pro" href="">Contactez-nous</a>
                 </div>
             </div>
         </div>

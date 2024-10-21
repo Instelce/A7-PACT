@@ -65,7 +65,12 @@ abstract class DBModel extends Model
             $statement->bindValue(':updated_at', $this->updated_at);
         }
 
-        $statement->execute();
+        $result = $statement->execute();
+
+        if ($result) {
+            $this->{static::pk()} = Application::$app->db->pdo->lastInsertId();
+        }
+
         return true;
     }
 
