@@ -53,7 +53,7 @@ categoryInput.addEventListener('change', (e) => {
         tagElement.innerHTML =
             tagsContainer.innerHTML += `
             <div class="flex items-center gap-1">
-                <input type="checkbox" class="checkbox" name="tags[]" value="${tag}" id="${tag}">
+                <input type="checkbox" class="checkbox checkbox-normal" name="tags[]" value="${tag}" id="${tag}">
                 <label for="${tag}">${tag}</label>
             </div>
         `;

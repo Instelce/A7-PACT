@@ -4,6 +4,7 @@ namespace app\forms;
 
 use app\core\Application;
 use app\core\Model;
+use app\models\account\UserAccount;
 use app\models\User;
 
 class LoginForm extends Model
@@ -21,10 +22,10 @@ class LoginForm extends Model
 
     public function login()
     {
-        $user = User::findOne(['email' => $this->email]);
+        $user = UserAccount::findOne(['email' => $this->email]);
 
         if (!$user) {
-            $this->addError('email', 'Utilisateur inexistant avec cette adresse email.');
+            $this->addError('email', 'Aucun compte n\'a été trouvé avec cet e-mail.');
             return false;
         }
 
@@ -33,7 +34,7 @@ class LoginForm extends Model
             return false;
         }
 
-        return Application::$app->login($user);
+        return Application::$app->login($user, );
     }
 
     public function labels(): array
