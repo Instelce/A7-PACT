@@ -15,16 +15,16 @@ class Offer extends DBModel
     public string $description = '';
     public int $likes = 0;
     public int $offline = self::STATUS_OFFLINE;
-    public string $offline_date = '';
-    public string $last_online_date = '';
+    public ?string $offline_date = '';
+    public ?string $last_online_date = '';
     public int $view_counter = 0;
     public int $click_counter = 0;
     public string $website = '';
     public string $phone_number = '';
     public int $offer_type_id = 0;
     public int $professional_id = 0;
-    public string $created_at = '';
-    public string $updated_at = '';
+//    public string $created_at = '';
+//    public string $updated_at = '';
 
     public static function tableName(): string
     {
@@ -33,7 +33,7 @@ class Offer extends DBModel
 
     public function attributes(): array
     {
-        return ['id', 'title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'professional_id'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'professional_id'];
     }
 
     public function updateAttributes(): array

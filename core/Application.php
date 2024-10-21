@@ -3,8 +3,12 @@
 namespace app\core;
 
 
-use app\core\exception\NotFoundException;
+use app\core\exceptions\NotFoundException;
 use app\core\exceptions\ForbiddenException;
+use app\models\account\UserAccount;
+use app\models\user\AdministratorUser;
+use app\models\user\MemberUser;
+use app\models\user\professional\ProfessionalUser;
 
 class Application
 {
@@ -17,16 +21,21 @@ class Application
     public Request $request;
     public Response $response;
     public ?Controller $controller = null;
+    public View $view;
     public Session $session;
     public string $userClass;
     public ?DBModel $user = null;
-    public View $view;
+
+    /**
+     * @var 'visitor'|'member'|'professional'|'admin'
+     */
+    public string $userType = 'visitor';
 
     public function __construct(string $rootPath, array $config)
     {
         self::$ROOT_DIR = $rootPath;
         self::$app = $this;
-        
+
         $this->request = new Request();
         $this->response = new Response();
         $this->router = new Router($this->request, $this->response);
@@ -37,9 +46,13 @@ class Application
 
         // Get the primary key of the user from the session
         $pkValue = $this->session->get('user');
+
         if ($pkValue) {
+            $this->userType = $this->session->get('userType');
             $pk = $this->userClass::pk();
             $this->user = $this->userClass::findOne([$pk => $pkValue]);
+        } else {
+            $this->userType = 'visitor';
         }
     }
 
@@ -72,12 +85,20 @@ class Application
         $this->controller = $controller;
     }
 
-    public function login(DBModel $user): bool
+    /**
+     * @param UserAccount $userAccount
+     * @param 'member'|'professional'|'admin' $userType
+     * @return bool
+     */
+    public function login(UserAccount $userAccount, string $userType): bool
     {
-        $this->user = $user;
-        $pk = $user->pk();
-        $pkValue = $user->{$pk};
+        $this->user = $userAccount;
+        $this->userType = $userAccount->getType();
+        $pk = $userAccount->pk();
+        $pkValue = $userAccount->{$pk};
+
         $this->session->set('user', $pkValue);
+        $this->session->set('userType', $userType);
 
         return true;
     }
@@ -91,5 +112,25 @@ class Application
     public function isAuthenticated(): bool
     {
         return $this->user !== null;
+    }
+
+    /**
+     * Retrieve the user model
+     *
+     * @return DBModel|null
+     */
+    public function user(): ?DBModel
+    {
+        if ($this->user) {
+            if ($this->userType === 'member') {
+                return MemberUser::findOneByPk($this->user->id);
+            } else if ($this->userType === 'professional') {
+                return ProfessionalUser::findOneByPk($this->user->id);
+            } else if ($this->userType === 'admin') {
+                return AdministratorUser::findOneByPk($this->user->id);
+            }
+        }
+
+        return null;
     }
 }

@@ -306,7 +306,7 @@ $form = new Form();
               </label>
 
               <!-- Photos -->
-              <div id="photos" class="grid grid-cols-3 gap-2">
+              <div id="photos" class="flex flex-col gap-2">
                   <div class="drag-line hidden"></div>
               </div>
 

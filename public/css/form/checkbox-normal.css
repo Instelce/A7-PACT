@@ -20,10 +20,7 @@ Please consult yann for more information regarding its creation
     each checkbox needs its own id to be recognized, never forget that.            
                     
 **************************************************************************/
-input.checkbox[type="checkbox"]
-
-
-input.checkboxNormal[type="checkbox"]
+input.checkbox-normal[type="checkbox"]
 {
     -webkit-appearance: none;
     appearance: none;
@@ -39,7 +36,7 @@ input.checkboxNormal[type="checkbox"]
     border: 1px solid rgb(var(--color-gray-2));
     border-radius: 0.15em;
 }
-    
+
 input.checkbox[type="checkbox"]::before
 {
     content: "";
