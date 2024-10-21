@@ -24,7 +24,7 @@ class Offer extends DBModel
     public string $phone_number = '';
     public int $offer_type_id = 0;
     public int $professional_id = 0;
-//    public string $created_at = '';
+    //    public string $created_at = '';
 //    public string $updated_at = '';
     public int $address_id = 0;
     public static function tableName(): string
@@ -45,7 +45,7 @@ class Offer extends DBModel
     public function rules(): array
     {
         return [
-//            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
+            //            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
 //            'summary' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]],
 //            'description' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 1024]],
 //            'website' => [],
@@ -90,4 +90,5 @@ class Offer extends DBModel
     {
         return OfferPhoto::find(['offer_id' => $this->id]);
     }
+
 }

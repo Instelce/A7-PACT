@@ -18,6 +18,7 @@
 @import "form/input.css";
 
 @import "pages/detailedOffer.css";
+@import "pages/research.css";
 
 /* Import fonts */
 @import "fonts/satoshi.css";
@@ -84,7 +85,7 @@ a {
     margin: 2rem 0;
 }
 
-.heightTop{
+.heightTop {
     height: 56px;
 }
 
@@ -109,9 +110,11 @@ a {
     0% {
         opacity: 1;
     }
+
     80% {
         opacity: 1;
     }
+
     100% {
         opacity: 0;
     }

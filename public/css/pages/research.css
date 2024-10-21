@@ -1,0 +1,9 @@
+.vertical-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.horizontal-line {
+    color: rgb(var(--color-gray-1));
+}

@@ -12,7 +12,8 @@ abstract class DBModel extends Model
 
     abstract public function attributes(): array;
 
-    public function updateAttributes(): array {
+    public function updateAttributes(): array
+    {
         return $this->attributes();
     }
 
@@ -49,7 +50,7 @@ abstract class DBModel extends Model
         }
 
         // Prepare the statement
-        $statement = self::prepare("INSERT INTO $tableName (".implode(",", $attributes).") VALUES (".implode(",", $params).")");
+        $statement = self::prepare("INSERT INTO $tableName (" . implode(",", $attributes) . ") VALUES (" . implode(",", $params) . ")");
 
         // Load the model values into the statement
         foreach ($attributes as $attribute) {
@@ -71,7 +72,8 @@ abstract class DBModel extends Model
     /**
      * Update the model in the database
      */
-    public function update() {
+    public function update()
+    {
         $tableName = $this->tableName();
         $attributes = $this->attributes();
         $set = array_map(fn($attr) => "$attr = :$attr", $attributes);
@@ -79,7 +81,7 @@ abstract class DBModel extends Model
         $pkValue = $this->{$pk};
 
         // Prepare the statement
-        $statement = self::prepare("UPDATE $tableName SET ".implode(",", $set)." WHERE $pk = $pkValue;");
+        $statement = self::prepare("UPDATE $tableName SET " . implode(",", $set) . " WHERE $pk = $pkValue;");
 
         // Load the model values into the statement
         foreach ($attributes as $attribute) {
@@ -92,7 +94,8 @@ abstract class DBModel extends Model
     /**
      * Delete the model from the database
      */
-    public function destroy() {
+    public function destroy()
+    {
         $tableName = static::tableName();
         $pk = static::pk();
         $pkValue = $this->{$pk};
@@ -113,7 +116,7 @@ abstract class DBModel extends Model
 
         $whereStr = implode("AND ", array_map(fn($attr) => "$attr = :$attr", $attributes));
 
-        $statement = self::prepare("SELECT * FROM $tableName WHERE ".$whereStr);
+        $statement = self::prepare("SELECT * FROM $tableName WHERE " . $whereStr);
 
         foreach ($where as $key => $item) {
             $statement->bindValue(":$key", $item);
@@ -148,7 +151,7 @@ abstract class DBModel extends Model
 
         $whereStr = implode("AND ", array_map(fn($attr) => "$attr = :$attr", $attributes));
 
-        $statement = self::prepare("SELECT * FROM $tableName WHERE ".$whereStr);
+        $statement = self::prepare("SELECT * FROM $tableName WHERE " . $whereStr);
         foreach ($where as $key => $item) {
             $statement->bindValue(":$key", $item);
         }
