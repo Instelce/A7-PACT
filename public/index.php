@@ -46,5 +46,9 @@ $app->router->post('/inscription', [AuthController::class, 'register']);
 $app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/profile', [AuthController::class, 'profile']);
 
+// detailOffer routes
+$app->router->get('/offres/detail', [\app\controllers\OfferController::class, 'detail']);
+
+
 $app->run();
 

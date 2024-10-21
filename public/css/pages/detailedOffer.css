@@ -1,0 +1,47 @@
+.inlineOfferGap{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+}
+
+.inlineOffer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+}
+
+.columnOffer{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 20px;
+    font-weight: 550;
+}
+
+.paddingOfferDetailed{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+x-acordeon{
+    width: 100%;
+}
+
+.acordeonSize{
+    width: 100%;
+}
+
+.publication{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: flex-end;
+}

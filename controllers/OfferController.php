@@ -48,4 +48,9 @@ class OfferController extends Controller
             'model' => $offer,
         ]);
     }
+
+
+    public function detail(Request $request, Response $response){
+        return $this->render('offers/detail');
+    }
 }
