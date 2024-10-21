@@ -42,15 +42,10 @@ class Application
         $this->session = new Session();
         $this->view = new View();
 
-        echo "<pre>";
-        var_dump($_SESSION);
-        echo "</pre>";
-
         // Get the primary key of the user from the session
         $pkValue = $this->session->get('user');
 
         if ($pkValue) {
-            echo "connected";
             $this->userType = $this->session->get('userType');
             $pk = UserAccount::pk();
             $this->user = UserAccount::findOne([$pk => $pkValue]);
@@ -99,10 +94,6 @@ class Application
         $pk = $userAccount->pk();
         $pkValue = $userAccount->{$pk};
 
-        echo "<pre>";
-        var_dump($userAccount);
-        echo "</pre>";
-
         $this->session->set('user', $pkValue);
         $this->session->set('userType', $this->userType);
 
@@ -113,6 +104,7 @@ class Application
     {
         $this->user = null;
         $this->session->remove('user');
+        $this->session->set('userType', 'visitor');
     }
 
     public function isAuthenticated(): bool
