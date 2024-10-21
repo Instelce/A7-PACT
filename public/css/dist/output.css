@@ -37,6 +37,7 @@
   --typescale-d2: 0.688rem;
   --radius-rounded: 100rem;
   --radius-small: 5px;
+  --radius-medium: 20px;
   /* Viewports */
   --viewport-lg: 1440px;
   --viewport-sm: 926px;
@@ -473,7 +474,6 @@ x-tabs.column x-tab[selected]::before {
   border-radius: var(--radius-rounded);
 }
 
-<<<<<<< Updated upstream
 .link {
   --color: rgb(var(--color-blue-primary));
   width: -moz-fit-content;
@@ -584,11 +584,12 @@ td:has(.table-button) {
   height: 100%;
   padding: 2rem;
   border: 2px dashed rgb(var(--color-gray-1));
-  border-radius: 5px;
+  border-radius: var(--radius-small);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
   cursor: pointer;
   transition: border-color 0.3s;
 }
@@ -602,29 +603,86 @@ td:has(.table-button) {
   height: 40px;
 }
 
+.image-uploader.over {
+  border-color: rgb(var(--color-gray-2));
+  background: rgba(var(--color-success), .2);
+}
+
+/* Photos container */
+
+#photos.over {
+  padding: .5rem;
+  border: 1px solid rgb(var(--color-gray-2));
+  border-radius: var(--radius-small);
+}
+
+/* Image card */
+
+.uploaded-image-card {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  border: 1px solid rgb(var(--color-gray-1));
+  border-radius: var(--radius-medium);
+  overflow: hidden;
+  background: white;
+}
+
+.uploaded-image-card .image-container {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-medium);
+  overflow: hidden;
+}
+
+.uploaded-image-card img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.uploaded-image-card .card-buttons {
+  padding: .5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.uploaded-image-card.dragging {
+  border: 2px dashed rgb(var(--color-gray-1));
+}
+
+/* Drag button */
+
+.photo-drag {
+  cursor: grab !important;
+}
+
+/* Line for dragging */
+
+.drag-line {
+  width: 100%;
+  height: 40px;
+  border: 1px solid rgb(var(--color-gray-2));
+  border-radius: var(--radius-medium);
+  /* hash pattern */
+  background-image: linear-gradient(45deg, rgb(var(--color-gray-2)) 25%, transparent 25%, transparent 50%, rgb(var(--color-gray-2)) 50%, rgb(var(--color-gray-2)) 75%, transparent 75%, transparent);
+}
+
 /* General form style */
 
 .form form {
-=======
-form {
->>>>>>> Stashed changes
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-<<<<<<< Updated upstream
 /* A page which only contains a form */
 
 .form-page {
   margin: 0 15%;
-=======
-.form-container {
-  margin: 0 15%;
-}
-
-.form-page {
->>>>>>> Stashed changes
   margin-top: 4rem;
   display: flex;
   flex-direction: column;
@@ -647,7 +705,6 @@ form {
   gap: .4rem;
 }
 
-<<<<<<< Updated upstream
 /* Helper text */
 
 .helper {
@@ -667,8 +724,6 @@ form {
   color: rgb(var(--color-gray-4));
 }
 
-=======
->>>>>>> Stashed changes
 /*
 
 Button component
@@ -713,7 +768,7 @@ Default size is medium.
   justify-content: center;
   gap: 1rem;
   cursor: pointer;
-  transition: color .2s, background .2s, border .2s, box-shadow .2s;
+  transition: color .2s, background .1s, border .2s, box-shadow .2s;
 }
 
 .button:hover {
@@ -797,6 +852,23 @@ Default size is medium.
   padding-right: 1rem;
 }
 
+.button.no-border {
+  border: none;
+}
+
+.button:disabled,
+.button[aria-disabled] {
+  background: rgb(var(--color-white));
+  color: rgb(var(--color-gray-3));
+  cursor: not-allowed;
+  border: 1px solid rgb(var(--color-gray-2));
+}
+
+.button:disabled.no-border,
+.button[aria-disabled].no-border {
+  border: none;
+}
+
 /* Reset button */
 
 button {
@@ -836,18 +908,33 @@ div[slot="options"] > div .check svg {
   height: 1rem;
 }
 
+/*
+
+Its the normal checkbox button.
+"/switch.css" also uses a checkbox. so be careful and don't forget
+to use the class "checkboxNormal".
+
+if it isn't specified specified. A normal checkbbox will appear.
+
+It only exists for the pro version in the current version.
+
+Please consult yann for more information regarding its creation
 /**************************************************************************
 
                 FOR THE CHECKBOX YOU CAN COPY THAT LINE
 
-                    <label>
-                        <input type="checkbox" id="bla">
-                        text
-                    </label>
+            <input class="checkboxNormal" type="checkbox" id="bla">
+            <label class="checkboxNormal">lorem</label>
+
+    The id is necessery in order to tick the correct parameters.
+    each checkbox needs its own id to be recognized, never forget that.            
                     
 **************************************************************************/
 
 input.checkbox[type="checkbox"]
+
+
+input.checkboxNormal[type="checkbox"]
 {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -884,10 +971,20 @@ input.checkbox[type="checkbox"]:checked::before
 
             FOR THE RADIO BUTTON VERSION YOU CAN COPY THAT LINE
 
-                    <label>
-                        <input type="radio" name="test">
-                        text
-                    </label>
+        <input class="checkboxNormal" type="radio" id="tezt" name="test">
+        <label class="checkboxNormal" for="tezt">gougou</label>
+
+    
+    Don't forget use the type radio, even though the class is currently
+    called "checkboxNormal".
+
+    Name is really important to make the radio button works properly.
+    If it isn't specified, it will work like a checkbox which can't be
+    unticked.
+
+    Id works the same way
+    The id is necessery in order to tick the correct parameters.
+    each checkbox needs its own id to be recognized, never forget that.  
 
 **************************************************************************/
 
@@ -930,6 +1027,16 @@ label.checkbox
   align-items: center;
 }
 
+/*
+
+    Nothing complicated here. It corresponds to the section Header
+    on the figma
+
+    It was made by yann so please consult him if you have any questions 
+    regarding its creation.
+
+*/
+
 .section-header
 {
   margin-bottom: 20px;
@@ -962,6 +1069,32 @@ truc {
 }
 }
 */
+
+/*
+
+Its the switch buttons,  which you can toggle and untoggle.
+It originaly is a checkbox. So its very important to use the 
+class "switch" and not to confound with checkboxNormal.
+
+If it isn't specified, it won't work.
+
+It only exists for the pro version in the current version.
+
+Please consult Yann for more informations regarding its creation.
+
+
+/**************************************************************************
+
+                FOR THE CHECKBOX YOU CAN COPY THAT LINE
+
+            <input class="switch" type="checkbox" id="switchtest" />
+            <label class="switch" for="switchtest">Toggle</label>
+
+	The id works the same way that checkboxNormal's 
+    The id is necessery in order to tick the correct parameters.
+    each checkbox needs its own id to be recognized, never forget that.            
+                    
+**************************************************************************/
 
 input.switch[type=checkbox]{
   visibility: hidden;
@@ -1009,11 +1142,6 @@ input.switch:checked + label:after {
   transform: translateX(-100%);
 }
 
-<<<<<<< Updated upstream
-label.switch:active:after {
-  width: 130px;
-}
-
 /* Remove date icon on input field */
 
 /*input[type="date"]::-webkit-calendar-picker-indicator {*/
@@ -1044,8 +1172,6 @@ textarea {
   resize: vertical;
 }
 
-=======
->>>>>>> Stashed changes
 /* Import fonts */
 
 /**
@@ -1321,13 +1447,10 @@ a {
   margin: 2rem 0;
 }
 
-<<<<<<< Updated upstream
 .heightTop{
   height: 56px;
 }
 
-=======
->>>>>>> Stashed changes
 @media only screen and (max-width: 728px) {
   .main-container {
     padding: 0 20px;
@@ -1337,7 +1460,6 @@ a {
 @media only screen and (min-width: 1440px) {
   .main-container {
     padding: 0 20%;
-<<<<<<< Updated upstream
   }
 }
 
@@ -1356,8 +1478,6 @@ a {
 
   100% {
     opacity: 0;
-=======
->>>>>>> Stashed changes
   }
 }
 
@@ -1472,18 +1592,23 @@ a {
   display: none;
 }
 
-<<<<<<< Updated upstream
+.h-20{
+  height: 5rem;
+}
+
 .h-fit{
   height: -moz-fit-content;
   height: fit-content;
+}
+
+.w-20{
+  width: 5rem;
 }
 
 .w-full{
   width: 100%;
 }
 
-=======
->>>>>>> Stashed changes
 .flex-shrink{
   flex-shrink: 1;
 }
@@ -1496,17 +1621,18 @@ a {
   resize: both;
 }
 
-<<<<<<< Updated upstream
 .grid-cols-2{
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-3{
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .grid-cols-5{
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
-=======
->>>>>>> Stashed changes
 .flex-col{
   flex-direction: column;
 }
@@ -1515,7 +1641,6 @@ a {
   flex-wrap: wrap;
 }
 
-<<<<<<< Updated upstream
 .items-center{
   align-items: center;
 }
@@ -1528,19 +1653,14 @@ a {
   justify-content: space-between;
 }
 
-=======
->>>>>>> Stashed changes
 .gap-1{
   gap: 0.25rem;
 }
 
-<<<<<<< Updated upstream
 .gap-12{
   gap: 3rem;
 }
 
-=======
->>>>>>> Stashed changes
 .gap-2{
   gap: 0.5rem;
 }
@@ -1557,6 +1677,10 @@ a {
   border-radius: 1.5rem;
 }
 
+.rounded-lg{
+  border-radius: 0.5rem;
+}
+
 .border{
   border-width: 1px;
 }
@@ -1568,6 +1692,11 @@ a {
 .border-gray-1{
   --tw-border-opacity: 1;
   border-color: rgb(225 225 225 / var(--tw-border-opacity));
+}
+
+.object-cover{
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .px-6{
