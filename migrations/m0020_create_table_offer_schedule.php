@@ -36,7 +36,7 @@ class m0020_create_table_offer_schedule
             FOREIGN KEY (schedule_id) REFERENCES offer_schedule (id)
         );
 
-        CREATE TABLE parc_schedule (
+        CREATE TABLE park_schedule (
             id SERIAL PRIMARY KEY,
             
             attraction_park_id INT NOT NULL,
@@ -50,7 +50,10 @@ class m0020_create_table_offer_schedule
 
     public function down()
     {
-        $sql = "DROP TABLE offer_schedule CASCADE;";
+        $sql = "DROP TABLE offer_schedule CASCADE,
+                DROP TABLE activity_schedule CASCADE,
+                DROP TABLE restaurant_schedule CASCADE,
+                DROP TABLE park_schedule CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

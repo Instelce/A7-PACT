@@ -76,7 +76,14 @@ class m0006_create_table_account
     public function down()
     {
         $db = Application::$app->db;
-        $sql = "DROP TABLE account CASCADE;";
+        $sql = "DROP TABLE account CASCADE,
+                DROP TABLE anonymous_account CASCADE,
+                DROP TABLE user_account CASCADE,
+                DROP TABLE administrator_user CASCADE,
+                DROP TABLE member_user CASCADE,
+                DROP TABLE professional_user CASCADE,
+                DROP TABLE private_professional CASCADE,
+                DROP TABLE public_professional CASCADE;";
         $db->pdo->exec($sql);
     }
 }
