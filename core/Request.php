@@ -1,5 +1,4 @@
 <?php
-// abstraction for the super global variable : $_SERVER
 
 namespace app\core;
 

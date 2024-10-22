@@ -58,6 +58,7 @@ class AuthController extends Controller
     public function logout(Request $request, Response $response)
     {
         Application::$app->logout();
+        Application::$app->session->setFlash('success', 'Vous avez été déconnecté.');
         $response->redirect('/');
     }
 

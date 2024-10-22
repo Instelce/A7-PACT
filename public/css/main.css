@@ -1,9 +1,10 @@
 @import "variables.css";
 @import "reset.css";
+
 @import "parts/navbar.css";
 @import "parts/footer.css";
 @import "parts/loader.css";
-
+@import "parts/alert.css";
 @import "parts/tabs.css";
 @import "parts/link.css";
 @import "parts/table.css";

@@ -99,7 +99,7 @@ use app\core\Application;
 <main class="main-container">
     <!-- Show alert -->
     <?php if (Application::$app->session->getFlash('success')): ?>
-        <div class="alert alert-success">
+        <div class="alert success">
             <?php echo Application::$app->session->getFlash('success') ?>
         </div>
     <?php endif; ?>

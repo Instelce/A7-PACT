@@ -2,6 +2,8 @@
 
 /** @var $exception \Exception */
 
+$this->title = 'Oops';
+
 ?>
 
 <h1 class="heading-1 mb-4">Oops! une pitite erreur</h1>
