@@ -34,32 +34,88 @@ class Router
         $path = $this->request->getPath();
         $method = $this->request->method();
         $callback = $this->routes[$method][$path] ?? false;
+        $routes = $this->routes[$method] ?? false;
 
-        if (!$callback) {
+        if (!$routes) {
             throw new NotFoundException();
         }
 
-        if (is_string($callback)) {
-            return Application::$app->view->renderView($callback);
+        // Check for static route
+        $callback = $routes[$path] ?? false;
+        if ($callback) {
+            if (is_string($callback)) {
+                return Application::$app->view->renderView($callback);
+            }
+
+            if (is_array($callback)) {
+                /**
+                 * New instance of the controller
+                 * @var Controller $controller
+                 */
+                $controller = new $callback[0];
+                Application::$app->controller = $controller;
+                $controller->action = $callback[1];
+                $callback[0] = $controller;
+
+                foreach ($controller->getMiddlewares() as $middleware) {
+                    $middleware->execute();
+                }
+            }
+
+            // Call the callback function, and pass request and response to the method
+            return call_user_func($callback, $this->request, $this->response);
         }
 
-        if (is_array($callback)) {
-            /**
-             * New instance of the controller
-             * @var Controller $controller
-             */
-            $controller = new $callback[0];
-            Application::$app->controller = $controller;
-            $controller->action = $callback[1];
-            $callback[0] = $controller;
 
-            foreach ($controller->getMiddlewares() as $middleware) {
-                $middleware->execute();
+        foreach ($routes as $route => $callback) {
+            $routeRegex = preg_replace_callback('/<(\w+):(\w+)>/', function ($matches) {
+                $paramName = $matches[1];
+                $type = $matches[2];
+
+                // Support different types like int, string
+                if ($type === 'int') {
+                    return '(?P<' . $paramName . '>\d+)'; // Match digits for integer type with param name
+                } elseif ($type === 'string') {
+                    return '(?P<' . $paramName . '>\w+)'; // Match word-like strings for string type with param name
+                }
+
+                return '(?P<' . $paramName . '>\w+)';
+            }, $route);
+
+            // Get the params name (`/route/<pk:int>` = pk)
+
+            $routeRegex = str_replace('/', '\/', $routeRegex);
+            $pattern = "/^{$routeRegex}$/";
+
+            if (preg_match($pattern, $path, $matches)) {
+                array_shift($matches);
+                $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+
+                echo "<pre>";
+                var_dump($params);
+                echo "</pre>";
+
+                if (is_array($callback)) {
+                    /**
+                     * New instance of the controller
+                     * @var Controller $controller
+                     */
+                    $controller = new $callback[0];
+                    Application::$app->controller = $controller;
+                    $controller->action = $callback[1];
+                    $callback[0] = $controller;
+
+                    foreach ($controller->getMiddlewares() as $middleware) {
+                        $middleware->execute();
+                    }
+                }
+
+                // Call the callback function, and pass request and response to the method
+                return call_user_func($callback, $this->request, $this->response, $params);
             }
         }
 
-        // Call the callback function, and pass request and response to the method
-        return call_user_func($callback, $this->request, $this->response);
+        throw new NotFoundException();
     }
 
 }

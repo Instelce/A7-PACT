@@ -35,13 +35,15 @@ if ($argc >= 2) {
     } else if ($argv[1] === "dev") {
         echo "Starting development tools" . PHP_EOL;
         exec("sh scripts/dev");
-    } else if ($argv[1] === "dev-db") {
+    } else if ($argv[1] === "db") {
         if ($argv[2] === "start") {
             exec("sudo docker compose up -d");
             echo "Development database started" . PHP_EOL;
         } else if ($argv[2] === "stop") {
             exec("docker compose down > /dev/null 2>&1 &");
             echo "Development database stopped" . PHP_EOL;
+        } else if ($argv[2] === "seed") {
+            exec("php seeder/seeder.php");
         } else {
             echo "Invalid argument" . PHP_EOL;
         }
@@ -58,7 +60,7 @@ if ($argc >= 2) {
     echo "Usage:" . PHP_EOL;
     echo "  migration [apply|drop]" . PHP_EOL;
     echo "  dev: Start development server" . PHP_EOL;
-    echo "  dev-db [start|stop]: Start/Stop development database" . PHP_EOL;
+    echo "  db [start|stop|seed]: Start/Stop development database of seed the DB" . PHP_EOL;
     echo "  tw: Start tailwind watcher" . PHP_EOL;
     echo "  sf: Synchronize your fork" . PHP_EOL;
 }

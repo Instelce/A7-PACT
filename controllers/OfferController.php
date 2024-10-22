@@ -54,8 +54,9 @@ class OfferController extends Controller
         ]);
     }
 
-
-    public function detail(Request $request, Response $response){
-        return $this->render('offers/detail');
+    public function detail(Request $request, Response $response, $pk) {
+        return $this->render('offers/detail', [
+            'pk' => $pk,
+        ]);
     }
 }
