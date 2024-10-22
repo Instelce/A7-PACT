@@ -103,7 +103,7 @@ $offre->professional_id = 4;
 $offre->address_id = 22;
 $offre->save();
 
-$db->pdo->exec("INSERT INTO offer(title, summary, description, likes, offline, offline_date, last_online_date, view_counter, click_counter, website, phone_number, offer_type_id, professional_id, address_id) VALUES ";);
+//$db->pdo->exec("INSERT INTO offer(title, summary, description, likes, offline, offline_date, last_online_date, view_counter, click_counter, website, phone_number, offer_type_id, professional_id, address_id) VALUES ('Traversée de l île de Brehat', );");
 
 
 
