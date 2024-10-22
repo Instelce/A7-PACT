@@ -28,9 +28,6 @@ $password = password_hash("1234", PASSWORD_DEFAULT);
 
 
 $db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
-//create mean of payment
-$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1);");
-$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'CB1', '1548759863254125', '07/25', '123');");
 
 // ---------------------------------------------------------------------- //
 // user adress
@@ -86,7 +83,7 @@ $db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id)
 // create offer types
 // ---------------------------------------------------------------------- //
 
-$db->pdo->exec(statement: "INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.99), (2, 'premium', 7.99);");
+$db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.99), (2, 'premium', 7.99);");
 
 // ---------------------------------------------------------------------- //
 // create offer
@@ -104,10 +101,10 @@ $offre1->view_counter = 120;
 $offre1->click_counter = 180;
 $offre1->website = 'https://www.facebook.com/people/Caf%C3%A9-Des-Halles/100064099743039/';
 $offre1->phone_number = '0296371642';
-$offre1->offer_type_id = 1;
+$offre1->category = 'restaurant';
 $offre1->professional_id = 3;
 $offre1->address_id = 21;
-$offre1->category = 'restaurant';
+$offre1->offer_type_id = 1;
 $offre1->save();
 
 $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, minimum_price, maximum_price) VALUES (" . $offre1->id . ", 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/21/f5/07/e3/cafe-des-halles.jpg?w=700&h=-1&s=1', 12, 20);");
@@ -122,19 +119,41 @@ Sur place, la restauration est possible à la crêperie du village : "le Menhir
 Ce village n’est pas celui du célèbre petit Gaulois... C’est un lieu de détente, de culture et de distraction. Mais les habitants du village restent irréductibles car, avec ténacité depuis 25 ans, ils mènent une action de solidarité en direction d’une lointaine région du monde, l’Afrique.';
 $offre2->likes = 420;
 $offre2->offline = 0;
-$offre2->offline_date = '';
+$offre2->offline_date = null;
 $offre2->last_online_date = "2024-11-01";
 $offre2->view_counter = 8714;
 $offre2->click_counter = 1234;
 $offre2->website = 'https://www.levillagegaulois.org/php/home.php';
 $offre2->phone_number = '0296918395';
+$offre2->category = 'attraction_park';
 $offre2->offer_type_id = 2;
 $offre2->professional_id = 4;
 $offre2->address_id = 22;
-$offre2->category = 'attraction_park';
 $offre2->save();
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
+
+
+//create balade bréhat
+$offre6 = new Offer();
+$offre6->title = "Traversée et tour de l'île de Brehat";
+$offre6->summary = 'Voyagez dans le temps et plongez au cœur de la vie gauloise, où vous pourrez découvrir des artisans passionnés, participer à des jeux anciens et vivre une expérience immersive pour toute la famille dans un cadre authentique et amusant.';
+$offre6->description = 'Découvrez le Village Gaulois au sein du parc du Radôme et profitez de plus de 20 jeux originaux, distractifs et éducatifs. Apprentissage et divertissement sont les maîtres mots au Village Gaulois.
+Sur place, la restauration est possible à la crêperie du village : "le Menhir Gourmand" !
+Ce village n’est pas celui du célèbre petit Gaulois... C’est un lieu de détente, de culture et de distraction. Mais les habitants du village restent irréductibles car, avec ténacité depuis 25 ans, ils mènent une action de solidarité en direction d’une lointaine région du monde, l’Afrique.';
+$offre6->likes = 2534;
+$offre6->offline = 0;
+$offre6->offline_date = null;
+$offre6->last_online_date = "2024-11-01";
+$offre6->view_counter = 8714;
+$offre6->click_counter = 1234;
+$offre6->website = 'https://www.levillagegaulois.org/php/home.php';
+$offre6->phone_number = '0296918395';
+$offre6->category = 'attraction_park';
+$offre6->offer_type_id = 2;
+$offre6->professional_id = 4;
+$offre6->address_id = 22;
+$offre6->save();
 
 $offre3 = new Offer();
 $offre3->title = "Promenade en Bateau sur le Canal de la Rance";

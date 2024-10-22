@@ -11,6 +11,7 @@ use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
 use app\models\offer\OfferType;
 use app\models\Address;
+use app\models\user\professional\ProfessionalUser;
 
 class SiteController extends Controller
 {
@@ -59,28 +60,26 @@ class SiteController extends Controller
     }
     public function research()//render research page
     {
-        $STATUS_ONLINE = 0; //const online offer
-        $STATUS_OFFLINE = 1;// const offline offer
         $allOffers = Offer::all();//get all offer from the model
         $offers = [];//create final table to send into the vue
         foreach ($allOffers as $offer) {//foreach offer
-            if ($offer["offline"] == $STATUS_OFFLINE) {//show only online offer
-
+            if ($offer["offline"] == Offer::STATUS_ONLINE) {//show only online offer
+                $image = OfferPhoto::find(['offer_id' => $offer["id"]])[0]->url_photo ?? NULL;//get the first image of the offer for the preview
+                $professional = ProfessionalUser::find(where: ['user_id' => $offer["professional_id"]])[0]->denomination ?? NULL;//get the name of the professionnal who post the offer
+                $type = OfferType::find(['type' => $offer["offer_type_id"]])[0]->type ?? NULL;//get thee type of the offer
+                $price = OfferType::find(['type' => $offer["offer_type_id"]])[0]->price ?? NULL;//get the price of the type offer
+                $location = isset($offer["address_id"]) ? Address::find(['id' => $offer["address_id"]])[0]->city ?? NULL : NULL; // get the city of the offer
+                $offers[$offer["id"]] = [//set up the final array to send to the vue
+                    "id" => $offer["id"], //id for the link into the detail offer and the traitement of click and vue statistiques
+                    "image" => $image,//preview image
+                    "title" => $offer["title"],
+                    "author" => $professional,
+                    "type" => $type,
+                    "price" => $price,
+                    "location" => $location,
+                    "date" => $offer["last_online_date"],
+                ];
             }
-            $image = OfferPhoto::find(['offer_id' => $offer["id"]])[0]->url_photo ?? NULL;//get the first image of the offer for the preview
-            $type = OfferType::find(['type' => $offer["offer_type_id"]])[0]->type ?? NULL;//get thee type of the offer
-            $price = OfferType::find(['price' => $offer["offer_type_id"]])[0]->price ?? NULL;//get the price of the type offer
-            $location = isset($offer["address_id"]) ? Address::find(['id' => $offer["address_id"]])[0]->city ?? NULL : NULL; // get the city of the offer
-            $offers[$offer["id"]] = [//set up the final array to send to the vue
-                "id" => $offer["id"], //id for the link into the detail offer and the traitement of click and vue statistiques
-                "image" => $image,//preview image
-                "title" => $offer["title"],
-                "author" => $offer["professional_id"],
-                "type" => $type,
-                "price" => $price,
-                "location" => $location,
-                "date" => $offer["last_online_date"],
-            ];
         }
         return $this->render("research", ["offers" => $offers]);
     }
