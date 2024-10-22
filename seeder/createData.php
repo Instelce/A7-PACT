@@ -38,8 +38,7 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (12,90,'rue de Lille','Asnières-sur-Seine',92600,2.285369,48.914155),
                                                                     (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
                                                                     (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451),
-                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326)
-                                                                    ON CONFLICT (id) DO NOTHING;");
+                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326);");
 
 // ---------------------------------------------------------------------- //
 // create offer adress
@@ -48,7 +47,9 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
                                                                     (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
                                                                     (22, 1, 'Rue de la Corderie', 'Lannion', 22300, -3.4597, 48.7326),
-                                                                    (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326);");
+                                                                    (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
+                                                                    (24, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104);");
+
 
 // ---------------------------------------------------------------------- //
 // create users
@@ -58,9 +59,12 @@ $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl,
                                                                      (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11), 
                                                                      (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',12), 
                                                                      (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg',13),
-                                                                     (4, 'FredLeChat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14),
-                                                                    (5, 'rance.evasion@gmail.com', '" . $password . "', 'https://fr.web.img5.acsta.net/pictures/16/05/17/12/17/360795.jpg', 15);");
+                                                                     (5, 'rance.evasion@gmail.com', '" . $password . "', 'https://fr.web.img5.acsta.net/pictures/16/05/17/12/17/360795.jpg', 15),
 
+                                                                     (4, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14),
+                                                                     (8, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14),
+                                                                     (9, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14),
+                                                                     (10, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14);");
 
 // ---------------------------------------------------------------------- //
 // create means of payment
@@ -137,22 +141,21 @@ $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map,
 //create balade bréhat
 $offre6 = new Offer();
 $offre6->title = "Traversée et tour de l'île de Brehat";
-$offre6->summary = 'Voyagez dans le temps et plongez au cœur de la vie gauloise, où vous pourrez découvrir des artisans passionnés, participer à des jeux anciens et vivre une expérience immersive pour toute la famille dans un cadre authentique et amusant.';
-$offre6->description = 'Découvrez le Village Gaulois au sein du parc du Radôme et profitez de plus de 20 jeux originaux, distractifs et éducatifs. Apprentissage et divertissement sont les maîtres mots au Village Gaulois.
-Sur place, la restauration est possible à la crêperie du village : "le Menhir Gourmand" !
-Ce village n’est pas celui du célèbre petit Gaulois... C’est un lieu de détente, de culture et de distraction. Mais les habitants du village restent irréductibles car, avec ténacité depuis 25 ans, ils mènent une action de solidarité en direction d’une lointaine région du monde, l’Afrique.';
-$offre6->likes = 2534;
+$offre6->summary = 'Embarquez à bord de l’un de nos navires pour une traversée ou un tour de l’île. Naviguez loin du flot touristique au cœur d’une zone NATURA 2000.';
+$offre6->description = 'Profitez de notre formule TOUR DE L’ÎLE pour une balade commentée et animée par des passionnés. Vous pourrez admirer l’île par la mer, ses rochers roses, sa côte sauvage et son patrimoine maritime exceptionnel. Les 96 ilots de l’archipel vous offriront un panorama incroyable.
+A l’issue, vous débarquerez sur l’île de Bréhat pour une visite libre. Le retour s’effectuera avec les traversées directes.';
+$offre6->likes = 4012;
 $offre6->offline = 0;
 $offre6->offline_date = null;
-$offre6->last_online_date = "2024-11-01";
-$offre6->view_counter = 8714;
-$offre6->click_counter = 1234;
-$offre6->website = 'https://www.levillagegaulois.org/php/home.php';
-$offre6->phone_number = '0296918395';
-$offre6->category = 'attraction_park';
+$offre6->last_online_date = "2024-10-01";
+$offre6->view_counter = 20986;
+$offre6->click_counter = 7863;
+$offre6->website = 'https://surmerbrehat.com/';
+$offre6->phone_number = '0677980042';
+$offre6->category = 'activity';
 $offre6->offer_type_id = 2;
-$offre6->professional_id = 4;
-$offre6->address_id = 22;
+$offre6->professional_id = 8;
+$offre6->address_id = 23;
 $offre6->save();
 
 $offre3 = new Offer();
