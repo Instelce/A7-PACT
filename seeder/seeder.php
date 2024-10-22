@@ -61,6 +61,8 @@ echo "Creating users and mean of payment...\n";
 $db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.98), (2, 'premium', 7.98);");
 echo "Creating offer types...\n";
 
+$categories = ['activity', 'attraction_park', 'restaurant', 'show', 'visit'];
+
 // Create random offers for testing
 for ($i = 0; $i < 10; $i++) {
     $address = new Address();
@@ -84,6 +86,7 @@ for ($i = 0; $i < 10; $i++) {
     $offer->click_counter = rand(0, 100);
     $offer->website = "https://example.com/$i";
     $offer->phone_number = "0123456789";
+    $offer->category = $categories[rand(0, 4)];
     $offer->offer_type_id = rand(1, 2);
     $offer->professional_id = rand(3, 4);
     $offer->address_id = $address->id;
@@ -93,24 +96,27 @@ for ($i = 0; $i < 10; $i++) {
     for ($j = 1; $j < 4; $j++) {
         $offer->addPhoto("https://placehold.co/{$j}00");
     }
+
+    // Add tags to the offer
+    foreach (array_rand($tags, rand(1, 5)) as $tag) {
+        $tag = strtolower($tags[$tag]);
+        $tagModel = OfferTag::findOne(['name' => $tag]);
+        $offer->addTag($tagModel->id);
+    }
+
+    // Add specific data for category
+    if ($offer->category === 'activity') {
+        $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age, price) VALUES (". $offer->id . ", 2, 10, 10.99);");
+    } elseif ($offer->category === 'attraction_park') {
+        $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (". $offer->id . ", 'https://placehold.co/400', 10, 10);");
+    } elseif ($offer->category === 'restaurant') {
+        $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, minimum_price, maximum_price) VALUES (". $offer->id . ", 'https://placehold.co/400', 10, 30);");
+    } elseif ($offer->category === 'show') {
+        $db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity) VALUES (". $offer->id . ", 3, 30);");
+    } elseif ($offer->category === 'visit') {
+        $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration,  guide) VALUES (". $offer->id . ", 2, false);");
+    }
 }
 echo "Creating random offers...\n";
-
-// Retrieve the offers ids
-$offers_ids = $db->pdo->query("SELECT id FROM offer;")->fetchAll();
-
-function getOfferId($i)
-{
-    global $offers_ids;
-    return $offers_ids[$i - 1]['id'];
-}
-
-// Create specific offers (visit, restaurant, show, attraction_park, activity)
-$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration,  guide) VALUES (". getOfferId(1) . ", 2, false);");
-$db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, minimum_price, maximum_price) VALUES (". getOfferId(2) . ", 'https://placehold.co/400', 10, 30);");
-$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity) VALUES (". getOfferId(3) . ", 3, 30);");
-$db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (". getOfferId(4) . ", 'https://placehold.co/400', 10, 10);");
-$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age, price) VALUES (". getOfferId(5) . ", 2, 10, 10.99);");
-echo "Creating specific offers...\n";
 
 echo "Database seeded successfully.\n";

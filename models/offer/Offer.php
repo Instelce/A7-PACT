@@ -23,6 +23,12 @@ class Offer extends DBModel
     public int $click_counter = 0;
     public string $website = '';
     public string $phone_number = '';
+
+    /**
+     * @var 'activity' | 'attraction_park' | 'restaurant' | 'show' | 'visit'
+     */
+    public string $category = '';
+
     public int $offer_type_id = 0;
     public int $professional_id = 0;
     public int $address_id = 0;

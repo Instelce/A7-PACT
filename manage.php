@@ -43,7 +43,7 @@ if ($argc >= 2) {
             exec("docker compose down > /dev/null 2>&1 &");
             echo "Development database stopped" . PHP_EOL;
         } else if ($argv[2] === "seed") {
-            exec("php seeder/seeder.php");
+            echo shell_exec("php seeder/seeder.php");
         } else {
             echo "Invalid argument" . PHP_EOL;
         }
