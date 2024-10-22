@@ -294,35 +294,42 @@ $form = new Form();
         <section>
             <h2 class="section-header">Localisation</h2>
 
-            <x-input>
-                <p slot="label">Adresse</p>
-                <input slot="input" id="localization-autocomplete" type="text" placeholder="" required list="localization-autocomplete-list">
-            </x-input>
+            <div class="flex flex-col gap-4">
+                <x-input>
+                    <p slot="label">Adresse complète</p>
+                    <input slot="input" id="address-field" type="text" placeholder="" required>
+                    <p slot="helper">Champ avec suggestions qui modifie les champs suivants</p>
+                    <div slot="list" id="address-autocomplete" data-no-filter></div>
+                </x-input>
 
-            <datalist id="localization-autocomplete-list"></datalist>
+                <div class="flex flex-col gap-2">
+                    <div class="flex gap-4">
+                        <x-input class="w-[200px]">
+                            <p slot="label">Numéro de rue</p>
+                            <input slot="input" id="address-number" type="number" name="address-number" placeholder="2" required>
+                        </x-input>
+                        <x-input>
+                            <p slot="label">Nom de la rue</p>
+                            <input slot="input" id="address-street" type="text" name="address-street" placeholder="Rue Edouard Branly" required>
+                        </x-input>
+                    </div>
+                    <div class="flex gap-4">
+                        <x-input class="w-[200px]">
+                            <p slot="label">Code postal</p>
+                            <input slot="input" id="address-postal-code" type="text" name="address-postal-code" placeholder="22300" required>
+                        </x-input>
+                        <x-input>
+                            <p slot="label">Ville</p>
+                            <input slot="input" id="address-city" type="text" name="address-city" placeholder="Lannion" required>
+                        </x-input>
+                    </div>
 
-            <div class="flex flex-col gap-2">
-                <div class="flex gap-4">
-                    <x-input class="w-[200px]">
-                        <p slot="label">Numéro de rue</p>
-                        <input slot="input" type="number" name="address-number" placeholder="2" required>
-                    </x-input>
-                    <x-input>
-                        <p slot="label">Nom de la rue</p>
-                        <input slot="input" type="text" name="address-street" placeholder="Rue Edouard Branly" required>
-                    </x-input>
-                </div>
-                <div class="flex gap-4">
-                    <x-input class="w-[200px]">
-                        <p slot="label">Code postal</p>
-                        <input slot="input" type="text" name="address-postal-code" placeholder="22300" required>
-                    </x-input>
-                    <x-input>
-                        <p slot="label">Ville</p>
-                        <input slot="input" type="text" name="address-city" placeholder="Lannion" required>
-                    </x-input>
+                    <!-- Longitude and latitude inputs -->
+                    <input id="address-latitude" type="hidden" name="address-latitude">
+                    <input id="address-longitude" type="hidden" name="address-longitude">
                 </div>
             </div>
+
         </section>
 
 

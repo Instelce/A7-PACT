@@ -58,18 +58,33 @@ export class Input extends WebComponent {
 
         // Add autocomplete list
         let list = this.querySelector('[slot="list"]');
-        list.role = 'listbox';
 
         if (list) {
+            list.role = 'listbox';
+
             let listOption = list.querySelectorAll('[slot="list"] > *');
             this.listOptions = [];
             this.currentIndex = -1;
 
-            // Retrieve all options text
-            listOption.forEach(option => {
-                this.listOptions.push(option.textContent);
+            // Retrieve all options text when list is initialized
+            this.listOptions = Array.from(list.children).map(option => {
                 option.classList.add('option');
+                return option.textContent;
             });
+
+            // Retrieve all options text when list inner HTML is changed
+            new MutationObserver(() => {
+                this.listOptions = Array.from(list.children).map(option => {
+                    option.classList.add('option');
+
+                    option.addEventListener('click', () => {
+                        input.value = option.textContent;
+                        list.classList.remove('open');
+                    });
+
+                    return option.textContent;
+                });
+            }).observe(list, {childList: true});
 
             input.addEventListener('input', (e) => {
                 // Show the list when typing
@@ -82,31 +97,38 @@ export class Input extends WebComponent {
                     list.classList.remove('open');
                 }
 
-                // Remove all options
-                list.innerHTML = '';
+                if (!list.hasAttribute('data-no-filter')) {
+                    // Remove all options
+                    list.innerHTML = '';
 
-                // Add options that match the input value
-                this.listOptions.forEach((option, index) => {
-                    if (option.toLowerCase().includes(value.toLowerCase())) {
-                        let el = document.createElement('div');
-                        el.classList.add('option');
-                        el.textContent = option;
-                        list.appendChild(el);
+                    console.log("Filtering");
 
-                        el.addEventListener('click', () => {
-                            input.value = el.textContent;
-                            list.classList.remove('open');
-                        });
+                    // Add options that match the input value
+                    this.listOptions.forEach((option, index) => {
+                        if (option.toLowerCase().includes(value.toLowerCase())) {
+                            let el = document.createElement('div');
+                            el.classList.add('option');
+                            el.textContent = option;
+                            list.appendChild(el);
 
-                        if (index === this.currentIndex) {
-                            el.classList.add('selected');
+                            el.addEventListener('click', () => {
+                                input.value = el.textContent;
+                                list.classList.remove('open');
+                            });
+
+                            if (index === this.currentIndex) {
+                                el.classList.add('selected');
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
-                if (list.children.length === 0) {
-                    this.currentIndex = -1;
-                    list.classList.remove('open');
+                console.log(this.listOptions.length);
+
+                if (this.listOptions.length === 0) {
+                    list.classList.add('fake-hidden');
+                } else {
+                    list.classList.remove('fake-hidden');
                 }
             });
 
@@ -129,6 +151,15 @@ export class Input extends WebComponent {
                     if (this.currentIndex >= 0 && this.currentIndex < options.length) {
                         input.value = options[this.currentIndex].textContent;
                         list.classList.remove('open');
+
+                        // Dispatch custom event
+                        input.dispatchEvent(new CustomEvent('selected', {
+                            detail: {
+                                value: input.value,
+                                index: this.currentIndex,
+                                option: options[this.currentIndex]
+                            }
+                        }));
                     }
                 }
             });
@@ -240,30 +271,6 @@ export class Input extends WebComponent {
                   border: 1px solid rgb(var(--color-danger));
                 }
                 
-                /* Autocomplete list */
-                ::slotted([slot="list"]) {
-                    width: 100%;
-                    top: calc(100% + 1rem);
-                    left: 0;
-                    position: absolute;
-                    border: 1px solid rgb(var(--color-gray-2));
-                    border-radius: var(--radius-small);
-                    background: white;
-                    z-index: 100;
-                    overflow: hidden;
-                    display:flex;
-                    flex-direction: column;
-                    pointer-events: none;
-                    opacity: 0;
-                    transform: translateY(-.5rem);
-                    transition: opacity .1s, transform .1s;
-                }
-                
-                ::slotted([slot="list"].open) {
-                    opacity: 1;
-                    transform: translateY(0);
-                    pointer-events: auto;
-                }
             </style>
         `;
     }

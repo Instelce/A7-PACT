@@ -141,31 +141,6 @@ export class Select extends WebComponent {
                 cursor: pointer;
             }
             
-            ::slotted([slot="options"]) {
-                width: 100%;
-                top: calc(100% + 1rem);
-                left: 0;
-                position: absolute;
-                border: 1px solid rgb(var(--color-gray-2));
-                border-radius: var(--radius-small);
-                background: white;
-                z-index: 100;
-                overflow: hidden;
-                /*display: none;*/
-                display:flex;
-                flex-direction: column;
-                pointer-events: none;
-                opacity: 0;
-                transform: translateY(-.5rem);
-                transition: opacity .1s, transform .1s;
-            }
-            
-            ::slotted([slot="options"].open) {
-                opacity: 1;
-                transform: translateY(0);
-                pointer-events: auto;
-            }
-            
             ::slotted([slot="label"]) {
                 display: block;
                 margin-bottom: .5rem;
