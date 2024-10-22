@@ -25,24 +25,32 @@ $db = $app->db;
 
 $password = password_hash("1234", PASSWORD_DEFAULT);
 
-$db->pdo->exec("TRUNCATE TABLE offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account CASCADE;");
-
+$db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
 //create mean of payment
 $db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1);");
-$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'CarteBancaire', '1548759863254125', '07/25', '123');");
+$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'CB1', '1548759863254125', '07/25', '123');");
 
-//create adress users
+// ---------------------------------------------------------------------- //
+// user adress
+// ---------------------------------------------------------------------- //
+
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
                                                                     (11,68, 'Avenue Millies Lacroix', 'Eaubonne', 95600,2.2779189 ,48.992128), 
                                                                     (12,90,'rue de Lille','Asnières-sur-Seine',92600,2.285369,48.914155),
                                                                     (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
                                                                     (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451)ON CONFLICT (id) DO NOTHING;");
 
-//create adress offres
+// ---------------------------------------------------------------------- //
+// offer adress
+// ---------------------------------------------------------------------- //
+
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
                                                                     (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
                                                                     (22, 1, 'Rue de la Corderie', 'Lannion', 22300, -3.4597, 48.7326);");
-//create users
+
+// ---------------------------------------------------------------------- //
+// create users
+// ---------------------------------------------------------------------- //
 $db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4);");
 $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl, address_id) VALUES 
                                                                      (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11), 
@@ -60,10 +68,14 @@ $db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3);");
 
 $db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto,payment_id) VALUES (4, '2024-11-30',1);");
 
-//create offres
+// ---------------------------------------------------------------------- //
+// offer type
+// ---------------------------------------------------------------------- //
 $db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.99), (2, 'premium', 7.99);");
 
-//create cafe des halles
+// ---------------------------------------------------------------------- //
+// create cafe des halles
+// ---------------------------------------------------------------------- //
 $offre = new Offer();
 $offre->id = 1;
 $offre->title = "Café des Halles";
@@ -72,7 +84,7 @@ $offre->description = 'le Café des Halles se distingue par son ambiance authent
 $offre->likes = 57;
 $offre->offline = 0;
 $offre->offline_date = null;
-$offre->last_online_date = '2024-11-01';
+$offre->last_online_date = "2024-11-01";
 $offre->view_counter = 120;
 $offre->click_counter = 180;
 $offre->website = 'https://www.facebook.com/people/Caf%C3%A9-Des-Halles/100064099743039/';
@@ -83,7 +95,9 @@ $offre->address_id = 21;
 $offre->save();
 
 
-//create village gaulois
+// ---------------------------------------------------------------------- //
+// create village gaulois
+// ---------------------------------------------------------------------- //
 $offre = new Offer();
 $offre->id = 2;
 $offre->title = "Village Gaulois";
@@ -95,7 +109,7 @@ Ce village n’est pas celui du célèbre petit Gaulois... C’est un lieu de d�
 $offre->likes = 2534;
 $offre->offline = 0;
 $offre->offline_date = '';
-$offre->last_online_date = '2024-11-01';
+$offre->last_online_date = "2024-11-01";
 $offre->view_counter = 8714;
 $offre->click_counter = 1234;
 $offre->website = 'https://www.levillagegaulois.org/php/home.php';
@@ -107,7 +121,9 @@ $offre->save();
 
 
 
-//photos cafe des halles
+// ---------------------------------------------------------------------- //
+// photos offer
+// ---------------------------------------------------------------------- //
 $photosCafe1 = new OfferPhoto();
 $photosCafe1->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/e7/89/7e/cafe-des-halles.jpg?w=1000&h=-1&s=1';
 $photosCafe1->offer_id = 1;
@@ -124,7 +140,7 @@ $photosCafe3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo
 $photosCafe3->offer_id = 1;
 $photosCafe3->save();
 
-//photos village gaulois
+
 $photosGaulois1 = new OfferPhoto();
 $photosGaulois1->url_photo = 'https://res.cloudinary.com/funbooker/image/upload/c_fill,dpr_2.0,f_auto,q_auto/v1/marketplace-listing/eiq9bgtjemwjwtweimn7';
 $photosGaulois1->offer_id = 2;
