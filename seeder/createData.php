@@ -53,7 +53,7 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 // ---------------------------------------------------------------------- //
 // create users
 // ---------------------------------------------------------------------- //
-$db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4);");
+$db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4),(5);");
 $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl, address_id) VALUES 
                                                                      (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11), 
                                                                      (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',12), 
@@ -66,18 +66,18 @@ $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl,
 // create means of payment
 // ---------------------------------------------------------------------- //
 
-$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1);");
-$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'CarteBancaire', '1548759863254125', '07/25', '123');");
+$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1),(2);");
+$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'Fred port', '1548759863254125', '07/25', '123'),(2,'Rance Evasion','4287621589632154','08/29','123');");
 
 $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 
 $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VeilleArbre', TRUE);");
 
-$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034'), (4, 7421, 'Fred port', '65941542000012');");
+$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034'), (4, 7421, 'Fred port', '65941542000012'),(5,8452,'Rance Evasion','26915441000024');");
 
 $db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3);");
 
-$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id) VALUES (4, '2024-11-30', 1);");
+$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id) VALUES (4, '2024-11-30', 1),(5,'2024-11-30',2);");
 
 // ---------------------------------------------------------------------- //
 // create offer types
@@ -162,7 +162,7 @@ $offre3->description = 'Avec un petit comité de seulement 10 personnes, profite
 Nous nous rendrons jusqu\'au Port de Dinan (pas d\'arrêt, pas de débarquement). Lors de notre promenade vous pourrez observer l\'avifaune de la Plaine de Taden et en apprendre plus sur le patrimoine naturel de la Vallée de la Rance. Votre Capitaine vous racontera également des anecdotes historiques sur l\'évolution de la Rance au fil des années.';
 $offre3->likes = 8;
 $offre3->offline = 0;
-$offre3->offline_date = '';
+$offre3->offline_date = null;
 $offre3->last_online_date = "2024-11-01";
 $offre3->view_counter = 321;
 $offre3->click_counter = 180;
@@ -174,7 +174,7 @@ $offre3->address_id = 21;
 $offre3->category = 'visit';
 $offre3->save();
 
-$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre3->id . ", 1.5, 1);");
+$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre3->id . ", 1.5, true);");
 
 
 
