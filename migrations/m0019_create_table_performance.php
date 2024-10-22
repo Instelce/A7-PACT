@@ -20,7 +20,7 @@ class m0019_create_table_performance
 
     public function down()
     {
-        $sql = "DROP TABLE performance;";
+        $sql = "DROP TABLE performance CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

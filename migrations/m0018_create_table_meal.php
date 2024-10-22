@@ -26,7 +26,7 @@ class m0018_create_table_meal
 
     public function down()
     {
-        $sql = "DROP TABLE meal CASCADE,
+        $sql = "DROP TABLE meal CASCADE;
                 DROP TABLE is_on_restaurant_menu CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
