@@ -39,6 +39,10 @@ $app->router->get('/offres/creation', [\app\controllers\OfferController::class, 
 $app->router->post('/offres/creation', [\app\controllers\OfferController::class, 'create']);
 $app->router->get('/offres/<pk:int>', [\app\controllers\OfferController::class, 'detail']);
 
+// dashboard pro
+$app->router->get('/dashboard/offres', [\app\controllers\DashboardController::class, 'offers']);
+$app->router->post('/dashboard/offres', [\app\controllers\DashboardController::class, 'offers']);
+
 // Auth routes
 $app->router->get('/connexion', [AuthController::class, 'login']);
 $app->router->post('/connexion', [AuthController::class, 'login']);
