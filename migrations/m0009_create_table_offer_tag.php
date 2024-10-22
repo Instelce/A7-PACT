@@ -12,11 +12,11 @@ class m0009_create_table_offer_tag
             name VARCHAR(50) NOT NULL
         );
 
-        CREATE TABLE is_tagged (
+        CREATE TABLE offer_is_tagged (
             id SERIAL PRIMARY KEY,
             
             tag_id INT NOT NULL,
-            offer_id INT NOT NULL,  
+            offer_id INT NOT NULL,
             
             FOREIGN KEY (offer_id) REFERENCES offer(id),
             FOREIGN KEY (tag_id) REFERENCES offer_tag(id)
@@ -27,7 +27,7 @@ class m0009_create_table_offer_tag
     public function down()
     {
         $sql = "DROP TABLE offer_tag CASCADE;
-                DROP TABLE is_tagged CASCADE;";
+                DROP TABLE offer_is_tagged CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

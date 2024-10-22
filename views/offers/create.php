@@ -194,21 +194,21 @@ $form = new Form();
                 <div class="flex gap-4">
                     <x-input class="w-[200px]">
                         <p slot="label">Numéro de rue</p>
-                        <input slot="input" type="number" placeholder="2" required>
+                        <input slot="input" type="number" name="address-number" placeholder="2" required>
                     </x-input>
                     <x-input>
                         <p slot="label">Nom de la rue</p>
-                        <input slot="input" type="text" placeholder="Rue Edouard Branly" required>
+                        <input slot="input" type="text" name="address-street" placeholder="Rue Edouard Branly" required>
                     </x-input>
                 </div>
                 <div class="flex gap-4">
                     <x-input class="w-[200px]">
                         <p slot="label">Code postal</p>
-                        <input slot="input" type="text" placeholder="22300" required>
+                        <input slot="input" type="text" name="address-postal-code" placeholder="22300" required>
                     </x-input>
                     <x-input>
                         <p slot="label">Ville</p>
-                        <input slot="input" type="text" placeholder="Lannion" required>
+                        <input slot="input" type="text" name="address-city" placeholder="Lannion" required>
                     </x-input>
                 </div>
             </div>
@@ -331,7 +331,7 @@ $form = new Form();
 
               <!-- Uploader -->
               <label for="photo-input" class="image-uploader">
-                <input type="file" accept="image/*" id="photo-input" multiple hidden>
+                <input type="file" accept="image/png, image/jpeg" id="photo-input" multiple hidden>
 
                 <i data-lucide="upload"></i>
                 <p>Faire glisser des fichiers pour les uploader</p>
