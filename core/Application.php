@@ -23,6 +23,7 @@ class Application
     public ?Controller $controller = null;
     public View $view;
     public Session $session;
+    public Storage $storage;
     public ?UserAccount $user = null;
 
     /**
@@ -41,6 +42,7 @@ class Application
         $this->db = new Database($config['db']);
         $this->session = new Session();
         $this->view = new View();
+        $this->storage = new Storage();
 
         // Get the primary key of the user from the session
         $pkValue = $this->session->get('user');

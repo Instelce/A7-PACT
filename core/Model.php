@@ -12,6 +12,7 @@ abstract class Model
     public const RULE_UNIQUE = 'unique';
     public const RULE_DATE = 'date';
     public const RULE_EXP_DATE = 'exp_date';
+    public const RULE_HOUR = 'hour';
 
     public array $errors = [];
 
@@ -103,6 +104,12 @@ abstract class Model
                         $this->addError($attr, self::RULE_MATCH, $rule);
                     }
                 }
+                if ($rule_name === self::RULE_HOUR) {
+                    $pattern = '/^\d{1,2}:\d{2}$/';
+                    if (!preg_match($pattern, $value)) {
+                        $this->addError($attr, self::RULE_MATCH, $rule);
+                    }
+                }
             }
         }
 
@@ -133,7 +140,8 @@ abstract class Model
             self::RULE_MATCH => 'Ce champs doit être le même que {match}',
             self::RULE_UNIQUE => '{field} existe déjà',
             self::RULE_DATE => 'Format de date incorrecte',
-            self::RULE_EXP_DATE => 'Format de date d\'expiration incorrecte'
+            self::RULE_EXP_DATE => 'Format de date d\'expiration incorrecte',
+            self::RULE_HOUR => 'Format d\'heure incorrecte'
         ];
     }
 

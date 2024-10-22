@@ -91,10 +91,6 @@ class Router
                 array_shift($matches);
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
 
-                echo "<pre>";
-                var_dump($params);
-                echo "</pre>";
-
                 if (is_array($callback)) {
                     /**
                      * New instance of the controller

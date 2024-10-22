@@ -9,11 +9,17 @@ use app\core\middlewares\BackOfficeMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\models\Address;
+use app\models\offer\ActivityOffer;
 use app\models\offer\Offer;
+use app\models\offer\OfferPeriod;
+use app\models\offer\OfferSchedule;
 use app\models\offer\OfferTag;
 use app\models\offer\OfferType;
 use app\models\offer\OfferPhoto;
 use app\models\user\professional\ProfessionalUser;
+use app\models\offer\RestaurantOffer;
+use app\models\offer\ShowOffer;
+use app\models\offer\VisitOffer;
 
 class OfferController extends Controller
 {
@@ -23,8 +29,7 @@ class OfferController extends Controller
         $this->registerMiddleware(new BackOfficeMiddleware(['create']));
     }
 
-    public function create(Request $request, Response $response)
-    {
+    public function create(Request $request, Response $response) {
         $this->setLayout('back-office');
         $offer = new Offer();
 
@@ -46,10 +51,14 @@ class OfferController extends Controller
             $address->city = $body['address-city'];
             $address->save();
 
+            // Get category
+            $category = $body['category'];
+
             // Create the offer
             $offer->loadData($request->getBody());
             $offer->offline_date = date('Y-m-d');
             $offer->last_online_date = null;
+            $offer->category = $category;
             $offer->professional_id = Application::$app->user->account_id;
             $offer->offer_type_id = $offer_type->id;
             $offer->address_id = $address->id;
@@ -69,18 +78,48 @@ class OfferController extends Controller
                 $offer->addTag($tagModel->id);
             }
 
+            // Creation of complementary informations
+            if ($category === 'visit') {
+                $visit = new VisitOffer();
+                $visit->offer_id = $offer->id;
+                $visit->duration = $body['visit-duration'];
+                $visit->guide = array_key_exists('visit-guide', $body) ? VisitOffer::GUIDE : VisitOffer::NO_GUIDE;
+
+                // TODO - change to fields values
+                $period = new OfferPeriod();
+                $period->start_date_date = date('Y-m-d');
+                $period->end_date = date('Y-m-d');
+                $period->save();
+
+                $visit->period_id = $period->id;
+                $visit->save();
+
+            } elseif ($category === 'activity') {
+                $activity = new ActivityOffer();
+                $activity->offer_id = $offer->id;
+                $activity->duration = intval($body['activity-duration']);
+                $activity->required_age = intval($body['activity-age']);
+                $activity->price = intval($body['activity-price']);
+                $activity->save();
+            } elseif ($category === 'restaurant') {
+                $restaurant = new RestaurantOffer();
+                $restaurant->url_image_carte = Application::$app->storage->saveFile('restaurant-image', 'offers/restaurant');
+                $restaurant->minimum_price = intval($body['restaurant-min-price']);
+                $restaurant->maximum_price = intval($body['restaurant-max-price']);
+                $restaurant->save();
+            } elseif ($category === 'show') {
+                $show = new ShowOffer();
+                $show->offer_id = $offer->id;
+                $show->duration = intval($body['show-duration']);
+                $show->capacity = intval($body['show-capacity']);
+            } elseif ($category === 'attraction-parc') {
+
+            }
+
             // Save photos
-            $photos = $_FILES['photos'];
-            foreach ($photos['name'] as $i => $fileName) {
-                $extension = explode('.', $fileName)[1];
-                $tmpFilePath = $photos['tmp_name'][$i];
-                $fileName = time() . rand(1, 1000) . '.' . $extension;
-                $filePath = Application::$ROOT_DIR . '/public/upload/offers/' . $fileName;
-
-                // Save the file
-                move_uploaded_file($tmpFilePath, $filePath);
-
-                $offer->addPhoto('/upload/offers/' . $fileName);
+            $files = Application::$app->storage->saveFiles( 'photos', 'offers');
+            foreach ($files as $file) {
+                $offer->addPhoto($file);
             }
 
             exit;
