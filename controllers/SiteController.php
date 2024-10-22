@@ -9,7 +9,11 @@ use app\core\Response;
 use app\models\ContactForm;
 use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
-use app\models\offer\OfferType;
+use app\models\offer\ActivityOffer;
+use app\models\offer\AttractionParkOffer;
+use app\models\offer\RestaurantOffer;
+use app\models\offer\ShowOffer;
+use app\models\offer\VisitOffer;
 use app\models\Address;
 use app\models\user\professional\ProfessionalUser;
 
@@ -65,10 +69,23 @@ class SiteController extends Controller
         foreach ($allOffers as $offer) {//foreach offer
             if ($offer["offline"] == Offer::STATUS_ONLINE) {//show only online offer
                 $image = OfferPhoto::find(['offer_id' => $offer["id"]])[0]->url_photo ?? NULL;//get the first image of the offer for the preview
-                $professional = ProfessionalUser::find(where: ['user_id' => $offer["professional_id"]])[0]->denomination ?? NULL;//get the name of the professionnal who post the offer
-                $type = OfferType::find(['type' => $offer["offer_type_id"]])[0]->type ?? NULL;//get thee type of the offer
-                $price = OfferType::find(['type' => $offer["offer_type_id"]])[0]->price ?? NULL;//get the price of the type offer
-                $location = isset($offer["address_id"]) ? Address::find(['id' => $offer["address_id"]])[0]->city ?? NULL : NULL; // get the city of the offer
+                $professional = ProfessionalUser::findOne(where: ['user_id' => $offer["professional_id"]])->denomination ?? NULL;//get the name of the professionnal who post the offer
+                $price = NULL;
+                $type = NULL;
+                if (RestaurantOffer::findOne(['offer_id' => $offer["id"]])) {//if the offer is a restaurant
+                    $type = "Restaurant";
+                    $price = RestaurantOffer::findOne(['offer_id' => $offer["id"]])->minimum_price ?? NULL;//get the minimum price of the restaurant
+                } else if (ActivityOffer::findOne(['offer_id' => $offer["id"]])) {//if the offer is an activity
+                    $type = "Activité";
+                    $price = ActivityOffer::findOne(['offer_id' => $offer["id"]])->price ?? NULL;//get the price of the activity
+                } else if (ShowOffer::findOne(['offer_id' => $offer["id"]])) {//if the offer is a show
+                    $type = "Spectacle";
+                } else if (VisitOffer::findOne(['offer_id' => $offer["id"]])) {//if the offer is a visit
+                    $type = "Visite";
+                } else if (AttractionParkOffer::findOne(['offer_id' => $offer["id"]])) {//if the offer is an attraction park
+                    $type = "Parc d'attraction";
+                }
+                $location = Address::findOne(['id' => $offer["address_id"]])->city ?? NULL; // get the city of the offer
                 $offers[$offer["id"]] = [//set up the final array to send to the vue
                     "id" => $offer["id"], //id for the link into the detail offer and the traitement of click and vue statistiques
                     "image" => $image,//preview image
