@@ -21,7 +21,7 @@ class m0012_create_table_activity_offer
 
     public function down()
     {
-        $sql = "DROP TABLE activity_offer;";
+        $sql = "DROP TABLE activity_offer CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }
