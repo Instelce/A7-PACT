@@ -10,7 +10,7 @@ class m0005_create_address {
             number INT NOT NULL,
             street VARCHAR(255) NOT NULL,
             city VARCHAR(255) NOT NULL,
-            postal_code INT NOT NULL,
+            postal_code VARCHAR(5) NOT NULL,
             longitude NUMERIC,
             latitude NUMERIC
         );";

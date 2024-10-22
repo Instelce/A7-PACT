@@ -112,4 +112,12 @@ class Offer extends DBModel
             $photo->delete();
         }
     }
+
+    public function addTag($tagId)
+    {
+        $isTagged = new OfferIsTagged();
+        $isTagged->tag_id = $tagId;
+        $isTagged->offer_id = $this->id;
+        $isTagged->save();
+    }
 }

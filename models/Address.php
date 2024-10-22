@@ -10,7 +10,7 @@ class Address extends DBModel
     public int $number = 0;
     public string $street = '';
     public string $city = '';
-    public int $postal_code = 0;
+    public string $postal_code = '';
     public float $longitude = 0.0;
     public float $latitude = 0.0;
 

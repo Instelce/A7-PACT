@@ -4,6 +4,7 @@ use app\core\Application;
 use app\models\account\Account;
 use app\models\Address;
 use app\models\offer\Offer;
+use app\models\offer\OfferTag;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -27,15 +28,25 @@ $db = $app->db;
 $db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment CASCADE;");
 echo "Truncating all tables...\n";
 
+// Add tags
+$tags = ['Française', 'Fruit de mer', 'Plastique', 'Italienne', 'Indienne', 'Gastronomique', 'Restauration rapide', 'Crêperie', 'Culturel', 'Gastronomie', 'Patrimoine', 'Musée', 'Histoire', 'Atelier', 'Urbain', 'Musique', 'Nature', 'Famille', 'Plein air', 'Cirque', 'Sport', 'Son et lumière', 'Nautique', 'Humour'];
+
+foreach ($tags as $tag) {
+    $tagModel = new OfferTag();
+    $tagModel->name = strtolower($tag);
+    $tagModel->save();
+}
+echo "Adding tags ...\n";
+
 // Add addresses for users
-$db->pdo->exec("INSERT INTO address(id, number, street, city, postal_code, longitude, latitude) VALUES(15, 16, 'Edouard Branly', 'Lannion', 22300, 48.0002, -15.0115), (12, 11, 'Edouard Branly', 'Lannion', 22300, 49.0002, -16.0115), (13, 12, 'Edouard Branly', 'Lannion', 22300, 47.0002, -14.0115), (14, 13, 'Edouard Branly', 'Lannion', 22300, 46.0002, -18.0115);");
+$db->pdo->exec("INSERT INTO address(number, street, city, postal_code, longitude, latitude) VALUES(16, 'Edouard Branly', 'Lannion', 22300, 48.0002, -15.0115), (11, 'Edouard Branly', 'Lannion', 22300, 49.0002, -16.0115), (12, 'Edouard Branly', 'Lannion', 22300, 47.0002, -14.0115), (13, 'Edouard Branly', 'Lannion', 22300, 46.0002, -18.0115);");
 echo "Adding addresses for users...\n";
 
 // Create four users (admin, member, public-pro, private-pro)
 $password = password_hash("1234", PASSWORD_DEFAULT);
-
+$lastId = $db->pdo->lastInsertId();
 $db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4);");
-$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl, address_id) VALUES (1, 'admin@test.com', '". $password ."', 'https://placehold.co/400', 15), (2, 'member@test.com', '". $password ."', 'https://placehold.co/400', 12), (3, 'public-pro@test.com', '". $password ."', 'https://placehold.co/400', 13), (4, 'private-pro@test.com', '". $password ."', 'https://placehold.co/400', 14);");
+$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl, address_id) VALUES (1, 'admin@test.com', '". $password ."', 'https://placehold.co/400', ". $lastId - 3 ."), (2, 'member@test.com', '". $password ."', 'https://placehold.co/400', ". $lastId - 2 ."), (3, 'public-pro@test.com', '". $password ."', 'https://placehold.co/400', ". $lastId - 1 ."), (4, 'private-pro@test.com', '". $password ."', 'https://placehold.co/400', ". $lastId .");");
 $db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1);");
 $db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'Super entreprise', '1548759863254125', '07/25', '123');");
 
