@@ -12,8 +12,9 @@ $this->title = "research";
                 <?php if ($offer["image"] == NULL) {
                     ?><img slot="image" alt="l offre ne contient pas d image" /> <?php //no image for the offer
                 } else {
-                    ?><img slot="image" alt="photo d article" src="<?php echo $image ?>" /> <?php //image of the offer
+                    ?><img slot="image" alt="photo d article" src="<?php echo $offer["image"] ?>" /> <?php //image of the offer
                 } ?>
+
                 <span slot="title"><?php echo $offer["title"]; ?> </span>
                 <span slot="author"><?php echo $offer["author"]; ?> </span>
                 <span slot="type"><?php echo $offer["type"]; ?> </span>

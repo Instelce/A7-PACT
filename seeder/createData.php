@@ -168,3 +168,7 @@ $photosGaulois3->offer_id = 2;
 $photosGaulois3->save();
 
 
+
+echo "Database seeded successfully.\n";
+
+?>
