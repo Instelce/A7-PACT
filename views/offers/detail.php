@@ -8,10 +8,10 @@ use app\core\form\Form;
 $this->title = "Détails d'une offre";
 $this->jsFile = "detailedOffer";
 
-echo "<pre>";
-var_dump($pk);
-var_dump($offerData);
-echo "</pre>";
+// echo "<pre>";
+// var_dump($pk);
+// var_dump($offerData);
+// echo "</pre>";
 
 ?>
 
@@ -19,14 +19,14 @@ echo "</pre>";
 
 <div class="publication">
     <p>Paru le </p>
-    <p><?php echo $offerData['date'] ?></p>
+    <p><?php echo $offerData["date"] ?></p>
 </div>
 
 <!---- Carousel ---->
 <div class="paddingOfferDetailed">
     <x-carousel>
         <?php
-        foreach ($offerData = ['url_images'] as $url) {
+        foreach ($offerData["url_images"] as $url) {
             ?><img slot="image" src="<?php echo $url ?>" alt="photo offre"><?php
 
         }
@@ -36,11 +36,11 @@ echo "</pre>";
 
 
     <!---- Infos ---->
+    <h2 class="heading-2"><?php echo $offerData["title"] ?></h2>
 
-    <h2 class="heading-2">Balade familiale à vélo “Qui m’aime me suive”</h2>
 
     <div class="inlineOffer">
-        <p>Par Trégor Bicyclette</p>
+        <p>Par <?php echo $offerData["author"] ?></p>
         <div class="inlineOfferGap">
 
             <p>Activité</p>

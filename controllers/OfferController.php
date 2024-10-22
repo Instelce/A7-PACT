@@ -95,19 +95,19 @@ class OfferController extends Controller
     {
         $id = $routeparams['pk'];
         $offerData = [];
-        $offer = Offer::find(['id' => $id])[0];
+        $offer = Offer::findOne(['id' => $id]);
         $images = OfferPhoto::find(['offer_id' => $id]) ?? NULL;//get the first image of the offer for the preview
         $url_images = [];
         foreach ($images as $image) {
             array_push($url_images, $image->url_photo);
         }
-        $professional = ProfessionalUser::find(where: ['user_id' => $offer["professional_id"]])[0]->denomination ?? NULL;//get the name of the professionnal who post the offer
-
+        $professional = ProfessionalUser::findOne(['user_id' => $offer->professional_id])->denomination ?? NULL;//get the name of the professional who posted the offer
 
         $offerData = [
             'url_images' => $url_images,
-            'date' => $offer['last_online_date'],
-            'title' => $offer['title']
+            'date' => $offer->last_online_date,
+            'title' => $offer->title,
+            'author' => $professional
         ];
         return $this->render('offers/detail', [
             'pk' => $routeparams['pk'],
