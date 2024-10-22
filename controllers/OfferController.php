@@ -12,6 +12,8 @@ use app\models\Address;
 use app\models\offer\Offer;
 use app\models\offer\OfferTag;
 use app\models\offer\OfferType;
+use app\models\offer\OfferPhoto;
+use app\models\user\professional\ProfessionalUser;
 
 class OfferController extends Controller
 {
@@ -21,7 +23,8 @@ class OfferController extends Controller
         $this->registerMiddleware(new BackOfficeMiddleware(['create']));
     }
 
-    public function create(Request $request, Response $response) {
+    public function create(Request $request, Response $response)
+    {
         $this->setLayout('back-office');
         $offer = new Offer();
 
@@ -88,9 +91,27 @@ class OfferController extends Controller
         ]);
     }
 
-    public function detail(Request $request, Response $response, $pk) {
+    public function detail(Request $request, Response $response, $routeparams)
+    {
+        $id = $routeparams['pk'];
+        $offerData = [];
+        $offer = Offer::find(['id' => $id])[0];
+        $images = OfferPhoto::find(['offer_id' => $id]) ?? NULL;//get the first image of the offer for the preview
+        $url_images = [];
+        foreach ($images as $image) {
+            array_push($url_images, $image->url_photo);
+        }
+        $professional = ProfessionalUser::find(where: ['user_id' => $offer["professional_id"]])[0]->denomination ?? NULL;//get the name of the professionnal who post the offer
+
+
+        $offerData = [
+            'url_images' => $url_images,
+            'date' => $offer['last_online_date'],
+            'title' => $offer['title']
+        ];
         return $this->render('offers/detail', [
-            'pk' => $pk,
+            'pk' => $routeparams['pk'],
+            "offerData" => $offerData
         ]);
     }
 }

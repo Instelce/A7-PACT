@@ -7,7 +7,7 @@ $this->title = "research";
     // var_dump($offers);
     foreach ($offers as $offer) {//for each offer show, the composant x-search-page-card with a link to the detail offer
         ?>
-        <a href="/offers/detail?id=<?php echo $offer["id"]; ?>">
+        <a href="/offres/<?php echo $offer["id"]; ?>">
             <x-search-page-card>
                 <?php if ($offer["image"] == NULL) {
                     ?><img slot="image" alt="l offre ne contient pas d image" /> <?php //no image for the offer
