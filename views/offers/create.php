@@ -168,7 +168,7 @@ $form = new Form();
                     <div data-value="activity">Activité</div>
                     <div data-value="restaurant">Restaurant</div>
                     <div data-value="show">Spectacle</div>
-                    <div data-value="attraction-park">Parc d'attraction</div>
+                    <div data-value="attraction-parc">Parc d'attraction</div>
                   </div>
                 </x-select>
 
@@ -319,6 +319,109 @@ $form = new Form();
 
         </section>
 
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- Complementary data                                                       -->
+        <!-- ------------------------------------------------------------------- -->
+
+        <section id="complementary-section">
+
+            <h2 class="section-header">Informations complémentaires </h2>
+
+            <p id="category-no-selected">Veuillez selectionnez une catégorie.</p>
+
+            <!-- Visit -->
+
+            <div class="complementary-section flex flex-col gap-4 hidden" data-category="visit">
+
+                <x-input>
+                    <p slot="label">Durée de la visite (h)</p>
+                    <input slot="input" type="text" name="visit-duration" placeholder="2h15" required>
+                </x-input>
+
+                <x-input>
+                    <p slot="label">Langues disponibles pour la visite</p>
+                    <input slot="input" type="text" name="visit-languages" placeholder="anglais,français..." required>
+                    <p slot="helper">Séparez les langues par une ,</p>
+                </x-input>
+
+                <div class="flex gap-4 items-center">
+                    <div class="flex items-center">
+                        <input class="switch" type="checkbox" id="switch-guide" name="visit-guide" />
+                        <label class="switch" for="switch-guide"></label>
+                    </div>
+                    <label for="switch-guide">Avec guide de visite</label>
+                </div>
+
+            </div>
+
+            <!-- Show -->
+            <div class="complementary-section flex flex-col gap-4 hidden" data-category="show">
+                <x-input>
+                    <p slot="label">Durée du spectacle (h)</p>
+                    <input slot="input" type="text" name="show-duration" placeholder="1h30" required>
+                </x-input>
+
+                <x-input>
+                    <p slot="label">Capacité d'accueil spectacle</p>
+                    <input slot="input" type="number" name="show-capacity" placeholder="100" required>
+                </x-input>
+
+            </div>
+
+            <!-- Activity -->
+            <div class="complementary-section flex flex-col gap-4 hidden" data-category="activity">
+                <x-input>
+                    <p slot="label">Durée de l'activité (h)</p>
+                    <input slot="input" type="text" name="activity-duration" placeholder="1h30" required>
+                </x-input>
+
+                <x-input>
+                    <p slot="label">Age minimum pour l'activité</p>
+                    <input slot="input" type="number" name="activity-age" placeholder="3" required>
+                </x-input>
+
+                <x-input>
+                    <p slot="label">Prix de l'activité</p>
+                    <input slot="input" type="number" name="activity-price" placeholder="5.99" required>
+                </x-input>
+            </div>
+
+            <!-- Restaurant -->
+            <div class="complementary-section flex flex-col gap-4 hidden" data-category="restaurant">
+                <div class="flex flex-col gap-2">
+                    <label for="restaurant-image">Image de la carte</label>
+                    <input id="restaurant-image" type="file" accept="image/png, image/jpg" name="restaurant-image" required>
+                </div>
+
+                <div class="flex gap-4">
+                    <x-input>
+                        <p slot="label">Prix minimum</p>
+                        <input slot="input" type="number" name="restaurant-min-price" required>
+                    </x-input>
+
+                    <x-input>
+                        <p slot="label">Prix maximum</p>
+                        <input slot="input" type="number" name="restaurant-max-price" required>
+                    </x-input>
+                </div>
+
+            </div>
+
+            <!-- Attraction parc-->
+            <div class="complementary-section flex flex-col gap-4 hidden" data-category="attraction-parc">
+                <div class="flex flex-col gap-2">
+                    <label for="attraction-parc-map">Plan du parc</label>
+                    <input id="attraction-parc-map" type="file" accept="image/png, image/jpg" name="attraction-parc-map" required>
+                </div>
+
+                <x-input>
+                    <p slot="label">Age minimum requis</p>
+                    <input slot="input" type="number" name="attraction-min-age" required>
+                </x-input>
+            </div>
+
+        </section>
 
         <!-- ------------------------------------------------------------------- -->
         <!-- Photos                                                              -->

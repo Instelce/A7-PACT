@@ -11,30 +11,25 @@ class VisitOffer extends DBModel
     public int $offer_id = 0;
     public float $duration = 0.0;
     public int $guide = self::NO_GUIDE;
-    public int $schedule_id = 0;
-
+    public int $period_id = 0;
 
     public static function tableName(): string
     {
-        // TODO: Implement tableName() method.
         return 'visit_offer';
     }
 
     public function attributes(): array
     {
-        // TODO: Implement attributes() method.
-        return ['offer_id', 'duration', 'guide', 'schedule_id'];
+        return ['offer_id', 'duration', 'guide', 'period_id'];
     }
 
     public static function pk(): string
     {
-        // TODO: Implement pk() method.
         return 'offer_id';
     }
 
     public function rules(): array
     {
-        // TODO: Implement rules() method.
         return [
             'offer_id' => [self::RULE_REQUIRED],
             'duration' => [self::RULE_REQUIRED],

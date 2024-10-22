@@ -33,6 +33,13 @@ function updateDatesVisibility() {
 
 
 // -------------------------------------------------------------------------- //
+// Containers of additional data
+// -------------------------------------------------------------------------- //
+
+const complemantarySections = document.querySelectorAll(".complementary-section");
+const categoryNotSelected = document.querySelector('#category-no-selected');
+
+// -------------------------------------------------------------------------- //
 // Load tags in order to selected category
 // -------------------------------------------------------------------------- //
 
@@ -73,6 +80,32 @@ categoryInput.addEventListener('change', (e) => {
     } else {
         scheduleSection.classList.add('hidden');
     }
+
+
+    // -------------------------------------------------------------------------- //
+    // Toggle visibility of additional information
+    // -------------------------------------------------------------------------- //
+
+    complemantarySections.forEach(section => {
+        let inputs = section.querySelectorAll('input');
+        if (section.getAttribute('data-category') === categoryInput.value) {
+            section.classList.remove('hidden');
+            for (let input of inputs) {
+                if (!input.classList.contains('switch')) {
+                    input.required = true;
+                }
+            }
+        } else {
+            section.classList.add('hidden');
+            for (let input of inputs) {
+                input.required = false;
+            }
+        }
+
+
+    })
+
+    categoryNotSelected.classList.add('hidden');
 })
 
 

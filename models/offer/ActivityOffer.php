@@ -8,6 +8,7 @@ class ActivityOffer extends DBModel {
     public float $duration =0.0;
     public int $required_age = 0;
     public float $price = 0.0;
+
     public static function tableName(): string
     {
         return 'activity_offer';
