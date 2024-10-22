@@ -92,12 +92,12 @@ Ce village n’est pas celui du célèbre petit Gaulois... C’est un lieu de d�
 
 $offre->likes = 2534;
 $offre->offline = 0;
-$offre->offline_date = '';
+$offre->offline_date = null;
 $offre->last_online_date = "2024-11-01";
 $offre->view_counter = 8714;
 $offre->click_counter = 1234;
 $offre->website = 'https://www.levillagegaulois.org/php/home.php';
-$offre->phone_number = '02 96 91 83 95';
+$offre->phone_number = '0296918395';
 $offre->offer_type_id = 2;
 $offre->professional_id = 4;
 $offre->address_id = 22;
@@ -137,3 +137,7 @@ $photosGaulois3 = new OfferPhoto();
 $photosGaulois3->url_photo = 'https://www.levillagegaulois.org/php/img/accueil/accueil.jpg';
 $photosGaulois3->offer_id = 2;
 $photosGaulois3->save();
+
+echo "Database seeded successfully.\n";
+
+?>
