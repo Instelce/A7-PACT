@@ -1,0 +1,31 @@
+
+.alert {
+    width: 100%;
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
+    overflow: hidden;
+
+    border-radius: var(--radius-medium);
+
+    display: block;
+    animation: alert-disappear 1s 5s forwards;
+}
+
+.alert.success {
+    background: rgba(var(--color-success), .1);
+    border: 1px solid rgb(var(--color-success));
+}
+
+@keyframes alert-disappear {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    99% {
+        transform: translateY(-1rem);
+        opacity: 0;
+    }
+    100% {
+        display: none;
+    }
+}

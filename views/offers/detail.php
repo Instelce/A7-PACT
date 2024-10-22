@@ -8,6 +8,10 @@ use app\core\form\Form;
 $this->title = "Détails d'une offre";
 $this->jsFile = "detailedOffer";
 
+echo "<pre>";
+var_dump($pk);
+echo "</pre>";
+
 ?>
 
 <!---- Publication date ---->
@@ -90,7 +94,6 @@ $this->jsFile = "detailedOffer";
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <p>Ouvert</p>
         </div>
-
 
         <div class="inlineOffer">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
