@@ -1,4 +1,45 @@
 
+/* Options container */
+div[slot="list"],
+div[slot="options"] {
+    width: 100%;
+    top: calc(100% + 1rem);
+    left: 0;
+    position: absolute;
+    border: 1px solid rgb(var(--color-gray-2));
+    border-radius: var(--radius-small);
+    background: white;
+    z-index: 100;
+    overflow: hidden;
+    display:flex;
+    flex-direction: column;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-.5rem);
+    transition: opacity .1s, transform .1s;
+}
+
+div[slot="list"].open,
+div[slot="options"].open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+div[slot="list"].fake-hidden {
+    min-height: 2rem;
+    animation: loading 1s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-color: rgb(var(--color-gray-1));
+    }
+    100% {
+        background-color: rgba(var(--color-white));
+    }
+}
+
 /* Option button for select and autocomplete input */
 
 .option {
