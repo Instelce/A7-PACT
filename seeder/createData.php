@@ -28,9 +28,6 @@ $password = password_hash("1234", PASSWORD_DEFAULT);
 
 
 $db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
-//create mean of payment
-$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1);");
-$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'CB1', '1548759863254125', '07/25', '123');");
 
 // ---------------------------------------------------------------------- //
 // user adress
