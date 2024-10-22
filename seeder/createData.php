@@ -81,7 +81,7 @@ $db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id)
 // create offer types
 // ---------------------------------------------------------------------- //
 
-$db->pdo->exec(statement: "INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.99), (2, 'premium', 7.99);");
+$db->pdo->exec( "INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.99), (2, 'premium', 7.99);");
 
 // ---------------------------------------------------------------------- //
 // create offer
@@ -129,7 +129,11 @@ $offre2->address_id = 22;
 $offre2->category = 'attraction_park';
 $offre2->save();
 
+
+
+//$db->pdo->exec("INSERT INTO offer(title, summary, description, likes, offline, offline_date, last_online_date, view_counter, click_counter, website, phone_number, offer_type_id, professional_id, address_id) VALUES ('Traversée de l île de Brehat', );");
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
+
 
 
 // ---------------------------------------------------------------------- //
