@@ -8,8 +8,10 @@ use app\core\middlewares\AuthMiddleware;
 use app\core\middlewares\BackOfficeMiddleware;
 use app\core\Request;
 use app\core\Response;
+use app\core\Utils;
 use app\models\Address;
 use app\models\offer\ActivityOffer;
+use app\models\offer\AttractionParkOffer;
 use app\models\offer\Offer;
 use app\models\offer\OfferPeriod;
 use app\models\offer\OfferSchedule;
@@ -71,33 +73,42 @@ class OfferController extends Controller
                 echo "Offer created successfully";
             }
 
+            echo "<pre>";
+            var_dump($category);
+            var_dump(date('Y-m-d'));
+            echo "</pre>";
+
             // Add tags to the offer
-            foreach ($body['tags'] as $tag) {
-                $tag = strtolower($tag);
-                $tagModel = OfferTag::findOne(['name' => $tag]);
-                $offer->addTag($tagModel->id);
+            if (array_key_exists('tags', $body)) {
+                foreach ($body['tags'] as $tag) {
+                    $tag = strtolower($tag);
+                    $tagModel = OfferTag::findOne(['name' => $tag]);
+                    $offer->addTag($tagModel->id);
+                }
             }
+
+            echo "tags added";
 
             // Creation of complementary informations
             if ($category === 'visit') {
                 $visit = new VisitOffer();
                 $visit->offer_id = $offer->id;
-                $visit->duration = $body['visit-duration'];
-                $visit->guide = array_key_exists('visit-guide', $body) ? VisitOffer::GUIDE : VisitOffer::NO_GUIDE;
+                $visit->duration = Utils::convertHourToFloat($body['visit-duration']);
+                $visit->guide = array_key_exists('visit-guide', $body) ? 1 : 0;
 
                 // TODO - change to fields values
                 $period = new OfferPeriod();
-                $period->start_date_date = date('Y-m-d');
+                $period->start_date = date('Y-m-d');
                 $period->end_date = date('Y-m-d');
                 $period->save();
 
                 $visit->period_id = $period->id;
                 $visit->save();
-
-            } elseif ($category === 'activity') {
+                echo "visit created";
+            } elseif ($category === 'activity'){
                 $activity = new ActivityOffer();
                 $activity->offer_id = $offer->id;
-                $activity->duration = intval($body['activity-duration']);
+                $activity->duration = Utils::convertHourToFloat($body['activity-duration']);
                 $activity->required_age = intval($body['activity-age']);
                 $activity->price = intval($body['activity-price']);
                 $activity->save();
@@ -110,10 +121,23 @@ class OfferController extends Controller
             } elseif ($category === 'show') {
                 $show = new ShowOffer();
                 $show->offer_id = $offer->id;
-                $show->duration = intval($body['show-duration']);
+                $show->duration = Utils::convertHourToFloat($body['show-duration']);
                 $show->capacity = intval($body['show-capacity']);
-            } elseif ($category === 'attraction-parc') {
 
+                // TODO - change to fields values
+                $period = new OfferPeriod();
+                $period->start_date_date = date('Y-m-d');
+                $period->end_date = date('Y-m-d');
+                $period->save();
+
+                $show->period_id = $period->id;
+                $show->save();
+            } elseif ($category === 'attraction-parc') {
+                $attraction = new AttractionParkOffer();
+                $attraction->offer_id = $offer->id;
+                $attraction->required_age = intval($body['attraction-min-age']);
+                $attraction->url_image_park_map = Application::$app->storage->saveFile('attraction-parc-map', 'offers/attraction-parc');
+                $attraction->save();
             }
 
             // Save photos
@@ -121,8 +145,6 @@ class OfferController extends Controller
             foreach ($files as $file) {
                 $offer->addPhoto($file);
             }
-
-            exit;
         }
 
         return $this->render('offers/create', [

@@ -1,28 +1,38 @@
 
-div[slot="options"] > div {
+/* Option button for select and autocomplete input */
+
+.option {
     padding: .8rem 1.5rem .8rem .5rem;
     display: flex;
     align-items: center;
     gap: .5rem;
     text-align: left;
     cursor: pointer;
+
+    color: rgb(var(--color-black));
+
+    border: none;
 }
 
-div[slot="options"] > div:hover {
+.option:hover {
     background-color: rgba(var(--color-gray-1), .5);
 }
 
-div[slot="options"] > div.selected {
+.option.selected {
     background-color: rgb(var(--color-gray-1));
 }
 
-div[slot="options"] > div .check {
+.option .check {
     order: -1;
     width: 1rem;
     display: block;
 }
 
-div[slot="options"] > div .check svg {
+.option .check svg {
     width: 1rem;
     height: 1rem;
+}
+
+.option:not(:has(.check)) {
+    padding-left: 1.5rem;
 }

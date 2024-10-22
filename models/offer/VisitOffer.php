@@ -6,11 +6,9 @@ use app\core\DBModel;
 
 class VisitOffer extends DBModel
 {
-    public const NO_GUIDE = 0;
-    public const GUIDE = 1;
     public int $offer_id = 0;
     public float $duration = 0.0;
-    public int $guide = self::NO_GUIDE;
+    public int $guide = 0;
     public int $period_id = 0;
 
     public static function tableName(): string

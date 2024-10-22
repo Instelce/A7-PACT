@@ -5,7 +5,7 @@ use app\core\DBModel;
 
 class OfferPeriod extends DBModel {
     public int $id = 0;
-    public string $start_date ='';
+    public string $start_date = '';
     public string $end_date = '';
 
     public static function tableName(): string

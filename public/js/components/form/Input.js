@@ -1,4 +1,4 @@
-import { WebComponent } from '../WebComponent.js';
+import {WebComponent} from '../WebComponent.js';
 
 /**
  * Input component
@@ -55,6 +55,84 @@ export class Input extends WebComponent {
         if (this.hasButton) {
             field.classList.add('has-button')
         }
+
+        // Add autocomplete list
+        let list = this.querySelector('[slot="list"]');
+        list.role = 'listbox';
+
+        if (list) {
+            let listOption = list.querySelectorAll('[slot="list"] > *');
+            this.listOptions = [];
+            this.currentIndex = -1;
+
+            // Retrieve all options text
+            listOption.forEach(option => {
+                this.listOptions.push(option.textContent);
+                option.classList.add('option');
+            });
+
+            input.addEventListener('input', (e) => {
+                // Show the list when typing
+                let value = e.target.value;
+                if (value.length > 0) {
+                    this.currentIndex = 0;
+                    list.classList.add('open');
+                } else {
+                    this.currentIndex = -1;
+                    list.classList.remove('open');
+                }
+
+                // Remove all options
+                list.innerHTML = '';
+
+                // Add options that match the input value
+                this.listOptions.forEach((option, index) => {
+                    if (option.toLowerCase().includes(value.toLowerCase())) {
+                        let el = document.createElement('div');
+                        el.classList.add('option');
+                        el.textContent = option;
+                        list.appendChild(el);
+
+                        el.addEventListener('click', () => {
+                            input.value = el.textContent;
+                            list.classList.remove('open');
+                        });
+
+                        if (index === this.currentIndex) {
+                            el.classList.add('selected');
+                        }
+                    }
+                });
+
+                if (list.children.length === 0) {
+                    this.currentIndex = -1;
+                    list.classList.remove('open');
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                let options = list.querySelectorAll('.option');
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    this.currentIndex = (this.currentIndex + 1) % options.length;
+                    options.forEach((option, index) => {
+                        option.classList.toggle('selected', index === this.currentIndex);
+                    });
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    this.currentIndex = (this.currentIndex - 1 + options.length) % options.length;
+                    options.forEach((option, index) => {
+                        option.classList.toggle('selected', index === this.currentIndex);
+                    });
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (this.currentIndex >= 0 && this.currentIndex < options.length) {
+                        input.value = options[this.currentIndex].textContent;
+                        list.classList.remove('open');
+                    }
+                }
+            });
+        }
     }
 
     disconnectedCallback() {
@@ -66,6 +144,7 @@ export class Input extends WebComponent {
             <style>
                 :host {
                     width: 100%;
+                    position:relative;
                 }
                 .input-container {
                     width: 100%;
@@ -160,6 +239,31 @@ export class Input extends WebComponent {
                 :host([data-invalid]) .input-field {
                   border: 1px solid rgb(var(--color-danger));
                 }
+                
+                /* Autocomplete list */
+                ::slotted([slot="list"]) {
+                    width: 100%;
+                    top: calc(100% + 1rem);
+                    left: 0;
+                    position: absolute;
+                    border: 1px solid rgb(var(--color-gray-2));
+                    border-radius: var(--radius-small);
+                    background: white;
+                    z-index: 100;
+                    overflow: hidden;
+                    display:flex;
+                    flex-direction: column;
+                    pointer-events: none;
+                    opacity: 0;
+                    transform: translateY(-.5rem);
+                    transition: opacity .1s, transform .1s;
+                }
+                
+                ::slotted([slot="list"].open) {
+                    opacity: 1;
+                    transform: translateY(0);
+                    pointer-events: auto;
+                }
             </style>
         `;
     }
@@ -182,6 +286,9 @@ export class Input extends WebComponent {
                     ${this.hasIconRight ? `<div class="icon-right">
                         <slot name="icon-right"></slot>   
                     </div>` : ''}
+                    
+                    <!-- Autocomplete list -->
+                    <slot name="list"></slot>
                 </div>
             </div>
             

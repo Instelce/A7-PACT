@@ -105,7 +105,7 @@ abstract class Model
                     }
                 }
                 if ($rule_name === self::RULE_HOUR) {
-                    $pattern = '/^\d{1,2}:\d{2}$/';
+                    $pattern = '/^\d{1,2}h\d{2}$/';
                     if (!preg_match($pattern, $value)) {
                         $this->addError($attr, self::RULE_MATCH, $rule);
                     }
