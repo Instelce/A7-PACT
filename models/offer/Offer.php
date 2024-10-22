@@ -43,12 +43,12 @@ class Offer extends DBModel
 
     public function attributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'offer_type_id', 'professional_id', 'address_id'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id'];
     }
 
     public function updateAttributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'address_id'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id'];
     }
 
     public function rules(): array
