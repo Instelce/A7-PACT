@@ -27,10 +27,6 @@ $password = password_hash("1234", PASSWORD_DEFAULT);
 
 $db->pdo->exec("TRUNCATE TABLE offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account CASCADE;");
 
-//create mean of payment
-$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1);");
-$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'CarteBancaire', '1548759863254125', '07/25', '123');");
-
 //create adress users
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
                                                                     (11,68, 'Avenue Millies Lacroix', 'Eaubonne', 95600,2.2779189 ,48.992128), 
@@ -50,6 +46,10 @@ $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl,
                                                                      (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg',13),
                                                                      (4, 'FredLeChat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14);");
 
+//create mean of payment
+$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1);");
+$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'CarteBancaire', '1548759863254125', '07/25', '123');");
+
 $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 
 $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VeilleArbre', TRUE);");
@@ -58,21 +58,20 @@ $db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, sire
 
 $db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3);");
 
-$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto,payment_id) VALUES (4, '2024-11-30',1);");
+$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id) VALUES (4, '2024-11-30', 1);");
 
 //create offres
 $db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.99), (2, 'premium', 7.99);");
 
 //create cafe des halles
 $offre = new Offer();
-$offre->id = 1;
 $offre->title = "Café des Halles";
 $offre->summary = "Le Café des Halles est un lieu convivial situé au cœur d'une ville, souvent à proximité d'un marché couvert ou d'une place animée. Ce café est un point de rencontre privilégié pour les habitants et les visiteurs, offrant une atmosphère chaleureuse et accueillante.";
 $offre->description = 'le Café des Halles se distingue par son ambiance authentique et son cadre pittoresque, souvent proche d\'une halle ou d\'un marché. C\'est un endroit idéal pour faire une pause après une matinée de courses ou pour prendre un café en terrasse tout en observant l\'agitation de la ville. Avec son service amical, c\'est un lieu où l\'on se sent chez soi, que ce soit pour un petit-déjeuner rapide, un déjeuner décontracté, ou un apéritif en soirée.';
 $offre->likes = 57;
 $offre->offline = 0;
 $offre->offline_date = null;
-$offre->last_online_date = '2024-11-01';
+$offre->last_online_date = "2024-11-01";
 $offre->view_counter = 120;
 $offre->click_counter = 180;
 $offre->website = 'https://www.facebook.com/people/Caf%C3%A9-Des-Halles/100064099743039/';
@@ -85,7 +84,6 @@ $offre->save();
 
 //create village gaulois
 $offre = new Offer();
-$offre->id = 2;
 $offre->title = "Village Gaulois";
 $offre->summary = 'Voyagez dans le temps et plongez au cœur de la vie gauloise, où vous pourrez découvrir des artisans passionnés, participer à des jeux anciens et vivre une expérience immersive pour toute la famille dans un cadre authentique et amusant.';
 $offre->description = 'Découvrez le Village Gaulois au sein du parc du Radôme et profitez de plus de 20 jeux originaux, distractifs et éducatifs. Apprentissage et divertissement sont les maîtres mots au Village Gaulois.
@@ -95,7 +93,7 @@ Ce village n’est pas celui du célèbre petit Gaulois... C’est un lieu de d�
 $offre->likes = 2534;
 $offre->offline = 0;
 $offre->offline_date = '';
-$offre->last_online_date = '2024-11-01';
+$offre->last_online_date = "2024-11-01";
 $offre->view_counter = 8714;
 $offre->click_counter = 1234;
 $offre->website = 'https://www.levillagegaulois.org/php/home.php';

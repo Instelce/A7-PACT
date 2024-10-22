@@ -87,11 +87,11 @@ abstract class Model
                 }
 
                 if ($rule_name === self::RULE_DATE) {
-                    $pattern = '/^\d{2}-\d{2}-\d{4}$/';
+                    $pattern = '/^\d{4}-\d{2}-\d{2}$/';
                     if (!preg_match($pattern, $value)) {
                         $this->addError($attr, self::RULE_MATCH, $rule);
                     } else {
-                        [$day, $month, $year] = explode('-', $value);
+                        [$year, $month, $date] = explode('-', $value);
                         if (!checkdate($month, $day, $year)) {
                             $this->addError($attr, self::RULE_MATCH);
                         }
