@@ -27,6 +27,8 @@ class m0007_create_table_offer
             click_counter INT DEFAULT 0,
             website VARCHAR(255),
             phone_number VARCHAR(10),
+            category VARCHAR(20) NOT NULL,
+            
             professional_id INT NOT NULL,
             address_id INT NOT NULL,
             offer_type_id INT NOT NULL,
