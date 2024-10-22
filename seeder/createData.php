@@ -25,10 +25,15 @@ $db = $app->db;
 
 $password = password_hash("1234", PASSWORD_DEFAULT);
 
-$db->pdo->exec("TRUNCATE TABLE offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account CASCADE;");
+
+
+$db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
+//create mean of payment
+$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1);");
+$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'CB1', '1548759863254125', '07/25', '123');");
 
 // ---------------------------------------------------------------------- //
-//  create user adress
+// user adress
 // ---------------------------------------------------------------------- //
 
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
@@ -48,7 +53,6 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 // ---------------------------------------------------------------------- //
 // create users
 // ---------------------------------------------------------------------- //
-
 $db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4);");
 $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl, address_id) VALUES 
                                                                      (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11), 
@@ -101,7 +105,6 @@ $offre1->address_id = 21;
 $offre1->category = 'restaurant';
 $offre1->save();
 
-1
 $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, minimum_price, maximum_price) VALUES (" . $offre1->id . ", 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/21/f5/07/e3/cafe-des-halles.jpg?w=700&h=-1&s=1', 12, 20);");
 
 
@@ -129,7 +132,9 @@ $offre2->save();
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
 
 
-//photos cafe des halles
+// ---------------------------------------------------------------------- //
+// photos offer
+// ---------------------------------------------------------------------- //
 $photosCafe1 = new OfferPhoto();
 $photosCafe1->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/e7/89/7e/cafe-des-halles.jpg?w=1000&h=-1&s=1';
 $photosCafe1->offer_id = 1;
@@ -146,7 +151,7 @@ $photosCafe3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo
 $photosCafe3->offer_id = 1;
 $photosCafe3->save();
 
-//photos village gaulois
+
 $photosGaulois1 = new OfferPhoto();
 $photosGaulois1->url_photo = 'https://res.cloudinary.com/funbooker/image/upload/c_fill,dpr_2.0,f_auto,q_auto/v1/marketplace-listing/eiq9bgtjemwjwtweimn7';
 $photosGaulois1->offer_id = 2;
