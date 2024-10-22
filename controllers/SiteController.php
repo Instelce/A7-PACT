@@ -57,29 +57,28 @@ class SiteController extends Controller
             return $this->render("404");
         }
     }
-    public function research()
+    public function research()//render research page
     {
-        $STATUS_ONLINE = 0;
-        $STATUS_OFFLINE = 1;
-        $allOffers = Offer::all();
-        $offers = [];
-        foreach ($allOffers as $offer) {
-            if ($offer["offline"] == $STATUS_OFFLINE) {
+        $STATUS_ONLINE = 0; //const online offer
+        $STATUS_OFFLINE = 1;// const offline offer
+        $allOffers = Offer::all();//get all offer from the model
+        $offers = [];//create final table to send into the vue
+        foreach ($allOffers as $offer) {//foreach offer
+            if ($offer["offline"] == $STATUS_OFFLINE) {//show only online offer
 
             }
-            $image = OfferPhoto::find(['offer_id' => $offer["id"]])[0]['url_photo'] ?? NULL;
-            $type = OfferType::find(['type' => $offer["offer_type_id"]])[0]['type'] ?? NULL;
-            $price = OfferType::find(['price' => $offer["offer_type_id"]])[0]['price'] ?? NULL;
-            $location = isset($offer["address_id"]) ? Address::find(['id' => $offer["address_id"]])[0]['city'] ?? NULL : NULL;
-            $offers[$offer["id"]] = [
-                "id" => $offer["id"],
-                "image" => $image,
+            $image = OfferPhoto::find(['offer_id' => $offer["id"]])[0]->url_photo ?? NULL;//get the first image of the offer for the preview
+            $type = OfferType::find(['type' => $offer["offer_type_id"]])[0]->type ?? NULL;//get thee type of the offer
+            $price = OfferType::find(['price' => $offer["offer_type_id"]])[0]->price ?? NULL;//get the price of the type offer
+            $location = isset($offer["address_id"]) ? Address::find(['id' => $offer["address_id"]])[0]->city ?? NULL : NULL; // get the city of the offer
+            $offers[$offer["id"]] = [//set up the final array to send to the vue
+                "id" => $offer["id"], //id for the link into the detail offer and the traitement of click and vue statistiques
+                "image" => $image,//preview image
                 "title" => $offer["title"],
                 "author" => $offer["professional_id"],
                 "type" => $type,
                 "price" => $price,
                 "location" => $location,
-                // "locationDistance" => x,
                 "date" => $offer["last_online_date"],
             ];
         }
