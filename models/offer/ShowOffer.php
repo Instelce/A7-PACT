@@ -7,7 +7,8 @@ class ShowOffer extends DBModel {
     public int $offer_id = 0;
     public int $capacity = 0;
     public float $duration = 0.0;
-    public int $schedule_id = 0;
+    public int $period_id = 0;
+
     public static function tableName(): string
     {
         return 'show_offer';
@@ -27,8 +28,8 @@ class ShowOffer extends DBModel {
     {
         return [
             'capacity' => [self::RULE_REQUIRED],
-            '$duration' => [self::RULE_REQUIRED],
-            '$schedule_id' => [self::RULE_REQUIRED]
+            'duration' => [self::RULE_REQUIRED],
+            'schedule_id' => [self::RULE_REQUIRED]
         ];
     }
 }

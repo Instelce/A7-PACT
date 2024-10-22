@@ -40,8 +40,10 @@ export class Select extends WebComponent {
             }
         });
 
-        // Add the check icon to the options
+        // Add the check icon to the options and option class
         this.optionsButton.forEach(option => {
+            option.classList.add('option');
+
             let check = document.createElement('div');
             check.classList.add('check');
             if (option.getAttribute('data-value') !== this.input.value) {

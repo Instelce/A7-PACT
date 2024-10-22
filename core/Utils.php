@@ -9,7 +9,7 @@ class Utils
      * @param string $hour
      * @return float
      */
-    public function convertHourToFloat(string $hour): float
+    public static function convertHourToFloat(string $hour): float
     {
         $hour = explode('h', $hour);
         $hour = (float)$hour[0] + (float)$hour[1] / 60;

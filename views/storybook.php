@@ -132,6 +132,24 @@ $this->cssFile = "storybook";
 
     <section>
         <header>
+            <h2>Autocomplete input</h2>
+        </header>
+
+        <div class="flex gap-2">
+            <x-input>
+                <p slot="label">Label</p>
+                <input slot="input" id="toto" type="text" placeholder="Placeholder" required>
+                <div slot="list">
+                    <div>Orange</div>
+                    <div>Apple</div>
+                    <div>Banana</div>
+                </div>
+            </x-input>
+        </div>
+    </section>
+
+    <section>
+        <header>
             <h2>Checkbox</h2>
         </header>
 
@@ -220,10 +238,10 @@ $this->cssFile = "storybook";
                 <x-select>
                     <span slot="trigger">Select</span>
                     <div slot="options">
-                        <div class="option" data-value="value 1">Option 1</div>
-                        <div class="option" data-value="value 2">Option 2</div>
-                        <div class="option" data-value="value 3">Option 3</div>
-                        <div class="option" data-value="value 4">Option 4</div>
+                        <div data-value="value 1">Option 1</div>
+                        <div data-value="value 2">Option 2</div>
+                        <div data-value="value 3">Option 3</div>
+                        <div data-value="value 4">Option 4</div>
                     </div>
                 </x-select>
             </div>

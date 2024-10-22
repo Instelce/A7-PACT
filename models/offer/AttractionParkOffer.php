@@ -7,6 +7,7 @@ class AttractionParkOffer extends DBModel {
     public int $offer_id = 0;
     public string $url_image_park_map ='';
     public int $required_age = 0;
+
     public static function tableName(): string
     {
         return 'attraction_park_offer';
