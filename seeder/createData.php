@@ -40,7 +40,9 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (11,68, 'Avenue Millies Lacroix', 'Eaubonne', 95600,2.2779189 ,48.992128), 
                                                                     (12,90,'rue de Lille','Asnières-sur-Seine',92600,2.285369,48.914155),
                                                                     (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
-                                                                    (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451)ON CONFLICT (id) DO NOTHING;");
+                                                                    (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451),
+                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326)
+                                                                    ON CONFLICT (id) DO NOTHING;");
 
 // ---------------------------------------------------------------------- //
 // create offer adress
@@ -48,7 +50,8 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
                                                                     (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
-                                                                    (22, 1, 'Rue de la Corderie', 'Lannion', 22300, -3.4597, 48.7326);");
+                                                                    (22, 1, 'Rue de la Corderie', 'Lannion', 22300, -3.4597, 48.7326),
+                                                                    (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326);");
 
 // ---------------------------------------------------------------------- //
 // create users
@@ -58,7 +61,9 @@ $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl,
                                                                      (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11), 
                                                                      (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',12), 
                                                                      (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg',13),
-                                                                     (4, 'FredLeChat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14);");
+                                                                     (4, 'FredLeChat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14),
+                                                                    (5, 'rance.evasion@gmail.com', '" . $password . "', 'https://fr.web.img5.acsta.net/pictures/16/05/17/12/17/360795.jpg', 15);");
+
 
 // ---------------------------------------------------------------------- //
 // create means of payment
@@ -115,14 +120,14 @@ $offre2->summary = 'Voyagez dans le temps et plongez au cœur de la vie gauloise
 $offre2->description = 'Découvrez le Village Gaulois au sein du parc du Radôme et profitez de plus de 20 jeux originaux, distractifs et éducatifs. Apprentissage et divertissement sont les maîtres mots au Village Gaulois.
 Sur place, la restauration est possible à la crêperie du village : "le Menhir Gourmand" !
 Ce village n’est pas celui du célèbre petit Gaulois... C’est un lieu de détente, de culture et de distraction. Mais les habitants du village restent irréductibles car, avec ténacité depuis 25 ans, ils mènent une action de solidarité en direction d’une lointaine région du monde, l’Afrique.';
-$offre2->likes = 2534;
+$offre2->likes = 420;
 $offre2->offline = 0;
 $offre2->offline_date = '';
 $offre2->last_online_date = "2024-11-01";
 $offre2->view_counter = 8714;
 $offre2->click_counter = 1234;
 $offre2->website = 'https://www.levillagegaulois.org/php/home.php';
-$offre2->phone_number = '02 96 91 83 95';
+$offre2->phone_number = '0296918395';
 $offre2->offer_type_id = 2;
 $offre2->professional_id = 4;
 $offre2->address_id = 22;
@@ -131,41 +136,90 @@ $offre2->save();
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
 
+$offre3 = new Offer();
+$offre3->title = "Promenade en Bateau sur le Canal de la Rance";
+$offre3->summary = 'Découvrez la beauté paisible du canal de la Rance entre Dinan et Saint-Samson-sur-Rance à bord de notre confortable bateau.';
+$offre3->description = 'Avec un petit comité de seulement 10 personnes, profitez d\'une expérience intime et relaxante en naviguant à travers des paysages pittoresques. Parfait pour une escapade tranquille, notre bateau vous offre une perspective unique sur cette région magnifique.
+Nous nous rendrons jusqu\'au Port de Dinan (pas d\'arrêt, pas de débarquement). Lors de notre promenade vous pourrez observer l\'avifaune de la Plaine de Taden et en apprendre plus sur le patrimoine naturel de la Vallée de la Rance. Votre Capitaine vous racontera également des anecdotes historiques sur l\'évolution de la Rance au fil des années.';
+$offre3->likes = 8;
+$offre3->offline = 0;
+$offre3->offline_date = '';
+$offre3->last_online_date = "2024-11-01";
+$offre3->view_counter = 321;
+$offre3->click_counter = 180;
+$offre3->website = 'https://www.rance-evasion.fr/';
+$offre3->phone_number = '0786912239';
+$offre3->offer_type_id = 1;
+$offre3->professional_id = 5;
+$offre3->address_id = 21;
+$offre3->category = 'visit';
+$offre3->save();
+
+$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre3->id . ", 1.5, 1);");
+
+
+
 
 // ---------------------------------------------------------------------- //
-// photos offer
+// photos offre1
 // ---------------------------------------------------------------------- //
+
 $photosCafe1 = new OfferPhoto();
 $photosCafe1->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/e7/89/7e/cafe-des-halles.jpg?w=1000&h=-1&s=1';
-$photosCafe1->offer_id = 1;
+$photosCafe1->offer_id = $offre1->id;
 $photosCafe1->save();
 
 
 $photosCafe2 = new OfferPhoto();
 $photosCafe2->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/62/5d/a4/cafe-des-halles.jpg?w=800&h=-1&s=1';
-$photosCafe2->offer_id = 1;
+$photosCafe2->offer_id = $offre1->id;
 $photosCafe2->save();
 
 $photosCafe3 = new OfferPhoto();
 $photosCafe3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/16/c0/23/nos-plats.jpg?w=1000&h=-1&s=1';
-$photosCafe3->offer_id = 1;
+$photosCafe3->offer_id = $offre1->id;
 $photosCafe3->save();
 
+// ---------------------------------------------------------------------- //
+// photos offre2
+// ---------------------------------------------------------------------- //
 
 $photosGaulois1 = new OfferPhoto();
 $photosGaulois1->url_photo = 'https://res.cloudinary.com/funbooker/image/upload/c_fill,dpr_2.0,f_auto,q_auto/v1/marketplace-listing/eiq9bgtjemwjwtweimn7';
-$photosGaulois1->offer_id = 2;
+$photosGaulois1->offer_id = $offre2->id;
 $photosGaulois1->save();
 
 $photosGaulois2 = new OfferPhoto();
 $photosGaulois1->url_photo = 'https://media.ouest-france.fr/v1/pictures/MjAyMzA1ZDZjYzI3YmMyOGVkMWY3NTYzMzVmZmM3MWU1NjIwNWI?width=1260&height=708&focuspoint=50%2C25&cropresize=1&client_id=bpeditorial&sign=a23fba2fa83ab698eb62df2cdd611baefe85167b31937fff8a81de57d51e9d46';
-$photosGaulois1->offer_id = 2;
+$photosGaulois1->offer_id = $offre2->id;
 $photosGaulois1->save();
 
 $photosGaulois3 = new OfferPhoto();
 $photosGaulois3->url_photo = 'https://www.levillagegaulois.org/php/img/accueil/accueil.jpg';
-$photosGaulois3->offer_id = 2;
+$photosGaulois3->offer_id = $offre2->id;
 $photosGaulois3->save();
+
+// ---------------------------------------------------------------------- //
+// photos offre3
+// ---------------------------------------------------------------------- //
+
+$photosPromenade1 = new OfferPhoto();
+$photosPromenade1->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/ae/1c/32/a-bord-du-meissa.jpg?w=1200&h=-1&s=1';
+$photosPromenade1->offer_id = $offre3->id;
+
+$photosPromenade2 = new OfferPhoto();
+$photosPromenade2->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/ae/15/59/a-bord-du-meissa.jpg?w=1200&h=-1&s=1';
+$photosPromenade2->offer_id = $offre3->id;
+
+$photosPromenade3 = new OfferPhoto();
+$photosPromenade3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/ae/13/9b/a-bord-du-meissa.jpg?w=1200&h=-1&s=1';
+$photosPromenade3->offer_id = $offre3->id;
+
+// ---------------------------------------------------------------------- //
+// photos offre4
+// ---------------------------------------------------------------------- //
+
+
 
 
 
