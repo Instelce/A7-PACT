@@ -12,6 +12,11 @@ class Storage
      */
     public function saveFile(string $name, string $folder): string
     {
+        // Create the folder if it doesn't exist
+        if (!file_exists(Application::$ROOT_DIR . '/public/upload/' . $folder)) {
+            mkdir(Application::$ROOT_DIR . '/public/upload/' . $folder, 0777, true);
+        }
+
         $tmpPath = $_FILES[$name]['tmp_name'];
         $extension = explode('.', $_FILES[$name]['name'])[1];
 
@@ -33,6 +38,11 @@ class Storage
      */
     public function saveFiles(string $name, string $folder): array
     {
+        // Create the folder if it doesn't exist
+        if (!file_exists(Application::$ROOT_DIR . '/public/upload/' . $folder)) {
+            mkdir(Application::$ROOT_DIR . '/public/upload/' . $folder, 0777, true);
+        }
+
         $files = [];
 
         foreach ($_FILES[$name]['name'] as $i => $fileName) {

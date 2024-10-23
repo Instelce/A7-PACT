@@ -25,6 +25,10 @@ class AuthController extends Controller
             $loginForm->loadData($request->getBody());
 
             if ($loginForm->validate() && $loginForm->login()) {
+                if (Application::$app->user->isProfessional()) {
+                    $response->redirect("/dashboard/offres");
+                    exit;
+                }
                 $response->redirect("/");
                 exit;
             }

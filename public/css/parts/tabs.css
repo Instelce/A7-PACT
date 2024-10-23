@@ -33,7 +33,9 @@ x-tabs.column {
     flex-direction: row;
 }
 
-x-tabs.column x-tab {
+x-tabs.column x-tab,
+.tab-button {
+    --color: var(--color-blue-primary);
     display: flex;
     gap: 1rem;
     border: none;
@@ -42,19 +44,28 @@ x-tabs.column x-tab {
     display: flex;
     align-items: center;
     padding: 1rem 2rem 1rem 1rem;
+    cursor: pointer;
 }
 
-x-tabs.column x-tab svg {
+x-tabs.column x-tab svg,
+.tab-button svg {
     stroke-width: 1.5;
     width: 2rem;
 }
 
-x-tabs.column x-tab[selected] {
-    background: rgba(var(--color-blue-primary), .1);
+x-tabs.column x-tab[selected],
+.tab-button[selected] {
+    background: rgba(var(--color), .1);
     font-weight: 700;
 }
 
-x-tabs.column x-tab::before {
+x-tabs.column x-tab:hover,
+.tab-button:hover {
+    background: rgba(var(--color-gray-1), .5);
+}
+
+x-tabs.column x-tab::before,
+.tab-button::before {
     content: "";
     width: 3px;
     height: 80%;
@@ -64,8 +75,12 @@ x-tabs.column x-tab::before {
     transform: translateY(-50%);
 }
 
-x-tabs.column x-tab[selected]::before {
-    background: rgb(var(--color-blue-primary));
+x-tabs.column x-tab[selected]::before,
+.tab-button[selected]::before {
+    background: rgb(var(--color));
     border-radius: var(--radius-rounded);
 }
 
+.tab-button.pro {
+    --color: var(--color-purple-primary);
+}

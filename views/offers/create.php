@@ -19,7 +19,7 @@ $form = new Form();
 </div>
 
 
-<div class="grid grid-cols-5 gap-4">
+<div class="grid grid-cols-5 gap-8">
     <div class="w-full flex flex-col col-span-3">
 
         <form action="" method="post" id="create-offer" class="flex flex-col gap-12" enctype="multipart/form-data">
@@ -243,11 +243,6 @@ $form = new Form();
                     <p slot="label">Age minimum pour l'activité</p>
                     <input slot="input" type="number" name="activity-age" placeholder="3" required>
                 </x-input>
-
-                <x-input>
-                    <p slot="label">Prix de l'activité</p>
-                    <input slot="input" type="number" name="activity-price" placeholder="5.99" required>
-                </x-input>
             </div>
 
             <!-- Restaurant -->
@@ -257,18 +252,20 @@ $form = new Form();
                     <input id="restaurant-image" type="file" accept="image/png, image/jpg" name="restaurant-image" required>
                 </div>
 
+                <!-- Range price for the RESTAURANT -->
                 <div class="flex gap-4">
-                    <x-input>
-                        <p slot="label">Prix minimum</p>
-                        <input slot="input" type="number" name="restaurant-min-price" required>
-                    </x-input>
 
-                    <x-input>
-                        <p slot="label">Prix maximum</p>
-                        <input slot="input" type="number" name="restaurant-max-price" required>
-                    </x-input>
+                    <x-select id="price-low" name="price-range" value="1" class="w-full" required>
+                        <label slot="label">Gamme de prix</label>
+                        <span slot="trigger">€</span>
+                        <div slot="options">
+                            <div data-value="1">€ - menu à moins de 25€</div>
+                            <div data-value="2">€€ - entre 25 et 40€</div>
+                            <div data-value="3">€€€ - au-delà de 40€</div>
+                        </div>
+                    </x-select>
+
                 </div>
-
             </div>
 
             <!-- Attraction parc-->
@@ -321,7 +318,7 @@ $form = new Form();
                     <div class="flex gap-4">
                         <x-input class="w-[200px]">
                             <p slot="label">Numéro de rue</p>
-                            <input slot="input" id="address-number" type="number" name="address-number" placeholder="2" required>
+                            <input slot="input" id="address-number" type="number" name="address-number" placeholder="2">
                         </x-input>
                         <x-input>
                             <p slot="label">Nom de la rue</p>
@@ -380,7 +377,7 @@ $form = new Form();
         <!-- Price                                                               -->
         <!-- ------------------------------------------------------------------- -->
 
-        <section class="flex flex-col">
+        <section class="flex flex-col hidden" id="price-section">
             <h2 class="section-header">Vos prix</h2>
 
             <div class="flex flex-col gap-2">
@@ -400,22 +397,19 @@ $form = new Form();
             </div>
 
             <div id="price-fields" class="flex flex-col gap-4 hidden">
-                <div class="flex gap-4 mt-4">
 
-                    <x-select id="price-low" name="price-range" value="1" class="w-full">
-                        <label slot="label">Gamme de prix</label>
-                        <span slot="trigger">€</span>
-                        <div slot="options">
-                            <div data-value="1">€ - menu à moins de 25€</div>
-                            <div data-value="2">€€ - entre 25 et 40€</div>
-                            <div data-value="3">€€€ - au-delà de 40€</div>
-                        </div>
-                    </x-select>
+                <!-- Minimum price for offers that NOT RESTAURANT -->
+                <div class="flex gap-4 mt-4" id="offer-minimum-price">
+
+                    <x-input>
+                        <p slot="label">Prix minimum</p>
+                        <input slot="input" type="number" name="restaurant-min-price" min="1">
+                    </x-input>
 
                 </div>
 
                 <!-- Price table -->
-                <table class="table center">
+                <table class="table center hidden">
                     <thead>
                     <tr>
                         <th class="table-head" colspan="2">Grille tarifaire</th>

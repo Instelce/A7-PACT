@@ -41,6 +41,13 @@ $app->router->get('/offres/<pk:int>', [\app\controllers\OfferController::class, 
 $app->router->get('/offres/<pk:int>/payment', [\app\controllers\OfferController::class, 'payment']);
 
 // dashboard pro
+$app->router->get('/dashboard', function () {
+    if (Application::$app->user->isProfessional()) {
+        Application::$app->response->redirect('/dashboard/offres');
+    } else {
+        Application::$app->response->redirect('/');
+    }
+});
 $app->router->get('/dashboard/offres', [\app\controllers\DashboardController::class, 'offers']);
 $app->router->post('/dashboard/offres', [\app\controllers\DashboardController::class, 'offers']);
 

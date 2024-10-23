@@ -106,11 +106,11 @@ for ($i = 0; $i < 10; $i++) {
 
     // Add specific data for category
     if ($offer->category === 'activity') {
-        $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age, price) VALUES (". $offer->id . ", 2, 10, 10.99);");
+        $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES (". $offer->id . ", 2, 10);");
     } elseif ($offer->category === 'attraction_park') {
         $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (". $offer->id . ", 'https://placehold.co/400', 10, 10);");
     } elseif ($offer->category === 'restaurant') {
-        $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, minimum_price, maximum_price) VALUES (". $offer->id . ", 'https://placehold.co/400', 10, 30);");
+        $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (". $offer->id . ", 'https://placehold.co/400', ". rand(1, 3) .");");
     } elseif ($offer->category === 'show') {
         $db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity) VALUES (". $offer->id . ", 3, 30);");
     } elseif ($offer->category === 'visit') {

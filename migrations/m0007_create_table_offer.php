@@ -28,6 +28,7 @@ class m0007_create_table_offer
             website VARCHAR(255),
             phone_number VARCHAR(10),
             category VARCHAR(20) NOT NULL,
+            minimum_price FLOAT,
             
             professional_id INT NOT NULL,
             address_id INT NOT NULL,

@@ -7,7 +7,6 @@ class ActivityOffer extends DBModel {
     public int $offer_id = 0;
     public float $duration =0.0;
     public int $required_age = 0;
-    public float $price = 0.0;
 
     public static function tableName(): string
     {
@@ -16,7 +15,7 @@ class ActivityOffer extends DBModel {
 
     public function attributes(): array
     {
-        return ['offer_id', 'duration', 'required_age', 'price'];
+        return ['offer_id', 'duration', 'required_age'];
     }
 
     public static function pk(): string

@@ -52,8 +52,7 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
                                                                     (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
                                                                     (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, 	-3.474171, 	48.800755),
-                                                                    (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
-                                                                    (24, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104);");
+                                                                    (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326);");
 
 
 // ---------------------------------------------------------------------- //
