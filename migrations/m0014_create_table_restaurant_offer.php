@@ -11,8 +11,7 @@ class m0014_create_table_restaurant_offer
             offer_id INT NOT NULL PRIMARY KEY,
             
             url_image_carte VARCHAR(255) NOT NULL,
-            minimum_price NUMERIC NOT NULL,
-            maximum_price NUMERIC NOT NULL,
+            range_price NUMERIC NOT NULL,
             
             FOREIGN KEY (offer_id) REFERENCES offer(id)
         );";

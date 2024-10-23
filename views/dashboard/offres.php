@@ -2,11 +2,12 @@
 /** @var $this \app\core\View */
 /** @var $offers \app\models\offer\Offer[] */
 /** @var $offersType \app\models\offer\OfferType[] */
+
 /** @var $photos \app\models\offer\OfferPhoto[] */
 
 use app\core\Application;
 
-$this->title = "Consulter mes offres";
+$this->title = "Mes offres";
 $this->jsFile = "dashboardOffers";
 $this->cssFile = "dashboardOffers";
 
@@ -15,45 +16,54 @@ var_dump($offersType);
 var_dump(count($offers));*/
 ?>
 
-<div class="mainContainer">
-    <div class="bloc">
+<div class="flex gap-4">
+
+    <!-- Tabs button -->
+    <div class="flex flex-col w-[250px]">
+        <div class="tab-button pro" selected>
+            <i data-lucide="ticket"></i>
+            Mes offres
+        </div>
+
+        <div class="tab-button pro">
+            <i data-lucide="message-circle"></i>
+            Avis reçus
+        </div>
+
+        <div class="tab-button pro">
+            <i data-lucide="file-text"></i>
+            Factures
+        </div>
+
+        <a href="/offres/creation" class="button gray icon-left mt-4">
+            <i data-lucide="plus"></i>
+            Créer une offre
+        </a>
+    </div>
+
+    <!-- Offer cards -->
+    <div class="flex flex-col">
         <?php foreach ($offers as $i => $offer) { ?>
-            <div class="imgContainer">
-                <img src="<?php echo $photos[$i]->url_photo ?>" class="w-5vw, h-vw" class="image border-gray-1">
-            </div>
-            <div class="description">
-                <div class="titleType">
-                    <div class="title">
-                        <h1><strong><?php echo $offer->title ?></strong></h1>
-                    </div>
-                    <span class="offersType"><?php echo $offersType[$i]->type ?></span>
+            <article class="offer-card">
+                <div class="image-container">
+                    <img src="<?php echo $photos[$i]->url_photo ?>"
+                         class="w-5vw, h-vw" class="image border-gray-1">
                 </div>
-                <div>
+                <div class="card-body">
+                    <header>
+                        <h3><?php echo $offer->title ?></h3>
+                        <span class="badge blue"><?php echo $offersType[$i]->type ?></span>
+                    </header>
                     <p class='mt-3'><?php echo $offer->summary ?></p>
+                    <p class="location mt-3">Activités • Gratuit</p>
+                    <p class="mt-2">Ploumanach • à 2 min de chez vous • Il y a 2
+                        min</p>
+                    <p class="mt-2">Mise à jour
+                        le <?php echo $offer->last_online_date ?></p>
                 </div>
-                <p class="location mt-3">Activités • Gratuit</p>
-                <p class="mt-2">Ploumanach • à 2 min de chez vous • Il y a 2 min</p>
-                <p class="borderBottom mt-2">Mise à jour le <?php echo $offer->last_online_date ?></p>
-                <?php if($offer->offer_option) { ?>
-                    <div class="enRelief">
-                        <p><strong>Avec l'option "En relief"</strong></p>
-                    </div>
-                <?php } ?>
-            </div>
+            </article>
+
         <?php } ?>
     </div>
-    <div class="buttons">
-        <button class="button purple mt-3">
-            <i data-lucide="message-square-dot"></i>
-            <?php echo $offer->likes ?>
-        </button>
-        <button class="button gray mt-3">
-            <i data-lucide="message-square-more"></i>
-            <?php echo $offer->likes ?>
-        </button>
-        <button class="button gray mt-3">
-            <i data-lucide="ban"></i>
-            <?php echo $offer->likes ?>
-        </button>
-    </div>
+
 </div>

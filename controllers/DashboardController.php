@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\core\Application;
 use app\core\Controller;
+use app\core\middlewares\AuthMiddleware;
+use app\core\middlewares\BackOfficeMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\models\offer\Offer;
@@ -13,6 +15,13 @@ use app\models\offer\OfferType;
 
 class DashboardController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->registerMiddleware(new AuthMiddleware(['offers']));
+        $this->registerMiddleware(new BackOfficeMiddleware(['offers']));
+    }
+
     public function offers(Request $request, Response $response) {
         $this->setLayout('back-office');
         $offers = Offer::find(['id'=> Application::$app->user->account_id]);

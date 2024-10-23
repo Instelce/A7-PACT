@@ -42,6 +42,10 @@ const complemantarySections = document.querySelectorAll(".complementary-section"
 const categoryNotSelected = document.querySelector('#category-no-selected');
 const periodSection = document.querySelector('#period-section');
 
+const priceSection = document.querySelector('#price-section');
+const rangePriceInput = document.querySelector('#restaurant-range-price');
+const minimumPriceInput = document.querySelector('#offer-minimum-price');
+
 // -------------------------------------------------------------------------- //
 // Load tags in order to selected category
 // -------------------------------------------------------------------------- //
@@ -117,6 +121,13 @@ categoryInput.addEventListener('change', (e) => {
         periodSection.classList.remove('hidden');
     }
 
+    if (categoryInput.value !== 'restaurant') {
+        minimumPriceInput.required = true;
+        priceSection.classList.remove('hidden');
+    } else {
+        minimumPriceInput.required = false;
+        priceSection.classList.add('hidden');
+    }
 })
 
 

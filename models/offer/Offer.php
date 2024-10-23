@@ -23,6 +23,7 @@ class Offer extends DBModel
     public int $click_counter = 0;
     public string $website = '';
     public string $phone_number = '';
+    public ?float $minimum_price = null;
 
     /**
      * @var 'activity' | 'attraction_park' | 'restaurant' | 'show' | 'visit'
@@ -33,8 +34,8 @@ class Offer extends DBModel
     public int $professional_id = 0;
     public int $address_id = 0;
 
-//    public string $created_at = '';
-//    public string $updated_at = '';
+    public string $created_at = '';
+    public string $updated_at = '';
 
     public static function tableName(): string
     {
@@ -43,12 +44,12 @@ class Offer extends DBModel
 
     public function attributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price'];
     }
 
     public function updateAttributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price'];
     }
 
     public function rules(): array
@@ -59,6 +60,7 @@ class Offer extends DBModel
             'description' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 1024]],
             'website' => [],
             'phone_number' => [],
+            'minimum_price' => []
         ];
     }
 
@@ -69,6 +71,7 @@ class Offer extends DBModel
             'summary' => 'Résumé',
             'website' => 'Site web',
             'phone_number' => 'Numéro de téléphone',
+            'minimum_price' => 'Prix minimum'
         ];
     }
 
