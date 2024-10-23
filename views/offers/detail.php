@@ -10,7 +10,7 @@ $this->jsFile = "detailedOffer";
 
 // echo "<pre>";
 // var_dump($pk);
-// var_dump($offerData);
+var_dump($offerData);
 // echo "</pre>";
 
 ?>
@@ -40,10 +40,10 @@ $this->jsFile = "detailedOffer";
 
 
     <div class="inlineOffer">
-        <p>Par <?php echo $offerData["author"] ?></p>
         <div class="inlineOfferGap">
+            <p class="author">Par <?php echo $offerData["author"] ?></p>
 
-            <p>Activité</p>
+            <p><?php echo $offerData["category"] ?></p>
             <div class="inlineOffer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
@@ -52,27 +52,33 @@ $this->jsFile = "detailedOffer";
                         d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
                     <circle cx="12" cy="10" r="3" />
                 </svg>
-                <p>Bréhat</p>
+                <p><?php echo $offerData["location"] ?></p>
             </div>
 
-            <div class="inlineOffer">
-                <p>Durée</p>
-                <p>6H</p>
-            </div>
+            <?php if (in_array($offerData["category"], ["Activité", "Visite", "Spectacle"])): ?>
+                <div class="inlineOffer">
+                    <p>Durée</p>
+                    <p><?php echo $offerData["duration"] ?></p>
+                    <p>H</p>
+                </div>
+            <?php endif; ?>
 
-            <div class="inlineOffer">
-                <p>A partir de </p>
-                <p>12 ans</p>
-            </div>
+
+            <?php if (in_array($offerData["category"], ["Activité", "Parc d'attraction"])): ?>
+                <div class="inlineOffer">
+                    <p>A partir de </p>
+                    <p><?php echo $offerData["required_age"] ?></p>
+                    <p>ans</p>
+                </div>
+            <?php endif; ?>
+
         </div>
     </div>
 
     <div>
         <h2 class="heading-2">Résumé :</h2>
         <br>
-        <p>Montrer que l'on peut réaliser localement de belles balades à vélo, en empruntant de petites routes
-            tranquilles et sans trop de montées
-        </p>
+        <p><?php echo $offerData["summary"] ?></p>
     </div>
 
     <div class="columnOffer">
@@ -85,22 +91,29 @@ $this->jsFile = "detailedOffer";
                     d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
                 <circle cx="12" cy="10" r="3" />
             </svg>
-            <p><a href="https://www.google.fr/maps/place/3+All.+des+Soupirs,+22300+Lannion/@48.7283667,-3.461672,17z/data=!3m1!4b1!4m6!3m5!1s0x48122be9c2f84ea7:0x891eae3d19746eed!8m2!3d48.7283632!4d-3.4590971!16s%2Fg%2F11cpnp2qhh?entry=ttu&g_ep=EgoyMDI0MTAxNi4wIKXMDSoASAFQAw%3D%3D"
-                    target="_blank">
-                    3 Allée des Soupirs, 22300 Lannion</a></p>
+            <p><?php echo $offerData["address"] ?></p>
         </div>
 
-        <div class="inlineOffer">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-coins">
-                <circle cx="8" cy="8" r="6" />
-                <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
-                <path d="M7 6h1v4" />
-                <path d="m16.71 13.88.7.71-2.82 2.82" />
-            </svg>
-            <p>Gratuit</p>
-        </div>
+        <?php if ($offerData["category"] !== "restaurant"): ?>
+            <div class="inlineOffer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                     class="lucide lucide-coins">
+                    <circle cx="8" cy="8" r="6" />
+                    <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
+                    <path d="M7 6h1v4" />
+                    <path d="m16.71 13.88.7.71-2.82 2.82" />
+                </svg>
+                <p>
+                    <?php if ($offerData["price"] == 0): ?>
+                        Gratuit
+                    <?php else: ?>
+                        À partir de <?php echo $offerData["price"] ?> € / personne
+                    <?php endif; ?>
+                </p>
+            </div>
+        <?php endif; ?>
+
 
         <div class="inlineOffer">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -109,7 +122,7 @@ $this->jsFile = "detailedOffer";
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
             </svg>
-            <p>Ouvert</p>
+            <p><?php echo $offerData["openValue"] ?></p>
         </div>
 
         <div class="inlineOffer">
@@ -120,7 +133,7 @@ $this->jsFile = "detailedOffer";
                 <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
                 <path d="M2 12h20" />
             </svg>
-            <p><a href="https://www.tregorbicyclette.fr/" target="_blank">https://www.tregorbicyclette.fr/</a></p>
+            <p><a href="<?php echo $offerData["website"] ?>" target="_blank">Voir le site</a></p>
         </div>
 
         <div class="inlineOffer">
@@ -130,38 +143,35 @@ $this->jsFile = "detailedOffer";
                 <path
                     d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
             </svg>
-            <p>01 23 45 67 89</p>
+            <p><?php echo $offerData["phone_number"] ?></p>
         </div>
 
-        <div class="inlineOffer">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-languages">
-                <path d="m5 8 6 6" />
-                <path d="m4 14 6-6 2-3" />
-                <path d="M2 5h12" />
-                <path d="M7 2h1" />
-                <path d="m22 22-5-10-5 10" />
-                <path d="M14 18h6" />
-            </svg>
-            <p>Français, Anglais</p>
-        </div>
+        <?php if ($offerData["category"] === "Visite"): ?>
+            <div class="inlineOffer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                     class="lucide lucide-languages">
+                    <path d="m5 8 6 6" />
+                    <path d="m4 14 6-6 2-3" />
+                    <path d="M2 5h12" />
+                    <path d="M7 2h1" />
+                    <path d="m22 22-5-10-5 10" />
+                    <path d="M14 18h6" />
+                </svg>
+                <p><?php echo $offerData["languages"] ?></p>
+            </div>
+        <?php endif; ?>
     </div>
 
     <div>
         <h2 class="heading-2">Description :</h2>
         <br>
-        <p>Les sorties sont volontairement limitées entre 15 km et 20 km pour permettre à un large public familial de se
-            joindre à nous. A partir de 6 ou 7 ans, un enfant à l'aise sur son vélo, peut en général parcourir une telle
-            distance sans problème : le rythme est suffisamment lent (adapté aux plus faibles), avec des pauses, et le
-            fait d'être en groupe est en général un bon stimulant pour les enfants ... et les plus grands ! Les plus
-            jeunes peuvent aussi participer en charrette, sur un siège vélo ou bien avec une barre de traction.
-        </p>
+        <p><?php echo $offerData["description"] ?></p>
     </div>
 
     <div class="inlineOffer">
         <h2 class="heading-2">Tags : </h2>
-        <p class="heading-3">Plein air, Sport, Famille</p>
+        <p class="heading-3"><?php echo $offerData["tags"] ?></p>
     </div>
 
 
