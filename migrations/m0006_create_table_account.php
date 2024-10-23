@@ -25,7 +25,7 @@ class m0006_create_table_account
             
             mail VARCHAR(100) UNIQUE NOT NULL,
             password VARCHAR(100) NOT NULL,
-            avatarUrl VARCHAR(255) NOT NULL,
+            avatar_url VARCHAR(255) NOT NULL,
             address_id INT NOT NULL,
             
             FOREIGN KEY (account_id) REFERENCES account(id),

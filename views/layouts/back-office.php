@@ -32,7 +32,7 @@ use app\core\Application;
 <!-- Loader -->
 <div class="loader">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-purple-primary))"
          stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
          class="lucide lucide-loader-circle">
         <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
@@ -42,13 +42,7 @@ use app\core\Application;
 
 <!-- Navbar -->
 <nav class="navbar">
-    <div class="nav-burger" id="nav-burger">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-    <div class="flex gap-4 items-center">
+    <div class="navbar-left">
         <a href="/" class="mr-4">
             <img id="logo" src="/assets/images/logoPro.svg" alt="" width="100">
         </a>
@@ -68,7 +62,7 @@ use app\core\Application;
             </div>
         <?php } ?>
     </div>
-    <div class="row">
+    <div class="navbar-right">
 <!--        <a href="/recherche">-->
 <!--            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"-->
 <!--                 viewBox="0 0 24 24" fill="none" stroke="currentColor"-->
@@ -81,11 +75,21 @@ use app\core\Application;
 
         <?php if (Application::$app->isAuthenticated()) { ?>
             <a href="/deconnexion" class="link pro">Déconnexion</a>
-            <a href="/profile" class="button gray only-icon"><i data-lucide="user"></i></a>
+
+            <!-- Avatar -->
+            <a href="/profile" class="avatar">
+                <img src="<?php echo Application::$app->user->avatar_url ?>" alt="">
+            </a>
         <?php } else { ?>
             <a href="/connexion" class="button">Connexion</a>
         <?php } ?>
 
+        <div class="nav-burger" id="nav-burger">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </div>
 </nav>
 
@@ -102,7 +106,7 @@ use app\core\Application;
 <main class="main-container">
     <!-- Show alert -->
     <?php if (Application::$app->session->getFlash('success')): ?>
-        <div class="alert alert-success">
+        <div class="alert success">
             <?php echo Application::$app->session->getFlash('success') ?>
         </div>
     <?php endif; ?>

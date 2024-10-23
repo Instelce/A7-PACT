@@ -1,7 +1,7 @@
 <?php
 
-/** @var $model \app\models\offer\Offer */
-/** @var $offerTags \app\models\offer\OfferTag[] */
+/** @var $offer \app\models\offer\Offer */
+/** @var $address \app\models\Address */
 /** @var $this \app\core\View */
 
 use app\core\Application;
@@ -17,8 +17,9 @@ $form = new Form();
 ?>
 
 <!-- Title -->
-<div class="w-full flex items-center justify-center py-16">
-    <h1 class="heading-1">Modifier l'offre : <?php echo $offer['title'] ?></h1>
+<div class="w-full flex flex-col gap-2 items-center justify-center py-16">
+    <h3 class="heading-3 text-gray-4">Modifier l'offre</h3>
+    <h1 class="heading-1"><?php echo $offer['title'] ?></h1>
 </div>
 
 
@@ -209,28 +210,32 @@ $form = new Form();
 
                     <div class="flex flex-col gap-2">
                         <div class="flex gap-4">
-                            <x-input class="w-[200px]">
-                                <p slot="label">Numéro de rue</p>
-                                <input slot="input" id="address-number" type="number" name="address-number"
-                                    placeholder="2">
-                            </x-input>
-                            <x-input>
-                                <p slot="label">Nom de la rue</p>
-                                <input slot="input" id="address-street" type="text" name="address-street"
-                                    placeholder="Rue Edouard Branly" required>
-                            </x-input>
+                            <?php echo $form->field($address, 'number') ?>
+<!--                            <x-input class="w-[200px]">-->
+<!--                                <p slot="label">Numéro de rue</p>-->
+<!--                                <input slot="input" id="address-number" type="number" name="address-number"-->
+<!--                                    placeholder="2">-->
+<!--                            </x-input>-->
+                            <?php echo $form->field($address, 'street') ?>
+<!--                            <x-input>-->
+<!--                                <p slot="label">Nom de la rue</p>-->
+<!--                                <input slot="input" id="address-street" type="text" name="address-street"-->
+<!--                                    placeholder="Rue Edouard Branly" required>-->
+<!--                            </x-input>-->
                         </div>
                         <div class="flex gap-4">
-                            <x-input class="w-[200px]">
-                                <p slot="label">Code postal</p>
-                                <input slot="input" id="address-postal-code" type="text" name="address-postal-code"
-                                    placeholder="22300" required>
-                            </x-input>
-                            <x-input>
-                                <p slot="label">Ville</p>
-                                <input slot="input" id="address-city" type="text" name="address-city"
-                                    placeholder="Lannion" required>
-                            </x-input>
+                            <?php echo $form->field($address, 'postal_code') ?>
+<!--                            <x-input class="w-[200px]">-->
+<!--                                <p slot="label">Code postal</p>-->
+<!--                                <input slot="input" id="address-postal-code" type="text" name="address-postal-code"-->
+<!--                                    placeholder="22300" required>-->
+<!--                            </x-input>-->
+                            <?php echo $form->field($address, 'city') ?>
+<!--                            <x-input>-->
+<!--                                <p slot="label">Ville</p>-->
+<!--                                <input slot="input" id="address-city" type="text" name="address-city"-->
+<!--                                    placeholder="Lannion" required>-->
+<!--                            </x-input>-->
                         </div>
 
                         <!-- Longitude and latitude inputs -->

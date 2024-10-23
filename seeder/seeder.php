@@ -47,7 +47,7 @@ echo "Adding addresses for users...\n";
 $password = password_hash("1234", PASSWORD_DEFAULT);
 $lastId = $db->pdo->lastInsertId();
 $db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4);");
-$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl, address_id) VALUES (1, 'admin@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId - 3 . "), (2, 'member@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId - 2 . "), (3, 'public-pro@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId - 1 . "), (4, 'private-pro@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId . ");");
+$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES (1, 'admin@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId - 3 . "), (2, 'member@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId - 2 . "), (3, 'public-pro@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId - 1 . "), (4, 'private-pro@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId . ");");
 $db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1);");
 $db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'Super entreprise', '1548759863254125', '07/25', '123');");
 
@@ -98,7 +98,7 @@ for ($i = 0; $i < 10; $i++) {
     $offer->save();
 
     // Add images to the offer
-    for ($j = 1; $j < 4; $j++) {
+    for ($j = 1; $j < rand(3, 6); $j++) {
         $offer->addPhoto("https://placehold.co/{$j}00");
     }
 

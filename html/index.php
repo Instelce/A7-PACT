@@ -39,6 +39,7 @@ $app->router->get('/offres/creation', [\app\controllers\OfferController::class, 
 $app->router->post('/offres/creation', [\app\controllers\OfferController::class, 'create']);
 $app->router->get('/offres/<pk:int>', [\app\controllers\OfferController::class, 'detail']);
 $app->router->get('/offres/<pk:int>/modification', [\app\controllers\OfferController::class, 'update']);
+$app->router->post('/offres/<pk:int>/modification', [\app\controllers\OfferController::class, 'update']);
 $app->router->get('/offres/<pk:int>/payment', [\app\controllers\OfferController::class, 'payment']);
 
 // dashboard pro

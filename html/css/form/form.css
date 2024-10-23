@@ -49,3 +49,15 @@
     font-size: var(--typescale-u1);
     color: rgb(var(--color-gray-4));
 }
+
+@media screen and (max-width: 768px) {
+    .form-page {
+        margin: 0 10%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .form-page {
+        margin: 0;
+    }
+}

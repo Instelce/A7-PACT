@@ -54,6 +54,8 @@ class OfferController extends Controller
             $address->street = $body['address-street'];
             $address->postal_code = $body['address-postal-code'];
             $address->city = $body['address-city'];
+            $address->latitude = $body['address-latitude'];
+            $address->longitude = $body['address-longitude'];
             $address->save();
 
             // Get category
@@ -73,13 +75,6 @@ class OfferController extends Controller
                 $offer->minimum_price = intval($body['offer-minimum-price']);
             }
 
-            //            if ($offer->validate()) {
-//                echo "Offer is valid";
-//            }
-//
-//            if ($offer->save()) {
-//                echo "Offer created successfully";
-//            }
             $offer->save();
 
             // Add tags to the offer
@@ -90,8 +85,6 @@ class OfferController extends Controller
                     $offer->addTag($tagModel->id);
                 }
             }
-
-            //            echo "tags added";
 
             // Creation of complementary informations
             if ($category === 'visit') {
@@ -284,7 +277,6 @@ class OfferController extends Controller
         $offer = Offer::findOne(['id' => $routeparams['pk']]);
         $address = Address::findOne(['id' => $offer->address_id]);
 
-
         $offerData = [
             'title' => $offer->title,
             'category' => $offer->category
@@ -295,20 +287,17 @@ class OfferController extends Controller
 
             // Update the address
             $address = Address::findOne(['id' => $offer->address_id]);
-            $address->number = intval($body['address-number']);
-            $address->street = $body['address-street'];
-            $address->postal_code = $body['address-postal-code'];
-            $address->city = $body['address-city'];
+            $address->loadData($request->getBody());
+//            $address->number = intval($body['address-number']);
+//            $address->street = $body['address-street'];
+//            $address->postal_code = $body['address-postal-code'];
+//            $address->city = $body['address-city'];
             $address->update();
-
-            // Get category
-            $category = $body['category'];
 
             // Update the offer
             $offer->loadData($request->getBody());
             $offer->offline_date = date('Y-m-d');
             $offer->last_online_date = null;
-            $offer->category = $category;
             $offer->professional_id = Application::$app->user->account_id;
             $offer->address_id = $address->id;
 
@@ -333,8 +322,6 @@ class OfferController extends Controller
                 }
             }
 
-            //            echo "tags added";
-
             // Update of complementary informations
             if ($category === 'visit') {
                 $visit = VisitOffer::findOne(['offer_id' => $offer->id]);
@@ -353,7 +340,6 @@ class OfferController extends Controller
                 }
 
                 $visit->update();
-                //                echo "visit created";
             } elseif ($category === 'activity') {
                 $activity = ActivityOffer::findOne(['offer_id' => $offer->id]);
                 $activity->offer_id = $offer->id;
@@ -396,7 +382,6 @@ class OfferController extends Controller
                 $image->destroy();
             }
 
-
             // Save photos
             $files = Application::$app->storage->saveFiles('photos', 'offers');
             foreach ($files as $file) {
@@ -406,14 +391,17 @@ class OfferController extends Controller
             // TODO - validate all fields
             // if all fields are valid redirect to the payment page
 
-            return $response->redirect('/offres/' . $offer->id);
+            Application::$app->session->setFlash('success', 'Offre modifiée avec succès');
+
+            return $response->redirect('/offres/' . $offer->id . '/modification');
         }
 
 
         return $this->render('offers/update', [
             'pk' => $routeparams['pk'],
             'offer' => $offerData,
-            'model' => $offer
+            'model' => $offer,
+            'address' => $address
         ]);
     }
 }

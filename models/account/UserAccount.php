@@ -14,7 +14,7 @@ class UserAccount extends DBModel
     public int $account_id = 0;
     public string $mail = '';
     public string $password = '';
-    public string $avatarUrl = '';
+    public string $avatar_url = '';
 
     public static function tableName(): string
     {
@@ -23,7 +23,7 @@ class UserAccount extends DBModel
 
     public function attributes(): array
     {
-        return ['account_id', 'mail', 'password', 'avatarUrl'];
+        return ['account_id', 'mail', 'password', 'avatar_url'];
     }
 
     public static function pk(): string
@@ -36,7 +36,7 @@ class UserAccount extends DBModel
         return [
             'mail' => [self::RULE_REQUIRED, [self::RULE_MAIL], [self::RULE_MAX, 'max' => 100], [self::RULE_UNIQUE]],
             'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8], [self::RULE_MAX, 'max' => 100]],
-            'avatarUrl' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]]
+            'avatar_url' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]]
         ];
     }
 

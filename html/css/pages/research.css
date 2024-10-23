@@ -1,9 +1,14 @@
 .vertical-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
 }
 
-.horizontal-line {
-    color: rgb(var(--color-gray-1));
+.vertical-list > a {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgb(var(--color-gray-1));
+}
+
+.vertical-list > a:last-child {
+    border-bottom: none;
 }
