@@ -2,6 +2,7 @@
 
 namespace app\models\offer;
 use app\core\DBModel;
+use app\models\offer\schedule\ActivitySchedule;
 
 class ActivityOffer extends DBModel {
     public int $offer_id = 0;
@@ -30,5 +31,13 @@ class ActivityOffer extends DBModel {
             'required_age' => [self::RULE_REQUIRED],
             'price' => [self::RULE_REQUIRED]
         ];
+    }
+
+    public function addSchedule($scheduleId)
+    {
+        $activitySchedule = new ActivitySchedule();
+        $activitySchedule->activity_id = $this->offer_id;
+        $activitySchedule->schedule_id = $scheduleId;
+        $activitySchedule->save();
     }
 }

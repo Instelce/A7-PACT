@@ -69,7 +69,7 @@ $form = new Form();
                     <!-- Free offer -->
                     <div class="flex justify-between items-center">
                         <div class="flex gap-2 items-center">
-                            <input type="radio" id="type-free" name="type" value="free">
+                            <input type="radio" id="type-free" name="type" value="gratuit" selected>
                             <label for="type-premium" class="flex flex-col gap-1">
                                 Offre gratuite
                             </label>

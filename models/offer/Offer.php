@@ -55,12 +55,12 @@ class Offer extends DBModel
     public function rules(): array
     {
         return [
-            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
-            'summary' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]],
-            'description' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 1024]],
-            'website' => [],
-            'phone_number' => [],
-            'minimum_price' => []
+//            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
+//            'summary' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]],
+//            'description' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 1024]],
+//            'website' => [],
+//            'phone_number' => [],
+//            'minimum_price' => []
         ];
     }
 

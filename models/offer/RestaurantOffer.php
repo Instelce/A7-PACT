@@ -2,6 +2,8 @@
 
 namespace app\models\offer;
 use app\core\DBModel;
+use app\models\offer\schedule\ActivitySchedule;
+use app\models\offer\schedule\RestaurantSchedule;
 
 class RestaurantOffer extends DBModel
 {
@@ -34,5 +36,13 @@ class RestaurantOffer extends DBModel
             'url_image_carte' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
             'range_price' => [self::RULE_REQUIRED],
         ];
+    }
+
+    public function addSchedule($scheduleId)
+    {
+        $restaurantSchedule = new RestaurantSchedule();
+        $restaurantSchedule->restaurant_id = $this->offer_id;
+        $restaurantSchedule->schedule_id = $scheduleId;
+        $restaurantSchedule->save();
     }
 }

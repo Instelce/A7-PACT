@@ -25,7 +25,7 @@ class DashboardController extends Controller
     public function offers(Request $request, Response $response)
     {
         $this->setLayout('back-office');
-        $offers = Offer::find(['id' => Application::$app->user->account_id]);
+        $offers = Offer::find(['professional_id' => Application::$app->user->account_id]);
 
         $photos = [];
         foreach ($offers as $offer) {

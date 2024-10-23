@@ -9,7 +9,6 @@ class m0020_create_table_offer_schedule
         $db = Application::$app->db;
         $sql = "CREATE TABLE offer_schedule (
             id SERIAL PRIMARY KEY,
-            offer_id INT NOT NULL,
             day INT NOT NULL,
             opening_hours VARCHAR(5) NOT NULL,
             closing_hours VARCHAR(5) NOT NULL
