@@ -40,9 +40,9 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
                                                                     (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451),
                                                                     (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326),
-                                                                    (16, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
-                                                                    (17, 0, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
-                                                                    (18, 0, 'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104)
+                                                                    (16, ,'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
+                                                                    (17, ,'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
+                                                                    (18, ,'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104)
                                                                     ;");
 
 // ---------------------------------------------------------------------- //
@@ -140,6 +140,13 @@ foreach ($tagsCafe as $tagName) {
         echo "Tag '$tagName' not found.\n";
     }
 }
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 1, '12h', '23h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 2, '12h', '23h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 3, 'fermé', 'fermé')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 4, '12h', '23h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 5, '12h', '23h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 6, '19h30', '23h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 7, 'fermé', 'fermé')");
 
 //create village gaulois
 $offre2 = new Offer();
@@ -187,6 +194,13 @@ foreach ($tagsGaulois as $tagName) {
     }
 }
 
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 1, 'fermé', 'fermé')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 2, '9h', '19h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 3, '9h', '19h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 4, 'fermé', 'fermé')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 5, '9h', '19h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 6, '9h', '20h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 7, '9h', '20h')");
 
 $offre3 = new Offer();
 $offre3->title = "Promenade en Bateau sur le Canal de la Rance";
@@ -283,6 +297,14 @@ foreach ($tagsBrehat as $tagName) {
 
 
 
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 1, '9h', '17h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 2, '9h', '17h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 3, 'fermé', 'fermé')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 4, 'fermé', 'fermé')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 5, '9h', '17h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 6, '9h', '17h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 7, '9h', '17h')");
+
 
 $offre9 = new Offer();
 $offre9->title = "La Récrée des 3 Curés";
@@ -307,6 +329,14 @@ $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map,
 //add tags
 
 $tagsRecree = ['attractions', 'sensations', 'manèges', 'enfants', 'famille', 'parc', 'verdoyant', 'évasion'];
+
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 1, '9h', '19h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 2, '9h', '19h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 3, 'fermé', 'fermé')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 4, 'fermé', 'fermé')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 5, '9h', '19h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 6, '9h', '20h')");
+$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 7, '9h', '20h')");
 
 foreach ($tagsRecree as $tagName) {
     $tagName = strtolower($tagName);
@@ -334,7 +364,7 @@ $offre10->title = "Vallée des Saints";
 $offre10->summary = 'Il y a de la magie dans ce site hors norme. Un peu comme sur l’île de Pâques... mais à la manière bretonne ! ';
 $offre10->description = 'Au coeur de Carnoët, vous vous promènerez au milieu de géants de granit. Le site compte 180 statues, dont certaines atteignent 7 mètres de haut ! Véritable jeu de piste pour les enfants, demandez-leur de trouver Sainte Riwanon ou Sainte Katell, et laissez place à votre imagination.';
 $offre10->likes = 2014;
-$offre10->offline = 1;
+$offre10->offline = 0;
 $offre10->offline_date = null;
 $offre10->last_online_date = "2023-01-12";
 $offre10->view_counter = 14856;
@@ -476,6 +506,26 @@ $photoRecree3 = new OfferPhoto();
 $photoRecree3->url_photo = 'https://www.brest-terres-oceanes.fr/wp-content/uploads/2018/06/DSC03057.jpg';
 $photoRecree3->offer_id = $offre9->id;
 $photoRecree3->save();
+
+
+// ---------------------------------------------------------------------- //
+// photos offre9
+// ---------------------------------------------------------------------- //
+
+$photovalleedessaints1 = new OfferPhoto();
+$photovalleedessaints1->url_photo = 'https://www.parcs-france.com/wp-content/uploads/parc-recredes3cures-ouverture-tarif-nouveaute.jpg';
+$photovalleedessaints1->offer_id = $offre9->id;
+$photovalleedessaints1->save();
+
+$photovalleedessaints2 = new OfferPhoto();
+$photovalleedessaints2->url_photo = 'https://29.recreatiloups.com/wp-content/uploads/sites/3/2014/10/spoontus-recre-milizac.jpg';
+$photovalleedessaints2->offer_id = $offre9->id;
+$photovalleedessaints2->save();
+
+$photovalleedessaints3 = new OfferPhoto();
+$photovalleedessaints3->url_photo = 'https://www.brest-terres-oceanes.fr/wp-content/uploads/2018/06/DSC03057.jpg';
+$photovalleedessaints3->offer_id = $offre9->id;
+$photovalleedessaints3->save();
 
 echo "Database seeded successfully.\n";
 

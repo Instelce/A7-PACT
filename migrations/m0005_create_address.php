@@ -7,7 +7,7 @@ class m0005_create_address {
         $db = Application::$app->db;
         $sql = "CREATE TABLE address (
             id SERIAL PRIMARY KEY,
-            number INT NOT NULL,
+            number INT,
             street VARCHAR(255) NOT NULL,
             city VARCHAR(255) NOT NULL,
             postal_code VARCHAR(5) NOT NULL,
