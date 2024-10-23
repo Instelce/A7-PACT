@@ -27,7 +27,6 @@ class Address extends DBModel
     public function rules(): array
     {
         return [
-            'number' => [self::RULE_REQUIRED],
             'street' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
             'city' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
             'postal_code' => [self::RULE_REQUIRED]

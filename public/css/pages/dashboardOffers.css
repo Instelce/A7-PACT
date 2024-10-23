@@ -1,0 +1,52 @@
+.mainContainer{
+    display: flex;
+    justify-content: space-between;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.titleType{
+    display: flex;
+}
+
+.offersType{
+    margin-left: 2vw;
+}
+
+.description{
+    width: 30vw;
+    border-bottom: 2px solid black;
+}
+
+.image{
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.bloc{
+    display: flex;
+}
+
+.imgContainer{
+    margin-right: 3vw;
+}
+
+h1 {
+    font-size: 20px;
+    color: #333;
+}
+
+span {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    height: 2vh;
+}
