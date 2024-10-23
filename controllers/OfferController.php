@@ -23,6 +23,7 @@ use app\models\user\professional\ProfessionalUser;
 use app\models\offer\RestaurantOffer;
 use app\models\offer\ShowOffer;
 use app\models\offer\VisitOffer;
+use app\models\VisitLanguage;
 
 class OfferController extends Controller
 {
@@ -188,6 +189,11 @@ class OfferController extends Controller
         $id = $routeparams['pk'];
         $offerData = [];
         $offer = Offer::findOne(['id' => $id]);
+        $location = Address::findOne(['id' => $offer->address_id]) -> city;
+        $address = Address::findOne(['id' => $offer->address_id]);
+        $tags = OfferTag::findOne(['id' => $offer->tag]);
+        $languages = VisitLanguage::findOne(['offer_id' => $id]) -> language;
+        $formattedAddress = $address->number . ' ' . $address->street . ', ' . $address->postal_code . ' ' . $address->city;
         $images = OfferPhoto::find(['offer_id' => $id]) ?? NULL;//get the first image of the offer for the preview
         $url_images = [];
         foreach ($images as $image) {
@@ -195,12 +201,55 @@ class OfferController extends Controller
         }
         $professional = ProfessionalUser::findOne(['user_id' => $offer->professional_id])->denomination ?? NULL;//get the name of the professional who posted the offer
 
+        $type = NULL;
+        $duration = NULL;
+        $required_age = NULL;
+        $price = NULL;
+
+        switch ($offer -> category) {
+            case 'restaurant':
+                $type = "Restaurant";
+                break;
+            case 'activity':
+                $type = "Activité";
+                $duration = ActivityOffer::findOne(['offer_id' => $id])->duration ?? NULL;
+                $required_age = ActivityOffer::findOne(['offer_id' => $id])->required_age ?? NULL;
+                $price = ActivityOffer::findOne(['offer_id' => $id])->price ?? NULL;
+                break;
+            case 'show':
+                $type = "Spectacle";
+                $duration = ShowOffer::findOne(['offer_id' => $id])->duration ?? NULL;
+                break;
+            case 'visit':
+                $type = "Visite";
+                $duration = VisitOffer::findOne(['offer_id' => $id])->duration ?? NULL;
+                break;
+            case 'attraction_park':
+                $type = "Parc d'attraction";
+                $required_age = AttractionParkOffer::findOne(['offer_id' => $id])->required_age ?? NULL;
+                break;
+        }
+
         $offerData = [
             'url_images' => $url_images,
             'date' => $offer->last_online_date,
             'title' => $offer->title,
-            'author' => $professional
+            'author' => $professional,
+            'category' => $type,
+            'location' => $location,
+            'duration' => $duration,
+            'required_age' => $required_age,
+            'summary' => $offer->summary,
+            'website' => $offer->website,
+            'address' => $formattedAddress,
+            'price' => $price,
+            'phone_number' => $offer->phone_number,
+            'description' => $offer->description,
+            'tags' => $tags,
+            'languages' => $languages
+
         ];
+
         return $this->render('offers/detail', [
             'pk' => $routeparams['pk'],
             "offerData" => $offerData
