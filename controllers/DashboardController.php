@@ -7,6 +7,7 @@ use app\core\Controller;
 use app\core\Request;
 use app\core\Response;
 use app\models\offer\Offer;
+use app\models\offer\OfferOption;
 use app\models\offer\OfferPhoto;
 use app\models\offer\OfferType;
 
@@ -26,10 +27,16 @@ class DashboardController extends Controller
             $offersType[] = OfferType::findOne(['id'=>$offer->offer_type_id]);
         }
 
+        $offersOption = [];
+        foreach ($offers as $offer) {
+            $offersOption[] = OfferOption::findOne(['id'=>$offer->offer_option]);
+        }
+
         return $this->render('/dashboard/offres', [
             'offers' => $offers ,
             'photos' => $photos ,
-            'offersType' => $offersType
+            'offersType' => $offersType ,
+            'offersOption' => $offersOption
         ]);
     }
 }

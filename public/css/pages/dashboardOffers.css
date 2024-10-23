@@ -1,3 +1,5 @@
+/*Main container*/
+
 .mainContainer{
     display: flex;
     justify-content: space-between;
@@ -6,25 +8,7 @@
     padding: 20px;
 }
 
-.titleType{
-    display: flex;
-}
-
-.offersType{
-    margin-left: 2vw;
-}
-
-.description{
-    width: 30vw;
-    border-bottom: 2px solid black;
-}
-
-.image{
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
-    object-fit: cover;
-}
+/*Premier bloc*/
 
 .bloc{
     display: flex;
@@ -34,12 +18,22 @@
     margin-right: 3vw;
 }
 
-h1 {
-    font-size: 20px;
-    color: #333;
+.image{
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    object-fit: cover;
 }
 
-span {
+.description{
+    width: 40vw;
+}
+
+.titleType{
+    display: flex;
+}
+
+.offersType{
     background-color: #007bff;
     color: white;
     padding: 5px 10px;
@@ -50,3 +44,22 @@ span {
     align-items: center;
     height: 2vh;
 }
+
+h1 {
+    font-size: 20px;
+    color: #333;
+}
+
+.borderBottom{
+    border-bottom: 2px solid black;
+    padding-bottom: 1.5vh;
+    margin-bottom: 1.5vh;
+}
+
+/* bloc 2 */
+
+.buttons{
+    margin-left: 2vw;
+}
+
+
