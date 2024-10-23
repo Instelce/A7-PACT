@@ -33,13 +33,14 @@ class OfferController extends Controller
         $this->registerMiddleware(new BackOfficeMiddleware(['create']));
     }
 
-    public function create(Request $request, Response $response) {
+    public function create(Request $request, Response $response)
+    {
         $this->setLayout('back-office');
         $offer = new Offer();
 
         if ($request->isPost()) {
             $body = $request->getBody();
-//            echo "<pre>";
+            //            echo "<pre>";
 //            var_dump($_FILES);
 //            var_dump($request->getBody());
 //            echo "</pre>";
@@ -72,7 +73,7 @@ class OfferController extends Controller
                 $offer->minimum_price = intval($body['offer-minimum-price']);
             }
 
-//            if ($offer->validate()) {
+            //            if ($offer->validate()) {
 //                echo "Offer is valid";
 //            }
 //
@@ -89,6 +90,8 @@ class OfferController extends Controller
                     $offer->addTag($tagModel->id);
                 }
             }
+
+            //            echo "tags added";
 
             // Creation of complementary informations
             if ($category === 'visit') {
@@ -108,7 +111,7 @@ class OfferController extends Controller
                 }
 
                 $visit->save();
-            } elseif ($category === 'activity'){
+            } elseif ($category === 'activity') {
                 $activity = new ActivityOffer();
                 $activity->offer_id = $offer->id;
                 $activity->duration = Utils::convertHourToFloat($body['activity-duration']);
@@ -165,7 +168,7 @@ class OfferController extends Controller
             }
 
             // Save photos
-            $files = Application::$app->storage->saveFiles( 'photos', 'offers');
+            $files = Application::$app->storage->saveFiles('photos', 'offers');
             foreach ($files as $file) {
                 $offer->addPhoto($file);
             }
@@ -205,10 +208,10 @@ class OfferController extends Controller
         $id = $routeparams['pk'];
         $offerData = [];
         $offer = Offer::findOne(['id' => $id]);
-        $location = Address::findOne(['id' => $offer->address_id]) -> city;
+        $location = Address::findOne(['id' => $offer->address_id])->city;
         $address = Address::findOne(['id' => $offer->address_id]);
         $tags = OfferTag::findOne(['id' => $offer->tag]);
-        $languages = VisitLanguage::findOne(['offer_id' => $id]) -> language;
+        $languages = VisitLanguage::findOne(['offer_id' => $id])->language;
         $formattedAddress = $address->number . ' ' . $address->street . ', ' . $address->postal_code . ' ' . $address->city;
         $images = OfferPhoto::find(['offer_id' => $id]) ?? NULL;//get the first image of the offer for the preview
         $url_images = [];
@@ -222,7 +225,7 @@ class OfferController extends Controller
         $required_age = NULL;
         $price = NULL;
 
-        switch ($offer -> category) {
+        switch ($offer->category) {
             case 'restaurant':
                 $type = "Restaurant";
                 $minimum_price = RestaurantOffer::findOne(['offer_id' => $id])->minimum_price;
@@ -272,6 +275,145 @@ class OfferController extends Controller
         return $this->render('offers/detail', [
             'pk' => $routeparams['pk'],
             "offerData" => $offerData
+        ]);
+    }
+
+    public function update(Request $request, Response $response, $routeparams)
+    {
+        $this->setLayout('back-office');
+        $offer = Offer::findOne(['id' => $routeparams['pk']]);
+        $address = Address::findOne(['id' => $offer->address_id]);
+
+
+        $offerData = [
+            'title' => $offer->title,
+            'category' => $offer->category
+        ];
+
+        if ($request->isPost()) {
+            $body = $request->getBody();
+
+            // Update the address
+            $address = Address::findOne(['id' => $offer->address_id]);
+            $address->number = intval($body['address-number']);
+            $address->street = $body['address-street'];
+            $address->postal_code = $body['address-postal-code'];
+            $address->city = $body['address-city'];
+            $address->update();
+
+            // Get category
+            $category = $body['category'];
+
+            // Update the offer
+            $offer->loadData($request->getBody());
+            $offer->offline_date = date('Y-m-d');
+            $offer->last_online_date = null;
+            $offer->category = $category;
+            $offer->professional_id = Application::$app->user->account_id;
+            $offer->address_id = $address->id;
+
+            // Offer minimum price
+            if (array_key_exists('offer-minimum-price', $body) && $category !== 'restaurant') {
+                $offer->minimum_price = intval($body['offer-minimum-price']);
+            }
+
+            if ($offer->validate()) {
+                echo "Offer is valid";
+            }
+
+            if ($offer->update()) {
+                echo "Offer updated successfully";
+            }
+            // Add tags to the offer
+            if (array_key_exists('tags', $body)) {
+                foreach ($body['tags'] as $tag) {
+                    $tag = strtolower($tag);
+                    $tagModel = OfferTag::findOne(['name' => $tag]);
+                    $offer->addTag($tagModel->id);
+                }
+            }
+
+            //            echo "tags added";
+
+            // Update of complementary informations
+            if ($category === 'visit') {
+                $visit = VisitOffer::findOne(['offer_id' => $offer->id]);
+                $visit->offer_id = $offer->id;
+                $visit->duration = Utils::convertHourToFloat($body['visit-duration']);
+                $visit->guide = array_key_exists('visit-guide', $body) ? 1 : 0;
+
+                // Update the period
+                if (array_key_exists('period-start', $body)) {
+                    $period = OfferPeriod::findOne(['id' => $offer->id]);
+                    $period->start_date = $body['period-start'];
+                    $period->end_date = $body['period-end'];
+                    $period->update();
+
+                    $visit->period_id = $period->id;
+                }
+
+                $visit->update();
+                //                echo "visit created";
+            } elseif ($category === 'activity') {
+                $activity = ActivityOffer::findOne(['offer_id' => $offer->id]);
+                $activity->offer_id = $offer->id;
+                $activity->duration = Utils::convertHourToFloat($body['activity-duration']);
+                $activity->required_age = intval($body['activity-age']);
+                $activity->update();
+            } elseif ($category === 'restaurant') {
+                $restaurant = RestaurantOffer::findOne(['offer_id' => $offer->id]);
+                $restaurant->offer_id = $offer->id;
+                $restaurant->url_image_carte = Application::$app->storage->saveFile('restaurant-image', 'offers/restaurant');
+                $restaurant->range_price = intval($body['restaurant-range-price']);
+                $restaurant->update();
+            } elseif ($category === 'show') {
+                $show = ShowOffer::findOne(['offer_id' => $offer->id]);
+                $show->offer_id = $offer->id;
+                $show->duration = Utils::convertHourToFloat($body['show-duration']);
+                $show->capacity = intval($body['show-capacity']);
+
+                // Update the period
+                if (array_key_exists('period-start', $body)) {
+                    $period = OfferPeriod::findOne(['offer_id' => $offer->id]);
+                    $period->start_date = $body['period-start'];
+                    $period->end_date = $body['period-end'];
+                    $period->update();
+
+                    $show->period_id = $period->id;
+                }
+
+                $show->update();
+            } elseif ($category === 'attraction-parc') {
+                $attraction = AttractionParkOffer::findOne(['offer_id' => $offer->id]);
+                $attraction->offer_id = $offer->id;
+                $attraction->required_age = intval($body['attraction-min-age']);
+                $attraction->url_image_park_map = Application::$app->storage->saveFile('attraction-parc-map', 'offers/attraction-parc');
+                $attraction->update();
+            }
+            //delete old image
+            $oldimage = OfferPhoto::find(['offer_id' => $offer->id]);
+            foreach ($oldimage as $image) {
+                $image->destroy();
+            }
+
+
+            // Save photos
+            $files = Application::$app->storage->saveFiles('photos', 'offers');
+            foreach ($files as $file) {
+                $offer->addPhoto($file);
+            }
+
+            // TODO - validate all fields
+            // if all fields are valid redirect to the payment page
+
+            return $response->redirect('/offres/' . $offer->id);
+        }
+
+
+        return $this->render('offers/update', [
+            'pk' => $routeparams['pk'],
+            'offer' => $offerData,
+            'model' => $offer
         ]);
     }
 }

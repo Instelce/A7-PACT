@@ -8,12 +8,12 @@ use app\models\offer\schedule\RestaurantSchedule;
 class RestaurantOffer extends DBModel
 {
     public int $offer_id = 0;
-    public string $url_image_carte ='';
+    public string $url_image_carte = '';
 
     /**
-     * @var int 1, 2 or 3 (€, €€, €€€)
+     * @var float 1, 2 or 3 (€, €€, €€€)
      */
-    public int $range_price = 0;
+    public float $range_price = 0;
 
     public static function tableName(): string
     {
