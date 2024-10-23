@@ -25,16 +25,18 @@ var_dump(count($offers));*/
             Mes offres
         </div>
 
-        <div class="tab-button pro">
-            <i data-lucide="message-circle"></i>
-            Avis reçus
-        </div>
-
-        <div class="tab-button pro">
-            <i data-lucide="file-text"></i>
-            Factures
-        </div>
-
+        <a href="/dashboard/avis">
+            <div class="tab-button pro">
+                <i data-lucide="message-circle"></i>
+                Avis reçus
+            </div>
+        </a>
+        <a href="/dashboard/factures">
+            <div class="tab-button pro">
+                <i data-lucide="file-text"></i>
+                Factures
+            </div>
+        </a>
         <a href="/offres/creation" class="button gray icon-left mt-4">
             <i data-lucide="plus"></i>
             Créer une offre
@@ -46,8 +48,7 @@ var_dump(count($offers));*/
         <?php foreach ($offers as $i => $offer) { ?>
             <article class="offer-card">
                 <div class="image-container">
-                    <img src="<?php echo $photos[$i]->url_photo ?>"
-                         class="w-5vw, h-vw" class="image border-gray-1">
+                    <img src="<?php echo $photos[$i]->url_photo ?>" class="w-5vw, h-vw" class="image border-gray-1">
                 </div>
                 <div class="card-body">
                     <header>
