@@ -164,27 +164,50 @@ $offre3->save();
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre3->id . ", 1.5, true);");
 
 
-//create balade bréhat
-$offre6 = new Offer();
-$offre6->title = "Traversée et tour de l'île de Brehat";
-$offre6->summary = 'Embarquez à bord de l’un de nos navires pour une traversée ou un tour de l’île. Naviguez loin du flot touristique au cœur d’une zone NATURA 2000.';
-$offre6->description = 'Profitez de notre formule TOUR DE L’ÎLE pour une balade commentée et animée par des passionnés. Vous pourrez admirer l’île par la mer, ses rochers roses, sa côte sauvage et son patrimoine maritime exceptionnel. Les 96 ilots de l’archipel vous offriront un panorama incroyable.
-A l’issue, vous débarquerez sur l’île de Bréhat pour une visite libre. Le retour s’effectuera avec les traversées directes.';
-$offre6->likes = 4012;
-$offre6->offline = 0;
-$offre6->offline_date = null;
-$offre6->last_online_date = "2024-10-01";
-$offre6->view_counter = 20986;
-$offre6->click_counter = 7863;
-$offre6->website = 'https://surmerbrehat.com/';
-$offre6->phone_number = '0677980042';
-$offre6->category = 'activity';
-$offre6->offer_type_id = 2;
-$offre6->professional_id = 8;
-$offre6->address_id = 16;
-$offre6->save();
 
-$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age, price) VALUES ($offre6->id, 1.0, 3, 15.0);");
+//create balade bréhat
+$offre8 = new Offer();
+$offre8->title = "Traversée et tour de l'île de Brehat";
+$offre8->summary = 'Embarquez à bord de l’un de nos navires pour une traversée ou un tour de l’île. Naviguez loin du flot touristique au cœur d’une zone NATURA 2000.';
+$offre8->description = 'Profitez de notre formule TOUR DE L’ÎLE pour une balade commentée et animée par des passionnés. Vous pourrez admirer l’île par la mer, ses rochers roses, sa côte sauvage et son patrimoine maritime exceptionnel. Les 96 ilots de l’archipel vous offriront un panorama incroyable.
+A l’issue, vous débarquerez sur l’île de Bréhat pour une visite libre. Le retour s’effectuera avec les traversées directes.';
+$offre8->likes = 4012;
+$offre8->offline = 0;
+$offre8->offline_date = null;
+$offre8->last_online_date = "2024-10-01";
+$offre8->view_counter = 20986;
+$offre8->click_counter = 7863;
+$offre8->website = 'https://surmerbrehat.com/';
+$offre8->phone_number = '0677980042';
+$offre8->category = 'activity';
+$offre8->offer_type_id = 2;
+$offre8->professional_id = 8;
+$offre8->address_id = 16;
+$offre8->save();
+
+$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age, price) VALUES ($offre8->id, 1.0, 3, 15.0);");
+
+
+$offre9 = new Offer();
+$offre9->title = "La Récrée des 3 Curés";
+$offre9->summary = 'Amateurs de sensations fortes, venez profiter au plus grand parc d’attractions breton la Récrée des trois curés';
+$offre9->description = 'Plongez dans l’aventure au Parc d’attractions La Récré des Trois Curés à Milizac ! Sur ses 17 hectares, des dizaines d’attractions captivantes attendent petits et grands. Des manèges palpitants aux aires de jeux dédiées aux plus petits, ce lieu offre une évasion totale dans un cadre verdoyant. Adultes, ados et enfants, tous y trouveront leur bonheur pour une journée d’amusement garantie.';
+$offre9->likes = 100841;
+$offre9->offline = 0;
+$offre9->offline_date = null;
+$offre9->last_online_date = "2024-9-01";
+$offre9->view_counter = 542321;
+$offre9->click_counter = 35874;
+$offre9->website = 'https://www.larecredes3cures.com/';
+$offre9->phone_number = '0298079559';
+$offre9->category = 'attraction_park';
+$offre9->offer_type_id = 2;
+$offre9->professional_id = 9;
+$offre9->address_id = 17;
+$offre9->save();
+
+$db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES ($offre9->id, 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
+
 
 // ---------------------------------------------------------------------- //
 // photos offre1
@@ -232,14 +255,17 @@ $photosGaulois3->save();
 $photosPromenade1 = new OfferPhoto();
 $photosPromenade1->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/ae/1c/32/a-bord-du-meissa.jpg?w=1200&h=-1&s=1';
 $photosPromenade1->offer_id = $offre3->id;
+$photosPromenade1->save();
 
 $photosPromenade2 = new OfferPhoto();
 $photosPromenade2->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/ae/15/59/a-bord-du-meissa.jpg?w=1200&h=-1&s=1';
 $photosPromenade2->offer_id = $offre3->id;
+$photosPromenade2->save();
 
 $photosPromenade3 = new OfferPhoto();
 $photosPromenade3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/ae/13/9b/a-bord-du-meissa.jpg?w=1200&h=-1&s=1';
 $photosPromenade3->offer_id = $offre3->id;
+$photosPromenade3->save();
 
 // ---------------------------------------------------------------------- //
 // photos offre4
@@ -247,20 +273,42 @@ $photosPromenade3->offer_id = $offre3->id;
 
 
 // ---------------------------------------------------------------------- //
-// photos offre6
+// photos offre8
 // ---------------------------------------------------------------------- //
 
-$photosBrehat1 = new OfferPhoto();
-$photosBrehat1->url_photo = 'https://www.theisland-list.com/wp-content/uploads/2023/05/brehat1.jpg';
-$photosBrehat1->offer_id = $offre6->id;
+$photoBrehat1 = new OfferPhoto();
+$photoBrehat1->url_photo = 'https://www.theisland-list.com/wp-content/uploads/2023/05/brehat1.jpg';
+$photoBrehat1->offer_id = $offre8->id;
+$photoBrehat1->save();
 
-$photosBrehat2 = new OfferPhoto();
-$photosBrehat2->url_photo = 'https://cdt22.media.tourinsoft.eu/upload/Brehat-2020-06-ile-du-guerzido-oeil-de-paco.jpg';
-$photosBrehat2->offer_id = $offre6->id;
+$photoBrehat2 = new OfferPhoto();
+$photoBrehat2->url_photo = 'https://cdt22.media.tourinsoft.eu/upload/Brehat-2020-06-ile-du-guerzido-oeil-de-paco.jpg';
+$photoBrehat2->offer_id = $offre8->id;
+$photoBrehat2->save();
 
-$photosBrehat3 = new OfferPhoto();
-$photosBrehat3->url_photo = 'https://cdn.artphotolimited.com/images/58bd704f04799b000f623d31/1000x1000/ile-de-brehat-2.jpg';
-$photosBrehat3->offer_id = $offre6->id;
+$photoBrehat3 = new OfferPhoto();
+$photoBrehat3->url_photo = 'https://cdn.artphotolimited.com/images/58bd704f04799b000f623d31/1000x1000/ile-de-brehat-2.jpg';
+$photoBrehat3->offer_id = $offre8->id;
+$photoBrehat3->save();
+
+// ---------------------------------------------------------------------- //
+// photos offre9
+// ---------------------------------------------------------------------- //
+
+$photoRecree1 = new OfferPhoto();
+$photoRecree1->url_photo = 'https://www.parcs-france.com/wp-content/uploads/parc-recredes3cures-ouverture-tarif-nouveaute.jpg';
+$photoRecree1->offer_id = $offre9->id;
+$photoRecree1->save();
+
+$photoRecree2 = new OfferPhoto();
+$photoRecree2->url_photo = 'https://29.recreatiloups.com/wp-content/uploads/sites/3/2014/10/spoontus-recre-milizac.jpg';
+$photoRecree2->offer_id = $offre9->id;
+$photoRecree2->save();
+
+$photoRecree3 = new OfferPhoto();
+$photoRecree3->url_photo = 'https://www.brest-terres-oceanes.fr/wp-content/uploads/2018/06/DSC03057.jpg';
+$photoRecree3->offer_id = $offre9->id;
+$photoRecree3->save();
 
 echo "Database seeded successfully.\n";
 
