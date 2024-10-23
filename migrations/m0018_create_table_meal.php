@@ -8,18 +8,18 @@ class m0018_create_table_meal
     {
         $db = Application::$app->db;
         $sql = "CREATE TABLE meal (
-            id SERIAL PRIMARY KEY,
-            name VARCHAR(30) NOT NULL  
+            meal_id SERIAL PRIMARY KEY,
+            name VARCHAR(128) NOT NULL  
         );
 
         CREATE TABLE is_on_restaurant_menu (
             id SERIAL PRIMARY KEY,
             
-            restaurant_id INT NOT NULL,
+            offer_id INT NOT NULL,
             meal_id INT NOT NULL,
             
-            FOREIGN KEY (restaurant_id) REFERENCES restaurant_offer(offer_id),
-            FOREIGN KEY (meal_id) REFERENCES meal(id)
+            FOREIGN KEY (offer_id) REFERENCES restaurant_offer(offer_id),
+            FOREIGN KEY (meal_id) REFERENCES meal(meal_id)
         );";
         $db->pdo->exec($sql);
     }
