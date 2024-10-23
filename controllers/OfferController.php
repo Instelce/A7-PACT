@@ -209,6 +209,8 @@ class OfferController extends Controller
         switch ($offer -> category) {
             case 'restaurant':
                 $type = "Restaurant";
+                $minimum_price = RestaurantOffer::findOne(['offer_id' => $id])->minimum_price;
+                $maximum_price = RestaurantOffer::findOne(['offer_id' => $id])->maximum_price;
                 break;
             case 'activity':
                 $type = "Activité";
@@ -246,8 +248,9 @@ class OfferController extends Controller
             'phone_number' => $offer->phone_number,
             'description' => $offer->description,
             'tags' => $tags,
-            'languages' => $languages
-
+            'languages' => $languages,
+            'minimum_price' => $minimum_price,
+            'maximum_price' => $maximum_price
         ];
 
         return $this->render('offers/detail', [
