@@ -28,7 +28,7 @@ $password = password_hash("1234", PASSWORD_DEFAULT);
 
 
 
-$db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, offer_option, offer, offer_type, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
+$db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, offer_option, offer, offer_type, offer_period, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
 
 // ---------------------------------------------------------------------- //
 // user adress
@@ -40,10 +40,10 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
                                                                     (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451),
                                                                     (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326),
-                                                                    (16, 1,'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
-                                                                    (17, 1,'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
-                                                                    (18, 1,'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104)
-                                                                    ;");
+                                                                    (16, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
+                                                                    (17, 0, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
+                                                                    (18, 0, 'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104),
+                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230,48.041895277402126, -1.6674224847189223)");
 
 // ---------------------------------------------------------------------- //
 // create offer adress
@@ -52,7 +52,8 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
                                                                     (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
                                                                     (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, 	-3.474171, 	48.800755),
-                                                                    (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326);");
+                                                                    (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
+                                                                    (24, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104);");
 
 
 // ---------------------------------------------------------------------- //
@@ -63,8 +64,9 @@ $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl,
                                                                      (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11), 
                                                                      (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',12), 
                                                                      (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg',13),
+                                                                     (4, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14),                                                            
                                                                      (5, 'rance.evasion@gmail.com', '" . $password . "', 'https://fr.web.img5.acsta.net/pictures/16/05/17/12/17/360795.jpg', 15),
-                                                                     (4, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14),
+                                                                     (6, 'roiduvoyage@gmail.com', '" . $password . "', 'https://cdn.discordapp.com/attachments/1194441121376514099/1298550202579554314/roi_brigand.png?ex=6719f89e&is=6718a71e&hm=b3ad4fe032eb2ed29b6f15aba207cb3132a322b9c69317afa07869d783b13269&',19),
                                                                      (8, 'brehat@gmail.com', '" . $password . "', 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png',16),
                                                                      (9, 'recree_trois_cures@gmail.com', '" . $password . "', 'https://www.larecredes3cures.com/app/uploads/2024/04/vertika-la-recre-des-3-cures-scaled-910x668-c-center.jpg',17),
                                                                      (10, 'valleedessaints@gmail.com', '" . $password . "', 'https://media.letelegramme.fr/api/v1/images/view/637cf1668f4302361f300639/web_golden_xl/637cf1668f4302361f300639.1',18);");
@@ -80,9 +82,9 @@ $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 
 $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VeilleArbre', TRUE);");
 
-$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034'), (4, 7421, 'Fred port', '65941542000012'),(5,8452,'Rance Evasion','26915441000024'), (8, 9587, 'Brehat', '79658412354789'), (9, 7896, 'Récrée des 3 curés', '12548965324785'), (10, 1489, 'La vallée des Saints', '25489600358897');");
+$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034'), (4, 7421, 'Fred port', '65941542000012'),(5,8452,'Rance Evasion','26915441000024'), (8, 9587, 'Brehat', '79658412354789'), (9, 7896, 'Récrée des 3 curés', '12548965324785'), (10, 1489, 'La vallée des Saints', '25489600358897'), (6, 9635, 'VoyageurGuidé', '95489433452897');");
 
-$db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3), (8), (10);");
+$db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3), (8), (10), (6);");
 
 $db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id) VALUES (4, '2024-11-30', 1),(5,'2024-11-30',2),(9, '2024-09-20', 3);");
 
@@ -115,7 +117,7 @@ $offre1->offer_type_id = 1;
 $offre1->save();
 
 //type offres
-$db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, minimum_price, maximum_price) VALUES (" . $offre1->id . ", 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/21/f5/07/e3/cafe-des-halles.jpg?w=700&h=-1&s=1', 12, 20);");
+$db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (" . $offre1->id . ", 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/21/f5/07/e3/cafe-des-halles.jpg?w=700&h=-1&s=1',3);");
 
 //add tags
 $tagsCafe = ['café', 'bar', 'brasserie', 'terrasse', 'convivial', 'burger', 'chaleureux', 'vege friendly', 'familial'];
@@ -183,6 +185,7 @@ foreach ($tagsGaulois as $tagName) {
     }
 }
 
+//create promenade canal rance
 foreach ($tagsGaulois as $tagName) {
     $tagName = strtolower($tagName);
     $tagModel = OfferTag::findOne(['name' => $tagName]);
@@ -269,7 +272,7 @@ $offre8->professional_id = 8;
 $offre8->address_id = 16;
 $offre8->save();
 
-$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age, price) VALUES ($offre8->id, 1.0, 3, 15.0);");
+$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES ($offre8->id, 1.0, 3);");
 
 //add tags
 $tagsBrehat = ['île', 'traversée', 'nature', 'patrimoine', 'maritime', 'guidée', 'panorama', 'granite rose'];
@@ -305,6 +308,7 @@ $db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closin
 $db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 7, '9h', '17h')");
 
 
+//create Récrée Curés
 $offre9 = new Offer();
 $offre9->title = "La Récrée des 3 Curés";
 $offre9->summary = 'Amateurs de sensations fortes, venez profiter au plus grand parc d’attractions breton la Récrée des trois curés';
@@ -405,6 +409,53 @@ foreach ($tagsVallee as $tagName) {
     }
 }
 
+
+//create cachette de merlin
+$offre6 = new Offer();
+$offre6->title = "La cachette de Merlin";
+$offre6->summary = 'Voyagez dans le temps et plongez au cœur de la vie gauloise, où vous pourrez découvrir des artisans passionnés, participer à des jeux anciens et vivre une expérience immersive pour toute la famille dans un cadre authentique et amusant.';
+$offre6->description = 'La légende raconte que Merlin, banni du Royaume de Camelot, est venu s\'installer dans ce mystérieux manoir où il éleva avec amour deux enfants prénommés Arthur et Morgane. Aujourd\'hui, le vieux manoir recèle un esprit enchanteur et déborde de surprises !';
+$offre6->likes = 600;
+$offre6->offline = 0;
+$offre6->offline_date = null;
+$offre6->last_online_date = "2024-11-02";
+$offre6->view_counter = 8714;
+$offre6->click_counter = 8001;
+$offre6->website = 'https://www.lacachettedemerlin.fr/';
+$offre6->phone_number = '0698834022';
+$offre6->category = 'show';
+$offre6->offer_type_id = 2;
+$offre6->professional_id = 6;
+$offre6->address_id = 24;
+$offre6->save();
+
+$db->pdo->exec("INSERT INTO offer_period (id, start_date,end_date) VALUES (1,'2024-06-01', '2024-09-01');");
+
+$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity, period_id) VALUES (" .$offre6->id . ", 1.5, 33, 1);");
+
+$tagsMerlin = ['Merlin', 'Bretagne', 'gaulois', 'enfants', 'imagination', 'culture bretonne', 'Camelot', 'cachette', 'temps', 'manoir','magie'];
+
+
+foreach ($tagsMerlin as $tagName) {
+    $tagName = strtolower($tagName);
+    $tag = OfferTag::findOne(['name' => $tagName]);
+    if (!$tag) {
+        $tag = new OfferTag();
+        $tag->name = $tagName;
+        $tag->save();
+    }
+}
+
+foreach ($tagsMerlin as $tagName) {
+    $tagName = strtolower($tagName);
+    $tagModel = OfferTag::findOne(['name' => $tagName]);
+    if ($tagModel) {
+        $offre10->addTag($tagModel->id);
+    } else {
+        echo "Tag '$tagName' not found.\n";
+    }
+}
+
 // ---------------------------------------------------------------------- //
 // photos offre1
 // ---------------------------------------------------------------------- //
@@ -467,6 +518,17 @@ $photosPromenade3->save();
 // photos offre4
 // ---------------------------------------------------------------------- //
 
+$photosMerlin1 = new OfferPhoto();
+$photosMerlin1->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/22/df/7d/9b/merlin-remet-le-diplome.jpg?w=1000&h=-1&s=1';
+$photosMerlin1->offer_id = $offre6->id;
+
+$photosMerlin2 = new OfferPhoto();
+$photosMerlin2->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/58/90/fa/merlin-conte-la-legende.jpg?w=1400&h=-1&s=1';
+$photosMerlin2->offer_id = $offre6->id;
+
+$photosMerlin3 = new OfferPhoto();
+$photosMerlin3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/22/df/7c/ca/merlin-rencontra-viviane.jpg?w=1400&h=-1&s=1';
+$photosMerlin3->offer_id = $offre6->id;
 
 // ---------------------------------------------------------------------- //
 // photos offre8
@@ -513,17 +575,17 @@ $photoRecree3->save();
 
 $photovalleedessaints1 = new OfferPhoto();
 $photovalleedessaints1->url_photo = 'https://www.parcs-france.com/wp-content/uploads/parc-recredes3cures-ouverture-tarif-nouveaute.jpg';
-$photovalleedessaints1->offer_id = $offre9->id;
+$photovalleedessaints1->offer_id = $offre10->id;
 $photovalleedessaints1->save();
 
 $photovalleedessaints2 = new OfferPhoto();
 $photovalleedessaints2->url_photo = 'https://29.recreatiloups.com/wp-content/uploads/sites/3/2014/10/spoontus-recre-milizac.jpg';
-$photovalleedessaints2->offer_id = $offre9->id;
+$photovalleedessaints2->offer_id = $offre10->id;
 $photovalleedessaints2->save();
 
 $photovalleedessaints3 = new OfferPhoto();
 $photovalleedessaints3->url_photo = 'https://www.brest-terres-oceanes.fr/wp-content/uploads/2018/06/DSC03057.jpg';
-$photovalleedessaints3->offer_id = $offre9->id;
+$photovalleedessaints3->offer_id = $offre10->id;
 $photovalleedessaints3->save();
 
 echo "Database seeded successfully.\n";
