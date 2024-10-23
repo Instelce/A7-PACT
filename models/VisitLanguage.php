@@ -4,7 +4,7 @@ namespace app\models;
 
 use app\core\DBModel;
 
-class VisitLanguage extends DBModel
+class   VisitLanguage extends DBModel
 {
     public int $offer_id = 0;
     public string $language = '0.0';
