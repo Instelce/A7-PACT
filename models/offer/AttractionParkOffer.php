@@ -2,6 +2,8 @@
 
 namespace app\models\offer;
 use app\core\DBModel;
+use app\models\offer\schedule\ActivitySchedule;
+use app\models\offer\schedule\AttractionParkSchedule;
 
 class AttractionParkOffer extends DBModel {
     public int $offer_id = 0;
@@ -31,5 +33,13 @@ class AttractionParkOffer extends DBModel {
             'required_age' => [self::RULE_REQUIRED],
             'attraction_number' => [self::RULE_REQUIRED]
         ];
+    }
+
+    public function addSchedule($scheduleId)
+    {
+        $parkSchedule = new AttractionParkSchedule();
+        $parkSchedule->attraction_park_id = $this->offer_id;
+        $parkSchedule->schedule_id = $scheduleId;
+        $parkSchedule->save();
     }
 }

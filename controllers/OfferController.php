@@ -15,14 +15,14 @@ use app\models\offer\ActivityOffer;
 use app\models\offer\AttractionParkOffer;
 use app\models\offer\Offer;
 use app\models\offer\OfferPeriod;
-use app\models\offer\OfferSchedule;
+use app\models\offer\OfferPhoto;
 use app\models\offer\OfferTag;
 use app\models\offer\OfferType;
-use app\models\offer\OfferPhoto;
-use app\models\user\professional\ProfessionalUser;
 use app\models\offer\RestaurantOffer;
+use app\models\offer\schedule\OfferSchedule;
 use app\models\offer\ShowOffer;
 use app\models\offer\VisitOffer;
+use app\models\user\professional\ProfessionalUser;
 use app\models\VisitLanguage;
 
 class OfferController extends Controller
@@ -72,18 +72,14 @@ class OfferController extends Controller
                 $offer->minimum_price = intval($body['offer-minimum-price']);
             }
 
-            if ($offer->validate()) {
-                echo "Offer is valid";
-            }
-
-            if ($offer->save()) {
-                echo "Offer created successfully";
-            }
-
-//            echo "<pre>";
-//            var_dump($category);
-//            var_dump(date('Y-m-d'));
-//            echo "</pre>";
+//            if ($offer->validate()) {
+//                echo "Offer is valid";
+//            }
+//
+//            if ($offer->save()) {
+//                echo "Offer created successfully";
+//            }
+            $offer->save();
 
             // Add tags to the offer
             if (array_key_exists('tags', $body)) {
@@ -93,8 +89,6 @@ class OfferController extends Controller
                     $offer->addTag($tagModel->id);
                 }
             }
-
-//            echo "tags added";
 
             // Creation of complementary informations
             if ($category === 'visit') {
@@ -114,7 +108,6 @@ class OfferController extends Controller
                 }
 
                 $visit->save();
-//                echo "visit created";
             } elseif ($category === 'activity'){
                 $activity = new ActivityOffer();
                 $activity->offer_id = $offer->id;
@@ -150,6 +143,25 @@ class OfferController extends Controller
                 $attraction->required_age = intval($body['attraction-min-age']);
                 $attraction->url_image_park_map = Application::$app->storage->saveFile('attraction-parc-map', 'offers/attraction-parc');
                 $attraction->save();
+            }
+
+            // Save schedules for restaurant, activity and attraction park offer
+            foreach ($body['schedules'] as $dayIndex => $scheduleFields) {
+                if ($scheduleFields['open'] !== '' && $scheduleFields['close'] !== '') {
+                    $schedule = new OfferSchedule();
+                    $schedule->day = $dayIndex + 1;
+                    $schedule->opening_hours = $scheduleFields['open'];
+                    $schedule->closing_hours = $scheduleFields['close'];
+                    $schedule->save();
+
+                    if ($category === 'restaurant') {
+                        $restaurant->addSchedule($schedule->id);
+                    } else if ($category === 'activity') {
+                        $activity->addSchedule($schedule->id);
+                    } else if ($category === 'attraction-park') {
+                        $attraction->addSchedule($schedule->id);
+                    }
+                }
             }
 
             // Save photos

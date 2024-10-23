@@ -158,7 +158,6 @@ switchPeriod.addEventListener('input', (e) => {
 })
 
 
-
 // -------------------------------------------------------------------------- //
 // Fill the SCHEDULE table with all the days of the week
 // -------------------------------------------------------------------------- //
@@ -167,18 +166,18 @@ let scheduleTable = document.querySelector('#schedule-table');
 let days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 let scheduleTableBody = scheduleTable.querySelector('tbody#schedules-rows');
 
-days.forEach(day => {
+days.forEach((day, index) => {
     scheduleTableBody.innerHTML += `
         <tr>
             <td>${day}</td>
             <td>
                 <div class="flex justify-center">
-                    <input type="time" name="schedules[${day}][open]">
+                    <input type="time" name="schedules[${index}][open]">
                 </div>
             </td>
             <td>
                 <div class="flex justify-center">
-                    <input type="time" name="schedules[${day}][close]">
+                    <input type="time" name="schedules[${index}][close]">
                 </div>
             </td>
         </tr>
