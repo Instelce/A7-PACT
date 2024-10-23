@@ -40,9 +40,9 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
                                                                     (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451),
                                                                     (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326),
-                                                                    (16, null,'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
-                                                                    (17, null,'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
-                                                                    (18, null,'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104)
+                                                                    (16, 1,'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
+                                                                    (17, 1,'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
+                                                                    (18, 1,'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104)
                                                                     ;");
 
 // ---------------------------------------------------------------------- //
@@ -52,8 +52,7 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
                                                                     (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
                                                                     (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, 	-3.474171, 	48.800755),
-                                                                    (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
-                                                                    (24, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104);");
+                                                                    (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326);");
 
 
 // ---------------------------------------------------------------------- //
