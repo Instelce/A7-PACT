@@ -353,9 +353,10 @@ $db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $off
 
 //add tags
 
-$tagsRecree = ['attractions', 'sensations', 'manèges', 'enfants', 'famille', 'parc', 'verdoyant', 'évasion'];
+$tagsVallee = ['granit', 'statues', 'jeu de piste', 'enfants', 'imagination', 'culture bretonne'];
 
-foreach ($tagsRecree as $tagName) {
+
+foreach ($tagsVallee as $tagName) {
     $tagName = strtolower($tagName);
     $tag = OfferTag::findOne(['name' => $tagName]);
     if (!$tag) {
@@ -365,11 +366,11 @@ foreach ($tagsRecree as $tagName) {
     }
 }
 
-foreach ($tagsRecree as $tagName) {
+foreach ($tagsVallee as $tagName) {
     $tagName = strtolower($tagName);
     $tagModel = OfferTag::findOne(['name' => $tagName]);
     if ($tagModel) {
-        $offre9->addTag($tagModel->id);
+        $offre10->addTag($tagModel->id);
     } else {
         echo "Tag '$tagName' not found.\n";
     }
