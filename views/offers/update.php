@@ -6,7 +6,8 @@
 
 use app\core\Application;
 use app\core\form\Form;
-var_dump($offer);
+
+//var_dump($offer);
 
 $this->title = "Création d'une offre";
 $this->jsFile = "offerUpdate";
@@ -37,19 +38,6 @@ $form = new Form();
                     <?php echo $form->field($model, 'title') ?>
                     <?php echo $form->textarea($model, 'summary') ?>
                     <?php echo $form->textarea($model, 'description') ?>
-
-                    <!-- Category of the offer -->
-                    <x-select id="category" name="category" required>
-                        <label slot="label">Catégorie</label>
-                        <span slot="trigger">Choisir une categorie</span>
-                        <div slot="options">
-                            <div data-value="visit">Visite</div>
-                            <div data-value="activity">Activité</div>
-                            <div data-value="restaurant">Restaurant</div>
-                            <div data-value="show">Spectacle</div>
-                            <div data-value="attraction-parc">Parc d'attraction</div>
-                        </div>
-                    </x-select>
 
                     <!-- Tags of the category -->
                     <!-- Generated in the offerCreate.js -->

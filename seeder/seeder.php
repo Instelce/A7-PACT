@@ -4,6 +4,7 @@ use app\core\Application;
 use app\models\account\Account;
 use app\models\Address;
 use app\models\offer\Offer;
+use app\models\offer\OfferOption;
 use app\models\offer\OfferTag;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -46,7 +47,7 @@ echo "Adding addresses for users...\n";
 $password = password_hash("1234", PASSWORD_DEFAULT);
 $lastId = $db->pdo->lastInsertId();
 $db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4);");
-$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl, address_id) VALUES (1, 'admin@test.com', '". $password ."', 'https://placehold.co/400', ". $lastId - 3 ."), (2, 'member@test.com', '". $password ."', 'https://placehold.co/400', ". $lastId - 2 ."), (3, 'public-pro@test.com', '". $password ."', 'https://placehold.co/400', ". $lastId - 1 ."), (4, 'private-pro@test.com', '". $password ."', 'https://placehold.co/400', ". $lastId .");");
+$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl, address_id) VALUES (1, 'admin@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId - 3 . "), (2, 'member@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId - 2 . "), (3, 'public-pro@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId - 1 . "), (4, 'private-pro@test.com', '" . $password . "', 'https://placehold.co/400', " . $lastId . ");");
 $db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1);");
 $db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'Super entreprise', '1548759863254125', '07/25', '123');");
 
@@ -62,21 +63,24 @@ $db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 
 echo "Creating offer types...\n";
 
 $categories = ['activity', 'attraction_park', 'restaurant', 'show', 'visit'];
+$words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore', 'magna', 'aliqua', 'ut', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud', 'exercitation', 'ullamco', 'laboris', 'nisi', 'ut', 'aliquip', 'ex', 'ea', 'commodo', 'consequat', 'duis', 'aute', 'irure', 'dolor', 'in', 'reprehenderit', 'in', 'voluptate', 'velit', 'esse', 'cillum', 'dolore', 'eu', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint', 'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'in', 'culpa', 'qui', 'officia', 'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum'];
+$options = [OfferOption::EN_RELIEF, OfferOption::A_LA_UNE];
 
 // Create random offers for testing
 for ($i = 0; $i < 10; $i++) {
     $address = new Address();
-    $address -> number = rand(20, 40);
-    $address -> street = "Edouard Branly";
-    $address -> city = "Lannion";
-    $address -> postal_code = 22300;
-    $address -> longitude = 41.000;
-    $address -> latitude = -15.000;
-    $address -> save();
+    $address->number = rand(20, 40);
+    $address->street = "Edouard Branly";
+    $address->city = "Lannion";
+    $address->postal_code = 22300;
+    $address->longitude = 41.000;
+    $address->latitude = -15.000;
+    $address->save();
 
     $offer = new Offer();
-    $offer->title = "Offer $i";
-    $offer->summary = "Summary $i";
+    $offer->title = ucfirst(implode(' ', array_map(fn() => $words[array_rand($words)], range(1, 5))));
+    $offer->summary = ucfirst(implode(' ', array_map(fn() => $words[array_rand($words)], range(1, 10))));
+    $offer->description = ucfirst(implode(' ', array_map(fn() => $words[array_rand($words)], range(1, 20))));
     $offer->description = "Description $i";
     $offer->likes = rand(0, 100);
     $offer->offline = rand(0, 1);
@@ -87,6 +91,7 @@ for ($i = 0; $i < 10; $i++) {
     $offer->website = "https://example.com/$i";
     $offer->phone_number = "0123456789";
     $offer->category = $categories[rand(0, 4)];
+    $offer->minimum_price = rand(0, 100);
     $offer->offer_type_id = rand(1, 2);
     $offer->professional_id = rand(3, 4);
     $offer->address_id = $address->id;
@@ -106,15 +111,20 @@ for ($i = 0; $i < 10; $i++) {
 
     // Add specific data for category
     if ($offer->category === 'activity') {
-        $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES (". $offer->id . ", 2, 10);");
+        $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES (" . $offer->id . ", 2, 10);");
     } elseif ($offer->category === 'attraction_park') {
-        $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (". $offer->id . ", 'https://placehold.co/400', 10, 10);");
+        $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offer->id . ", 'https://placehold.co/400', 10, 10);");
     } elseif ($offer->category === 'restaurant') {
-        $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (". $offer->id . ", 'https://placehold.co/400', ". rand(1, 3) .");");
+        $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (" . $offer->id . ", 'https://placehold.co/400', " . rand(1, 3) . ");");
     } elseif ($offer->category === 'show') {
-        $db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity) VALUES (". $offer->id . ", 3, 30);");
+        $db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity) VALUES (" . $offer->id . ", 3, 30);");
     } elseif ($offer->category === 'visit') {
-        $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration,  guide) VALUES (". $offer->id . ", 2, false);");
+        $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration,  guide) VALUES (" . $offer->id . ", 2, false);");
+    }
+
+    // Add option
+    if (rand(1, 2) === 1) {
+        $offer->addOption($options[array_rand($options)], date('Y-m-d'), rand(1, 4));
     }
 }
 echo "Creating random offers...\n";

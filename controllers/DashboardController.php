@@ -39,21 +39,29 @@ class DashboardController extends Controller
 
         $offersOption = [];
         foreach ($offers as $offer) {
-            $offersOption[] = OfferOption::findOne(['id' => $offer->offer_option]);
+            $offersOption[] = OfferOption::findOne(['offer_id' => $offer->id]);
+        }
+
+        $specificData = [];
+        foreach ($offers as $offer) {
+            $specificData[] = $offer->specificData();
         }
 
         return $this->render('/dashboard/offres', [
             'offers' => $offers,
             'photos' => $photos,
             'offersType' => $offersType,
-            'offersOption' => $offersOption
+            'offersOption' => $offersOption,
+            'specificData' => $specificData
         ]);
     }
+
     public function avis(Request $request, Response $response)
     {
         $this->setLayout('back-office');
         return $this->render('/dashboard/avis');
     }
+
     public function factures(Request $request, Response $response)
     {
         $this->setLayout('back-office');

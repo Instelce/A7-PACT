@@ -101,6 +101,10 @@ Default size is medium.
     padding: 1rem 2.5rem;
 }
 
+.button.fit {
+    padding: .8rem 1.2rem;
+}
+
 .button.only-icon {
     padding: 0;
 }

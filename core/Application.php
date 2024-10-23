@@ -33,6 +33,7 @@ class Application
 
     public function __construct(string $rootPath, array $config)
     {
+        setlocale(LC_TIME, 'fr_FR.UTF-8');
         error_reporting(E_ERROR | E_PARSE);
 
         self::$ROOT_DIR = $rootPath;
