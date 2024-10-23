@@ -38,7 +38,11 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (12,90,'rue de Lille','Asnières-sur-Seine',92600,2.285369,48.914155),
                                                                     (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
                                                                     (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451),
-                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326);");
+                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326),
+                                                                    (16, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
+                                                                    (17, 0, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
+                                                                    (18, 0, 'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104)
+                                                                    ;");
 
 // ---------------------------------------------------------------------- //
 // create offer adress
@@ -54,40 +58,39 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 // ---------------------------------------------------------------------- //
 // create users
 // ---------------------------------------------------------------------- //
-$db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4),(5);");
+$db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4), (5), (6), (7), (8), (9), (10);");
 $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl, address_id) VALUES 
                                                                      (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11), 
                                                                      (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',12), 
                                                                      (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg',13),
                                                                      (5, 'rance.evasion@gmail.com', '" . $password . "', 'https://fr.web.img5.acsta.net/pictures/16/05/17/12/17/360795.jpg', 15),
-
                                                                      (4, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14),
-                                                                     (8, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14),
-                                                                     (9, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14),
-                                                                     (10, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14);");
+                                                                     (8, 'brehat@gmail.com', '" . $password . "', 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png',16),
+                                                                     (9, 'recree_trois_cures@gmail.com', '" . $password . "', 'https://www.larecredes3cures.com/app/uploads/2024/04/vertika-la-recre-des-3-cures-scaled-910x668-c-center.jpg',17),
+                                                                     (10, 'valleedessaints@gmail.com', '" . $password . "', 'https://media.letelegramme.fr/api/v1/images/view/637cf1668f4302361f300639/web_golden_xl/637cf1668f4302361f300639.1',18);");
 
 // ---------------------------------------------------------------------- //
 // create means of payment
 // ---------------------------------------------------------------------- //
 
-$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1),(2);");
-$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'Fred port', '1548759863254125', '07/25', '123'),(2,'Rance Evasion','4287621589632154','08/29','123');");
+$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1), (2), (3);");
+$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'Fred port', '1548759863254125', '07/25', '123'),(2,'Rance Evasion','4287621589632154','08/29','123'), (3,'Recrée des 3 curés','5168789654123654','08/27','458');");
 
 $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 
 $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VeilleArbre', TRUE);");
 
-$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034'), (4, 7421, 'Fred port', '65941542000012'),(5,8452,'Rance Evasion','26915441000024');");
+$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034'), (4, 7421, 'Fred port', '65941542000012'),(5,8452,'Rance Evasion','26915441000024'), (8, 9587, 'Brehat', '79658412354789'), (9, 7896, 'Récrée des 3 curés', '12548965324785'), (10, 1489, 'La vallée des Saints', '25489600358897');");
 
-$db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3);");
+$db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3), (8), (10);");
 
-$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id) VALUES (4, '2024-11-30', 1),(5,'2024-11-30',2);");
+$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id) VALUES (4, '2024-11-30', 1),(5,'2024-11-30',2),(9, '2024-09-20', 3);");
 
 // ---------------------------------------------------------------------- //
 // create offer types
 // ---------------------------------------------------------------------- //
 
-$db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.98), (2, 'premium', 7.98), (3, 'gratuit', 0);");
+$db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.99), (2, 'premium', 7.99), (3, 'gratuite', 0.00);");
 
 // ---------------------------------------------------------------------- //
 // create offer
@@ -138,25 +141,6 @@ $offre2->save();
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
 
 
-//create balade bréhat
-$offre6 = new Offer();
-$offre6->title = "Traversée et tour de l'île de Brehat";
-$offre6->summary = 'Embarquez à bord de l’un de nos navires pour une traversée ou un tour de l’île. Naviguez loin du flot touristique au cœur d’une zone NATURA 2000.';
-$offre6->description = 'Profitez de notre formule TOUR DE L’ÎLE pour une balade commentée et animée par des passionnés. Vous pourrez admirer l’île par la mer, ses rochers roses, sa côte sauvage et son patrimoine maritime exceptionnel. Les 96 ilots de l’archipel vous offriront un panorama incroyable.
-A l’issue, vous débarquerez sur l’île de Bréhat pour une visite libre. Le retour s’effectuera avec les traversées directes.';
-$offre6->likes = 4012;
-$offre6->offline = 0;
-$offre6->offline_date = null;
-$offre6->last_online_date = "2024-10-01";
-$offre6->view_counter = 20986;
-$offre6->click_counter = 7863;
-$offre6->website = 'https://surmerbrehat.com/';
-$offre6->phone_number = '0677980042';
-$offre6->category = 'activity';
-$offre6->offer_type_id = 2;
-$offre6->professional_id = 8;
-$offre6->address_id = 23;
-$offre6->save();
 
 $offre3 = new Offer();
 $offre3->title = "Promenade en Bateau sur le Canal de la Rance";
@@ -180,6 +164,49 @@ $offre3->save();
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre3->id . ", 1.5, true);");
 
 
+
+//create balade bréhat
+$offre8 = new Offer();
+$offre8->title = "Traversée et tour de l'île de Brehat";
+$offre8->summary = 'Embarquez à bord de l’un de nos navires pour une traversée ou un tour de l’île. Naviguez loin du flot touristique au cœur d’une zone NATURA 2000.';
+$offre8->description = 'Profitez de notre formule TOUR DE L’ÎLE pour une balade commentée et animée par des passionnés. Vous pourrez admirer l’île par la mer, ses rochers roses, sa côte sauvage et son patrimoine maritime exceptionnel. Les 96 ilots de l’archipel vous offriront un panorama incroyable.
+A l’issue, vous débarquerez sur l’île de Bréhat pour une visite libre. Le retour s’effectuera avec les traversées directes.';
+$offre8->likes = 4012;
+$offre8->offline = 0;
+$offre8->offline_date = null;
+$offre8->last_online_date = "2024-10-01";
+$offre8->view_counter = 20986;
+$offre8->click_counter = 7863;
+$offre8->website = 'https://surmerbrehat.com/';
+$offre8->phone_number = '0677980042';
+$offre8->category = 'activity';
+$offre8->offer_type_id = 2;
+$offre8->professional_id = 8;
+$offre8->address_id = 16;
+$offre8->save();
+
+$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age, price) VALUES ($offre8->id, 1.0, 3, 15.0);");
+
+
+$offre9 = new Offer();
+$offre9->title = "La Récrée des 3 Curés";
+$offre9->summary = 'Amateurs de sensations fortes, venez profiter au plus grand parc d’attractions breton la Récrée des trois curés';
+$offre9->description = 'Plongez dans l’aventure au Parc d’attractions La Récré des Trois Curés à Milizac ! Sur ses 17 hectares, des dizaines d’attractions captivantes attendent petits et grands. Des manèges palpitants aux aires de jeux dédiées aux plus petits, ce lieu offre une évasion totale dans un cadre verdoyant. Adultes, ados et enfants, tous y trouveront leur bonheur pour une journée d’amusement garantie.';
+$offre9->likes = 100841;
+$offre9->offline = 0;
+$offre9->offline_date = null;
+$offre9->last_online_date = "2024-9-01";
+$offre9->view_counter = 542321;
+$offre9->click_counter = 35874;
+$offre9->website = 'https://www.larecredes3cures.com/';
+$offre9->phone_number = '0298079559';
+$offre9->category = 'attraction_park';
+$offre9->offer_type_id = 2;
+$offre9->professional_id = 9;
+$offre9->address_id = 17;
+$offre9->save();
+
+$db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES ($offre9->id, 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
 
 
 // ---------------------------------------------------------------------- //
@@ -228,22 +255,60 @@ $photosGaulois3->save();
 $photosPromenade1 = new OfferPhoto();
 $photosPromenade1->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/ae/1c/32/a-bord-du-meissa.jpg?w=1200&h=-1&s=1';
 $photosPromenade1->offer_id = $offre3->id;
+$photosPromenade1->save();
 
 $photosPromenade2 = new OfferPhoto();
 $photosPromenade2->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/ae/15/59/a-bord-du-meissa.jpg?w=1200&h=-1&s=1';
 $photosPromenade2->offer_id = $offre3->id;
+$photosPromenade2->save();
 
 $photosPromenade3 = new OfferPhoto();
 $photosPromenade3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/ae/13/9b/a-bord-du-meissa.jpg?w=1200&h=-1&s=1';
 $photosPromenade3->offer_id = $offre3->id;
+$photosPromenade3->save();
 
 // ---------------------------------------------------------------------- //
 // photos offre4
 // ---------------------------------------------------------------------- //
 
 
+// ---------------------------------------------------------------------- //
+// photos offre8
+// ---------------------------------------------------------------------- //
 
+$photoBrehat1 = new OfferPhoto();
+$photoBrehat1->url_photo = 'https://www.theisland-list.com/wp-content/uploads/2023/05/brehat1.jpg';
+$photoBrehat1->offer_id = $offre8->id;
+$photoBrehat1->save();
 
+$photoBrehat2 = new OfferPhoto();
+$photoBrehat2->url_photo = 'https://cdt22.media.tourinsoft.eu/upload/Brehat-2020-06-ile-du-guerzido-oeil-de-paco.jpg';
+$photoBrehat2->offer_id = $offre8->id;
+$photoBrehat2->save();
+
+$photoBrehat3 = new OfferPhoto();
+$photoBrehat3->url_photo = 'https://cdn.artphotolimited.com/images/58bd704f04799b000f623d31/1000x1000/ile-de-brehat-2.jpg';
+$photoBrehat3->offer_id = $offre8->id;
+$photoBrehat3->save();
+
+// ---------------------------------------------------------------------- //
+// photos offre9
+// ---------------------------------------------------------------------- //
+
+$photoRecree1 = new OfferPhoto();
+$photoRecree1->url_photo = 'https://www.parcs-france.com/wp-content/uploads/parc-recredes3cures-ouverture-tarif-nouveaute.jpg';
+$photoRecree1->offer_id = $offre9->id;
+$photoRecree1->save();
+
+$photoRecree2 = new OfferPhoto();
+$photoRecree2->url_photo = 'https://29.recreatiloups.com/wp-content/uploads/sites/3/2014/10/spoontus-recre-milizac.jpg';
+$photoRecree2->offer_id = $offre9->id;
+$photoRecree2->save();
+
+$photoRecree3 = new OfferPhoto();
+$photoRecree3->url_photo = 'https://www.brest-terres-oceanes.fr/wp-content/uploads/2018/06/DSC03057.jpg';
+$photoRecree3->offer_id = $offre9->id;
+$photoRecree3->save();
 
 echo "Database seeded successfully.\n";
 

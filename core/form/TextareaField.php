@@ -16,13 +16,12 @@ class TextareaField extends BaseField
     {
         return sprintf('<x-input %s>
                     <p slot="label">%s</p>
-                    <textarea slot="input" id="%s" type="%s" name="%s" value="%s" placeholder="%s" %s></textarea>
+                    <textarea slot="input" id="%s" name="%s" value="%s" placeholder="%s" %s></textarea>
                     %s
         </x-input>',
             $this->model->hasError($this->attr) ? 'data-invalid' : '', // other class
             $this->model->getLabel($this->attr) ?? ucfirst($this->attr), // label
             $this->attr, // id
-            $this->type, // type
             $this->attr, // name
             $this->model->{$this->attr}, // value
             $this->model->getPlaceholder($this->attr) ?? '', // placeholder

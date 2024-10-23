@@ -92,7 +92,7 @@ abstract class Model
                     if (!preg_match($pattern, $value)) {
                         $this->addError($attr, self::RULE_MATCH, $rule);
                     } else {
-                        [$year, $month, $date] = explode('-', $value);
+                        [$year, $month, $day] = explode('-', $value);
                         if (!checkdate($month, $day, $year)) {
                             $this->addError($attr, self::RULE_MATCH);
                         }
