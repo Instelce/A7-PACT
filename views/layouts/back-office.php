@@ -56,7 +56,7 @@ use app\core\Application;
         <a href="/dashboard" class="link pro">Mon dashboard</a>
 
         <!-- For dev -->
-        <?php if (Application::$app->isAuthenticated()) { ?>
+        <?php if (Application::$app->isAuthenticated() && $_ENV['APP_ENVIRONMENT'] === 'dev') { ?>
             <div class="flex gap-1">
                 <?php if (Application::$app->user->isPrivateProfessional()) { ?>
                     <p>private</p>

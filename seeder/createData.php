@@ -209,6 +209,8 @@ $offre3->save();
 
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre3->id . ", 1.5, true);");
 
+$db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre3->id . ", 'français'), (" . $offre3->id . ", 'anglais')");
+
 //add tags
 
 $tagsPromenade = ['bateau', 'canal', 'Dinan', 'Saint-Samson-sur-Rance', 'paysage', 'intime', 'relaxant', 'patrimoine'];
@@ -289,7 +291,7 @@ $offre9->description = 'Plongez dans l’aventure au Parc d’attractions La Ré
 $offre9->likes = 100841;
 $offre9->offline = 0;
 $offre9->offline_date = null;
-$offre9->last_online_date = "2024-9-01";
+$offre9->last_online_date = "2024-09-01";
 $offre9->view_counter = 542321;
 $offre9->click_counter = 35874;
 $offre9->website = 'https://www.larecredes3cures.com/';
@@ -300,7 +302,54 @@ $offre9->professional_id = 9;
 $offre9->address_id = 17;
 $offre9->save();
 
-$db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES ($offre9->id, 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
+$db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre9->id . ", 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
+
+//add tags
+
+$tagsRecree = ['attractions', 'sensations', 'manèges', 'enfants', 'famille', 'parc', 'verdoyant', 'évasion'];
+
+foreach ($tagsRecree as $tagName) {
+    $tagName = strtolower($tagName);
+    $tag = OfferTag::findOne(['name' => $tagName]);
+    if (!$tag) {
+        $tag = new OfferTag();
+        $tag->name = $tagName;
+        $tag->save();
+    }
+}
+
+foreach ($tagsRecree as $tagName) {
+    $tagName = strtolower($tagName);
+    $tagModel = OfferTag::findOne(['name' => $tagName]);
+    if ($tagModel) {
+        $offre9->addTag($tagModel->id);
+    } else {
+        echo "Tag '$tagName' not found.\n";
+    }
+}
+
+
+$offre10 = new Offer();
+$offre10->title = "Vallée des Saints";
+$offre10->summary = 'Il y a de la magie dans ce site hors norme. Un peu comme sur l’île de Pâques... mais à la manière bretonne ! ';
+$offre10->description = 'Au coeur de Carnoët, vous vous promènerez au milieu de géants de granit. Le site compte 180 statues, dont certaines atteignent 7 mètres de haut ! Véritable jeu de piste pour les enfants, demandez-leur de trouver Sainte Riwanon ou Sainte Katell, et laissez place à votre imagination.';
+$offre10->likes = 2014;
+$offre10->offline = 1;
+$offre10->offline_date = null;
+$offre10->last_online_date = "2023-01-12";
+$offre10->view_counter = 14856;
+$offre10->click_counter = 3101;
+$offre10->website = 'https://www.lavalleedessaints.com/';
+$offre10->phone_number = '0296916226';
+$offre10->category = 'visit_offer';
+$offre10->offer_type_id = 1;
+$offre10->professional_id = 10;
+$offre10->address_id = 18;
+$offre10->save();
+
+$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre10->id . ", 2.5, false);");
+
+$db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre10->id . ", 'français')");
 
 //add tags
 

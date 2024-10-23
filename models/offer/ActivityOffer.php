@@ -16,7 +16,7 @@ class ActivityOffer extends DBModel {
 
     public function attributes(): array
     {
-        return ['duration', 'required_age', 'price'];
+        return ['offer_id', 'duration', 'required_age', 'price'];
     }
 
     public static function pk(): string

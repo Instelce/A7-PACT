@@ -33,6 +33,8 @@ class Application
 
     public function __construct(string $rootPath, array $config)
     {
+        error_reporting(E_ERROR | E_PARSE);
+
         self::$ROOT_DIR = $rootPath;
         self::$app = $this;
 

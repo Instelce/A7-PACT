@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\core\Application;
 use app\core\Controller;
+use app\core\exceptions\NotFoundException;
 use app\core\middlewares\AuthMiddleware;
 use app\core\middlewares\BackOfficeMiddleware;
 use app\core\Request;
@@ -37,10 +38,10 @@ class OfferController extends Controller
 
         if ($request->isPost()) {
             $body = $request->getBody();
-            echo "<pre>";
-            var_dump($_FILES);
-            var_dump($request->getBody());
-            echo "</pre>";
+//            echo "<pre>";
+//            var_dump($_FILES);
+//            var_dump($request->getBody());
+//            echo "</pre>";
 
             // Retrieve the offer type
             $offer_type = OfferType::findOne(['type' => $request->getBody()['type']]);
@@ -73,10 +74,10 @@ class OfferController extends Controller
                 echo "Offer created successfully";
             }
 
-            echo "<pre>";
-            var_dump($category);
-            var_dump(date('Y-m-d'));
-            echo "</pre>";
+//            echo "<pre>";
+//            var_dump($category);
+//            var_dump(date('Y-m-d'));
+//            echo "</pre>";
 
             // Add tags to the offer
             if (array_key_exists('tags', $body)) {
@@ -87,7 +88,7 @@ class OfferController extends Controller
                 }
             }
 
-            echo "tags added";
+//            echo "tags added";
 
             // Creation of complementary informations
             if ($category === 'visit') {
@@ -96,15 +97,18 @@ class OfferController extends Controller
                 $visit->duration = Utils::convertHourToFloat($body['visit-duration']);
                 $visit->guide = array_key_exists('visit-guide', $body) ? 1 : 0;
 
-                // TODO - change to fields values
-                $period = new OfferPeriod();
-                $period->start_date = date('Y-m-d');
-                $period->end_date = date('Y-m-d');
-                $period->save();
+                // Create the period
+                if (array_key_exists('period-start', $body)) {
+                    $period = new OfferPeriod();
+                    $period->start_date = $body['period-start'];
+                    $period->end_date = $body['period-end'];
+                    $period->save();
 
-                $visit->period_id = $period->id;
+                    $visit->period_id = $period->id;
+                }
+
                 $visit->save();
-                echo "visit created";
+//                echo "visit created";
             } elseif ($category === 'activity'){
                 $activity = new ActivityOffer();
                 $activity->offer_id = $offer->id;
@@ -124,13 +128,16 @@ class OfferController extends Controller
                 $show->duration = Utils::convertHourToFloat($body['show-duration']);
                 $show->capacity = intval($body['show-capacity']);
 
-                // TODO - change to fields values
-                $period = new OfferPeriod();
-                $period->start_date_date = date('Y-m-d');
-                $period->end_date = date('Y-m-d');
-                $period->save();
+                // Create the period
+                if (array_key_exists('period-start', $body)) {
+                    $period = new OfferPeriod();
+                    $period->start_date = $body['period-start'];
+                    $period->end_date = $body['period-end'];
+                    $period->save();
 
-                $show->period_id = $period->id;
+                    $show->period_id = $period->id;
+                }
+
                 $show->save();
             } elseif ($category === 'attraction-parc') {
                 $attraction = new AttractionParkOffer();
@@ -145,15 +152,39 @@ class OfferController extends Controller
             foreach ($files as $file) {
                 $offer->addPhoto($file);
             }
+
+            // TODO - validate all fields
+            // if all fields are valid redirect to the payment page
+
+            return $response->redirect('/offres/' . $offer->id . '/payment');
         }
+
 
         return $this->render('offers/create', [
             'model' => $offer,
         ]);
     }
 
+    public function payment(Request $request, Response $response, $routeParams)
+    {
+        $this->setLayout('back-office');
+        $offer = Offer::findOne(['id' => $routeParams['pk']]);
+
+        if (!$offer) {
+            throw new NotFoundException();
+        }
+
+        return $this->render('offers/payment', [
+            'offer' => $offer
+        ]);
+    }
+
     public function detail(Request $request, Response $response, $routeparams)
     {
+        if (Application::$app->isAuthenticated()) {
+            $this->setLayout('back-office');
+        }
+
         $id = $routeparams['pk'];
         $offerData = [];
         $offer = Offer::findOne(['id' => $id]);
