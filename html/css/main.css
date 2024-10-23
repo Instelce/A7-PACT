@@ -135,7 +135,7 @@ a {
 
 @keyframes to-hidden {
     0% {
-        opacity: 1;
+        opacity : 1;
     }
 
     80% {

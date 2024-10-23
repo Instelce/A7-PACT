@@ -39,11 +39,7 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (12,90,'rue de Lille','Asnières-sur-Seine',92600,2.285369,48.914155),
                                                                     (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
                                                                     (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451),
-                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326),
-                                                                    (16, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
-                                                                    (17, 0, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
-                                                                    (18, 0, 'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104),
-                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230,48.041895277402126, -1.6674224847189223)");
+                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326);");
 
 // ---------------------------------------------------------------------- //
 // create offer adress
@@ -53,7 +49,11 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
                                                                     (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, 	-3.474171, 	48.800755),
                                                                     (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
-                                                                    (24, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104);");
+                                                                    (24, 13, 'Rue des Ruees', 'Tréhorenteuc', 56430, 48.00799182324886, -2.2850415831640905),
+                                                                    (16, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
+                                                                    (17, 0, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
+                                                                    (18, 0, 'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104),
+                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230,48.041895277402126, -1.6674224847189223);");
 
 
 // ---------------------------------------------------------------------- //
@@ -491,9 +491,15 @@ $photosGaulois1->offer_id = $offre2->id;
 $photosGaulois1->save();
 
 $photosGaulois3 = new OfferPhoto();
-$photosGaulois3->url_photo = 'https://www.levillagegaulois.org/php/img/accueil/accueil.jpg';
+$photosGaulois3->url_photo = 'https://static.actu.fr/uploads/2023/07/camp-romain-village-gaulois.jpg';
 $photosGaulois3->offer_id = $offre2->id;
 $photosGaulois3->save();
+
+$photosGaulois4 = new OfferPhoto();
+$photosGaulois4->url_photo = 'https://www.village-gaulois.org/wp-content/uploads/2024/06/unsiteuniqueeneurope-image-pecheurs.jpg';
+$photosGaulois4->offer_id = $offre2->id;
+$photosGaulois4->save();
+
 
 // ---------------------------------------------------------------------- //
 // photos offre3
@@ -568,23 +574,30 @@ $photoRecree3->url_photo = 'https://www.brest-terres-oceanes.fr/wp-content/uploa
 $photoRecree3->offer_id = $offre9->id;
 $photoRecree3->save();
 
+$photoRecree4 = new OfferPhoto();
+$photoRecree4->url_photo = 'https://media.letelegramme.fr/api/v1/images/view/63b9e6efbbe84b391253d21b/web_golden_xl/63b9e6efbbe84b391253d21b.1';
+$photoRecree4->offer_id = $offre9->id;
+$photoRecree4->save();
+
+
+
 
 // ---------------------------------------------------------------------- //
-// photos offre9
+// photos offre10
 // ---------------------------------------------------------------------- //
 
 $photovalleedessaints1 = new OfferPhoto();
-$photovalleedessaints1->url_photo = 'https://www.parcs-france.com/wp-content/uploads/parc-recredes3cures-ouverture-tarif-nouveaute.jpg';
+$photovalleedessaints1->url_photo = 'https://www.francetvinfo.fr/pictures/Q1e3C7l3TscaP5lbRMjbNRTynVk/fit-in/720x/2019/08/11/phpHz9llI.jpg';
 $photovalleedessaints1->offer_id = $offre10->id;
 $photovalleedessaints1->save();
 
 $photovalleedessaints2 = new OfferPhoto();
-$photovalleedessaints2->url_photo = 'https://29.recreatiloups.com/wp-content/uploads/sites/3/2014/10/spoontus-recre-milizac.jpg';
+$photovalleedessaints2->url_photo = 'https://www.tourismebretagne.com/app/uploads/crt-bretagne/2018/10/la-vallee-des-saints-3-640x480.jpg';
 $photovalleedessaints2->offer_id = $offre10->id;
 $photovalleedessaints2->save();
 
 $photovalleedessaints3 = new OfferPhoto();
-$photovalleedessaints3->url_photo = 'https://www.brest-terres-oceanes.fr/wp-content/uploads/2018/06/DSC03057.jpg';
+$photovalleedessaints3->url_photo = 'https://static.actu.fr/uploads/2020/09/img-1876-960x640.jpg';
 $photovalleedessaints3->offer_id = $offre10->id;
 $photovalleedessaints3->save();
 
