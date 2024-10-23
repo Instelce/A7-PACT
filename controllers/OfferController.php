@@ -67,6 +67,11 @@ class OfferController extends Controller
             $offer->offer_type_id = $offer_type->id;
             $offer->address_id = $address->id;
 
+            // Offer minimum price
+            if (array_key_exists('offer-minimum-price', $body) && $category !== 'restaurant') {
+                $offer->minimum_price = intval($body['offer-minimum-price']);
+            }
+
             if ($offer->validate()) {
                 echo "Offer is valid";
             }
@@ -115,13 +120,12 @@ class OfferController extends Controller
                 $activity->offer_id = $offer->id;
                 $activity->duration = Utils::convertHourToFloat($body['activity-duration']);
                 $activity->required_age = intval($body['activity-age']);
-                $activity->price = intval($body['activity-price']);
                 $activity->save();
             } elseif ($category === 'restaurant') {
                 $restaurant = new RestaurantOffer();
+                $restaurant->offer_id = $offer->id;
                 $restaurant->url_image_carte = Application::$app->storage->saveFile('restaurant-image', 'offers/restaurant');
-                $restaurant->minimum_price = intval($body['restaurant-min-price']);
-                $restaurant->maximum_price = intval($body['restaurant-max-price']);
+                $restaurant->range_price = intval($body['restaurant-range-price']);
                 $restaurant->save();
             } elseif ($category === 'show') {
                 $show = new ShowOffer();

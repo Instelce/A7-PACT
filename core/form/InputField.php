@@ -7,9 +7,9 @@ use app\core\Model;
 class InputField extends BaseField
 {
     public const TEXT_TYPE = 'text';
+    public const NUMBER_TYPE = 'number';
     public const EMAIL_TYPE = 'email';
     public const PASSWORD_TYPE = 'password';
-    public const NUMBER_TYPE = 'number';
 
     public string $type;
 
@@ -22,6 +22,12 @@ class InputField extends BaseField
     public function passwordField()
     {
         $this->type = self::PASSWORD_TYPE;
+        return $this;
+    }
+
+    public function numberField()
+    {
+        $this->type = self::NUMBER_TYPE;
         return $this;
     }
 
