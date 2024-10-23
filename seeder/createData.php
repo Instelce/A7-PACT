@@ -4,6 +4,7 @@ use app\core\Application;
 use app\models\account\Account;
 use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
+use app\models\offer\OfferTag;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -50,7 +51,7 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
                                                                     (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
-                                                                    (22, 1, 'Rue de la Corderie', 'Lannion', 22300, -3.4597, 48.7326),
+                                                                    (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, 	-3.474171, 	48.800755),
                                                                     (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
                                                                     (24, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104);");
 
@@ -114,8 +115,31 @@ $offre1->address_id = 21;
 $offre1->offer_type_id = 1;
 $offre1->save();
 
+//type offres
 $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, minimum_price, maximum_price) VALUES (" . $offre1->id . ", 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/21/f5/07/e3/cafe-des-halles.jpg?w=700&h=-1&s=1', 12, 20);");
 
+//add tags
+$tagsCafe = ['café', 'bar', 'brasserie', 'terrasse', 'convivial', 'burger', 'chaleureux', 'vege friendly', 'familial'];
+
+foreach ($tagsCafe as $tagName) {
+    $tagName = strtolower($tagName);
+    $tag = OfferTag::findOne(['name' => $tagName]);
+    if (!$tag) {
+        $tag = new OfferTag();
+        $tag->name = $tagName;
+        $tag->save();
+    }
+}
+
+foreach ($tagsCafe as $tagName) {
+    $tagName = strtolower($tagName);
+    $tagModel = OfferTag::findOne(['name' => $tagName]);
+    if ($tagModel) {
+        $offre1->addTag($tagModel->id);
+    } else {
+        echo "Tag '$tagName' not found.\n";
+    }
+}
 
 //create village gaulois
 $offre2 = new Offer();
@@ -140,6 +164,28 @@ $offre2->save();
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
 
+//add tags
+$tagsGaulois = ['jeux', 'artisanat', 'famille', 'éducatif', 'culture', 'crêperie', 'solidarité', 'détente'];
+
+foreach ($tagsGaulois as $tagName) {
+    $tagName = strtolower($tagName);
+    $tag = OfferTag::findOne(['name' => $tagName]);
+    if (!$tag) {
+        $tag = new OfferTag();
+        $tag->name = $tagName;
+        $tag->save();
+    }
+}
+
+foreach ($tagsGaulois as $tagName) {
+    $tagName = strtolower($tagName);
+    $tagModel = OfferTag::findOne(['name' => $tagName]);
+    if ($tagModel) {
+        $offre2->addTag($tagModel->id);
+    } else {
+        echo "Tag '$tagName' not found.\n";
+    }
+}
 
 
 $offre3 = new Offer();
@@ -157,7 +203,7 @@ $offre3->website = 'https://www.rance-evasion.fr/';
 $offre3->phone_number = '0786912239';
 $offre3->offer_type_id = 1;
 $offre3->professional_id = 5;
-$offre3->address_id = 21;
+$offre3->address_id = 23;
 $offre3->category = 'visit';
 $offre3->save();
 
@@ -165,9 +211,30 @@ $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . 
 
 $db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre3->id . ", 'français'), (" . $offre3->id . ", 'anglais')");
 
+//add tags
+
+$tagsPromenade = ['bateau', 'canal', 'Dinan', 'Saint-Samson-sur-Rance', 'paysage', 'intime', 'relaxant', 'patrimoine'];
 
 
+foreach ($tagsPromenade as $tagName) {
+    $tagName = strtolower($tagName);
+    $tag = OfferTag::findOne(['name' => $tagName]);
+    if (!$tag) {
+        $tag = new OfferTag();
+        $tag->name = $tagName;
+        $tag->save();
+    }
+}
 
+foreach ($tagsPromenade as $tagName) {
+    $tagName = strtolower($tagName);
+    $tagModel = OfferTag::findOne(['name' => $tagName]);
+    if ($tagModel) {
+        $offre3->addTag($tagModel->id);
+    } else {
+        echo "Tag '$tagName' not found.\n";
+    }
+}
 
 //create balade bréhat
 $offre8 = new Offer();
@@ -189,7 +256,32 @@ $offre8->professional_id = 8;
 $offre8->address_id = 16;
 $offre8->save();
 
-$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age, price) VALUES (" . $offre8->id . ", 1.0, 3, 15.0);");
+$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age, price) VALUES ($offre8->id, 1.0, 3, 15.0);");
+
+//add tags
+$tagsBrehat = ['île', 'traversée', 'nature', 'patrimoine', 'maritime', 'guidée', 'panorama', 'granite rose'];
+
+foreach ($tagsBrehat as $tagName) {
+    $tagName = strtolower($tagName);
+    $tag = OfferTag::findOne(['name' => $tagName]);
+    if (!$tag) {
+        $tag = new OfferTag();
+        $tag->name = $tagName;
+        $tag->save();
+    }
+}
+
+foreach ($tagsBrehat as $tagName) {
+    $tagName = strtolower($tagName);
+    $tagModel = OfferTag::findOne(['name' => $tagName]);
+    if ($tagModel) {
+        $offre8->addTag($tagModel->id);
+    } else {
+        echo "Tag '$tagName' not found.\n";
+    }
+}
+
+
 
 
 $offre9 = new Offer();
@@ -212,7 +304,29 @@ $offre9->save();
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre9->id . ", 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
 
+//add tags
 
+$tagsRecree = ['attractions', 'sensations', 'manèges', 'enfants', 'famille', 'parc', 'verdoyant', 'évasion'];
+
+foreach ($tagsRecree as $tagName) {
+    $tagName = strtolower($tagName);
+    $tag = OfferTag::findOne(['name' => $tagName]);
+    if (!$tag) {
+        $tag = new OfferTag();
+        $tag->name = $tagName;
+        $tag->save();
+    }
+}
+
+foreach ($tagsRecree as $tagName) {
+    $tagName = strtolower($tagName);
+    $tagModel = OfferTag::findOne(['name' => $tagName]);
+    if ($tagModel) {
+        $offre9->addTag($tagModel->id);
+    } else {
+        echo "Tag '$tagName' not found.\n";
+    }
+}
 
 
 $offre10 = new Offer();
@@ -237,6 +351,30 @@ $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . 
 
 $db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre10->id . ", 'français')");
 
+//add tags
+
+$tagsVallee = ['granit', 'statues', 'jeu de piste', 'enfants', 'imagination', 'culture bretonne'];
+
+
+foreach ($tagsVallee as $tagName) {
+    $tagName = strtolower($tagName);
+    $tag = OfferTag::findOne(['name' => $tagName]);
+    if (!$tag) {
+        $tag = new OfferTag();
+        $tag->name = $tagName;
+        $tag->save();
+    }
+}
+
+foreach ($tagsVallee as $tagName) {
+    $tagName = strtolower($tagName);
+    $tagModel = OfferTag::findOne(['name' => $tagName]);
+    if ($tagModel) {
+        $offre10->addTag($tagModel->id);
+    } else {
+        echo "Tag '$tagName' not found.\n";
+    }
+}
 
 // ---------------------------------------------------------------------- //
 // photos offre1
