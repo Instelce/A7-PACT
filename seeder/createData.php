@@ -5,6 +5,12 @@ use app\models\account\Account;
 use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
 use app\models\offer\OfferTag;
+use app\models\offer\RestaurantOffer;
+use app\models\offer\AttractionParkOffer;
+use app\models\offer\ActivityOffer;
+use app\models\Meal;
+use app\models\offer\schedule\OfferSchedule;
+
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -39,11 +45,7 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (12,90,'rue de Lille','Asnières-sur-Seine',92600,2.285369,48.914155),
                                                                     (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
                                                                     (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451),
-                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326),
-                                                                    (16, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
-                                                                    (17, 0, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
-                                                                    (18, 0, 'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104),
-                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230,48.041895277402126, -1.6674224847189223)");
+                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326);");
 
 // ---------------------------------------------------------------------- //
 // create offer adress
@@ -53,14 +55,18 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
                                                                     (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, 	-3.474171, 	48.800755),
                                                                     (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
-                                                                    (24, 0, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104);");
+                                                                    (24, 13, 'Rue des Ruees', 'Tréhorenteuc', 56430, 48.00799182324886, -2.2850415831640905),
+                                                                    (16, 1, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
+                                                                    (17, 1, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
+                                                                    (18, 1, 'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104),
+                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230,48.041895277402126, -1.6674224847189223);");
 
 
 // ---------------------------------------------------------------------- //
 // create users
 // ---------------------------------------------------------------------- //
 $db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4), (5), (6), (7), (8), (9), (10);");
-$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatarUrl, address_id) VALUES 
+$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES 
                                                                      (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11), 
                                                                      (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',12), 
                                                                      (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg',13),
@@ -119,6 +125,38 @@ $offre1->save();
 //type offres
 $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (" . $offre1->id . ", 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/21/f5/07/e3/cafe-des-halles.jpg?w=700&h=-1&s=1',3);");
 
+//repas
+$repas1 = new Meal();
+$repas1->name = 'Galette complète';
+$repas1->save();
+
+$repas2 = new Meal();
+$repas2->name = 'Uncle IPA';
+$repas2->save();
+
+$repas3 = new Meal();
+$repas3->name = 'Crèpe beurre sucre';
+$repas3->save();
+
+$repas4 = new Meal();
+$repas4->name = 'Andouille de Guémené accompagnée d’une purée de carrotte';
+$repas4->save();
+
+$repas5 = new Meal();
+$repas5->name = 'Breizh Tea';
+$repas5->save();
+
+$repas6 = new Meal();
+$repas6->name = 'Far breton';
+$repas6->save();
+
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas1->meal_id);
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas2->meal_id);
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas3->meal_id);
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas4->meal_id);
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas5->meal_id);
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas6->meal_id);
+
 //add tags
 $tagsCafe = ['café', 'bar', 'brasserie', 'terrasse', 'convivial', 'burger', 'chaleureux', 'vege friendly', 'familial'];
 
@@ -141,13 +179,22 @@ foreach ($tagsCafe as $tagName) {
         echo "Tag '$tagName' not found.\n";
     }
 }
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 1, '12h', '23h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 2, '12h', '23h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 3, 'fermé', 'fermé')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 4, '12h', '23h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 5, '12h', '23h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 6, '19h30', '23h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre1->id . ", 7, 'fermé', 'fermé')");
+
+$horaire1o1 = new OfferSchedule(); $horaire1o1->day = 1; $horaire1o1->opening_hours = '12:00'; $horaire1o1->closing_hours = '23:00'; $horaire1o1-> save();
+$horaire2o1 = new OfferSchedule(); $horaire2o1->day = 2; $horaire2o1->opening_hours = '12:00'; $horaire2o1->closing_hours = '23:00'; $horaire2o1-> save();
+$horaire3o1 = new OfferSchedule(); $horaire3o1->day = 3; $horaire3o1->opening_hours = 'fermé'; $horaire3o1->closing_hours = 'fermé'; $horaire3o1-> save();
+$horaire4o1 = new OfferSchedule(); $horaire4o1->day = 4; $horaire4o1->opening_hours = '12:00'; $horaire4o1->closing_hours = '23:00'; $horaire4o1-> save();
+$horaire5o1 = new OfferSchedule(); $horaire5o1->day = 5; $horaire5o1->opening_hours = '12:00'; $horaire5o1->closing_hours = '23:00'; $horaire5o1-> save();
+$horaire6o1 = new OfferSchedule(); $horaire6o1->day = 6; $horaire6o1->opening_hours = '19:30'; $horaire6o1->closing_hours = '23:00'; $horaire6o1-> save();
+$horaire7o1 = new OfferSchedule(); $horaire7o1->day = 7; $horaire7o1->opening_hours = 'fermé'; $horaire7o1->closing_hours = 'fermé'; $horaire7o1-> save();
+
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addSchedule($horaire1o1->id);
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addSchedule($horaire2o1->id);
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addSchedule($horaire3o1->id);
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addSchedule($horaire4o1->id);
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addSchedule($horaire5o1->id);
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addSchedule($horaire6o1->id);
+RestaurantOffer::findOne(['offer_id' => $offre1->id])->addSchedule($horaire7o1->id);
 
 //create village gaulois
 $offre2 = new Offer();
@@ -196,13 +243,22 @@ foreach ($tagsGaulois as $tagName) {
     }
 }
 
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 1, 'fermé', 'fermé')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 2, '9h', '19h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 3, '9h', '19h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 4, 'fermé', 'fermé')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 5, '9h', '19h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 6, '9h', '20h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre2->id . ", 7, '9h', '20h')");
+$horaire1o2 = new OfferSchedule(); $horaire1o2->day = 1; $horaire1o2->opening_hours = 'fermé'; $horaire1o2->closing_hours = 'fermé'; $horaire1o2-> save();
+$horaire2o2 = new OfferSchedule(); $horaire2o2->day = 2; $horaire2o2->opening_hours = '09:00'; $horaire2o2->closing_hours = '19:00'; $horaire2o2-> save();
+$horaire3o2 = new OfferSchedule(); $horaire3o2->day = 3; $horaire3o2->opening_hours = '09:00'; $horaire3o2->closing_hours = '19:00'; $horaire3o2-> save();
+$horaire4o2 = new OfferSchedule(); $horaire4o2->day = 4; $horaire4o2->opening_hours = 'fermé'; $horaire4o2->closing_hours = 'fermé'; $horaire4o2-> save();
+$horaire5o2 = new OfferSchedule(); $horaire5o2->day = 5; $horaire5o2->opening_hours = '09:00'; $horaire5o2->closing_hours = '19:00'; $horaire5o2-> save();
+$horaire6o2 = new OfferSchedule(); $horaire6o2->day = 6; $horaire6o2->opening_hours = '09:00'; $horaire6o2->closing_hours = '20:00'; $horaire6o2-> save();
+$horaire7o2 = new OfferSchedule(); $horaire7o2->day = 7; $horaire7o2->opening_hours = '09:00'; $horaire7o2->closing_hours = '20:00'; $horaire7o2-> save();
+
+AttractionParkOffer::findOne(['offer_id' => $offre2->id])->addSchedule($horaire1o2->id);
+AttractionParkOffer::findOne(['offer_id' => $offre2->id])->addSchedule($horaire2o2->id);
+AttractionParkOffer::findOne(['offer_id' => $offre2->id])->addSchedule($horaire3o2->id);
+AttractionParkOffer::findOne(['offer_id' => $offre2->id])->addSchedule($horaire4o2->id);
+AttractionParkOffer::findOne(['offer_id' => $offre2->id])->addSchedule($horaire5o2->id);
+AttractionParkOffer::findOne(['offer_id' => $offre2->id])->addSchedule($horaire6o2->id);
+AttractionParkOffer::findOne(['offer_id' => $offre2->id])->addSchedule($horaire7o2->id);
+
 
 $offre3 = new Offer();
 $offre3->title = "Promenade en Bateau sur le Canal de la Rance";
@@ -252,27 +308,74 @@ foreach ($tagsPromenade as $tagName) {
     }
 }
 
-//create balade bréhat
-$offre8 = new Offer();
-$offre8->title = "Traversée et tour de l'île de Brehat";
-$offre8->summary = 'Embarquez à bord de l’un de nos navires pour une traversée ou un tour de l’île. Naviguez loin du flot touristique au cœur d’une zone NATURA 2000.';
-$offre8->description = 'Profitez de notre formule TOUR DE L’ÎLE pour une balade commentée et animée par des passionnés. Vous pourrez admirer l’île par la mer, ses rochers roses, sa côte sauvage et son patrimoine maritime exceptionnel. Les 96 ilots de l’archipel vous offriront un panorama incroyable.
-A l’issue, vous débarquerez sur l’île de Bréhat pour une visite libre. Le retour s’effectuera avec les traversées directes.';
-$offre8->likes = 4012;
-$offre8->offline = 0;
-$offre8->offline_date = null;
-$offre8->last_online_date = "2024-10-01";
-$offre8->view_counter = 20986;
-$offre8->click_counter = 7863;
-$offre8->website = 'https://surmerbrehat.com/';
-$offre8->phone_number = '0677980042';
-$offre8->category = 'activity';
-$offre8->offer_type_id = 2;
-$offre8->professional_id = 8;
-$offre8->address_id = 16;
-$offre8->save();
+//create cachette de merlin
+$offre4 = new Offer();
+$offre4->title = "La cachette de Merlin";
+$offre4->summary = 'Voyagez dans le temps et plongez au cœur de la vie gauloise, où vous pourrez découvrir des artisans passionnés, participer à des jeux anciens et vivre une expérience immersive pour toute la famille dans un cadre authentique et amusant.';
+$offre4->description = 'La légende raconte que Merlin, banni du Royaume de Camelot, est venu s\'installer dans ce mystérieux manoir où il éleva avec amour deux enfants prénommés Arthur et Morgane. Aujourd\'hui, le vieux manoir recèle un esprit enchanteur et déborde de surprises !';
+$offre4->likes = 600;
+$offre4->offline = 0;
+$offre4->offline_date = null;
+$offre4->last_online_date = "2024-11-02";
+$offre4->view_counter = 8714;
+$offre4->click_counter = 8001;
+$offre4->website = 'https://www.lacachettedemerlin.fr/';
+$offre4->phone_number = '0698834022';
+$offre4->category = 'show';
+$offre4->offer_type_id = 2;
+$offre4->professional_id = 6;
+$offre4->address_id = 24;
+$offre4->save();
 
-$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES ($offre8->id, 1.0, 3);");
+$db->pdo->exec("INSERT INTO offer_period (id, start_date,end_date) VALUES (1,'2024-06-01', '2024-09-01');");
+
+$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity, period_id) VALUES (" .$offre4->id . ", 1.5, 33, 1);");
+
+$tagsMerlin = ['Merlin', 'Bretagne', 'gaulois', 'enfants', 'imagination', 'culture bretonne', 'Camelot', 'cachette', 'temps', 'manoir','magie'];
+
+
+foreach ($tagsMerlin as $tagName) {
+    $tagName = strtolower($tagName);
+    $tag = OfferTag::findOne(['name' => $tagName]);
+    if (!$tag) {
+        $tag = new OfferTag();
+        $tag->name = $tagName;
+        $tag->save();
+    }
+}
+
+foreach ($tagsMerlin as $tagName) {
+    $tagName = strtolower($tagName);
+    $tagModel = OfferTag::findOne(['name' => $tagName]);
+    if ($tagModel) {
+        $offre4->addTag($tagModel->id);
+    } else {
+        echo "Tag '$tagName' not found.\n";
+    }
+}
+
+
+//create balade bréhat
+$offre5 = new Offer();
+$offre5->title = "Traversée et tour de l'île de Brehat";
+$offre5->summary = 'Embarquez à bord de l’un de nos navires pour une traversée ou un tour de l’île. Naviguez loin du flot touristique au cœur d’une zone NATURA 2000.';
+$offre5->description = 'Profitez de notre formule TOUR DE L’ÎLE pour une balade commentée et animée par des passionnés. Vous pourrez admirer l’île par la mer, ses rochers roses, sa côte sauvage et son patrimoine maritime exceptionnel. Les 96 ilots de l’archipel vous offriront un panorama incroyable.
+A l’issue, vous débarquerez sur l’île de Bréhat pour une visite libre. Le retour s’effectuera avec les traversées directes.';
+$offre5->likes = 4012;
+$offre5->offline = 0;
+$offre5->offline_date = null;
+$offre5->last_online_date = "2024-10-01";
+$offre5->view_counter = 20986;
+$offre5->click_counter = 7863;
+$offre5->website = 'https://surmerbrehat.com/';
+$offre5->phone_number = '0677980042';
+$offre5->category = 'activity';
+$offre5->offer_type_id = 2;
+$offre5->professional_id = 8;
+$offre5->address_id = 16;
+$offre5->save();
+
+$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES ($offre5->id, 1.0, 3);");
 
 //add tags
 $tagsBrehat = ['île', 'traversée', 'nature', 'patrimoine', 'maritime', 'guidée', 'panorama', 'granite rose'];
@@ -291,55 +394,72 @@ foreach ($tagsBrehat as $tagName) {
     $tagName = strtolower($tagName);
     $tagModel = OfferTag::findOne(['name' => $tagName]);
     if ($tagModel) {
-        $offre8->addTag($tagModel->id);
+        $offre5->addTag($tagModel->id);
     } else {
         echo "Tag '$tagName' not found.\n";
     }
 }
 
+$horaire1o5 = new OfferSchedule(); $horaire1o5->day = 1; $horaire1o5->opening_hours = '09:00'; $horaire1o5->closing_hours = '17:00'; $horaire1o5-> save();
+$horaire2o5 = new OfferSchedule(); $horaire2o5->day = 2; $horaire2o5->opening_hours = '09:00'; $horaire2o5->closing_hours = '17:00'; $horaire2o5-> save();
+$horaire3o5 = new OfferSchedule(); $horaire3o5->day = 3; $horaire3o5->opening_hours = 'fermé'; $horaire3o5->closing_hours = 'fermé'; $horaire3o5-> save();
+$horaire4o5 = new OfferSchedule(); $horaire4o5->day = 4; $horaire4o5->opening_hours = 'fermé'; $horaire4o5->closing_hours = 'fermé'; $horaire4o5-> save();
+$horaire5o5 = new OfferSchedule(); $horaire5o5->day = 5; $horaire5o5->opening_hours = '09:00'; $horaire5o5->closing_hours = '17:00'; $horaire5o5-> save();
+$horaire6o5 = new OfferSchedule(); $horaire6o5->day = 6; $horaire6o5->opening_hours = '09:00'; $horaire6o5->closing_hours = '17:00'; $horaire6o5-> save();
+$horaire7o5 = new OfferSchedule(); $horaire7o5->day = 7; $horaire7o5->opening_hours = '09:00'; $horaire7o5->closing_hours = '17:00'; $horaire7o5-> save();
+
+ActivityOffer::findOne(['offer_id' => $offre5->id])->addSchedule($horaire1o5->id);
+ActivityOffer::findOne(['offer_id' => $offre5->id])->addSchedule($horaire2o5->id);
+ActivityOffer::findOne(['offer_id' => $offre5->id])->addSchedule($horaire3o5->id);
+ActivityOffer::findOne(['offer_id' => $offre5->id])->addSchedule($horaire4o5->id);
+ActivityOffer::findOne(['offer_id' => $offre5->id])->addSchedule($horaire5o5->id);
+ActivityOffer::findOne(['offer_id' => $offre5->id])->addSchedule($horaire6o5->id);
+ActivityOffer::findOne(['offer_id' => $offre5->id])->addSchedule($horaire7o5->id);
 
 
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 1, '9h', '17h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 2, '9h', '17h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 3, 'fermé', 'fermé')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 4, 'fermé', 'fermé')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 5, '9h', '17h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 6, '9h', '17h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre8->id . ", 7, '9h', '17h')");
 
 
 //create Récrée Curés
-$offre9 = new Offer();
-$offre9->title = "La Récrée des 3 Curés";
-$offre9->summary = 'Amateurs de sensations fortes, venez profiter au plus grand parc d’attractions breton la Récrée des trois curés';
-$offre9->description = 'Plongez dans l’aventure au Parc d’attractions La Récré des Trois Curés à Milizac ! Sur ses 17 hectares, des dizaines d’attractions captivantes attendent petits et grands. Des manèges palpitants aux aires de jeux dédiées aux plus petits, ce lieu offre une évasion totale dans un cadre verdoyant. Adultes, ados et enfants, tous y trouveront leur bonheur pour une journée d’amusement garantie.';
-$offre9->likes = 100841;
-$offre9->offline = 0;
-$offre9->offline_date = null;
-$offre9->last_online_date = "2024-09-01";
-$offre9->view_counter = 542321;
-$offre9->click_counter = 35874;
-$offre9->website = 'https://www.larecredes3cures.com/';
-$offre9->phone_number = '0298079559';
-$offre9->category = 'attraction_park';
-$offre9->offer_type_id = 2;
-$offre9->professional_id = 9;
-$offre9->address_id = 17;
-$offre9->save();
+$offre6 = new Offer();
+$offre6->title = "La Récrée des 3 Curés";
+$offre6->summary = 'Amateurs de sensations fortes, venez profiter au plus grand parc d’attractions breton la Récrée des trois curés';
+$offre6->description = 'Plongez dans l’aventure au Parc d’attractions La Récré des Trois Curés à Milizac ! Sur ses 17 hectares, des dizaines d’attractions captivantes attendent petits et grands. Des manèges palpitants aux aires de jeux dédiées aux plus petits, ce lieu offre une évasion totale dans un cadre verdoyant. Adultes, ados et enfants, tous y trouveront leur bonheur pour une journée d’amusement garantie.';
+$offre6->likes = 100841;
+$offre6->offline = 0;
+$offre6->offline_date = null;
+$offre6->last_online_date = "2024-09-01";
+$offre6->view_counter = 542321;
+$offre6->click_counter = 35874;
+$offre6->website = 'https://www.larecredes3cures.com/';
+$offre6->phone_number = '0298079559';
+$offre6->category = 'attraction_park';
+$offre6->offer_type_id = 2;
+$offre6->professional_id = 9;
+$offre6->address_id = 17;
+$offre6->save();
 
-$db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre9->id . ", 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
+$db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre6->id . ", 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
 
 //add tags
 
 $tagsRecree = ['attractions', 'sensations', 'manèges', 'enfants', 'famille', 'parc', 'verdoyant', 'évasion'];
 
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 1, '9h', '19h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 2, '9h', '19h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 3, 'fermé', 'fermé')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 4, 'fermé', 'fermé')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 5, '9h', '19h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 6, '9h', '20h')");
-$db->pdo->exec("INSERT INTO offer_schedule (offer_id, day, opening_hours, closing_hours) VALUES (" . $offre9->id . ", 7, '9h', '20h')");
+$horaire1o6 = new OfferSchedule(); $horaire1o6->day = 1; $horaire1o6->opening_hours = '09:00'; $horaire1o6->closing_hours = '19:00'; $horaire1o6-> save();
+$horaire2o6 = new OfferSchedule(); $horaire2o6->day = 2; $horaire2o6->opening_hours = '09:00'; $horaire2o6->closing_hours = '19:00'; $horaire2o6-> save();
+$horaire3o6 = new OfferSchedule(); $horaire3o6->day = 3; $horaire3o6->opening_hours = 'fermé'; $horaire3o6->closing_hours = 'fermé'; $horaire3o6-> save();
+$horaire4o6 = new OfferSchedule(); $horaire4o6->day = 4; $horaire4o6->opening_hours = 'fermé'; $horaire4o6->closing_hours = 'fermé'; $horaire4o6-> save();
+$horaire5o6 = new OfferSchedule(); $horaire5o6->day = 5; $horaire5o6->opening_hours = '09:00'; $horaire5o6->closing_hours = '19:00'; $horaire5o6-> save();
+$horaire6o6 = new OfferSchedule(); $horaire6o6->day = 6; $horaire6o6->opening_hours = '09:00'; $horaire6o6->closing_hours = '20:00'; $horaire6o6-> save();
+$horaire7o6 = new OfferSchedule(); $horaire7o6->day = 7; $horaire7o6->opening_hours = '09:00'; $horaire7o6->closing_hours = '20:00'; $horaire7o6-> save();
+
+AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire1o6->id);
+AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire2o6->id);
+AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire3o6->id);
+AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire4o6->id);
+AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire5o6->id);
+AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire6o6->id);
+AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire7o6->id);
+
 
 foreach ($tagsRecree as $tagName) {
     $tagName = strtolower($tagName);
@@ -355,34 +475,34 @@ foreach ($tagsRecree as $tagName) {
     $tagName = strtolower($tagName);
     $tagModel = OfferTag::findOne(['name' => $tagName]);
     if ($tagModel) {
-        $offre9->addTag($tagModel->id);
+        $offre6->addTag($tagModel->id);
     } else {
         echo "Tag '$tagName' not found.\n";
     }
 }
 
 
-$offre10 = new Offer();
-$offre10->title = "Vallée des Saints";
-$offre10->summary = 'Il y a de la magie dans ce site hors norme. Un peu comme sur l’île de Pâques... mais à la manière bretonne ! ';
-$offre10->description = 'Au coeur de Carnoët, vous vous promènerez au milieu de géants de granit. Le site compte 180 statues, dont certaines atteignent 7 mètres de haut ! Véritable jeu de piste pour les enfants, demandez-leur de trouver Sainte Riwanon ou Sainte Katell, et laissez place à votre imagination.';
-$offre10->likes = 2014;
-$offre10->offline = 0;
-$offre10->offline_date = null;
-$offre10->last_online_date = "2023-01-12";
-$offre10->view_counter = 14856;
-$offre10->click_counter = 3101;
-$offre10->website = 'https://www.lavalleedessaints.com/';
-$offre10->phone_number = '0296916226';
-$offre10->category = 'visit_offer';
-$offre10->offer_type_id = 1;
-$offre10->professional_id = 10;
-$offre10->address_id = 18;
-$offre10->save();
+$offre7 = new Offer();
+$offre7->title = "Vallée des Saints";
+$offre7->summary = 'Il y a de la magie dans ce site hors norme. Un peu comme sur l’île de Pâques... mais à la manière bretonne ! ';
+$offre7->description = 'Au coeur de Carnoët, vous vous promènerez au milieu de géants de granit. Le site compte 180 statues, dont certaines atteignent 7 mètres de haut ! Véritable jeu de piste pour les enfants, demandez-leur de trouver Sainte Riwanon ou Sainte Katell, et laissez place à votre imagination.';
+$offre7->likes = 2014;
+$offre7->offline = 0;
+$offre7->offline_date = null;
+$offre7->last_online_date = "2023-01-12";
+$offre7->view_counter = 14856;
+$offre7->click_counter = 3101;
+$offre7->website = 'https://www.lavalleedessaints.com/';
+$offre7->phone_number = '0296916226';
+$offre7->category = 'visit_offer';
+$offre7->offer_type_id = 1;
+$offre7->professional_id = 10;
+$offre7->address_id = 18;
+$offre7->save();
 
-$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre10->id . ", 2.5, false);");
+$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre7->id . ", 2.5, false);");
 
-$db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre10->id . ", 'français')");
+$db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre7->id . ", 'français')");
 
 //add tags
 
@@ -403,58 +523,13 @@ foreach ($tagsVallee as $tagName) {
     $tagName = strtolower($tagName);
     $tagModel = OfferTag::findOne(['name' => $tagName]);
     if ($tagModel) {
-        $offre10->addTag($tagModel->id);
+        $offre7->addTag($tagModel->id);
     } else {
         echo "Tag '$tagName' not found.\n";
     }
 }
 
 
-//create cachette de merlin
-$offre6 = new Offer();
-$offre6->title = "La cachette de Merlin";
-$offre6->summary = 'Voyagez dans le temps et plongez au cœur de la vie gauloise, où vous pourrez découvrir des artisans passionnés, participer à des jeux anciens et vivre une expérience immersive pour toute la famille dans un cadre authentique et amusant.';
-$offre6->description = 'La légende raconte que Merlin, banni du Royaume de Camelot, est venu s\'installer dans ce mystérieux manoir où il éleva avec amour deux enfants prénommés Arthur et Morgane. Aujourd\'hui, le vieux manoir recèle un esprit enchanteur et déborde de surprises !';
-$offre6->likes = 600;
-$offre6->offline = 0;
-$offre6->offline_date = null;
-$offre6->last_online_date = "2024-11-02";
-$offre6->view_counter = 8714;
-$offre6->click_counter = 8001;
-$offre6->website = 'https://www.lacachettedemerlin.fr/';
-$offre6->phone_number = '0698834022';
-$offre6->category = 'show';
-$offre6->offer_type_id = 2;
-$offre6->professional_id = 6;
-$offre6->address_id = 24;
-$offre6->save();
-
-$db->pdo->exec("INSERT INTO offer_period (id, start_date,end_date) VALUES (1,'2024-06-01', '2024-09-01');");
-
-$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity, period_id) VALUES (" .$offre6->id . ", 1.5, 33, 1);");
-
-$tagsMerlin = ['Merlin', 'Bretagne', 'gaulois', 'enfants', 'imagination', 'culture bretonne', 'Camelot', 'cachette', 'temps', 'manoir','magie'];
-
-
-foreach ($tagsMerlin as $tagName) {
-    $tagName = strtolower($tagName);
-    $tag = OfferTag::findOne(['name' => $tagName]);
-    if (!$tag) {
-        $tag = new OfferTag();
-        $tag->name = $tagName;
-        $tag->save();
-    }
-}
-
-foreach ($tagsMerlin as $tagName) {
-    $tagName = strtolower($tagName);
-    $tagModel = OfferTag::findOne(['name' => $tagName]);
-    if ($tagModel) {
-        $offre10->addTag($tagModel->id);
-    } else {
-        echo "Tag '$tagName' not found.\n";
-    }
-}
 
 // ---------------------------------------------------------------------- //
 // photos offre1
@@ -476,6 +551,21 @@ $photosCafe3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo
 $photosCafe3->offer_id = $offre1->id;
 $photosCafe3->save();
 
+$photosCafe4 = new OfferPhoto();
+$photosCafe4->url_photo = 'https://media-cdn.tripadvisor.com/media/photo-s/1b/80/31/6a/cafe-des-halles.jpg';
+$photosCafe4->offer_id = $offre1->id;
+$photosCafe4->save();
+
+$photosCafe5 = new OfferPhoto();
+$photosCafe5->url_photo = 'https://img.lacarte.menu/storage/media/company_gallery/8769476/conversions/contribution_gallery.jpg';
+$photosCafe5->offer_id = $offre1->id;
+$photosCafe5->save();
+
+$photosCafe5 = new OfferPhoto();
+$photosCafe5->url_photo = 'https://menu.restaurantguru.com/m9/Cafe-Des-Halles-Lannion-menu.jpg';
+$photosCafe5->offer_id = $offre1->id;
+$photosCafe5->save();
+
 // ---------------------------------------------------------------------- //
 // photos offre2
 // ---------------------------------------------------------------------- //
@@ -491,9 +581,19 @@ $photosGaulois1->offer_id = $offre2->id;
 $photosGaulois1->save();
 
 $photosGaulois3 = new OfferPhoto();
-$photosGaulois3->url_photo = 'https://www.levillagegaulois.org/php/img/accueil/accueil.jpg';
+$photosGaulois3->url_photo = 'https://static.actu.fr/uploads/2023/07/camp-romain-village-gaulois.jpg';
 $photosGaulois3->offer_id = $offre2->id;
 $photosGaulois3->save();
+
+$photosGaulois4 = new OfferPhoto();
+$photosGaulois4->url_photo = 'https://www.village-gaulois.org/wp-content/uploads/2024/06/unsiteuniqueeneurope-image-pecheurs.jpg';
+$photosGaulois4->offer_id = $offre2->id;
+$photosGaulois4->save();
+
+$photosGaulois5 = new OfferPhoto();
+$photosGaulois5->url_photo = 'https://desbretonsencavale.fr/wp-content/uploads/2020/04/Realisation_du_15-04-202-page-14-1024x759.jpg';
+$photosGaulois5->offer_id = $offre2->id;
+$photosGaulois5->save();
 
 // ---------------------------------------------------------------------- //
 // photos offre3
@@ -514,79 +614,133 @@ $photosPromenade3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/
 $photosPromenade3->offer_id = $offre3->id;
 $photosPromenade3->save();
 
+$photosPromenade4 = new OfferPhoto();
+$photosPromenade4->url_photo = 'https://cdn.getyourguide.com/img/tour/109168e365f79c9d75ab72c48f149892b169638a99c7eaa800fabac810f57feb.jpg/145.jpg';
+$photosPromenade4->offer_id = $offre3->id;
+$photosPromenade4->save();
+
+$photosPromenade5 = new OfferPhoto();
+$photosPromenade5->url_photo = 'https://www.rance-evasion.fr/wp-content/uploads/2024/03/DJI_0712-scaled.jpg';
+$photosPromenade5->offer_id = $offre3->id;
+$photosPromenade5->save();
+
 // ---------------------------------------------------------------------- //
 // photos offre4
 // ---------------------------------------------------------------------- //
 
 $photosMerlin1 = new OfferPhoto();
 $photosMerlin1->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/22/df/7d/9b/merlin-remet-le-diplome.jpg?w=1000&h=-1&s=1';
-$photosMerlin1->offer_id = $offre6->id;
+$photosMerlin1->offer_id = $offre4->id;
+$photosMerlin1->save();
 
 $photosMerlin2 = new OfferPhoto();
 $photosMerlin2->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/58/90/fa/merlin-conte-la-legende.jpg?w=1400&h=-1&s=1';
-$photosMerlin2->offer_id = $offre6->id;
+$photosMerlin2->offer_id = $offre4->id;
+$photosMerlin2->save();
 
 $photosMerlin3 = new OfferPhoto();
 $photosMerlin3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/22/df/7c/ca/merlin-rencontra-viviane.jpg?w=1400&h=-1&s=1';
-$photosMerlin3->offer_id = $offre6->id;
+$photosMerlin3->offer_id = $offre4->id;
+$photosMerlin3->save();
+
+$photosMerlin4 = new OfferPhoto();
+$photosMerlin4->url_photo = 'https://static.actu.fr/uploads/2019/08/25424-190822121728584-1-960x640.jpg';
+$photosMerlin4->offer_id = $offre4->id;
+$photosMerlin4->save();
+
+$photosMerlin5 = new OfferPhoto();
+$photosMerlin5->url_photo = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRujC_IRF2QiR9g3kjT9fMUnmjbBq7QfoV9qGuhe2Ou1JDXxlkXrM1uB1dHcx4x_fdaWRI&usqp=CAU';
+$photosMerlin5->offer_id = $offre4->id;
+$photosMerlin5->save();
 
 // ---------------------------------------------------------------------- //
-// photos offre8
+// photos offre5
 // ---------------------------------------------------------------------- //
 
 $photoBrehat1 = new OfferPhoto();
 $photoBrehat1->url_photo = 'https://www.theisland-list.com/wp-content/uploads/2023/05/brehat1.jpg';
-$photoBrehat1->offer_id = $offre8->id;
+$photoBrehat1->offer_id = $offre5->id;
 $photoBrehat1->save();
 
 $photoBrehat2 = new OfferPhoto();
 $photoBrehat2->url_photo = 'https://cdt22.media.tourinsoft.eu/upload/Brehat-2020-06-ile-du-guerzido-oeil-de-paco.jpg';
-$photoBrehat2->offer_id = $offre8->id;
+$photoBrehat2->offer_id = $offre5->id;
 $photoBrehat2->save();
 
 $photoBrehat3 = new OfferPhoto();
 $photoBrehat3->url_photo = 'https://cdn.artphotolimited.com/images/58bd704f04799b000f623d31/1000x1000/ile-de-brehat-2.jpg';
-$photoBrehat3->offer_id = $offre8->id;
+$photoBrehat3->offer_id = $offre5->id;
 $photoBrehat3->save();
 
+$photoBrehat4 = new OfferPhoto();
+$photoBrehat4->url_photo = 'https://cdt29.media.tourinsoft.eu/upload/Brehat-drone-002.jpg';
+$photoBrehat4->offer_id = $offre5->id;
+$photoBrehat4->save();
+
+$photoBrehat5 = new OfferPhoto();
+$photoBrehat5->url_photo = 'https://img-4.linternaute.com/WYRJv5KYR2MkNuOVphX2H4vknYg=/1500x/smart/9e14e631d7e341a1b9dee022c5b9d91f/ccmcms-linternaute/27556522.jpg';
+$photoBrehat5->offer_id = $offre5->id;
+$photoBrehat5->save();
+
 // ---------------------------------------------------------------------- //
-// photos offre9
+// photos offre6
 // ---------------------------------------------------------------------- //
 
 $photoRecree1 = new OfferPhoto();
 $photoRecree1->url_photo = 'https://www.parcs-france.com/wp-content/uploads/parc-recredes3cures-ouverture-tarif-nouveaute.jpg';
-$photoRecree1->offer_id = $offre9->id;
+$photoRecree1->offer_id = $offre6->id;
 $photoRecree1->save();
 
 $photoRecree2 = new OfferPhoto();
 $photoRecree2->url_photo = 'https://29.recreatiloups.com/wp-content/uploads/sites/3/2014/10/spoontus-recre-milizac.jpg';
-$photoRecree2->offer_id = $offre9->id;
+$photoRecree2->offer_id = $offre6->id;
 $photoRecree2->save();
 
 $photoRecree3 = new OfferPhoto();
 $photoRecree3->url_photo = 'https://www.brest-terres-oceanes.fr/wp-content/uploads/2018/06/DSC03057.jpg';
-$photoRecree3->offer_id = $offre9->id;
+$photoRecree3->offer_id = $offre6->id;
 $photoRecree3->save();
+
+$photoRecree4 = new OfferPhoto();
+$photoRecree4->url_photo = 'https://media.letelegramme.fr/api/v1/images/view/63b9e6efbbe84b391253d21b/web_golden_xl/63b9e6efbbe84b391253d21b.1';
+$photoRecree4->offer_id = $offre6->id;
+$photoRecree4->save();
+
+$photoRecree5 = new OfferPhoto();
+$photoRecree5->url_photo = 'https://www.larecredes3cures.com/app/uploads/2024/03/aquatico-scaled-1600x784-c-center.jpg';
+$photoRecree5->offer_id = $offre6->id;
+$photoRecree5->save();
+
 
 
 // ---------------------------------------------------------------------- //
-// photos offre9
+// photos offre7
 // ---------------------------------------------------------------------- //
 
 $photovalleedessaints1 = new OfferPhoto();
-$photovalleedessaints1->url_photo = 'https://www.parcs-france.com/wp-content/uploads/parc-recredes3cures-ouverture-tarif-nouveaute.jpg';
-$photovalleedessaints1->offer_id = $offre10->id;
+$photovalleedessaints1->url_photo = 'https://www.francetvinfo.fr/pictures/Q1e3C7l3TscaP5lbRMjbNRTynVk/fit-in/720x/2019/08/11/phpHz9llI.jpg';
+$photovalleedessaints1->offer_id = $offre7->id;
 $photovalleedessaints1->save();
 
 $photovalleedessaints2 = new OfferPhoto();
-$photovalleedessaints2->url_photo = 'https://29.recreatiloups.com/wp-content/uploads/sites/3/2014/10/spoontus-recre-milizac.jpg';
-$photovalleedessaints2->offer_id = $offre10->id;
+$photovalleedessaints2->url_photo = 'https://www.tourismebretagne.com/app/uploads/crt-bretagne/2018/10/la-vallee-des-saints-3-640x480.jpg';
+$photovalleedessaints2->offer_id = $offre7->id;
 $photovalleedessaints2->save();
 
 $photovalleedessaints3 = new OfferPhoto();
-$photovalleedessaints3->url_photo = 'https://www.brest-terres-oceanes.fr/wp-content/uploads/2018/06/DSC03057.jpg';
-$photovalleedessaints3->offer_id = $offre10->id;
+$photovalleedessaints3->url_photo = 'https://static.actu.fr/uploads/2020/09/img-1876-960x640.jpg';
+$photovalleedessaints3->offer_id = $offre7->id;
 $photovalleedessaints3->save();
+
+$photovalleedessaints4 = new OfferPhoto();
+$photovalleedessaints4->url_photo = 'https://www.tourismebretagne.com/app/uploads/crt-bretagne/2024/04/thumbs/Vallee%20des%20Saints_YB-640x480-crop-1715068176.jpg';
+$photovalleedessaints4->offer_id = $offre7->id;
+$photovalleedessaints4->save();
+
+$photovalleedessaints5 = new OfferPhoto();
+$photovalleedessaints5->url_photo = 'https://www.lavalleedessaints.bzh/img/presentations/vallee-from-sky.webp';
+$photovalleedessaints5->offer_id = $offre7->id;
+$photovalleedessaints5->save();
 
 echo "Database seeded successfully.\n";
 

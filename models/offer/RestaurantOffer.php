@@ -2,6 +2,7 @@
 
 namespace app\models\offer;
 use app\core\DBModel;
+use app\models\IsOnRestaurantMenu;
 use app\models\offer\schedule\ActivitySchedule;
 use app\models\offer\schedule\RestaurantSchedule;
 
@@ -44,5 +45,13 @@ class RestaurantOffer extends DBModel
         $restaurantSchedule->restaurant_id = $this->offer_id;
         $restaurantSchedule->schedule_id = $scheduleId;
         $restaurantSchedule->save();
+    }
+
+    public function addMeal($meal_id)
+    {
+        $isOnRestaurantMenu = new IsOnRestaurantMenu();
+        $isOnRestaurantMenu->meal_id = $meal_id;
+        $isOnRestaurantMenu->offer_id = $this->offer_id;
+        $isOnRestaurantMenu->save();
     }
 }

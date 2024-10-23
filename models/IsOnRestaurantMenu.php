@@ -2,28 +2,29 @@
 
 namespace app\models;
 use app\core\DBModel;
-class Meal extends DBModel {
-    public int $meal_id = 0;
-    public string $name ='';
+
+class IsOnRestaurantMenu extends DBModel {
+    public int $id = 0;
+    public int $offer_id =0;
+    public int $meal_id =0;
     public static function tableName(): string
     {
-        return 'meal';
+        return 'is_on_restaurant_menu';
     }
 
     public function attributes(): array
     {
-        return ['name'];
+        return ['offer_id', 'meal_id'];
     }
 
     public static function pk(): string
     {
-        return 'meal_id';
+        return 'id';
     }
 
     public function rules(): array
     {
         return [
-            'name' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]]
         ];
     }
 }
