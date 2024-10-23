@@ -112,7 +112,7 @@ export class SearchPageCard extends WebComponent {
                         <p class="name"><slot name="author"></slot></p>
                     </div>
 
-                    <p><slot name="type"></slot> • <slot name="price"></slot></p>
+                    <p><slot name="type"></slot><slot name="price"></slot></p>
 
                     <div class="location">
                         <span>
@@ -121,7 +121,7 @@ export class SearchPageCard extends WebComponent {
                                 <circle cx="12" cy="10" r="3"/>
                             </svg>
                         </span>
-                        <p><slot name="location"></slot> • <slot name="locationDistance"></slot> • <slot name="date">Date</slot></p>
+                        <p><slot name="location"></slot><slot name="locationDistance"></slot><slot name="date">Date</slot></p>
                     </div>
                 </div>
             </div>

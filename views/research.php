@@ -18,11 +18,29 @@ $this->title = "research";
                 <span slot="author"><?php echo $offer["author"]; ?> </span>
                 <span slot="type"><?php echo $offer["type"]; ?> </span>
                 <?php if ($offer["price"] > 0) { ?>
-                    <span slot="price">À partir de <?php echo $offer["price"]; ?>€ </span>
+                    <span slot="price"> • À partir de <?php echo $offer["price"]; ?>€ </span>
                 <?php } ?>
                 <span slot="location"><?php echo $offer["location"]; ?> </span>
-                <!-- <span slot="locationDistance"><?php //show the distance between location and user position ?> </span> -->
-                <span slot="date"><?php echo $offer["date"]; ?> </span>
+                <!-- <span slot="locationDistance"> • <?php //show the distance between location and user position ?> </span> -->
+                <span slot="date"> • Il y a <?php
+                $date = new DateTime($offer["date"]);
+                $now = new DateTime();
+                $interval = $date->diff($now);
+
+                if ($interval->y > 0) {
+                    echo $interval->y . ' ' . ($interval->y > 1 ? 'ans' : 'an');
+                } elseif ($interval->m > 0) {
+                    echo $interval->m . ' ' . ($interval->m > 1 ? 'mois' : 'mois');
+                } elseif ($interval->d >= 7) {
+                    $weeks = floor($interval->d / 7);
+                    echo $weeks . ' ' . ($weeks > 1 ? 'semaines' : 'semaine');
+                } elseif ($interval->d > 0) {
+                    echo $interval->d . ' ' . ($interval->d > 1 ? 'jours' : 'jour');
+                } else {
+                    echo 'mois de 24h';
+                }
+                ?>
+                </span>
             </x-search-page-card>
         </a>
         <hr class="horizontal-line">
