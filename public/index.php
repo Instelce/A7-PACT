@@ -49,7 +49,9 @@ $app->router->get('/dashboard', function () {
     }
 });
 $app->router->get('/dashboard/offres', [\app\controllers\DashboardController::class, 'offers']);
-$app->router->post('/dashboard/offres', [\app\controllers\DashboardController::class, 'offers']);
+$app->router->get('/dashboard/avis', [\app\controllers\DashboardController::class, 'avis']);
+$app->router->get('/dashboard/factures', [\app\controllers\DashboardController::class, 'factures']);
+
 
 // Auth routes
 $app->router->get('/connexion', [AuthController::class, 'login']);
