@@ -11,7 +11,6 @@ use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
 use app\models\offer\ActivityOffer;
 use app\models\offer\RestaurantOffer;
-use app\models\offer\AttractionParkOffer;
 use app\models\Address;
 use app\models\user\professional\ProfessionalUser;
 
@@ -68,14 +67,12 @@ class SiteController extends Controller
             if ($offer["offline"] == Offer::STATUS_ONLINE) {//show only online offer
                 $image = OfferPhoto::findOne(['offer_id' => $offer["id"]])->url_photo ?? NULL;//get the first image of the offer for the preview
                 $professional = ProfessionalUser::findOne(where: ['user_id' => $offer["professional_id"]])->denomination ?? NULL;//get the name of the professionnal who post the offer
-                $price = NULL;
+                $price = -1;
                 $type = NULL;
                 switch ($offer["category"]) {
                     case 'restaurant':
                         $type = "Restaurant";
-                        var_dump($offer["id"]);
-                        $price = RestaurantOffer::findOne(['offer_id' => 1]) ?? NULL;
-                        var_dump($price);
+                        $price = RestaurantOffer::findOne(['offer_id' => $offer["id"]])->minimum_price ?? NULL;
                         break;
                     case 'activity':
                         $type = "Activité";
@@ -89,7 +86,6 @@ class SiteController extends Controller
                         break;
                     case 'attraction_park':
                         $type = "Parc d'attraction";
-                        $price = AttractionParkOffer::findOne(['offer_id' => $offer["id"]])->required_age ?? NULL;
                         break;
                 }
                 $location = Address::findOne(['id' => $offer["address_id"]])->city ?? NULL; // get the city of the offer

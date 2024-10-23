@@ -3,12 +3,13 @@
 namespace app\models\offer;
 use app\core\DBModel;
 
-class RestaurantOffer extends DBModel {
+class RestaurantOffer extends DBModel
+{
     public int $offer_id = 0;
-    public string $url_image_carte ='';
-    public int $minimum_price = 0;
-    public int $maximum_price = 0;
 
+    public string $url_image_carte = '';
+    public float $minimum_price = 0;
+    public float $maximum_price = 0;
     public static function tableName(): string
     {
         return 'restaurant_offer';
