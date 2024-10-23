@@ -10,10 +10,7 @@ use app\models\ContactForm;
 use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
 use app\models\offer\ActivityOffer;
-use app\models\offer\AttractionParkOffer;
 use app\models\offer\RestaurantOffer;
-use app\models\offer\ShowOffer;
-use app\models\offer\VisitOffer;
 use app\models\Address;
 use app\models\user\professional\ProfessionalUser;
 
@@ -72,17 +69,17 @@ class SiteController extends Controller
                 $professional = ProfessionalUser::findOne(where: ['user_id' => $offer["professional_id"]])->denomination ?? NULL;//get the name of the professionnal who post the offer
                 $price = NULL;
                 $type = NULL;
-                if (RestaurantOffer::findOne(['offer_id' => $offer["id"]])) {//if the offer is a restaurant
+                if ($offer["category"] == 'restaurant') {//if the offer is a restaurant
                     $type = "Restaurant";
                     $price = RestaurantOffer::findOne(['offer_id' => $offer["id"]])->minimum_price ?? NULL;//get the minimum price of the restaurant
-                } else if (ActivityOffer::findOne(['offer_id' => $offer["id"]])) {//if the offer is an activity
+                } else if ($offer["category"] == 'activity') {//if the offer is an activity
                     $type = "Activité";
                     $price = ActivityOffer::findOne(['offer_id' => $offer["id"]])->price ?? NULL;//get the price of the activity
-                } else if (ShowOffer::findOne(['offer_id' => $offer["id"]])) {//if the offer is a show
+                } else if ($offer["category"] == 'show') {//if the offer is a show
                     $type = "Spectacle";
-                } else if (VisitOffer::findOne(['offer_id' => $offer["id"]])) {//if the offer is a visit
+                } else if ($offer["category"] == 'visit') {//if the offer is a visit
                     $type = "Visite";
-                } else if (AttractionParkOffer::findOne(['offer_id' => $offer["id"]])) {//if the offer is an attraction park
+                } else if ($offer["category"] == 'attraction_park') {//if the offer is an attraction park
                     $type = "Parc d'attraction";
                 }
                 $location = Address::findOne(['id' => $offer["address_id"]])->city ?? NULL; // get the city of the offer
