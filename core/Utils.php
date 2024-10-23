@@ -2,6 +2,8 @@
 
 namespace app\core;
 
+use IntlDateFormatter;
+
 class Utils
 {
     /**
@@ -14,5 +16,19 @@ class Utils
         $hour = explode('h', $hour);
         $hour = (float)$hour[0] + (float)$hour[1] / 60;
         return $hour;
+    }
+
+    /**
+     * Take a date string like that '2024-12-12' and convert it to a
+     * french date like '12 décembre 2024'
+     */
+    public static function formatDate(string $date): string
+    {
+        return strftime('%d %B %Y', strtotime($date));
+    }
+
+    public static function formatTypeString(string $type)
+    {
+        return ucfirst(str_replace('_', ' ', $type));
     }
 }

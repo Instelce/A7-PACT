@@ -75,6 +75,18 @@ class Offer extends DBModel
         ];
     }
 
+    public static function frenchCategoryName(string $category)
+    {
+        return match ($category) {
+            'activity' => 'Activité',
+            'attraction_park' => 'Parc d\'attraction',
+            'restaurant' => 'Restaurant',
+            'show' => 'Spectacle',
+            'visit' => 'Visite',
+            default => '',
+        };
+    }
+
     public function type(): OfferType
     {
         return OfferType::findOne(['id' => $this->offer_type_id]);
@@ -108,6 +120,18 @@ class Offer extends DBModel
         return ProfessionalUser::findOneByPk($this->professional_id);
     }
 
+    public function specificData()
+    {
+        return match ($this->category) {
+            'activity' => ActivityOffer::findOne(['offer_id' => $this->id]),
+            'attraction_park' => AttractionParkOffer::findOne(['offer_id' => $this->id]),
+            'restaurant' => RestaurantOffer::findOne(['offer_id' => $this->id]),
+            'show' => ShowOffer::findOne(['offer_id' => $this->id]),
+            'visit' => VisitOffer::findOne(['offer_id' => $this->id]),
+            default => null,
+        };
+    }
+
     public function addPhoto(string $url) {
         $photo = new OfferPhoto();
         $photo->offer_id = $this->id;
@@ -128,5 +152,14 @@ class Offer extends DBModel
         $isTagged->tag_id = $tagId;
         $isTagged->offer_id = $this->id;
         $isTagged->save();
+    }
+
+    public function addOption(string $type, string $launchDate, int $duration) {
+        $option = new OfferOption();
+        $option->offer_id = $this->id;
+        $option->type = $type;
+        $option->launch_date = $launchDate;
+        $option->duration = $duration;
+        $option->save();
     }
 }

@@ -1,19 +1,20 @@
 
 .badge {
     --foreground: var(--color-white);
-    --background: var(--color-blue-primary);
+    --background: var(--color-blue-secondary);
     padding: .2rem .4rem;
     font-size: var(--typescale-d1);
     background: rgb(var(--background));
     color: rgb(var(--foreground));
+    border-radius: var(--radius-rounded);
 }
 
-.badge .yellow {
-    --foreground: var(--color-gray-4);
+.badge.yellow {
+    --foreground: var(--color-black);
     --background: var(--color-warning);
 }
 
-.badge .green {
+.badge.green {
     --foreground: var(--color-white);
     --background: var(--color-success);
 }

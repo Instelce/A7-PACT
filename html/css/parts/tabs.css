@@ -61,7 +61,7 @@ x-tabs.column x-tab[selected],
 
 x-tabs.column x-tab:hover,
 .tab-button:hover {
-    background: rgba(var(--color-gray-1), .5);
+    background: rgba(var(--color), .05);
 }
 
 x-tabs.column x-tab::before,

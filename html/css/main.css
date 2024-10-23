@@ -76,6 +76,28 @@ a {
     opacity: 0;
 }
 
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: rgb(var(--color-gray-2));
+    display: inline-block;
+}
+
+.underline {
+    position: relative;
+    text-decoration-line: none !important;
+}
+.underline::after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: rgb(var(--color-gray-2));
+}
 
 /* Container */
 .main-container {
@@ -85,10 +107,6 @@ a {
     position: relative;
     padding: 2rem 20%;
     margin: 2rem 0;
-}
-
-.heightTop {
-    height: 56px;
 }
 
 @media only screen and (max-width: 728px) {

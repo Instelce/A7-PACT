@@ -1,60 +1,55 @@
-/*Premier bloc*/
-
-.offer-card-header{
-    display: flex;
-    align-items: center;
-}
-
-.title{
-    font-size: 1.5rem;
-}
-
-.badge{
-    border-radius: 5rem ;
-    margin-left: 5rem;
-    height: 1.5rem;
-        background-color: rgb(var(--color-blue-secondary));
-}
-
-.image{
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
-    object-fit: cover;
-}
-
-/* bloc 2 */
-
-.buttons{
-    margin-left: 2vw;
-}
-
-.card-body{
-     width: 30rem;
- }
 
 .offer-card {
     display: flex;
-    margin-left: 5rem;
+    gap: 1rem;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgb(var(--color-gray-1));
 }
 
-.image-container{
-    margin-right: 1rem;
+.offer-card:last-child {
+    border-bottom: none;
 }
 
-.location{
-    color: rgb(var(--color-gray-4));
+.offer-card header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.border-bottom{
-     border-bottom: 2px solid rgb(var(--color-gray-1));
-     padding-bottom: 1rem;
-     margin-bottom: 1rem;
-    color: rgb(var(--color-gray-4));
+.offer-card h3 {
+    font-weight: 700;
+    font-size: var(--typescale-u1);
 }
 
-.date{
-    color: rgb(var(--color-gray-4));
+.card-body {
+    width: 30rem;
 }
 
+.offer-card .image-container {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    overflow: hidden;
+}
 
+.offer-card .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-option {
+    display: inline-flex;
+    gap: 2rem;
+    padding-top: 1rem;
+    margin-top: 1rem;
+
+    border-top: 1px solid rgb(var(--color-gray-1));
+}
+
+.card-option div {
+    display: flex;
+    gap: .3rem;
+    flex-direction: column;
+}

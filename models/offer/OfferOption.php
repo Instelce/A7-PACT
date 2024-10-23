@@ -22,7 +22,7 @@ class OfferOption extends DBModel
 
     public function attributes(): array
     {
-        return ['launch_date', 'duration', 'offer_id'];
+        return ['type', 'launch_date', 'duration', 'offer_id'];
     }
 
     public function rules(): array
