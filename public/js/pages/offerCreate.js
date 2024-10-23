@@ -40,6 +40,7 @@ function updateDatesVisibility() {
 
 const complemantarySections = document.querySelectorAll(".complementary-section");
 const categoryNotSelected = document.querySelector('#category-no-selected');
+const periodSection = document.querySelector('#period-section');
 
 // -------------------------------------------------------------------------- //
 // Load tags in order to selected category
@@ -103,12 +104,48 @@ categoryInput.addEventListener('change', (e) => {
                 input.required = false;
             }
         }
-
-
     })
 
     categoryNotSelected.classList.add('hidden');
+
+
+    // -------------------------------------------------------------------------- //
+    // Toggle visibility of period section
+    // -------------------------------------------------------------------------- //
+
+    if (categoryInput.value === 'visit' || categoryInput.value === 'show') {
+        periodSection.classList.remove('hidden');
+    }
+
 })
+
+
+// -------------------------------------------------------------------------- //
+// Toggle visibility of period FIELDS
+// -------------------------------------------------------------------------- //
+
+let periodFields = document.querySelector('#period-fields');
+let switchPeriod = document.querySelector('#switch-period');
+
+switchPeriod.addEventListener('input', (e) => {
+    if (switchPeriod.checked) {
+        periodFields.classList.remove('hidden');
+        periodFields.innerHTML = `
+            <x-input>
+                <p slot="label">Début de la période</p>
+                <input slot="input" type="date" name="period-start">
+            </x-input>
+            <x-input>
+                <p slot="label">Fin de la période</p>
+                <input slot="input" type="date" name="period-end">
+            </x-input>
+        `
+    } else {
+        periodFields.innerHTML = '';
+        // periodFields.classList.add('hidden');
+    }
+})
+
 
 
 // -------------------------------------------------------------------------- //

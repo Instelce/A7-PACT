@@ -38,6 +38,7 @@ $app->router->get('/recherche', [SiteController::class, 'research']);
 $app->router->get('/offres/creation', [\app\controllers\OfferController::class, 'create']);
 $app->router->post('/offres/creation', [\app\controllers\OfferController::class, 'create']);
 $app->router->get('/offres/<pk:int>', [\app\controllers\OfferController::class, 'detail']);
+$app->router->get('/offres/<pk:int>/payment', [\app\controllers\OfferController::class, 'payment']);
 
 // dashboard pro
 $app->router->get('/dashboard/offres', [\app\controllers\DashboardController::class, 'offers']);

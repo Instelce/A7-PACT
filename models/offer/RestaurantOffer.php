@@ -8,14 +8,15 @@ class RestaurantOffer extends DBModel {
     public string $url_image_carte ='';
     public int $minimum_price = 0;
     public int $maximum_price = 0;
+
     public static function tableName(): string
     {
-        return 'attraction_park_offer';
+        return 'restaurant_offer';
     }
 
     public function attributes(): array
     {
-        return ['url_image_carte', 'minimum_price', 'maximum_price'];
+        return ['offer_id', 'url_image_carte', 'minimum_price', 'maximum_price'];
     }
 
     public static function pk(): string

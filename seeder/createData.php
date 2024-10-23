@@ -87,7 +87,7 @@ $db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id)
 // create offer types
 // ---------------------------------------------------------------------- //
 
-$db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.99), (2, 'premium', 7.99);");
+$db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.98), (2, 'premium', 7.98), (3, 'gratuit', 0);");
 
 // ---------------------------------------------------------------------- //
 // create offer

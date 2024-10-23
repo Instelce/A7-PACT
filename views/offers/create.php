@@ -284,6 +284,21 @@ $form = new Form();
                 </x-input>
             </div>
 
+
+            <!-- Period for visit and show -->
+            <div id="period-section" class="flex flex-col gap-4 mt-4 hidden">
+
+                <div class="flex gap-4 items-center">
+                    <div class="flex items-center">
+                        <input class="switch" type="checkbox" id="switch-period" name="visit-guide" />
+                        <label class="switch" for="switch-period"></label>
+                    </div>
+                    <label for="switch-period" id="switch-period-label">A une période</label>
+                </div>
+
+                <div id="period-fields" class="flex gap-4 hidden"></div>
+            </div>
+
         </section>
 
 
@@ -297,7 +312,7 @@ $form = new Form();
             <div class="flex flex-col gap-4">
                 <x-input>
                     <p slot="label">Adresse complète</p>
-                    <input slot="input" id="address-field" type="text" placeholder="" required>
+                    <input slot="input" id="address-field" type="text" placeholder="">
                     <p slot="helper">Champ avec suggestions qui modifie les champs suivants</p>
                     <div slot="list" id="address-autocomplete" data-no-filter></div>
                 </x-input>

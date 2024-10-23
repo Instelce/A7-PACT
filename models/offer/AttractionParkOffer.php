@@ -15,7 +15,7 @@ class AttractionParkOffer extends DBModel {
 
     public function attributes(): array
     {
-        return ['url_image_park_map', 'required_age'];
+        return ['offer_id', 'url_image_park_map', 'required_age'];
     }
 
     public static function pk(): string
