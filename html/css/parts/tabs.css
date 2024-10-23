@@ -45,6 +45,7 @@ x-tabs.column x-tab,
     align-items: center;
     padding: 1rem 2rem 1rem 1rem;
     cursor: pointer;
+    transition: background .2s ease;
 }
 
 x-tabs.column x-tab svg,
@@ -62,6 +63,11 @@ x-tabs.column x-tab[selected],
 x-tabs.column x-tab:hover,
 .tab-button:hover {
     background: rgba(var(--color), .05);
+}
+
+x-tabs.column x-tab:hover::before,
+.tab-button:hover::before {
+    background: rgba(var(--color), .1);
 }
 
 x-tabs.column x-tab::before,

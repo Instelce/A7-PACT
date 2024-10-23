@@ -18,11 +18,7 @@ $this->title = "research";
                 <span slot="author"><?php echo $offer["author"]; ?> </span>
                 <span slot="type"><?php echo $offer["type"]; ?> </span>
                 <?php if ($offer["price"] > 0) { ?>
-<<<<<<< Updated upstream
-                    <span slot="price"> • À partir de <?php echo $offer["price"]; ?>€ </span>
-=======
                     <span slot="price">À partir de <?php echo $offer["price"]; ?>€ </span>
->>>>>>> Stashed changes
                 <?php } ?>
                 <span slot="location"><?php echo $offer["location"]; ?> </span>
                 <!-- <span slot="locationDistance"> • <?php //show the distance between location and user position ?> </span> -->
@@ -47,7 +43,6 @@ $this->title = "research";
                 </span>
             </x-search-page-card>
         </a>
-        <hr class="horizontal-line">
         <?php
     }
     ?>

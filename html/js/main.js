@@ -12,7 +12,7 @@ import {Panel} from "./components/tabs/Panel.js";
 try {
     lucide.createIcons({
         attrs: {
-            'stroke-width': 1.5,
+            'stroke-width': 1,
             'width': '24px',
             'height': '24px'
         }

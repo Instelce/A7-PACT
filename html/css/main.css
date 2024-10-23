@@ -115,6 +115,13 @@ a {
     }
 }
 
+
+@media only screen and (min-width: 768px) {
+    .main-container {
+        padding: 0 15%;
+    }
+}
+
 @media only screen and (min-width: 1440px) {
     .main-container {
         padding: 0 20%;

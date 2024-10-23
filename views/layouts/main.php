@@ -42,13 +42,7 @@ use app\core\Application;
 
 <!-- Navbar -->
 <nav class="navbar">
-    <div class="nav-burger" id="nav-burger">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-    <div class="flex gap-4 items-center">
+    <div class="navbar-left">
         <a href="/">
             <img id="logo" src="/assets/images/logoVisitor.svg" alt="" width="100">
         </a>
@@ -66,23 +60,23 @@ use app\core\Application;
             </div>
         <?php } ?>
     </div>
-    <div class="row">
+    <div class="navbar-right">
         <a href="/recherche">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                 class="lucide lucide-search">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="m21 21-4.3-4.3"/>
-            </svg>
+            <i data-lucide="search"></i>
         </a>
 
         <?php if (Application::$app->isAuthenticated()) { ?>
             <a href="/deconnexion" class="link">Déconnexion</a>
         <?php } else { ?>
-            <a href="/connexion" class="button">Connexion</a>
+            <a href="/connexion" class="button sm">Connexion</a>
         <?php } ?>
 
+        <div class="nav-burger" id="nav-burger">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </div>
 </nav>
 

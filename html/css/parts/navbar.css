@@ -16,8 +16,8 @@
 }
 
 .navbar .nav-burger {
-    width: 35px;
-    height: 30px;
+    width: 30px;
+    height: 22px;
     position: relative;
     z-index: 1002;
     transform: rotate(0deg);
@@ -35,23 +35,24 @@
     left: 0;
     transform: rotate(0deg);
     transition: .25s ease-in-out;
+    top: calc(var(--i) * 10px);
 }
 
 .navbar .nav-burger span:nth-child(1) {
-    top: 0px;
+    --i: 0;
 }
 
 .navbar .nav-burger span:nth-child(2),
 .navbar .nav-burger span:nth-child(3) {
-    top: 13px;
+    --i: 1;
 }
 
 .navbar .nav-burger span:nth-child(4) {
-    top: 26px;
+    --i: 2;
 }
 
 .navbar .nav-burger.open span:nth-child(1) {
-    top: 13px;
+    top: 10px;
     width: 0%;
     left: 50%;
 }
@@ -65,7 +66,7 @@
 }
 
 .navbar .nav-burger.open span:nth-child(4) {
-    top: 13px;
+    top: 10px;
     width: 0%;
     left: 50%;
 }
@@ -113,25 +114,67 @@
     left: -100%;
 }
 
-.row {
+.navbar-left,
+.navbar-right{
     display: flex;
+    flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    gap: 30px;
+    gap: 1rem;
 }
 
-@media only screen and (min-width: 768px) {
+.navbar-right {
+    gap: 2rem;
+}
+
+@media only screen and (max-width: 768px) {
     .navbar {
-        padding: 0 20%;
+        padding: 0 20px !important;
+    }
+
+    .navbar .row > .button {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 1440px) {
+    .navbar {
+        padding: 0 15%;
     }
 }
 
 @media only screen and (min-width: 1440px) {
     .navbar {
-        padding: 1rem 20%;
+        padding: .5rem 20%;
     }
 
     .navbar .nav-burger {
         display: none;
     }
+}
+
+/* Avatar */
+.navbar .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: rgb(var(--color-gray-1));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    transition: box-shadow .2s ease;
+}
+
+.navbar .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.navbar .avatar:hover {
+    box-shadow: 0 0 0 2px rgba(var(--color-purple-primary), .5);
 }

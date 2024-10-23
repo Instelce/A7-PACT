@@ -19,11 +19,11 @@ $this->title = 'Oops';
          width="400" class="mt-10 hidden-anim">
 <?php } else { ?>
     <?php if ($exception->getCode() === 404) { ?>
-        <h1 class="heading-1">La page que vous cherchez n'existe pas</h1>
+        <h1 class="heading-1 mb-4">La page que vous cherchez n'existe pas</h1>
     <?php } else if ($exception->getCode() === 403) { ?>
-        <h1 class="heading-1">Vous n'avez pas les droits pour accéder à cette page</h1>
+        <h1 class="heading-1 mb-4">Vous n'avez pas les droits pour accéder à cette page</h1>
     <?php } else { ?>
-        <h1 class="heading-1">Une erreur est survenue</h1>
+        <h1 class="heading-1 mb-4">Une erreur est survenue</h1>
     <?php } ?>
 
     <?php if (Application::$app->isAuthenticated()) { ?>

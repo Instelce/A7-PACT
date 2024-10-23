@@ -110,7 +110,7 @@ footer #logo {
     color: rgb(var(--color-black));
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1440px) {
     footer{
         padding: 25px 15%;
     }
