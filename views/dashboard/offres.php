@@ -1,11 +1,10 @@
 <?php
 /** @var $this \app\core\View */
-/** @var $user \app\models\account\UserAccount */
-/** @var $professionalUser \app\models\user\professional\ProfessionalUser */
 /** @var $offers Offer[] */
 /** @var $offersType \app\models\offer\OfferType[] */
 /** @var $offersOption \app\models\offer\OfferOption[] */
 /** @var $specificData \app\core\DBModel */
+
 /** @var $photos \app\models\offer\OfferPhoto[] */
 
 use app\core\Application;
@@ -21,11 +20,7 @@ var_dump($offersType);
 var_dump(count($offers));*/
 //var_dump($offersOption);
 ?>
-<div class="flex justify-center mb-2 w-full h-20">
-    <h1 class=" font-bold text-2xl">Bonjour
-        <?= htmlspecialchars($professionalUser->denomination) ?>
-    </h1>
-</div>
+
 <div class="flex gap-8">
 
     <!-- Tabs button -->
@@ -65,7 +60,7 @@ var_dump(count($offers));*/
             } else {
                 $price = 'A partir de ' . $offer->minimum_price . ' €';
             }
-            ?>
+        ?>
             <article class="offer-card">
                 <div class="image-container">
                     <img src="<?php echo $photos[$i]->url_photo ?>" onerror="this.src = 'https://placehold.co/100'">
@@ -74,27 +69,34 @@ var_dump(count($offers));*/
                 <div class="card-body">
                     <header>
                         <h3 class="title"><?php echo $offer->title ?></h3>
-                        <span
-                            class="badge <?php echo $type === 'standard' ? 'blue' : 'yellow' ?>"><?php echo ucfirst($type) ?></span>
+                        <span class="badge <?php echo $type === 'standard' ? 'blue' : 'yellow' ?>"><?php echo ucfirst($type) ?></span>
                     </header>
 
                     <p class="mt-2"><?php echo $offer->summary ?></p>
 
                     <div class="flex flex-col gap-2 mt-4">
-                        <p class="text-gray-4 flex items-center gap-2">
-                            <?php echo Offer::frenchCategoryName($offer->category) ?> <span class="dot"></span>
-                            <?php echo $price ?> <span class="dot"></span> <?php echo $offer->likes . ' likes' ?>
-                        </p>
+                        <p class="text-gray-4 flex items-center gap-2"><?php echo Offer::frenchCategoryName($offer->category) ?> <span class="dot"></span> <?php echo $price ?> <span class="dot"></span> <?php echo $offer->likes . ' likes' ?></p>
                         <p class="text-gray-4">Mis à jour le <?php echo Utils::formatDate($offer->updated_at); ?></p>
                     </div>
 
-                    <?php if ($option) { ?>
+                    <?php if ($option) {?>
                         <div class="card-option">
                             <div>
-                                <p class="flex gap-1">Avec l'option <span
-                                        class="underline"><?php echo Utils::formatTypeString($option->type) ?></span></p>
-                                <p class="text-gray-4">Du <?php echo $option->launch_date ?> au
-                                    <?php echo $option->launch_date ?>
+                                <p class="flex gap-1">Avec l'option <span class="underline"><?php echo Utils::formatTypeString($option->type) ?></span></p>
+                                <p class="text-gray-4">Du <?php echo Utils::formatDate($option->launch_date); ?>
+                                    au <?php
+
+                                     //Création de la première date
+                                    $date = new DateTime($option->launch_date);
+
+                                    // Création de l'intervalle à ajouter
+                                    $interval = DateInterval::createFromDateString($option->duration * 7 . " days");
+
+                                    // Addition de l'intervalle à la date
+                                    $date->add($interval);
+
+                                    echo  Utils::formatDate($date->format('Y-m-d'));
+                                    ?>
                                 </p>
                             </div>
                             <button class="button gray only-icon no-border">
@@ -107,23 +109,28 @@ var_dump(count($offers));*/
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <a href="/offres/<?php echo $offer->id ?>/modification" class="button purple fit mb-2"
-                        title="Avis non lu">
+                    <a href="/offres/<?php echo $offer->id ?>/modification" class="button purple fit mb-2" title="Avis non lu">
                         <!-- <i data-lucide="pen"></i>-->
                         Modifier
                     </a>
-                    <button class="button purple fit" title="Avis non lu">
-                        <i data-lucide="message-square-dot"></i>
-                        <?php echo rand(3, 10) ?>
-                    </button>
-                    <button class="button gray fit" title="Avis non répondu">
-                        <i data-lucide="message-square-more"></i>
-                        <?php echo rand(2, 5) ?>
-                    </button>
-                    <button class="button gray fit" title="Avis blacklisté">
-                        <i data-lucide="ban"></i>
-                        <?php echo rand(1, 3) ?>
-                    </button>
+                    <a href="/dashboard/avis">
+                        <button class="button purple fit" title="Avis non lu">
+                            <i data-lucide="message-square-dot"></i>
+                            <?php echo rand(3, 10) ?>
+                        </button>
+                    </a>
+                    <a href="/dashboard/avis">
+                        <button class="button gray fit" title="Avis non répondu">
+                            <i data-lucide="message-square-more"></i>
+                            <?php echo rand(2, 5) ?>
+                        </button>
+                    </a>
+                    <a href="/dashboard/avis">
+                        <button class="button gray fit" title="Avis blacklisté">
+                            <i data-lucide="ban"></i>
+                            <?php echo rand(1, 3) ?>
+                        </button>
+                    </a>
                 </div>
             </article>
         <?php } ?>
