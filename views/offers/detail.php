@@ -197,9 +197,19 @@ var_dump($offerData);
 
     <div class="inlineOffer">
         <h2 class="heading-2">Tags : </h2>
-        <?php if (!empty($offerData['tags'])): ?>
-            <?php foreach ($offerData['tags'] as $tag): ?>
-                <p><?php echo $tag ;?>, </p>
+        <?php
+            $nbTags = count($offerData['tags']);
+            $compteurTag = 0;
+            if (!empty($offerData['tags'])):
+            foreach ($offerData['tags'] as $tag):
+                $compteurTag++; ?>
+                <p><?php echo $tag ;?>
+                <?php if($nbTags > $compteurTag){?>
+                    ,</p>
+                <?php }
+                else {?>
+                    </p>
+                <?php } ?>
             <?php endforeach; ?>
         <?php else: ?>
             <p>Aucun tag associé à cette offre.</p>

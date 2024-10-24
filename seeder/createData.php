@@ -100,6 +100,30 @@ $db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id)
 
 $db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.99), (2, 'premium', 7.99), (3, 'gratuite', 0.00);");
 
+
+// ---------------------------------------------------------------------- //
+// create tags
+// ---------------------------------------------------------------------- //
+
+$tags = [
+    'restaurant' => ['Française', 'Fruit de mer', 'Plastique', 'Italienne', 'Indienne', 'Gastronomique', 'Restauration rapide', 'Crêperie'],
+    'others' => ['Culturel', 'Gastronomie', 'Patrimoine', 'Musée', 'Histoire', 'Atelier', 'Urbain', 'Musique', 'Nature', 'Famille', 'Plein air', 'Cirque', 'Sport', 'Son et lumière', 'Nautique', 'Humour'],
+];
+
+$tagsIds = [];
+
+foreach ($tags as $tagType => $tagValues) {
+
+    foreach ($tagValues as $tagValue) {
+        $tagModel = new OfferTag();
+        $tagModel->name = strtolower($tagValue);
+        $tagModel->save();
+        $tagsIds[$tagType][] = $tagModel->id;
+    }
+
+}
+
+
 // ---------------------------------------------------------------------- //
 // create offer
 // ---------------------------------------------------------------------- //
@@ -158,25 +182,10 @@ RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas5->meal_id)
 RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas6->meal_id);
 
 //add tags
-$tagsCafe = ['café', 'bar', 'brasserie', 'terrasse', 'convivial', 'burger', 'chaleureux', 'vege friendly', 'familial'];
-
-foreach ($tagsCafe as $tagName) {
-    $tagName = strtolower($tagName);
-    $tag = OfferTag::findOne(['name' => $tagName]);
-    if (!$tag) {
-        $tag = new OfferTag();
-        $tag->name = $tagName;
-        $tag->save();
-    }
-}
-
-foreach ($tagsCafe as $tagName) {
-    $tagName = strtolower($tagName);
-    $tagModel = OfferTag::findOne(['name' => $tagName]);
-    if ($tagModel) {
-        $offre1->addTag($tagModel->id);
-    } else {
-        echo "Tag '$tagName' not found.\n";
+for($i = 0; $i<4; $i++){
+    $tag = $tagsIds['restaurant'][array_rand($tagsIds['restaurant'])];
+    if(!in_array($tag, $offre1->tags())){
+        $offre1->addTag($tag);
     }
 }
 
@@ -220,26 +229,10 @@ $offre2->save();
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
 
 //add tags
-$tagsGaulois = ['jeux', 'artisanat', 'famille', 'éducatif', 'culture', 'crêperie', 'solidarité', 'détente'];
-
-foreach ($tagsGaulois as $tagName) {
-    $tagName = strtolower($tagName);
-    $tag = OfferTag::findOne(['name' => $tagName]);
-    if (!$tag) {
-        $tag = new OfferTag();
-        $tag->name = $tagName;
-        $tag->save();
-    }
-}
-
-//create promenade canal rance
-foreach ($tagsGaulois as $tagName) {
-    $tagName = strtolower($tagName);
-    $tagModel = OfferTag::findOne(['name' => $tagName]);
-    if ($tagModel) {
-        $offre2->addTag($tagModel->id);
-    } else {
-        echo "Tag '$tagName' not found.\n";
+for($i = 0; $i<2; $i++){
+    $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
+    if(!in_array($tag, $offre2->tags())){
+        $offre2->addTag($tag);
     }
 }
 
@@ -284,27 +277,10 @@ $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . 
 $db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre3->id . ", 'français'), (" . $offre3->id . ", 'anglais')");
 
 //add tags
-
-$tagsPromenade = ['bateau', 'canal', 'Dinan', 'Saint-Samson-sur-Rance', 'paysage', 'intime', 'relaxant', 'patrimoine'];
-
-
-foreach ($tagsPromenade as $tagName) {
-    $tagName = strtolower($tagName);
-    $tag = OfferTag::findOne(['name' => $tagName]);
-    if (!$tag) {
-        $tag = new OfferTag();
-        $tag->name = $tagName;
-        $tag->save();
-    }
-}
-
-foreach ($tagsPromenade as $tagName) {
-    $tagName = strtolower($tagName);
-    $tagModel = OfferTag::findOne(['name' => $tagName]);
-    if ($tagModel) {
-        $offre3->addTag($tagModel->id);
-    } else {
-        echo "Tag '$tagName' not found.\n";
+for($i = 0; $i<3; $i++){
+    $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
+    if(!in_array($tag, $offre3->tags())){
+        $offre3->addTag($tag);
     }
 }
 
@@ -331,28 +307,9 @@ $db->pdo->exec("INSERT INTO offer_period (id, start_date,end_date) VALUES (1,'20
 
 $db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity, period_id) VALUES (" .$offre4->id . ", 1.5, 33, 1);");
 
-$tagsMerlin = ['Merlin', 'Bretagne', 'gaulois', 'enfants', 'imagination', 'culture bretonne', 'Camelot', 'cachette', 'temps', 'manoir','magie'];
+//no tags
 
 
-foreach ($tagsMerlin as $tagName) {
-    $tagName = strtolower($tagName);
-    $tag = OfferTag::findOne(['name' => $tagName]);
-    if (!$tag) {
-        $tag = new OfferTag();
-        $tag->name = $tagName;
-        $tag->save();
-    }
-}
-
-foreach ($tagsMerlin as $tagName) {
-    $tagName = strtolower($tagName);
-    $tagModel = OfferTag::findOne(['name' => $tagName]);
-    if ($tagModel) {
-        $offre4->addTag($tagModel->id);
-    } else {
-        echo "Tag '$tagName' not found.\n";
-    }
-}
 
 
 //create balade bréhat
@@ -378,25 +335,10 @@ $offre5->save();
 $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES ($offre5->id, 1.0, 3);");
 
 //add tags
-$tagsBrehat = ['île', 'traversée', 'nature', 'patrimoine', 'maritime', 'guidée', 'panorama', 'granite rose'];
-
-foreach ($tagsBrehat as $tagName) {
-    $tagName = strtolower($tagName);
-    $tag = OfferTag::findOne(['name' => $tagName]);
-    if (!$tag) {
-        $tag = new OfferTag();
-        $tag->name = $tagName;
-        $tag->save();
-    }
-}
-
-foreach ($tagsBrehat as $tagName) {
-    $tagName = strtolower($tagName);
-    $tagModel = OfferTag::findOne(['name' => $tagName]);
-    if ($tagModel) {
-        $offre5->addTag($tagModel->id);
-    } else {
-        echo "Tag '$tagName' not found.\n";
+for($i = 0; $i<3; $i++){
+    $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
+    if(!in_array($tag, $offre5->tags())){
+        $offre5->addTag($tag);
     }
 }
 
@@ -440,9 +382,6 @@ $offre6->save();
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre6->id . ", 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
 
-//add tags
-
-$tagsRecree = ['attractions', 'sensations', 'manèges', 'enfants', 'famille', 'parc', 'verdoyant', 'évasion'];
 
 $horaire1o6 = new OfferSchedule(); $horaire1o6->day = 1; $horaire1o6->opening_hours = '09:00'; $horaire1o6->closing_hours = '19:00'; $horaire1o6-> save();
 $horaire2o6 = new OfferSchedule(); $horaire2o6->day = 2; $horaire2o6->opening_hours = '09:00'; $horaire2o6->closing_hours = '19:00'; $horaire2o6-> save();
@@ -460,24 +399,11 @@ AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire5
 AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire6o6->id);
 AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire7o6->id);
 
-
-foreach ($tagsRecree as $tagName) {
-    $tagName = strtolower($tagName);
-    $tag = OfferTag::findOne(['name' => $tagName]);
-    if (!$tag) {
-        $tag = new OfferTag();
-        $tag->name = $tagName;
-        $tag->save();
-    }
-}
-
-foreach ($tagsRecree as $tagName) {
-    $tagName = strtolower($tagName);
-    $tagModel = OfferTag::findOne(['name' => $tagName]);
-    if ($tagModel) {
-        $offre6->addTag($tagModel->id);
-    } else {
-        echo "Tag '$tagName' not found.\n";
+//add tags
+for($i = 0; $i<3; $i++){
+    $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
+    if(!in_array($tag, $offre6->tags())){
+        $offre6->addTag($tag);
     }
 }
 
@@ -506,26 +432,10 @@ $db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $off
 
 //add tags
 
-$tagsVallee = ['granit', 'statues', 'jeu de piste', 'enfants', 'imagination', 'culture bretonne'];
-
-
-foreach ($tagsVallee as $tagName) {
-    $tagName = strtolower($tagName);
-    $tag = OfferTag::findOne(['name' => $tagName]);
-    if (!$tag) {
-        $tag = new OfferTag();
-        $tag->name = $tagName;
-        $tag->save();
-    }
-}
-
-foreach ($tagsVallee as $tagName) {
-    $tagName = strtolower($tagName);
-    $tagModel = OfferTag::findOne(['name' => $tagName]);
-    if ($tagModel) {
-        $offre7->addTag($tagModel->id);
-    } else {
-        echo "Tag '$tagName' not found.\n";
+for($i = 0; $i<4; $i++){
+    $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
+    if(!in_array($tag, $offre7->tags())){
+        $offre7->addTag($tag);
     }
 }
 
