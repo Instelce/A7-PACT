@@ -24,6 +24,8 @@ use app\models\offer\ShowOffer;
 use app\models\offer\VisitOffer;
 use app\models\user\professional\ProfessionalUser;
 use app\models\VisitLanguage;
+use DateInterval;
+use DateTime;
 
 class OfferController extends Controller
 {
@@ -205,24 +207,46 @@ class OfferController extends Controller
         $address = Address::findOne(['id' => $offer->address_id]);
         $tags = OfferTag::findOne(['id' => $offer->tag]);
         $languages = VisitLanguage::findOne(['offer_id' => $id])->language;
+        $languages = VisitLanguage::findOne(['offer_id' => $id]) -> language;
         $formattedAddress = $address->number . ' ' . $address->street . ', ' . $address->postal_code . ' ' . $address->city;
         $images = OfferPhoto::find(['offer_id' => $id]) ?? NULL;//get the first image of the offer for the preview
         $url_images = [];
         foreach ($images as $image) {
             array_push($url_images, $image->url_photo);
         }
+
+        var_dump(date('N'));
+
+        $closingHour = OfferSchedule::findOne(['offer_id' => $id])->closing_hours;
+
+        if ($closingHour === 'fermé') {
+            $status = "fermé";
+        } else {
+            $closingTime = new DateTime($closingHour);
+
+            $currentTime = new DateTime();
+
+            if ($closingTime <= $currentTime) {
+                $status = "fermé";
+            } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
+                $status = "ferme bientôt";
+            } else {
+                $status = "ouvert";
+            }
+        }
+
         $professional = ProfessionalUser::findOne(['user_id' => $offer->professional_id])->denomination ?? NULL;//get the name of the professional who posted the offer
 
         $type = NULL;
         $duration = NULL;
         $required_age = NULL;
         $price = NULL;
+        $range_price = NULL;
 
         switch ($offer->category) {
             case 'restaurant':
                 $type = "Restaurant";
-                $minimum_price = RestaurantOffer::findOne(['offer_id' => $id])->minimum_price;
-                $maximum_price = RestaurantOffer::findOne(['offer_id' => $id])->maximum_price;
+                $range_price = RestaurantOffer::findOne(['offer_id' => $id])->range_price;
                 break;
             case 'activity':
                 $type = "Activité";
@@ -257,12 +281,12 @@ class OfferController extends Controller
             'website' => $offer->website,
             'address' => $formattedAddress,
             'price' => $price,
+            'status' => $status,
             'phone_number' => $offer->phone_number,
             'description' => $offer->description,
-            'tags' => $tags,
+            // 'tagNames' => $tagNames,
             'languages' => $languages,
-            'minimum_price' => $minimum_price,
-            'maximum_price' => $maximum_price
+            'range_price' => $range_price
         ];
 
         return $this->render('offers/detail', [
