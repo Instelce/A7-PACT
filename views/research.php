@@ -1,7 +1,7 @@
 <?php
 /** @var $this \app\core\View */
 
-$this->title = "research";
+$this->title = "Recherche";
 $this->cssFile = "research";
 
 ?>
