@@ -45,9 +45,7 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (12,90,'rue de Lille','Asnières-sur-Seine',92600,2.285369,48.914155),
                                                                     (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
                                                                     (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451),
-                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326),
-                                                                    (16, 1,'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
-                                                                    (17, 1,'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133)
+                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326)
                                                                     ;");
 
 // ---------------------------------------------------------------------- //
