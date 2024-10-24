@@ -303,7 +303,7 @@ class OfferController extends Controller
 
         return $this->render('offers/detail', [
             'pk' => $routeparams['pk'],
-            "offerData" => $offerData
+            'offerData' => $offerData
         ]);
     }
 
@@ -324,7 +324,7 @@ class OfferController extends Controller
             // Update the address
             $address = Address::findOne(['id' => $offer->address_id]);
             $address->loadData($request->getBody());
-//            $address->number = intval($body['address-number']);
+            //            $address->number = intval($body['address-number']);
 //            $address->street = $body['address-street'];
 //            $address->postal_code = $body['address-postal-code'];
 //            $address->city = $body['address-city'];
@@ -332,12 +332,19 @@ class OfferController extends Controller
 
             // Update the offer
             $offer->loadData($request->getBody());
-            $offer->offline_date = date('Y-m-d');
-            $offer->last_online_date = null;
             $offer->professional_id = Application::$app->user->account_id;
             $offer->address_id = $address->id;
+            if (array_key_exists("online", array: $body)) {
+                $offer->offline = 0;
+                $offer->last_online_date = date('Y-m-d');
+            } else {
+                $offer->offline_date = date('Y-m-d');
+                $offer->offline = 1;
+
+            }
 
             // Offer minimum price
+            $category = $offer->category;
             if (array_key_exists('offer-minimum-price', $body) && $category !== 'restaurant') {
                 $offer->minimum_price = intval($body['offer-minimum-price']);
             }
@@ -412,17 +419,17 @@ class OfferController extends Controller
                 $attraction->url_image_park_map = Application::$app->storage->saveFile('attraction-parc-map', 'offers/attraction-parc');
                 $attraction->update();
             }
-            //delete old image
-            $oldimage = OfferPhoto::find(['offer_id' => $offer->id]);
-            foreach ($oldimage as $image) {
-                $image->destroy();
-            }
+            // //delete old image
+            // $oldimage = OfferPhoto::find(['offer_id' => $offer->id]);
+            // foreach ($oldimage as $image) {
+            //     $image->destroy();
+            // }
 
-            // Save photos
-            $files = Application::$app->storage->saveFiles('photos', 'offers');
-            foreach ($files as $file) {
-                $offer->addPhoto($file);
-            }
+            // // Save photos
+            // $files = Application::$app->storage->saveFiles('photos', 'offers');
+            // foreach ($files as $file) {
+            //     $offer->addPhoto($file);
+            // }
 
             // TODO - validate all fields
             // if all fields are valid redirect to the payment page
@@ -432,12 +439,12 @@ class OfferController extends Controller
             return $response->redirect('/offres/' . $offer->id . '/modification');
         }
 
-
         return $this->render('offers/update', [
             'pk' => $routeparams['pk'],
             'offer' => $offerData,
             'model' => $offer,
-            'address' => $address
+            'address' => $address,
+            'offline' => $offer->offline
         ]);
     }
 }
