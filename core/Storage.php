@@ -5,7 +5,7 @@ namespace app\core;
 class Storage
 {
     /**
-     * File are saved in `upload` folder that is in `public` directory.
+     * File are saved in `upload` folder that is in `html` directory.
      * @param string $name
      * @param string $folder
      * @return string Path for the DB
@@ -13,8 +13,8 @@ class Storage
     public function saveFile(string $name, string $folder): string
     {
         // Create the folder if it doesn't exist
-        if (!file_exists(Application::$ROOT_DIR . '/public/upload/' . $folder)) {
-            mkdir(Application::$ROOT_DIR . '/public/upload/' . $folder, 0777, true);
+        if (!file_exists(Application::$ROOT_DIR . '/html/upload/' . $folder)) {
+            mkdir(Application::$ROOT_DIR . '/html/upload/' . $folder, 0777, true);
         }
 
         $tmpPath = $_FILES[$name]['tmp_name'];
@@ -22,7 +22,7 @@ class Storage
 
         $fileName = time() . rand(1, 1000) . '.' . $extension;
         $dbPath = '/upload/' . $folder . '/' . $fileName;
-        $filePath = Application::$ROOT_DIR . '/public' . $dbPath;
+        $filePath = Application::$ROOT_DIR . '/html' . $dbPath;
 
         // Save the file
         move_uploaded_file($tmpPath, $filePath);
@@ -31,7 +31,7 @@ class Storage
     }
 
     /**
-     * Files are saved in `upload` folder that is in `public` directory.
+     * Files are saved in `upload` folder that is in `html` directory.
      * @param string $name
      * @param string $folder
      * @return array Paths for the DB
@@ -39,8 +39,8 @@ class Storage
     public function saveFiles(string $name, string $folder): array
     {
         // Create the folder if it doesn't exist
-        if (!file_exists(Application::$ROOT_DIR . '/public/upload/' . $folder)) {
-            mkdir(Application::$ROOT_DIR . '/public/upload/' . $folder, 0777, true);
+        if (!file_exists(Application::$ROOT_DIR . '/html/upload/' . $folder)) {
+            mkdir(Application::$ROOT_DIR . '/html/upload/' . $folder, 0777, true);
         }
 
         $files = [];
@@ -51,7 +51,7 @@ class Storage
 
             $fileName = time() . rand(1, 1000) . '.' . $extension;
             $dbPath = '/upload/' . $folder . '/' . $fileName;
-            $filePath = Application::$ROOT_DIR . '/public' . $dbPath;
+            $filePath = Application::$ROOT_DIR . '/html' . $dbPath;
 
             move_uploaded_file($tmpPath, $filePath);
 

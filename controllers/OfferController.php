@@ -216,7 +216,7 @@ class OfferController extends Controller
         $prestationsNonIncluses = "B";
         $accessibilite = "C";
 
-        $languages = VisitLanguage::findOne(['offer_id' => $id]) -> language;
+        $languages = VisitLanguage::findOne(['offer_id' => $id])->language;
         $formattedAddress = $address->number . ' ' . $address->street . ', ' . $address->postal_code . ' ' . $address->city;
         $images = OfferPhoto::find(['offer_id' => $id]) ?? NULL;//get the first image of the offer for the preview
         $url_images = [];
@@ -313,10 +313,12 @@ class OfferController extends Controller
         $offer = Offer::findOne(['id' => $routeparams['pk']]);
         $address = Address::findOne(['id' => $offer->address_id]);
         $specificData = $offer->specificData();
+        $images = OfferPhoto::find(['offer_id' => $offer->id]) ?? NULL;
 
         $offerData = [
             'title' => $offer->title,
-            'category' => $offer->category
+            'category' => $offer->category,
+            'images' => $images,
         ];
 
         if ($request->isPost()) {
@@ -421,16 +423,16 @@ class OfferController extends Controller
                 $attraction->update();
             }
             // //delete old image
-            // $oldimage = OfferPhoto::find(['offer_id' => $offer->id]);
-            // foreach ($oldimage as $image) {
-            //     $image->destroy();
-            // }
+            foreach ($body['deleted-photos'] as $imageId) {
+                $image = OfferPhoto::findOneByPk($imageId);
+                $image->destroy();
+            }
 
-            // // Save photos
-            // $files = Application::$app->storage->saveFiles('photos', 'offers');
-            // foreach ($files as $file) {
-            //     $offer->addPhoto($file);
-            // }
+            // Save photos
+            $files = Application::$app->storage->saveFiles('photos', 'offers');
+            foreach ($files as $file) {
+                $offer->addPhoto($file);
+            }
 
             // TODO - validate all fields
             // if all fields are valid redirect to the payment page
