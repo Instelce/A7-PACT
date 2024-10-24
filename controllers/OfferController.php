@@ -370,10 +370,6 @@ class OfferController extends Controller
                 $offer->minimum_price = intval($body['offer-minimum-price']);
             }
 
-            if ($offer->validate()) {
-                echo "Offer is valid";
-            }
-
             if ($offer->update()) {
                 echo "Offer updated successfully";
             }
