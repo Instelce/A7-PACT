@@ -44,8 +44,25 @@ $form = new Form();
                         <?php echo $form->textarea($model, 'description') ?>
 
                         <!-- Tags of the category -->
-                        <!-- Generated in the offerCreate.js -->
-                        <div id="tags" class="grid grid-cols-2 my-2"></div>
+                        <?php $tags = [
+                            'restaurant'=> ['Française', 'Fruit de mer', 'Plastique', 'Italienne', 'Indienne', 'Gastronomique', 'Restauration rapide', 'Crêperie'],
+                            'others'=> ['Culturel', 'Gastronomie', 'Patrimoine', 'Musée', 'Histoire', 'Atelier', 'Urbain', 'Musique', 'Nature', 'Famille', 'Plein air', 'Cirque', 'Sport', 'Son et lumière', 'Nautique', 'Humour']
+                        ] ?>
+                        <div id="tags" class="grid grid-cols-2 my-2">
+                            <?php if ($offer['category']=='restaurant'){foreach ($tags['restaurant'] as $tag) {?>
+                            <div class="flex items-center gap-1">
+                                <input type="checkbox" class="checkbox checkbox-normal" name="tags[]"
+                                    value="<?php echo $tag; ?>" id="<?php echo $tag; ?>">
+                                <label for="<?php echo $tag; ?>"><?php echo $tag; ?></label>
+                            </div>
+                            <?php }} else {foreach ($tags['others'] as $tag) { ?>
+                            <div class="flex items-center gap-1">
+                                <input type="checkbox" class="checkbox checkbox-normal" name="tags[]"
+                                    value="<?php echo $tag; ?>" id="<?php echo $tag; ?>">
+                                <label for="<?php echo $tag; ?>"><?php echo $tag; ?></label>
+                            </div>
+                            <?php } }?>
+                        </div>
 
                         <!-- Site web of the offer -->
                         <?php echo $form->field($model, 'website') ?>
