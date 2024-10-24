@@ -457,7 +457,7 @@ $form = new Form();
 
               <!-- Uploader -->
               <label for="photo-input" class="image-uploader">
-                <input type="file" accept="image/png, image/jpeg" id="photo-input" multiple hidden>
+                <input type="file" accept="image/png, image/jpeg" name="images[]" id="photo-input" multiple hidden>
 
                 <i data-lucide="upload"></i>
                 <p>Faire glisser des fichiers pour les uploader</p>
@@ -465,7 +465,7 @@ $form = new Form();
               </label>
 
               <!-- Photos -->
-              <div id="photos" class="flex flex-col gap-2">
+              <div name="photos[]" id="photos" class="flex flex-col gap-2">
                   <div class="drag-line hidden"></div>
               </div>
 

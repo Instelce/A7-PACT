@@ -42,4 +42,13 @@ class AttractionParkOffer extends DBModel {
         $parkSchedule->schedule_id = $scheduleId;
         $parkSchedule->save();
     }
+
+    public function labels(): array
+    {
+        return [
+            'url_image_park_map' => "Plan du parc",
+            'required_age' => "Age minimum requis"
+        ];
+    }
 }
+
