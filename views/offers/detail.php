@@ -124,18 +124,9 @@ var_dump($offerData);
                 </svg>
                 <p>
                     <?php
-                    if (isset($offerData['minimum_price']) && isset($offerData['maximum_price'])) {
-
-                        for ($i = 0; $i < $offerData['minimum_price']; $i++) {
+                        for ($i = 0; $i < $offerData['range_price']; $i++) {
                             echo "€";
                         }
-                        echo " - ";
-                        for ($i = 0; $i < $offerData['maximum_price']; $i++) {
-                            echo "€";
-                        }
-                    } else {
-                        echo "Prix non disponible";
-                    }
                     ?>
                 </p>
             </div>
@@ -154,8 +145,11 @@ var_dump($offerData);
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
             </svg>
-            <p><?php echo $offerData["openValue"] ?></p>
+            <p><?php echo $offerData["status"] ?></p>
         </div>
+
+
+
 
         <div class="inlineOffer">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -203,8 +197,16 @@ var_dump($offerData);
 
     <div class="inlineOffer">
         <h2 class="heading-2">Tags : </h2>
-        <p class="heading-3"><?php echo $offerData["tags"] ?></p>
-    </div>
+        <?php if (!empty($offerData['tags'])): ?>
+            <?php foreach ($offerData['tags'] as $tag): ?>
+                <p><?php echo $tag ;?>, </p>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Aucun tag associé à cette offre.</p>
+        <?php endif; ?>
+
+
+
 
 
     <div class="acordeonSize">
