@@ -212,6 +212,9 @@ class OfferController extends Controller
             $tagsName[] = $tag->name;
         }
 
+        $prestationsIncluses = "A";
+        $prestationsNonIncluses = "B";
+        $accessibilite = "C";
 
         $languages = VisitLanguage::findOne(['offer_id' => $id]) -> language;
         $formattedAddress = $address->number . ' ' . $address->street . ', ' . $address->postal_code . ' ' . $address->city;
@@ -226,18 +229,18 @@ class OfferController extends Controller
         $closingHour = OfferSchedule::findOne(['id' => $id])->closing_hours;
 
         if ($closingHour === 'fermé') {
-            $status = "fermé";
+            $status = "Fermé";
         } else {
             $closingTime = new DateTime($closingHour);
 
             $currentTime = new DateTime();
 
             if ($closingTime <= $currentTime) {
-                $status = "fermé";
+                $status = "Fermé";
             } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
-                $status = "ferme bientôt";
+                $status = "Ferme bientôt";
             } else {
-                $status = "ouvert";
+                $status = "Ouvert";
             }
         }
 
@@ -292,7 +295,10 @@ class OfferController extends Controller
             'description' => $offer->description,
             'tags' => $tagsName,
             'languages' => $languages,
-            'range_price' => $range_price
+            'range_price' => $range_price,
+            'prestationsIncluses' => $prestationsIncluses,
+            'prestationsNonIncluses' => $prestationsNonIncluses,
+            'accessibilite' => $accessibilite
         ];
 
         return $this->render('offers/detail', [
