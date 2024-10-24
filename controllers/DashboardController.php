@@ -1,5 +1,5 @@
 <?php
-
+// controllers/DashboardController.php
 namespace app\controllers;
 
 use app\core\Application;
@@ -12,10 +12,10 @@ use app\models\offer\Offer;
 use app\models\offer\OfferOption;
 use app\models\offer\OfferPhoto;
 use app\models\offer\OfferType;
+use app\models\user\professional\ProfessionalUser;
 
 class DashboardController extends Controller
 {
-
     public function __construct()
     {
         $this->registerMiddleware(new AuthMiddleware(['offers']));
@@ -47,12 +47,15 @@ class DashboardController extends Controller
             $specificData[] = $offer->specificData();
         }
 
+        $professionalUser = ProfessionalUser::findOne(['user_id' => Application::$app->user->account_id]);
+
         return $this->render('/dashboard/offres', [
             'offers' => $offers,
             'photos' => $photos,
             'offersType' => $offersType,
             'offersOption' => $offersOption,
-            'specificData' => $specificData
+            'specificData' => $specificData,
+            'professionalUser' => $professionalUser
         ]);
     }
 
