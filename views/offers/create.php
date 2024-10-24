@@ -105,7 +105,7 @@ $form = new Form();
                 <!-- En relief option -->
                 <div class="flex justify-between items-center">
                     <div class="flex gap-2 items-center">
-                      <input type="radio" id="type-in-relief" name="option" value="en-relief">
+                      <input type="radio" id="type-in-relief" name="option" value="en_relief">
                       <label for="type-in-relief" class="flex flex-col gap-1">
                         Option “En Relief”
                         <small class="helper">Met l’offre en exergue lors de son affichage dans les listes</small>
@@ -118,7 +118,7 @@ $form = new Form();
                 <!-- A la une option -->
                 <div class="flex justify-between items-center">
                     <div class="flex gap-2 items-center">
-                      <input type="radio" id="type-a-la-une" name="option" value="a-la-une">
+                      <input type="radio" id="type-a-la-une" name="option" value="a_la_une">
                       <label for="type-a-la-une" class="flex flex-col gap-1">
                         Option “A la Une”
                         <small class="helper">Avantage de “En relief” <br>
@@ -517,12 +517,12 @@ $form = new Form();
     <!-- Sidebar                                                             -->
     <!-- ------------------------------------------------------------------- -->
 
-    <aside id="sidebar" class="sticky col-span-2 h-fit mt-4 flex flex-col gap-4">
+    <aside id="sidebar" class="sticky col-span-2 h-fit mt-4 flex flex-col gap-4 top-navbar-height">
         <?php if (Application::$app->user->isPrivateProfessional()) { ?>
             <div class="flex flex-col gap-2">
                 <h3 class="font-bold indent-6">Résumé</h3>
 
-                <div class="px-6 py-4 border border-solid border-gray-1 rounded-3xl">
+                <div class="px-6 py-4 border border-solid border-gray-1 rounded-3xl gap-1">
                     <div class="flex justify-between text-gray-4">
                         <p>Cout de l’offre sans options</p>
                         <span id="price-without-option">4,98 €</span>
@@ -531,22 +531,33 @@ $form = new Form();
                         <p>Cout de l’offre avec options</p>
                         <span id="price-with-option">7,96 €</span>
                     </div>
-                    <div class="flex justify-between text-gray-4">
-                        <p>Réduction</p>
-                        <span>0</span>
+<!--                    <div class="flex justify-between text-gray-4">-->
+<!--                        <p>Réduction</p>-->
+<!--                        <span>0</span>-->
+<!--                    </div>-->
+<!--                    <div class="flex justify-between font-bold">-->
+<!--                        <p>Total HT</p>-->
+<!--                        <span id="price-subtotal">7,96 €</span>-->
+<!--                    </div>-->
+                    <div class="flex justify-between text-gray-4 mt-2">
+                        <p>TVA</p>
+                        <span>20%</span>
                     </div>
                     <div class="flex justify-between font-bold">
-                        <p>Sous-total</p>
-                        <span id="price-subtotal">7,96 €</span>
+                        <p>Total TTC</p>
+                        <span id="price-total">7,96 €</span>
                     </div>
+
                 </div>
+
+                <p class="indent-6 text-gray-3">L'offre sera facturé au mois</p>
             </div>
 
-            <x-input rounded>
-                <p slot="label">Code promo</p>
-                <input slot="input" type="text" placeholder="Entrez votre code promo">
-                <button slot="button" class="button gray sm no-border">Appliquer</button>
-            </x-input>
+<!--            <x-input rounded>-->
+<!--                <p slot="label">Code promo</p>-->
+<!--                <input slot="input" type="text" placeholder="Entrez votre code promo">-->
+<!--                <button slot="button" class="button gray sm no-border">Appliquer</button>-->
+<!--            </x-input>-->
         <?php } ?>
 
         <div class="flex flex-col gap-2">

@@ -89,6 +89,11 @@ class OfferController extends Controller
                 }
             }
 
+            // Save the offer option
+            if (array_key_exists('option', $body) && $body['option'] !== 'no') {
+                $offer->addOption($body['option'], $body['option-launch-date'], $body['option-duration']);
+            }
+
             // Creation of complementary informations
             if ($category === 'visit') {
                 $visit = new VisitOffer();

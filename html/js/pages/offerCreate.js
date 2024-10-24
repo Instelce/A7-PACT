@@ -397,7 +397,8 @@ let typePremiumInput = document.querySelector('#type-premium');
 
 let priceWithoutOption = document.querySelector('#price-without-option');
 let priceWithOption = document.querySelector('#price-with-option');
-let priceSubTotal = document.querySelector('#price-subtotal');
+// let priceSubTotal = document.querySelector('#price-subtotal');
+let priceTotal = document.querySelector('#price-total');
 
 let offerPrices = {
     "standard": 4.98,
@@ -409,6 +410,8 @@ let optionPrices = {
     "en-relief": 2.98,
     "a-la-une": 4.98,
 }
+
+updatePrices()
 
 if (typeStandardInput && typePremiumInput) {
     typeStandardInput.addEventListener('input', updatePrices);
@@ -424,5 +427,8 @@ function updatePrices() {
 
     priceWithoutOption.textContent = `${offerPrices[type]} €`;
     priceWithOption.textContent = `${(offerPrices[type] + optionPrices[option]).toFixed(2)} €`;
-    priceSubTotal.textContent = `${(offerPrices[type] + optionPrices[option]).toFixed(2)} €`;
+    // priceSubTotal.textContent = `${(offerPrices[type] + optionPrices[option]).toFixed(2)} €`;
+
+    // Total price with 20% TVA
+    priceTotal.textContent = `${((offerPrices[type] + optionPrices[option]) * 1.2).toFixed(2)} €`;
 }

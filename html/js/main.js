@@ -89,5 +89,6 @@ if (avatarButton) {
 
 let sidebar = document.querySelector('.top-navbar-height');
 
-if (sidebar)
+if (sidebar) {
     sidebar.style.top = `${navbar.offsetHeight + 16}px`;
+}
