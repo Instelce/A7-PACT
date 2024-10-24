@@ -11,28 +11,6 @@ sidebar.style.top = `${navbar.offsetHeight}px`;
 
 
 // -------------------------------------------------------------------------- //
-// Price grid new row
-// -------------------------------------------------------------------------- //
-
-let priceTableBody = priceTable.querySelector('tbody#prices-rows');
-let priceAddButton = document.querySelector('#add-price-row');
-
-priceAddButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    priceTableBody.insertAdjacentHTML('beforeend', `
-        <tr>
-            <td>
-                <input id="price-name" name="prices[]" type="text" placeholder="Nom" class="table-input">
-            </td>
-            <td>
-                <input id="price-value" name="prices[]" type="number" placeholder="Prix" class="table-input">
-            </td>
-        </tr>
-    `);
-})
-
-
-// -------------------------------------------------------------------------- //
 // Photo upload
 // -------------------------------------------------------------------------- //
 
@@ -242,3 +220,40 @@ function updatePrices() {
     priceWithOption.textContent = `${(offerPrices[type] + optionPrices[option]).toFixed(2)} €`;
     priceSubTotal.textContent = `${(offerPrices[type] + optionPrices[option]).toFixed(2)} €`;
 }
+
+let photos = photosContainer.querySelectorAll('.uploaded-image-card')
+
+console.log(photos);
+
+
+photos.forEach(photo => {
+    let deleteButton = photo.querySelector('.photo-remove');
+    let imageId = photo.querySelector('.image-id')
+
+    deleteButton.addEventListener('click', (e) => {
+        e.target.closest('.uploaded-image-card').remove();
+
+        console.log(imageId.value);
+
+        let deleteInputTracker = document.createElement('input');
+        deleteInputTracker.hidden = true;
+        deleteInputTracker.name = "deleted-photos[]";
+        deleteInputTracker.value = imageId.value;
+
+        console.log(deleteInputTracker.value);
+
+        photosContainer.appendChild(deleteInputTracker);
+    })
+})
+// removeButtons.forEach(button => {
+//     button.addEventListener('click', (e) => {
+//         e.target.closest('.uploaded-image-card').remove();
+
+//         let imageId =
+
+//             let deleteInputTracker = document.createElement('input');
+//         deleteInputTracker.hidden = true;
+//         deleteInputTracker.name = "deleted-photos[]";
+//         deleteInputTracker.value =
+//                 })
+// })
