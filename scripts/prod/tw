@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./tailwindcss -i css/main.css -o css/dist/output.css --watch --minify

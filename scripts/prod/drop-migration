@@ -1,0 +1,3 @@
+#!/bin/sh
+
+docker exec web sh -c "php ../manage.php migration drop"
