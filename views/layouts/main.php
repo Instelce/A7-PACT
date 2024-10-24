@@ -18,14 +18,16 @@ use app\core\Application;
 
     <!-- Styles -->
     <link rel="stylesheet" href="/css/dist/output.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
 
     <?php if ($this->cssFile): ?>
-        <link rel="stylesheet"
-              href="/css/pages/<?php echo $this->cssFile ?>.css">
+        <link rel="stylesheet" href="/css/pages/<?php echo $this->cssFile ?>.css">
     <?php endif; ?>
 </head>
 
-<body>
+<body class="<?php echo Application::$app->isAuthenticated() ? Application::$app->user->isProfessional() ? 'professional-mode' : '' : '' ?>">
 
 <div class="height-top"></div>
 
@@ -66,7 +68,20 @@ use app\core\Application;
         </a>
 
         <?php if (Application::$app->isAuthenticated()) { ?>
-            <a href="/deconnexion" class="link">Déconnexion</a>
+            <!-- Avatar -->
+            <div class="avatar">
+                <div class="image-container">
+                    <img src="<?php echo Application::$app->user->avatar_url ?>" alt="<?php echo Application::$app->user->mail ?>">
+                </div>
+
+                <div class="avatar-options">
+                    <a href="/profile">Mon profil</a>
+                    <a href="/deconnexion">
+                        Déconnexion
+                        <i data-lucide="log-out" width="18"></i>
+                    </a>
+                </div>
+            </div>
         <?php } else { ?>
             <a href="/connexion" class="button sm">Connexion</a>
         <?php } ?>
@@ -177,7 +192,12 @@ use app\core\Application;
 
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
 <script type="module" src="/js/main.js"></script>
+
 
 <?php if ($this->jsFile) ?>
     <script type="module" src="/js/pages/<?php echo $this->jsFile ?>.js"></script>

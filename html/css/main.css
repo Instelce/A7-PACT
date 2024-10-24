@@ -19,9 +19,6 @@
 @import "form/switch.css";
 @import "form/input.css";
 
-@import "pages/detailedOffer.css";
-@import "pages/research.css";
-
 /* Import fonts */
 @import "fonts/satoshi.css";
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
@@ -102,7 +99,7 @@ a {
 /* Container */
 .main-container {
     width: 100%;
-    min-height: 80vh;
+    min-height: 70vh;
     display: block;
     position: relative;
     padding: 2rem 20%;
@@ -145,6 +142,13 @@ a {
     100% {
         opacity: 0;
     }
+}
+
+.pro-name {
+    padding: 1rem 2rem;
+    border: 1px solid rgba(var(--color-purple-primary), .1);
+    border-radius: var(--radius-small);
+    margin-bottom: 1rem;
 }
 
 @tailwind components;

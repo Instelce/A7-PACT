@@ -51,3 +51,7 @@
 .link.simple::before {
     content: none;
 }
+
+.professional-mode .link {
+    --color: rgb(var(--color-purple-primary));
+}

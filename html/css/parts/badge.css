@@ -18,3 +18,13 @@
     --foreground: var(--color-white);
     --background: var(--color-success);
 }
+
+.badge.red {
+    --foreground: var(--color-white);
+    --background: var(--color-danger);
+}
+
+.badge.gray {
+    --foreground: var(--color-gray-3);
+    --background: var(--color-gray-1);
+}

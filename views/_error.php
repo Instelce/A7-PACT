@@ -27,8 +27,8 @@ $this->title = 'Oops';
     <?php } ?>
 
     <?php if (Application::$app->isAuthenticated()) { ?>
-        <p>Retourner sur <a href="/dashboard">votre tableau de bord</a>.</p>
+        <p>Retourner sur <a href="/dashboard" class="link">votre tableau de bord</a>.</p>
     <?php } else { ?>
-        <p>Retourner à la <a href="/">page d'accueil</a>.</p>
+        <p>Retourner à la <a href="/" class="link">page d'accueil</a>.</p>
     <?php } ?>
 <?php } ?>

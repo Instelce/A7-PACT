@@ -85,12 +85,22 @@ abstract class DBModel extends Model
         $pk = static::pk();
         $pkValue = $this->{$pk};
 
+        // Add updated_at to set
+        if (property_exists($this, 'updated_at')) {
+            $set[] = 'updated_at = :updated_at';
+        }
+
         // Prepare the statement
         $statement = self::prepare("UPDATE $tableName SET " . implode(",", $set) . " WHERE $pk = $pkValue;");
 
         // Load the model values into the statement
         foreach ($attributes as $attribute) {
             $statement->bindValue(":$attribute", $this->{$attribute});
+        }
+
+        if (property_exists($this, 'updated_at')) {
+            $this->updated_at = date('Y-m-d');
+            $statement->bindValue(':updated_at', $this->updated_at);
         }
 
         $statement->execute();

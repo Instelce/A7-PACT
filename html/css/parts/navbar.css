@@ -13,6 +13,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    border-bottom: 1px solid rgb(var(--color-gray-1));
 }
 
 .navbar .nav-burger {
@@ -155,8 +156,12 @@
 
 /* Avatar */
 .navbar .avatar {
-    width: 40px;
-    height: 40px;
+    position: relative;
+}
+
+.navbar .avatar .image-container {
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     overflow: hidden;
     background-color: rgb(var(--color-gray-1));
@@ -164,6 +169,7 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    position: relative;
 
     transition: box-shadow .2s ease;
 }
@@ -175,6 +181,72 @@
     object-position: center;
 }
 
-.navbar .avatar:hover {
+.navbar .avatar .image-container:hover {
     box-shadow: 0 0 0 2px rgba(var(--color-purple-primary), .5);
+}
+
+/* Avatar option */
+.avatar .avatar-options {
+    width: fit-content;
+    position: absolute;
+    /*overflow: hidden;*/
+    bottom: 0;
+    transform: translateY(calc(100% + .5rem)) translateX(-75%);
+    border-radius: var(--radius-small);
+    border: 1px solid rgb(var(--color-gray-1));
+    background: white;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 1000;
+
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+/* Chevron */
+.avatar .avatar-options::before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-left: 1px solid rgb(var(--color-gray-1));
+    border-top: 1px solid rgb(var(--color-gray-1));
+    background: white;
+    border-radius: 2px;
+    top: 0;
+    right: calc(45px / 2 - 10px / 2);
+    z-index: -1;
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.avatar-options.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(calc(100% + 1rem)) translateX(-75%);
+}
+
+.avatar .avatar-options a {
+    width: 100%;
+    padding: .8rem 1rem;
+
+    background-color: white;
+    border-bottom: 1px solid rgb(var(--color-gray-1));
+
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    transition: background-color .2s ease;
+}
+
+.avatar .avatar-options a:hover {
+    background-color: rgba(var(--color-purple-primary), .1);
+}
+
+.avatar .avatar-options a:first-child {
+    border-radius: var(--radius-small) var(--radius-small) 0 0;
+}
+
+.avatar .avatar-options a:last-child {
+    border-radius: 0 0 var(--radius-small) var(--radius-small);
+    border-bottom: none;
 }

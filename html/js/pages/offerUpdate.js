@@ -1,13 +1,20 @@
-import '../address.js';
 
 // -------------------------------------------------------------------------- //
-// Set sidebar top position
+// Toggle visibility of period FIELDS
 // -------------------------------------------------------------------------- //
 
-let sidebar = document.querySelector('#sidebar');
-let navbar = document.querySelector('.navbar');
+let periodFields = document.querySelector('#period-fields');
+let periodSelect = document.querySelector('#switch-period');
+let periodInput = periodFields.querySelectorAll('input');
 
-sidebar.style.top = `${navbar.offsetHeight}px`;
+if (periodSelect) {
+    periodSelect.addEventListener('change', (e) => {
+        periodFields.classList.toggle('hidden');
+        periodInput.forEach(input => {
+            input.required = !input.required;
+        })
+    })
+}
 
 
 // -------------------------------------------------------------------------- //

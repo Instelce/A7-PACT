@@ -52,7 +52,7 @@ $form = new Form();
                             <?php if ($offer['category']=='restaurant'){foreach ($tags['restaurant'] as $tag) {?>
                             <div class="flex items-center gap-1">
                                 <input type="checkbox" class="checkbox checkbox-normal" name="tags[]"
-                                    value="<?php echo $tag; ?>" id="<?php echo $tag; ?>">
+                                    value="<?php echo $tag; ?>" id="<?php echo $tag; ?>" <?php echo in_array(strtolower($tag), $offer['tags']) ? 'checked' : '' ?>>
                                 <label for="<?php echo $tag; ?>"><?php echo $tag; ?></label>
                             </div>
                             <?php }} else {foreach ($tags['others'] as $tag) { ?>
@@ -123,8 +123,9 @@ $form = new Form();
                     <div class="complementary-section flex flex-col gap-4" data-category="show">
                         <?php echo $form->field($specificData, 'duration')->numberField() ?>
                         <?php echo $form->field($specificData, 'capacity')->numberField() ?>
+                    </div>
 
-                    </div> <!-- Period for visit and show -->
+                    <!-- Period for visit and show -->
                     <div id="period-section" class="flex flex-col gap-4 mt-4">
 
                         <div class="flex gap-4 items-center">
@@ -135,7 +136,16 @@ $form = new Form();
                             <label for="switch-period" id="switch-period-label">A une période</label>
                         </div>
 
-                        <div id="period-fields" class="flex gap-4 hidden"></div>
+                        <div id="period-fields" class="flex gap-4 hidden">
+                            <x-input>
+                                <p slot="label">Début de la période</p>
+                                <input slot="input" type="date" name="period-start">
+                            </x-input>
+                            <x-input>
+                                <p slot="label">Fin de la période</p>
+                                <input slot="input" type="date" name="period-end">
+                            </x-input>
+                        </div>
                     </div><?php
                         break;
                     case 'visit': ?>
@@ -172,7 +182,7 @@ $form = new Form();
 
                     </div>
                     <!-- Period for visit and show -->
-                    <div id="period-section" class="flex flex-col gap-4 mt-4">
+                    <div id="period-section" class="flex flex-col gap-4">
 
                         <div class="flex gap-4 items-center">
                             <div class="flex items-center">
@@ -182,7 +192,16 @@ $form = new Form();
                             <label for="switch-period" id="switch-period-label">A une période</label>
                         </div>
 
-                        <div id="period-fields" class="flex gap-4 hidden"></div>
+                        <div id="period-fields" class="flex gap-4 hidden">
+                            <x-input>
+                                <p slot="label">Début de la période</p>
+                                <input slot="input" type="date" name="period-start">
+                            </x-input>
+                            <x-input>
+                                <p slot="label">Fin de la période</p>
+                                <input slot="input" type="date" name="period-end">
+                            </x-input>
+                        </div>
                     </div><?php
                         break;
                     case 'attraction_park':
@@ -206,41 +225,21 @@ $form = new Form();
                     <h2 class="section-header">Localisation</h2>
 
                     <div class="flex flex-col gap-4">
-                        <x-input>
-                            <p slot="label">Adresse complète</p>
-                            <input slot="input" id="address-field" type="text" placeholder="">
-                            <p slot="helper">Champ avec suggestions qui modifie les champs suivants</p>
-                            <div slot="list" id="address-autocomplete" data-no-filter></div>
-                        </x-input>
+<!--                        <x-input>-->
+<!--                            <p slot="label">Adresse complète</p>-->
+<!--                            <input slot="input" id="address-field" type="text" placeholder="">-->
+<!--                            <p slot="helper">Champ avec suggestions qui modifie les champs suivants</p>-->
+<!--                            <div slot="list" id="address-autocomplete" data-no-filter></div>-->
+<!--                        </x-input>-->
 
                         <div class="flex flex-col gap-2">
                             <div class="flex gap-4">
                                 <?php echo $form->field($address, 'number') ?>
-                                <!--                            <x-input class="w-[200px]">-->
-                                <!--                                <p slot="label">Numéro de rue</p>-->
-                                <!--                                <input slot="input" id="address-number" type="number" name="address-number"-->
-                                <!--                                    placeholder="2">-->
-                                <!--                            </x-input>-->
                                 <?php echo $form->field($address, 'street') ?>
-                                <!--                            <x-input>-->
-                                <!--                                <p slot="label">Nom de la rue</p>-->
-                                <!--                                <input slot="input" id="address-street" type="text" name="address-street"-->
-                                <!--                                    placeholder="Rue Edouard Branly" required>-->
-                                <!--                            </x-input>-->
                             </div>
                             <div class="flex gap-4">
                                 <?php echo $form->field($address, 'postal_code') ?>
-                                <!--                            <x-input class="w-[200px]">-->
-                                <!--                                <p slot="label">Code postal</p>-->
-                                <!--                                <input slot="input" id="address-postal-code" type="text" name="address-postal-code"-->
-                                <!--                                    placeholder="22300" required>-->
-                                <!--                            </x-input>-->
                                 <?php echo $form->field($address, 'city') ?>
-                                <!--                            <x-input>-->
-                                <!--                                <p slot="label">Ville</p>-->
-                                <!--                                <input slot="input" id="address-city" type="text" name="address-city"-->
-                                <!--                                    placeholder="Lannion" required>-->
-                                <!--                            </x-input>-->
                             </div>
 
                             <!-- Longitude and latitude inputs -->
@@ -448,13 +447,13 @@ $form = new Form();
         <!-- Sidebar                                                             -->
         <!-- ------------------------------------------------------------------- -->
 
-        <aside id="sidebar" class="sticky col-span-2 h-fit mt-4 flex flex-col gap-4">
+        <aside id="sidebar" class="sticky col-span-2 h-fit mt-4 flex flex-col gap-4 top-navbar-height">
             <div class="flex flex-col gap-2">
                 <div class="flex flex-col gap-2">
                     <div class="flex gap-4 items-center">
                         <div class="flex items-center">
                             <input class="switch" type="checkbox" id="switch-online" name="online"
-                                <?php if ($offline == 1) { echo'checked';} ?> />
+                                <?php if ($offer['offline'] == 1) { echo'checked';} ?> />
                             <label class="switch" for="switch-online"></label>
                         </div>
                         <label for="switch-online">Mise en ligne de l'offre</label>

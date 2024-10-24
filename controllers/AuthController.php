@@ -67,6 +67,9 @@ class AuthController extends Controller
     }
 
     public function profile() {
+        if (Application::$app->user->isProfessional()) {
+            $this->setLayout('back-office');
+        }
         return $this->render('profile');
     }
 }

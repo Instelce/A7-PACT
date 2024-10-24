@@ -1,6 +1,9 @@
 <?php
 /** @var $this \app\core\View */
+
 $this->title = "research";
+$this->cssFile = "research";
+
 ?>
 <main class="vertical-list">
     <?php

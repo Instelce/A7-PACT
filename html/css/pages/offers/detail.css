@@ -69,14 +69,12 @@ x-acordeon {
     text-decoration: underline; /* Underline the text */
 }
 
-.closed {
-    color: red; /* Style for closed items */
+.offer-closed {
+    color: red;
 }
-
-.closing-soon {
-    color: orange; /* Style for items closing soon */
+.offer-closing-soon {
+    color: orange;
 }
-
-.open {
-    color: green; /* Style for open items */
+.offer-open {
+    color: green;
 }

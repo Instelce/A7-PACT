@@ -72,6 +72,10 @@ class Application
                 $this->response->setStatusCode(500);
             }
 
+            if ($this->user->isProfessional()) {
+                $this->layout = 'back-office';
+            }
+
             echo $this->view->renderView('_error', [
                 'exception' => $e
             ]);
