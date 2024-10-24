@@ -318,11 +318,14 @@ class OfferController extends Controller
         $address = Address::findOne(['id' => $offer->address_id]);
         $specificData = $offer->specificData();
         $images = OfferPhoto::find(['offer_id' => $offer->id]) ?? NULL;
+        $tags = $offer->tags();
 
         $offerData = [
             'title' => $offer->title,
             'category' => $offer->category,
+            'offline' => $offer->offline,
             'images' => $images,
+            'tags' => array_map(fn($tag) => $tag->name, $tags),
         ];
 
         if ($request->isPost()) {
@@ -331,10 +334,6 @@ class OfferController extends Controller
             // Update the address
             $address = Address::findOne(['id' => $offer->address_id]);
             $address->loadData($request->getBody());
-            //            $address->number = intval($body['address-number']);
-//            $address->street = $body['address-street'];
-//            $address->postal_code = $body['address-postal-code'];
-//            $address->city = $body['address-city'];
             $address->update();
 
             // Update the offer
@@ -376,11 +375,11 @@ class OfferController extends Controller
             if ($category === 'visit') {
                 $visit = VisitOffer::findOne(['offer_id' => $offer->id]);
                 $visit->offer_id = $offer->id;
-                $visit->duration = Utils::convertHourToFloat($body['visit-duration']);
+                $visit->duration = Utils::convertHourToFloat($body['duration']);
                 $visit->guide = array_key_exists('visit-guide', $body) ? 1 : 0;
 
                 // Update the period
-                if (array_key_exists('period-start', $body)) {
+                if (array_key_exists('period-start', $body) && $body['period-start'] !== '') {
                     $period = OfferPeriod::findOne(['id' => $offer->id]);
                     $period->start_date = $body['period-start'];
                     $period->end_date = $body['period-end'];
@@ -409,7 +408,7 @@ class OfferController extends Controller
                 $show->capacity = intval($body['show-capacity']);
 
                 // Update the period
-                if (array_key_exists('period-start', $body)) {
+                if (array_key_exists('period-start', $body) && $body['period-start'] !== '') {
                     $period = OfferPeriod::findOne(['offer_id' => $offer->id]);
                     $period->start_date = $body['period-start'];
                     $period->end_date = $body['period-end'];
@@ -426,7 +425,8 @@ class OfferController extends Controller
                 $attraction->url_image_park_map = Application::$app->storage->saveFile('attraction-parc-map', 'offers/attraction-parc');
                 $attraction->update();
             }
-            // //delete old image
+
+            // Delete images
             foreach ($body['deleted-photos'] as $imageId) {
                 $image = OfferPhoto::findOneByPk($imageId);
                 $image->destroy();

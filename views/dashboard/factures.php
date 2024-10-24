@@ -1,7 +1,15 @@
+<?php
+use app\core\Application;
+?>
+
 <div class="flex gap-4">
 
     <!-- Tabs button -->
-    <div class="flex flex-col w-[250px]">
+    <div class="flex flex-col w-[250px] h-fit sticky top-navbar-height">
+        <div class="pro-name">
+            <h1><?php echo Application::$app->user->specific()->denomination ?></h1>
+        </div>
+
         <a href="/dashboard/offres">
             <div class="tab-button pro">
                 <i data-lucide="ticket"></i>

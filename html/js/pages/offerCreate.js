@@ -1,16 +1,6 @@
 import '../address.js';
 
 // -------------------------------------------------------------------------- //
-// Set sidebar top position
-// -------------------------------------------------------------------------- //
-
-let sidebar = document.querySelector('#sidebar');
-let navbar = document.querySelector('.navbar');
-
-sidebar.style.top = `${navbar.offsetHeight}px`;
-
-
-// -------------------------------------------------------------------------- //
 // Load option date picker
 // -------------------------------------------------------------------------- //
 
@@ -144,16 +134,15 @@ switchPeriod.addEventListener('input', (e) => {
         periodFields.innerHTML = `
             <x-input>
                 <p slot="label">Début de la période</p>
-                <input slot="input" type="date" name="period-start">
+                <input slot="input" type="date" name="period-start" required>
             </x-input>
             <x-input>
                 <p slot="label">Fin de la période</p>
-                <input slot="input" type="date" name="period-end">
+                <input slot="input" type="date" name="period-end" required>
             </x-input>
         `
     } else {
         periodFields.innerHTML = '';
-        // periodFields.classList.add('hidden');
     }
 })
 

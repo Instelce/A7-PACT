@@ -481,39 +481,45 @@ $form = new Form();
     <!-- ------------------------------------------------------------------- -->
 
     <aside id="sidebar" class="sticky col-span-2 h-fit mt-4 flex flex-col gap-4">
-        <div class="flex flex-col gap-2">
-          <h3 class="font-bold indent-6">Résumé</h3>
+        <?php if (Application::$app->user->isPrivateProfessional()) { ?>
+            <div class="flex flex-col gap-2">
+                <h3 class="font-bold indent-6">Résumé</h3>
 
-          <div class="px-6 py-4 border border-solid border-gray-1 rounded-3xl">
-            <div class="flex justify-between text-gray-4">
-              <p>Cout de l’offre sans options</p>
-              <span id="price-without-option">4,98 €</span>
+                <div class="px-6 py-4 border border-solid border-gray-1 rounded-3xl">
+                    <div class="flex justify-between text-gray-4">
+                        <p>Cout de l’offre sans options</p>
+                        <span id="price-without-option">4,98 €</span>
+                    </div>
+                    <div class="flex justify-between text-gray-4">
+                        <p>Cout de l’offre avec options</p>
+                        <span id="price-with-option">7,96 €</span>
+                    </div>
+                    <div class="flex justify-between text-gray-4">
+                        <p>Réduction</p>
+                        <span>0</span>
+                    </div>
+                    <div class="flex justify-between font-bold">
+                        <p>Sous-total</p>
+                        <span id="price-subtotal">7,96 €</span>
+                    </div>
+                </div>
             </div>
-            <div class="flex justify-between text-gray-4">
-              <p>Cout de l’offre avec options</p>
-              <span id="price-with-option">7,96 €</span>
-            </div>
-            <div class="flex justify-between text-gray-4">
-              <p>Réduction</p>
-              <span>0</span>
-            </div>
-            <div class="flex justify-between font-bold">
-              <p>Sous-total</p>
-              <span id="price-subtotal">7,96 €</span>
-            </div>
-          </div>
-        </div>
 
-        <x-input rounded>
-            <p slot="label">Code promo</p>
-            <input slot="input" type="text" placeholder="Entrez votre code promo">
-            <button slot="button" class="button gray sm no-border">Appliquer</button>
-        </x-input>
+            <x-input rounded>
+                <p slot="label">Code promo</p>
+                <input slot="input" type="text" placeholder="Entrez votre code promo">
+                <button slot="button" class="button gray sm no-border">Appliquer</button>
+            </x-input>
+        <?php } ?>
 
         <div class="flex flex-col gap-2">
             <a href="/dashboard" class="button gray">Annuler</a>
             <a href="/offres/preview" class="button gray" aria-disabled>Preview de l'offre</a>
-            <button class="button purple" form="create-offer" type="submit">Aller au paiement</button>
+            <?php if (Application::$app->user->isPrivateProfessional()) { ?>
+                <button class="button purple" form="create-offer" type="submit">Aller au paiement</button>
+            <?php } else { ?>
+                <button class="button purple" form="create-offer" type="submit">Créer l'offre</button>
+            <?php } ?>
         </div>
     </aside>
 

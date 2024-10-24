@@ -7,6 +7,7 @@ use app\core\form\Form;
 
 $this->title = "Détails d'une offre";
 $this->jsFile = "detailedOffer";
+$this->cssFile = "offers/detail";
 
 // echo "<pre>";
 // var_dump($pk);
@@ -123,11 +124,11 @@ $this->jsFile = "detailedOffer";
                 $class = "";
 
                 if ($status == "Fermé") {
-                    $class = "closed";
+                    $class = "offer-closed";
                 } elseif ($status == "Ferme bientôt") {
-                    $class = "closing-soon";
+                    $class = "offer-closing-soon";
                 } elseif ($status == "Ouvert") {
-                    $class = "open";
+                    $class = "offer-open";
                 }
                 ?>
 

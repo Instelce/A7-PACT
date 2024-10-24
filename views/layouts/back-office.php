@@ -25,7 +25,7 @@ use app\core\Application;
     <?php endif; ?>
 </head>
 
-<body>
+<body class="<?php echo Application::$app->user->isProfessional() ? 'professional-mode' : '' ?>">
 
 <div class="height-top"></div>
 
@@ -43,11 +43,9 @@ use app\core\Application;
 <!-- Navbar -->
 <nav class="navbar">
     <div class="navbar-left">
-        <a href="/" class="mr-4">
+        <a href="/dashboard" class="mr-4">
             <img id="logo" src="/assets/images/logoPro.svg" alt="" width="100">
         </a>
-
-        <a href="/dashboard" class="link pro">Mon dashboard</a>
 
         <!-- For dev -->
         <?php if (Application::$app->isAuthenticated() && $_ENV['APP_ENVIRONMENT'] === 'dev') { ?>
@@ -73,13 +71,23 @@ use app\core\Application;
 <!--            </svg>-->
 <!--        </a>-->
 
-        <?php if (Application::$app->isAuthenticated()) { ?>
-            <a href="/deconnexion" class="link pro">Déconnexion</a>
+        <a href="/dashboard" class="link pro">Mon dashboard</a>
 
+        <?php if (Application::$app->isAuthenticated()) { ?>
             <!-- Avatar -->
-            <a href="/profile" class="avatar">
-                <img src="<?php echo Application::$app->user->avatar_url ?>" alt="">
-            </a>
+            <div class="avatar">
+                <div class="image-container">
+                    <img src="<?php echo Application::$app->user->avatar_url ?>" alt="<?php echo Application::$app->user->mail ?>">
+                </div>
+
+                <div class="avatar-options">
+                    <a href="/profile">Mon profil</a>
+                    <a href="/deconnexion">
+                        Déconnexion
+                        <i data-lucide="log-out" width="18"></i>
+                    </a>
+                </div>
+            </div>
         <?php } else { ?>
             <a href="/connexion" class="button">Connexion</a>
         <?php } ?>

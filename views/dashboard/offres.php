@@ -13,18 +13,19 @@ use app\models\offer\Offer;
 
 $this->title = "Mes offres";
 $this->jsFile = "dashboardOffers";
-$this->cssFile = "dashboardOffers";
+$this->cssFile = "dashboard/offers";
 
-/*var_dump($offers);
-var_dump($offersType);
-var_dump(count($offers));*/
-//var_dump($offersOption);
 ?>
 
 <div class="flex gap-8">
 
     <!-- Tabs button -->
-    <div class="flex flex-col w-[250px]">
+    <div class="flex flex-col w-[250px] h-fit sticky top-navbar-height">
+
+        <div class="pro-name">
+            <h1><?php echo Application::$app->user->specific()->denomination ?></h1>
+        </div>
+
         <div class="tab-button pro" selected>
             <i data-lucide="ticket"></i>
             Mes offres
@@ -48,8 +49,8 @@ var_dump(count($offers));*/
         </a>
     </div>
 
-    <!-- Offer cards -->
     <div class="flex flex-col">
+        <!-- Offer cards -->
         <?php foreach ($offers as $i => $offer) {
             $type = $offersType[$i]->type;
             $option = $offersOption[$i];
@@ -60,33 +61,43 @@ var_dump(count($offers));*/
             } else {
                 $price = 'A partir de ' . $offer->minimum_price . ' €';
             }
-        ?>
+            ?>
             <article class="offer-card">
                 <div class="image-container">
-                    <img src="<?php echo $photos[$i]->url_photo ?>" onerror="this.src = 'https://placehold.co/100'">
+                    <img src="<?php echo $photos[$i]->url_photo ?>"
+                         onerror="this.src = 'https://placehold.co/100'">
                 </div>
 
                 <div class="card-body">
                     <header>
                         <h3 class="title"><?php echo $offer->title ?></h3>
-                        <span class="badge <?php echo $type === 'standard' ? 'blue' : 'yellow' ?>"><?php echo ucfirst($type) ?></span>
+                        <span
+                            class="badge <?php echo $type === 'standard' ? 'blue' : 'yellow' ?>"><?php echo ucfirst($type) ?></span>
                     </header>
 
                     <p class="mt-2"><?php echo $offer->summary ?></p>
 
                     <div class="flex flex-col gap-2 mt-4">
-                        <p class="text-gray-4 flex items-center gap-2"><?php echo Offer::frenchCategoryName($offer->category) ?> <span class="dot"></span> <?php echo $price ?> <span class="dot"></span> <?php echo $offer->likes . ' likes' ?></p>
-                        <p class="text-gray-4">Mis à jour le <?php echo Utils::formatDate($offer->updated_at); ?></p>
+                        <p class="text-gray-4 flex items-center gap-2"><?php echo Offer::frenchCategoryName($offer->category) ?>
+                            <span class="dot"></span> <?php echo $price ?> <span
+                                class="dot"></span> <?php echo $offer->likes . ' likes' ?>
+                        </p>
+                        <p class="text-gray-4">Mis à jour
+                            le <?php echo Utils::formatDate($offer->updated_at); ?></p>
                     </div>
 
-                    <?php if ($option) {?>
+                    <!-- Option -->
+                    <?php if ($option) { ?>
                         <div class="card-option">
                             <div>
-                                <p class="flex gap-1">Avec l'option <span class="underline"><?php echo Utils::formatTypeString($option->type) ?></span></p>
-                                <p class="text-gray-4">Du <?php echo Utils::formatDate($option->launch_date); ?>
+                                <p class="flex gap-1">Avec l'option <span
+                                        class="underline"><?php echo Utils::formatTypeString($option->type) ?></span>
+                                </p>
+                                <p class="text-gray-4">
+                                    Du <?php echo Utils::formatDate($option->launch_date); ?>
                                     au <?php
 
-                                     //Création de la première date
+                                    //Création de la première date
                                     $date = new DateTime($option->launch_date);
 
                                     // Création de l'intervalle à ajouter
@@ -95,7 +106,7 @@ var_dump(count($offers));*/
                                     // Addition de l'intervalle à la date
                                     $date->add($interval);
 
-                                    echo  Utils::formatDate($date->format('Y-m-d'));
+                                    echo Utils::formatDate($date->format('Y-m-d'));
                                     ?>
                                 </p>
                             </div>
@@ -104,32 +115,39 @@ var_dump(count($offers));*/
                             </button>
                         </div>
 
+                    <?php } else { ?>
+                        <div class="card-option">
+                            <div>
+                                <p class="flex gap-1">Sans option</p>
+                            </div>
+                            <button class="link pro">
+                                Ajouter une option
+                            </button>
+                        </div>
                     <?php } ?>
 
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <a href="/offres/<?php echo $offer->id ?>/modification" class="button purple fit mb-2" title="Avis non lu">
+                    <a href="/offres/<?php echo $offer->id ?>/modification"
+                       class="button purple fit mb-2" title="Avis non lu">
                         <!-- <i data-lucide="pen"></i>-->
                         Modifier
                     </a>
-                    <a href="/dashboard/avis">
-                        <button class="button purple fit" title="Avis non lu">
-                            <i data-lucide="message-square-dot"></i>
-                            <?php echo rand(3, 10) ?>
-                        </button>
+                    <a href="/dashboard/avis" class="button purple fit"
+                            title="Avis non lu">
+                        <i data-lucide="message-square-dot"></i>
+                        <?php echo rand(3, 10) ?>
                     </a>
-                    <a href="/dashboard/avis">
-                        <button class="button gray fit" title="Avis non répondu">
-                            <i data-lucide="message-square-more"></i>
-                            <?php echo rand(2, 5) ?>
-                        </button>
+                    <a href="/dashboard/avis" class="button gray fit"
+                       title="Avis non répondu">
+                        <i data-lucide="message-square-more"></i>
+                        <?php echo rand(2, 5) ?>
                     </a>
-                    <a href="/dashboard/avis">
-                        <button class="button gray fit" title="Avis blacklisté">
-                            <i data-lucide="ban"></i>
-                            <?php echo rand(1, 3) ?>
-                        </button>
+                    <a href="/dashboard/avis" class="button gray fit"
+                       title="Avis blacklisté">
+                        <i data-lucide="ban"></i>
+                        <?php echo rand(1, 3) ?>
                     </a>
                 </div>
             </article>

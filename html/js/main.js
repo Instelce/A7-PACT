@@ -18,7 +18,7 @@ try {
         }
     });
 } catch (e) {
-    console.log("Please connect you to a wifi network");
+    console.error("Please connect you to a wifi network");
 }
 
 
@@ -41,6 +41,7 @@ const loader = document.querySelector(".loader");
 if (loader) {
     document.addEventListener("DOMContentLoaded", () => {
         loader.classList.add("hidden");
+        document.body.classList.remove('hidden');
     });
 }
 
@@ -60,5 +61,33 @@ if (navIcon) {
 }
 
 if (navbar && heightTop) {
+    console.log(navbar);
+    console.log(navbar.offsetHeight);
     heightTop.style.height = navbar.offsetHeight + 'px';
 }
+
+// Avatar
+const avatarButton = document.querySelector('.avatar .image-container');
+const avatarOptions = document.querySelector('.avatar .avatar-options');
+
+if (avatarButton) {
+    avatarButton.addEventListener('click', function () {
+        avatarOptions.classList.toggle('open');
+    });
+
+    // Close when click outside
+    document.addEventListener('click', function (e) {
+        if (!avatarButton.contains(e.target)) {
+            avatarOptions.classList.remove('open');
+        }
+    });
+}
+
+// -------------------------------------------------------------------------- //
+// Set sidebar top position
+// -------------------------------------------------------------------------- //
+
+let sidebar = document.querySelector('.top-navbar-height');
+
+if (sidebar)
+    sidebar.style.top = `${navbar.offsetHeight + 16}px`;

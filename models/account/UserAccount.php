@@ -86,5 +86,18 @@ class UserAccount extends DBModel
 
         return '';
     }
+
+    public function specific(): ?DBModel
+    {
+        if ($this->isMember()) {
+            return MemberUser::findOneByPk($this->account_id);
+        } else if ($this->isProfessional()) {
+            return ProfessionalUser::findOneByPk($this->account_id);
+        } else if ($this->isAdministrator()) {
+            return AdministratorUser::findOneByPk($this->account_id);
+        }
+
+        return null;
+    }
 }
 
