@@ -2,6 +2,7 @@
 
 /** @var $offer \app\models\offer\Offer */
 /** @var $address \app\models\Address */
+/** @var $specificData \app\core\DBModel */
 /** @var $this \app\core\View */
 
 use app\core\Application;
@@ -10,14 +11,10 @@ use app\models\offer\Offer;
 
 //var_dump($offer);
 
-$this->title = "Création d'une offre";
+$this->title = "Modification d'une offre";
 $this->jsFile = "offerUpdate";
 
 $form = new Form();
-
-// echo '<pre>';
-// var_dump($offer['images']);
-// echo '</pre>';
 
 ?>
 
@@ -115,15 +112,8 @@ $form = new Form();
                         ?>
                     <!-- Activity -->
                     <div class="complementary-section flex flex-col gap-4" data-category="activity">
-                        <x-input>
-                            <p slot="label">Durée de l'activité (h)</p>
-                            <input slot="input" type="text" name="activity-duration" placeholder="1h30" required>
-                        </x-input>
-
-                        <x-input>
-                            <p slot="label">Age minimum pour l'activité</p>
-                            <input slot="input" type="number" name="activity-age" placeholder="3" required>
-                        </x-input>
+                        <?php echo $form->field($specificData, 'duration')->numberField() ?>
+                        <?php echo $form->field($specificData, 'required_age')->numberField() ?>
                     </div>
                     <?php
                         break;
@@ -131,15 +121,8 @@ $form = new Form();
                         ?>
                     <!-- Show -->
                     <div class="complementary-section flex flex-col gap-4" data-category="show">
-                        <x-input>
-                            <p slot="label">Durée du spectacle (h)</p>
-                            <input slot="input" type="text" name="show-duration" placeholder="1h30" required>
-                        </x-input>
-
-                        <x-input>
-                            <p slot="label">Capacité d'accueil spectacle</p>
-                            <input slot="input" type="number" name="show-capacity" placeholder="100" required>
-                        </x-input>
+                        <?php echo $form->field($specificData, 'duration')->numberField() ?>
+                        <?php echo $form->field($specificData, 'capacity')->numberField() ?>
 
                     </div> <!-- Period for visit and show -->
                     <div id="period-section" class="flex flex-col gap-4 mt-4">
@@ -159,9 +142,16 @@ $form = new Form();
                     <!-- Visit -->
 
                     <div class="complementary-section flex flex-col gap-4" data-category="visit">
-
-                        <x-input>
-                            <p slot="label">Durée de la visite (h)</p>
+                        <?php echo $form->field($specificData, 'duration')->numberField() ?>
+                        <div class="flex gap-4 items-center">
+                            <div class="flex items-center">
+                                <input class="switch" type="checkbox" id="switch-guide" name="visit-guide" />
+                                <label class="switch" for="switch-guide"></label>
+                            </div>
+                            <label for="switch-guide">Avec guide de visite</label>
+                        </div>
+                        <!--<x-input>
+                             <p slot="label">Durée de la visite (h)</p>
                             <input slot="input" type="text" name="visit-duration" placeholder="2h15" required>
                         </x-input>
 
@@ -199,16 +189,8 @@ $form = new Form();
                         ?>
                     <!-- Attraction parc-->
                     <div class="complementary-section flex flex-col gap-4" data-category="attraction-parc">
-                        <div class="flex flex-col gap-2">
-                            <label for="attraction-parc-map">Plan du parc</label>
-                            <input id="attraction-parc-map" type="file" accept="image/png, image/jpg"
-                                name="attraction-parc-map" required>
-                        </div>
-
-                        <x-input>
-                            <p slot="label">Age minimum requis</p>
-                            <input slot="input" type="number" name="attraction-min-age" required>
-                        </x-input>
+                        <?php echo $form->field($specificData, 'url_image_park_map') ?>
+                        <?php echo $form->field($specificData, 'required_age')?>
                     </div>
                     <?php
                         break;
@@ -471,11 +453,11 @@ $form = new Form();
                 <div class="flex flex-col gap-2">
                     <div class="flex gap-4 items-center">
                         <div class="flex items-center">
-                            <input class="switch" type="checkbox" id="switch-guide" name="online"
-                                <?php if ($offline === 0) { echo'checked';} ?> />
-                            <label class="switch" for="switch-guide"></label>
+                            <input class="switch" type="checkbox" id="switch-online" name="online"
+                                <?php if ($offline == 1) { echo'checked';} ?> />
+                            <label class="switch" for="switch-online"></label>
                         </div>
-                        <label for="switch-guide">Mise en ligne de l'offre</label>
+                        <label for="switch-online">Mise en ligne de l'offre</label>
                     </div>
                     <a href="/dashboard" class="button gray">Annuler</a>
                     <a href="/offres/preview" class="button gray" aria-disabled>Preview de l'offre</a>

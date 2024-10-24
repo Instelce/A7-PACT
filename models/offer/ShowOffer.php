@@ -31,4 +31,14 @@ class ShowOffer extends DBModel {
             'duration' => [self::RULE_REQUIRED],
         ];
     }
+
+    public function labels(): array
+    {
+        return [
+            'duration' => "Durée du spectacle (h)",
+            'capacity' => "Capacité d'accueil spectacle"
+        ];
+    }
+
+    
 }

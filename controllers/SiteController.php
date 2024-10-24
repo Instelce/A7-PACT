@@ -12,6 +12,7 @@ use app\models\offer\OfferPhoto;
 use app\models\offer\ActivityOffer;
 use app\models\offer\RestaurantOffer;
 use app\models\Address;
+use app\models\offer\ShowOffer;
 use app\models\user\professional\ProfessionalUser;
 
 class SiteController extends Controller
@@ -59,7 +60,7 @@ class SiteController extends Controller
             return $this->render("404");
         }
     }
-    public function research()//render research page
+    public function research()//render research
     {
         $allOffers = Offer::all();//get all offer from the model
         $offers = [];//create final table to send into the vue

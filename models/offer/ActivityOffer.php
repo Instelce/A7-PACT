@@ -33,6 +33,14 @@ class ActivityOffer extends DBModel {
         ];
     }
 
+    public function labels(): array
+    {
+        return [
+            'duration' => "Durée de l'activité (h)",
+            'required_age' => "Age minimum pour l'activité"
+        ];
+    }
+
     public function addSchedule($scheduleId)
     {
         $activitySchedule = new ActivitySchedule();

@@ -312,6 +312,7 @@ class OfferController extends Controller
         $this->setLayout('back-office');
         $offer = Offer::findOne(['id' => $routeparams['pk']]);
         $address = Address::findOne(['id' => $offer->address_id]);
+        $specificData = $offer->specificData();
         $images = OfferPhoto::find(['offer_id' => $offer->id]) ?? NULL;
 
         $offerData = [
@@ -326,7 +327,7 @@ class OfferController extends Controller
             // Update the address
             $address = Address::findOne(['id' => $offer->address_id]);
             $address->loadData($request->getBody());
-            //            $address->number = intval($body['address-number']);
+//            $address->number = intval($body['address-number']);
 //            $address->street = $body['address-street'];
 //            $address->postal_code = $body['address-postal-code'];
 //            $address->city = $body['address-city'];
@@ -446,7 +447,7 @@ class OfferController extends Controller
             'offer' => $offerData,
             'model' => $offer,
             'address' => $address,
-            'offline' => $offer->offline
+            'specificData' => $specificData
         ]);
     }
 }

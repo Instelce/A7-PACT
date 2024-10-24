@@ -34,4 +34,14 @@ class VisitOffer extends DBModel
             'guide' => [self::RULE_REQUIRED],
         ];
     }
+
+    public function labels(): array
+    {
+        return [
+            'duration' => "Durée de la visite (h)",
+            'guide' => 'Avec guide de visite',
+            // 'period_id' => 'A une période'
+            // "Langues disponibles pour la visite"
+        ];
+    }
 }
