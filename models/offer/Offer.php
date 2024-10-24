@@ -104,7 +104,15 @@ class Offer extends DBModel
 
     public function tags(): array
     {
-        return OfferIsTagged::find(['offer_id' => $this->id]);
+        $tags = [];
+        $association = OfferIsTagged::find(['offer_id' => $this->id]);
+
+        foreach ($association as $tagAssoc) {
+            $tag = OfferTag::findOne(['id' => $tagAssoc->tag_id]);
+            $tags[] = $tag;
+        }
+
+        return $tags;
     }
 
     /**

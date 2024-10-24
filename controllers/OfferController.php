@@ -206,19 +206,13 @@ class OfferController extends Controller
         $location = Address::findOne(['id' => $offer->address_id])->city;
         $address = Address::findOne(['id' => $offer->address_id]);
 
-        $tags = [];
-
-        //$temp = $offer -> tags();
-        //foreach ($temp as $tag) {
-        //    var_dump($tag['tag_id']);
-        //}
-
+        $tagsName = [];
+        $tagsId = $offer->tags();
+        foreach ($tagsId as $tag) {
+            $tagsName[] = $tag->name;
+        }
 
 
-
-
-
-        $languages = VisitLanguage::findOne(['offer_id' => $id])->language;
         $languages = VisitLanguage::findOne(['offer_id' => $id]) -> language;
         $formattedAddress = $address->number . ' ' . $address->street . ', ' . $address->postal_code . ' ' . $address->city;
         $images = OfferPhoto::find(['offer_id' => $id]) ?? NULL;//get the first image of the offer for the preview
@@ -296,7 +290,7 @@ class OfferController extends Controller
             'status' => $status,
             'phone_number' => $offer->phone_number,
             'description' => $offer->description,
-            'tags' => $tags,
+            'tags' => $tagsName,
             'languages' => $languages,
             'range_price' => $range_price
         ];
