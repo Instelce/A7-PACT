@@ -36,13 +36,13 @@ $this->jsFile = "detailedOffer";
 
 
     <!---- Infos ---->
-    <h2 class="heading-1"><?php echo $offerData["title"] ?></h2>
+    <h2 class="heading-1"><?php echo $offerData["title"] ?></h2> <!-- title -->
 
     <div class="inlineOfferTop">
 
         <div class="inlineOfferGap">
-            <p class="author">Par <?php echo $offerData["author"] ?></p>
-            <p><?php echo $offerData["category"] ?></p>
+            <p class="author">Par <?php echo $offerData["author"] ?></p> <!-- athor -->
+            <p><?php echo $offerData["category"] ?></p> <!-- category -->
             <div class="inlineOffer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
@@ -51,13 +51,13 @@ $this->jsFile = "detailedOffer";
                         d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
                     <circle cx="12" cy="10" r="3" />
                 </svg>
-                <p><?php echo $offerData["location"] ?></p>
+                <p><?php echo $offerData["location"] ?></p> <!-- location -->
             </div>
 
             <?php if (in_array($offerData["category"], ["Activité", "Visite", "Spectacle"])): ?>
                 <div class="inlineOffer">
                     <p>Durée</p>
-                    <p><?php echo $offerData["duration"] ?></p>
+                    <p><?php echo $offerData["duration"] ?></p> <!-- duration -->
                     <p>H</p>
                 </div>
             <?php endif; ?>
@@ -65,7 +65,7 @@ $this->jsFile = "detailedOffer";
             <?php if (in_array($offerData["category"], ["Activité", "Parc d'attraction"])): ?>
                 <div class="inlineOffer">
                     <p>A partir de </p>
-                    <p><?php echo $offerData["required_age"] ?></p>
+                    <p><?php echo $offerData["required_age"] ?></p> <!-- required age -->
                     <p>ans</p>
                 </div>
             <?php endif; ?>
@@ -84,7 +84,7 @@ $this->jsFile = "detailedOffer";
                         <path d="m16.71 13.88.7.71-2.82 2.82" />
                     </svg>
                     <p>
-                        <?php if ($offerData["price"] == 0): ?>
+                        <?php if ($offerData["price"] == 0): ?> <!-- price -->
                             Gratuit
                         <?php else: ?>
                             À partir de <?php echo $offerData["price"]; ?> € / personne
@@ -101,7 +101,7 @@ $this->jsFile = "detailedOffer";
                         <path d="M7 6h1v4" />
                         <path d="m16.71 13.88.7.71-2.82 2.82" />
                     </svg>
-                    <p>
+                    <p> <!-- price if Restaurant-->
                         <?php
                         for ($i = 0; $i < $offerData['range_price']; $i++) {
                             echo "€";
@@ -140,7 +140,7 @@ $this->jsFile = "detailedOffer";
     <div>
         <h2 class="heading-2">Résumé :</h2>
         <br>
-        <p><?php echo $offerData["summary"] ?></p>
+        <p><?php echo $offerData["summary"] ?></p> <!-- Summary -->
     </div>
 
     <div class="columnOffer">
@@ -153,7 +153,7 @@ $this->jsFile = "detailedOffer";
                     d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
                 <circle cx="12" cy="10" r="3" />
             </svg>
-            <p><?php echo $offerData["address"] ?></p>
+            <p><?php echo $offerData["address"] ?></p> <!-- address of the offer-->
         </div>
 
 
@@ -168,6 +168,7 @@ $this->jsFile = "detailedOffer";
                 <path d="M2 12h20" />
             </svg>
             <p><a href="<?php echo $offerData["website"] ?>" target="_blank">Voir le site</a></p>
+            <!-- link to the website -->
         </div>
 
         <div class="inlineOffer">
@@ -177,10 +178,10 @@ $this->jsFile = "detailedOffer";
                 <path
                     d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
             </svg>
-            <p><?php echo $offerData["phone_number"] ?></p>
+            <p><?php echo $offerData["phone_number"] ?></p> <!-- phone number of the creator of the offer -->
         </div>
 
-        <?php if ($offerData["category"] === "Visite"): ?>
+        <?php if ($offerData["category"] === "Visite"): ?> <!-- languages of the visit -->
             <div class="inlineOffer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
@@ -200,7 +201,7 @@ $this->jsFile = "detailedOffer";
     <div>
         <h2 class="heading-2">Description :</h2>
         <br>
-        <p><?php echo $offerData["description"] ?></p>
+        <p><?php echo $offerData["description"] ?></p> <!-- description of the offer-->
     </div>
 
     <?php if ($offerData["category"] === "Restaurant"): ?>
@@ -230,7 +231,7 @@ $this->jsFile = "detailedOffer";
 
 
     <div class="containerAcordeon">
-        <h2 class="heading-2">Tags : </h2>
+        <h2 class="heading-2">Tags : </h2> <!-- tags associated with the offer -->
         <?php
         $nbTags = count($offerData['tags']);
         $compteurTag = 0;

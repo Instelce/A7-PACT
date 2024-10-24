@@ -1,79 +1,82 @@
 .inlineOfferGap {
-    display: flex;
+    display: flex; /*Use flex to display in row*/
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    gap: 20px;
-    margin: 5px;
+    gap: 20px; /* Space between items */
+    margin: 5px; /* Margin around the container */
 }
 
 .inlineOffer {
-    display: flex;
+    display: flex; /*Use flex to display in row*/
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 5px;
+    gap: 5px; /* Space between items */
 }
+
 .inlineOfferTop {
-    display: flex;
+    display: flex; /*Use flex to display in row*/
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    width: 100%;
-    justify-content: space-between;
+    width: 100%; /* Full width of the container */
+    justify-content: space-between; /* Space out items evenly */
 }
 
 .containerAcordeon {
-    display: flex;
+    display: flex; /*Use flex to display in row*/
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    width: 100%;
-    gap: 5px;
+    width: 100%; /* Full width of the container */
+    gap: 5px; /* Space between items */
 }
 
 .columnOffer {
-    display: flex;
+    display: flex; /*Use flex to display in column*/
     flex-direction: column;
     flex-wrap: wrap;
-    gap: 20px;
-    font-weight: 550;
+    gap: 20px; /* Space between items */
+    font-weight: 550; /* Set font weight */
 }
 
 .paddingOfferDetailed {
-    display: flex;
+    display: flex; /*Use flex to display in column*/
     flex-direction: column;
     flex-wrap: nowrap;
-    align-items: flex-start;
-    gap: 30px;
+    align-items: flex-start; /* Align items to the start of the container */
+    gap: 30px; /* Space between items */
 }
 
 x-acordeon {
-    width: 100%;
+    width: 100%; /* Full width of the container */
 }
 
 .acordeonSize {
-    width: 100%;
+    width: 100%; /* Full width of the container */
 }
 
 .publication {
-    display: flex;
+    display: flex; /*Use flex to display in row*/
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 5px;
-    justify-content: flex-end;
+    gap: 5px; /* Space between items */
+    justify-content: flex-end; /* Align items to the end of the container */
 }
 
-.author{
-    text-decoration: underline;
+.author {
+    text-decoration: underline; /* Underline the text */
 }
 
 .closed {
-    color: red;
+    color: red; /* Style for closed items */
 }
+
 .closing-soon {
-    color: orange;
+    color: orange; /* Style for items closing soon */
 }
+
 .open {
-    color: green;
+    color: green; /* Style for open items */
 }
