@@ -11,6 +11,7 @@ use app\core\Request;
 use app\core\Response;
 use app\core\Utils;
 use app\models\Address;
+use app\models\Meal;
 use app\models\offer\ActivityOffer;
 use app\models\offer\AttractionParkOffer;
 use app\models\offer\Offer;
@@ -118,6 +119,15 @@ class OfferController extends Controller
                 $restaurant->url_image_carte = Application::$app->storage->saveFile('restaurant-image', 'offers/restaurant');
                 $restaurant->range_price = intval($body['restaurant-range-price']);
                 $restaurant->save();
+
+//                if(true){ // condition : il clique sur "ajouter un nouveau repas"
+//                    $meal = new Meal();
+//                    $meal->name = $body['meal-name'];
+//                    $meal->price = intval($body['meal-price']);
+//                    $meal->save();
+//                    $restaurant->addMeal($meal);
+//                }
+
             } elseif ($category === 'show') {
                 $show = new ShowOffer();
                 $show->offer_id = $offer->id;
