@@ -9,7 +9,8 @@ class m0018_create_table_meal
         $db = Application::$app->db;
         $sql = "CREATE TABLE meal (
             meal_id SERIAL PRIMARY KEY,
-            name VARCHAR(128) NOT NULL  
+            name VARCHAR(128) NOT NULL,
+            price NUMERIC NOT NULL,
         );
 
         CREATE TABLE is_on_restaurant_menu (

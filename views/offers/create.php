@@ -251,6 +251,8 @@ $form = new Form();
                     <input id="restaurant-image" type="file" accept="image/png, image/jpg" name="restaurant-image" required>
                 </div>
 
+
+
                 <!-- Range price for the RESTAURANT -->
                 <div class="flex gap-4">
 
@@ -265,6 +267,41 @@ $form = new Form();
                     </x-select>
 
                 </div>
+
+<!--                Meal-->
+<!--                <table class="table center hidden">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th class="table-head" colspan="2">Repas</th>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <th>Nom</th>-->
+<!--                        <th>Prix</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!---->
+<!--                    <tbody id="meal">-->
+<!--                    <tr>-->
+<!--                        <td>-->
+<!--                            <input id="meal-name" name="prices[]" type="text" placeholder="Nom" class="table-input">-->
+<!--                        </td>-->
+<!--                        <td>-->
+<!--                            <input id="meal-price" name="prices[]" type="number" placeholder="Prix" class="table-input">-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!---->
+<!--                    <tfoot>-->
+<!--                    <tr>-->
+<!--                        <td colspan="2">-->
+<!--                            <button id="add-price-row" class="table-button">-->
+<!--                                Ajouter un tarif-->
+<!--                                <i data-lucide="plus"></i>-->
+<!--                            </button>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    </tfoot>-->
+<!--                </table>-->
             </div>
 
             <!-- Attraction parc-->
