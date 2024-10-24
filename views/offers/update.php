@@ -40,8 +40,8 @@ $form = new Form();
 
                     <div class="flex flex-col gap-2">
                         <?php echo $form->field($model, 'title') ?>
-                        <?php echo $form->textarea($model, 'summary') ?>
-                        <?php echo $form->textarea($model, 'description') ?>
+                        <?php echo $form->textarea($model, 'summary', 3) ?>
+                        <?php echo $form->textarea($model, 'description', 8) ?>
 
                         <!-- Tags of the category -->
                         <?php $tags = [
@@ -58,7 +58,7 @@ $form = new Form();
                             <?php }} else {foreach ($tags['others'] as $tag) { ?>
                             <div class="flex items-center gap-1">
                                 <input type="checkbox" class="checkbox checkbox-normal" name="tags[]"
-                                    value="<?php echo $tag; ?>" id="<?php echo $tag; ?>">
+                                    value="<?php echo $tag; ?>" id="<?php echo $tag; ?>" <?php echo in_array(strtolower($tag), $offer['tags']) ? 'checked' : '' ?>>
                                 <label for="<?php echo $tag; ?>"><?php echo $tag; ?></label>
                             </div>
                             <?php } }?>

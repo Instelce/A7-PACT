@@ -155,8 +155,8 @@ $form = new Form();
 
             <div class="flex flex-col gap-2">
                 <?php echo $form->field($model, 'title') ?>
-                <?php echo $form->textarea($model, 'summary') ?>
-                <?php echo $form->textarea($model, 'description') ?>
+                <?php echo $form->textarea($model, 'summary', 3) ?>
+                <?php echo $form->textarea($model, 'description', 6) ?>
 
                 <!-- Category of the offer -->
                 <x-select id="category" name="category" required>

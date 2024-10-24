@@ -5,9 +5,10 @@
 
 let periodFields = document.querySelector('#period-fields');
 let periodSelect = document.querySelector('#switch-period');
-let periodInput = periodFields.querySelectorAll('input');
 
 if (periodSelect) {
+    let periodInput = periodFields.querySelectorAll('input');
+
     periodSelect.addEventListener('change', (e) => {
         periodFields.classList.toggle('hidden');
         periodInput.forEach(input => {

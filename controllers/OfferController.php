@@ -392,8 +392,8 @@ class OfferController extends Controller
             } elseif ($category === 'activity') {
                 $activity = ActivityOffer::findOne(['offer_id' => $offer->id]);
                 $activity->offer_id = $offer->id;
-                $activity->duration = Utils::convertHourToFloat($body['activity-duration']);
-                $activity->required_age = intval($body['activity-age']);
+                $activity->duration = Utils::convertHourToFloat($body['duration']);
+                $activity->required_age = intval($body['required_age']);
                 $activity->update();
             } elseif ($category === 'restaurant') {
                 $restaurant = RestaurantOffer::findOne(['offer_id' => $offer->id]);
@@ -404,8 +404,8 @@ class OfferController extends Controller
             } elseif ($category === 'show') {
                 $show = ShowOffer::findOne(['offer_id' => $offer->id]);
                 $show->offer_id = $offer->id;
-                $show->duration = Utils::convertHourToFloat($body['show-duration']);
-                $show->capacity = intval($body['show-capacity']);
+                $show->duration = Utils::convertHourToFloat($body['duration']);
+                $show->capacity = intval($body['capacity']);
 
                 // Update the period
                 if (array_key_exists('period-start', $body) && $body['period-start'] !== '') {

@@ -22,8 +22,8 @@ class Form
         return new InputField($model, $attr);
     }
 
-    public function textarea(Model $model, $attr)
+    public function textarea(Model $model, $attr, int $rows = 4)
     {
-        return new TextareaField($model, $attr);
+        return new TextareaField($model, $attr, $rows);
     }
 }

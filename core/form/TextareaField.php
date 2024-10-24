@@ -6,9 +6,11 @@ use app\core\Model;
 
 class TextareaField extends BaseField
 {
+    private int $rows;
 
-    public function __construct(Model $model, string $attr)
+    public function __construct(Model $model, string $attr, int $rows = 4)
     {
+        $this->rows = $rows;
         parent::__construct($model, $attr);
     }
 
@@ -16,7 +18,7 @@ class TextareaField extends BaseField
     {
         return sprintf('<x-input %s>
                     <p slot="label">%s</p>
-                    <textarea slot="input" id="%s" name="%s" placeholder="%s" %s>%s</textarea>
+                    <textarea slot="input" id="%s" name="%s" placeholder="%s" %s rows="%s">%s</textarea>
                     %s
         </x-input>',
             $this->model->hasError($this->attr) ? 'data-invalid' : '', // other class
@@ -25,6 +27,7 @@ class TextareaField extends BaseField
             $this->attr, // name
             $this->model->getPlaceholder($this->attr) ?? '', // placeholder
             $this->model->rules()[$this->attr][0] === Model::RULE_REQUIRED ? 'required' : '', // required or not
+            $this->rows,
             $this->model->{$this->attr}, // value
             $this->renderError()
         );
