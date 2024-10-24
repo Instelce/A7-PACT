@@ -72,11 +72,11 @@ class SiteController extends Controller
                 switch ($offer["category"]) {
                     case 'restaurant':
                         $type = "Restaurant";
-                        $price = RestaurantOffer::findOne(['offer_id' => $offer["id"]])->minimum_price ?? NULL;
+                        // $price = RestaurantOffer::findOne(['offer_id' => $offer["id"]])->minimum_price ?? NULL;
                         break;
                     case 'activity':
                         $type = "Activité";
-                        $price = ActivityOffer::findOne(['offer_id' => $offer["id"]])->price ?? NULL;
+                        // $price = ActivityOffer::findOne(['offer_id' => $offer["id"]])->price ?? NULL;
                         break;
                     case 'show':
                         $type = "Spectacle";
