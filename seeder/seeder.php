@@ -59,7 +59,7 @@ $db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id)
 echo "Creating users and mean of payment...\n";
 
 // Create "standard" and "premium" offer types
-$db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.98), (2, 'premium', 7.98), (3, 'gratuit', 0);");
+$db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.98), (2, 'premium', 7.98), (3, 'gratuite', 0);");
 echo "Creating offer types...\n";
 
 $categories = ['activity', 'attraction_park', 'restaurant', 'show', 'visit'];

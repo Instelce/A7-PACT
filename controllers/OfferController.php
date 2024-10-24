@@ -49,7 +49,8 @@ class OfferController extends Controller
 //            echo "</pre>";
 
             // Retrieve the offer type
-            $offer_type = OfferType::findOne(['type' => $request->getBody()['type']]);
+            $type = $body['type'] ?? 'gratuite';
+            $offer_type = OfferType::findOne(['type' => $type]);
 
             // Create the address
             $address = new Address();
@@ -57,8 +58,10 @@ class OfferController extends Controller
             $address->street = $body['address-street'];
             $address->postal_code = $body['address-postal-code'];
             $address->city = $body['address-city'];
-            $address->latitude = $body['address-latitude'];
-            $address->longitude = $body['address-longitude'];
+            if (array_key_exists('address-latitude', $body) && $body['address-latitude'] !== '') {
+                $address->latitude = $body['address-latitude'];
+                $address->longitude = $body['address-longitude'];
+            }
             $address->save();
 
             // Get category
