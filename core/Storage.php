@@ -39,31 +39,8 @@ class Storage
     public function saveFiles(string $name, string $folder): array
     {
         // Create the folder if it doesn't exist
-        if ($_ENV['APP_ENV'] === 'dev') {
-            if (!file_exists(Application::$ROOT_DIR . '/html/upload/' . $folder)) {
-                mkdir(Application::$ROOT_DIR . '/html/upload/' . $folder, 0777, true);
-            }
-
-            $files = [];
-
-            foreach ($_FILES[$name]['name'] as $i => $fileName) {
-                $extension = explode('.', $fileName)[1];
-                $tmpPath = $_FILES[$name]['tmp_name'][$i];
-
-                $fileName = time() . rand(1, 1000) . '.' . $extension;
-                $dbPath = '/upload/' . $folder . '/' . $fileName;
-                $filePath = Application::$ROOT_DIR . '/html' . $dbPath;
-
-                move_uploaded_file($tmpPath, $filePath);
-
-                $files[] = $dbPath;
-            }
-
-            return $files;
-        }
-
-        if (!file_exists(Application::$ROOT_DIR . '/upload/' . $folder)) {
-            mkdir(Application::$ROOT_DIR . '/upload/' . $folder, 0777, true);
+        if (!file_exists(Application::$ROOT_DIR . '/html/upload/' . $folder)) {
+            mkdir(Application::$ROOT_DIR . '/html/upload/' . $folder, 0777, true);
         }
 
         $files = [];
@@ -74,7 +51,7 @@ class Storage
 
             $fileName = time() . rand(1, 1000) . '.' . $extension;
             $dbPath = '/upload/' . $folder . '/' . $fileName;
-            $filePath = Application::$ROOT_DIR . $dbPath;
+            $filePath = Application::$ROOT_DIR . '/html' . $dbPath;
 
             move_uploaded_file($tmpPath, $filePath);
 

@@ -29,6 +29,9 @@ $config = [
 // Setup app
 $app = new Application(dirname(__DIR__), $config);
 
+if ($_ENV['APP_ENVIRONMENT'] === 'dev') {
+    $app->router->get('/info', phpinfo());
+}
 $app->router->get('/', [SiteController::class, 'home']);
 $app->router->post('/', [SiteController::class, 'home']);
 $app->router->get('/storybook', [SiteController::class, 'storybook']);
