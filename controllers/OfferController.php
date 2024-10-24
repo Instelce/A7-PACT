@@ -256,6 +256,7 @@ class OfferController extends Controller
             case 'restaurant':
                 $type = "Restaurant";
                 $range_price = RestaurantOffer::findOne(['offer_id' => $id])->range_price;
+                $carte_restaurant = RestaurantOffer::findOne(['offer_id' => $id])->url_image_carte;
                 break;
             case 'activity':
                 $type = "Activité";
@@ -274,6 +275,7 @@ class OfferController extends Controller
             case 'attraction_park':
                 $type = "Parc d'attraction";
                 $required_age = AttractionParkOffer::findOne(['offer_id' => $id])->required_age ?? NULL;
+                $carte_park = AttractionParkOffer::findOne(['offer_id' => $id])->url_image_park_map;
                 break;
         }
 
@@ -298,7 +300,9 @@ class OfferController extends Controller
             'range_price' => $range_price,
             'prestationsIncluses' => $prestationsIncluses,
             'prestationsNonIncluses' => $prestationsNonIncluses,
-            'accessibilite' => $accessibilite
+            'accessibilite' => $accessibilite,
+            'carteRestaurant' => $carte_restaurant,
+            'cartePark' => $carte_park
         ];
 
         return $this->render('offers/detail', [
@@ -327,7 +331,7 @@ class OfferController extends Controller
             // Update the address
             $address = Address::findOne(['id' => $offer->address_id]);
             $address->loadData($request->getBody());
-//            $address->number = intval($body['address-number']);
+            //            $address->number = intval($body['address-number']);
 //            $address->street = $body['address-street'];
 //            $address->postal_code = $body['address-postal-code'];
 //            $address->city = $body['address-city'];
