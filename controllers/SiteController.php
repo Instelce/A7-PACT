@@ -68,16 +68,14 @@ class SiteController extends Controller
             if ($offer["offline"] == Offer::STATUS_ONLINE) {//show only online offer
                 $image = OfferPhoto::findOne(['offer_id' => $offer["id"]])->url_photo ?? NULL;//get the first image of the offer for the preview
                 $professional = ProfessionalUser::findOne(where: ['user_id' => $offer["professional_id"]])->denomination ?? NULL;//get the name of the professionnal who post the offer
-                $price = -1;
+                $price = $offer['minimum_price'] ?? NULL;
                 $type = NULL;
                 switch ($offer["category"]) {
                     case 'restaurant':
                         $type = "Restaurant";
-                        // $price = RestaurantOffer::findOne(['offer_id' => $offer["id"]])->minimum_price ?? NULL;
                         break;
                     case 'activity':
                         $type = "Activité";
-                        // $price = ActivityOffer::findOne(['offer_id' => $offer["id"]])->price ?? NULL;
                         break;
                     case 'show':
                         $type = "Spectacle";
