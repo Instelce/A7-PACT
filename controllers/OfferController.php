@@ -205,7 +205,19 @@ class OfferController extends Controller
         $offer = Offer::findOne(['id' => $id]);
         $location = Address::findOne(['id' => $offer->address_id])->city;
         $address = Address::findOne(['id' => $offer->address_id]);
-        $tags = OfferTag::findOne(['id' => $offer->tag]);
+
+        $tags = [];
+
+        //$temp = $offer -> tags();
+        //foreach ($temp as $tag) {
+        //    var_dump($tag['tag_id']);
+        //}
+
+
+
+
+
+
         $languages = VisitLanguage::findOne(['offer_id' => $id])->language;
         $languages = VisitLanguage::findOne(['offer_id' => $id]) -> language;
         $formattedAddress = $address->number . ' ' . $address->street . ', ' . $address->postal_code . ' ' . $address->city;
@@ -217,7 +229,7 @@ class OfferController extends Controller
 
         var_dump(date('N'));
 
-        $closingHour = OfferSchedule::findOne(['offer_id' => $id])->closing_hours;
+        $closingHour = OfferSchedule::findOne(['id' => $id])->closing_hours;
 
         if ($closingHour === 'fermé') {
             $status = "fermé";
@@ -284,7 +296,7 @@ class OfferController extends Controller
             'status' => $status,
             'phone_number' => $offer->phone_number,
             'description' => $offer->description,
-            // 'tagNames' => $tagNames,
+            'tags' => $tags,
             'languages' => $languages,
             'range_price' => $range_price
         ];
