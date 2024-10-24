@@ -10,7 +10,7 @@ $this->jsFile = "detailedOffer";
 
 // echo "<pre>";
 // var_dump($pk);
-var_dump($offerData);
+//Svar_dump($offerData);
 // echo "</pre>";
 
 ?>
@@ -36,21 +36,20 @@ var_dump($offerData);
 
 
     <!---- Infos ---->
-    <h2 class="heading-2"><?php echo $offerData["title"] ?></h2>
+    <h2 class="heading-1"><?php echo $offerData["title"] ?></h2>
 
+    <div class="inlineOfferTop">
 
-    <div class="inlineOffer">
         <div class="inlineOfferGap">
             <p class="author">Par <?php echo $offerData["author"] ?></p>
-
             <p><?php echo $offerData["category"] ?></p>
             <div class="inlineOffer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-map-pin">
+                     stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                     class="lucide lucide-map-pin">
                     <path
-                        d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
-                    <circle cx="12" cy="10" r="3" />
+                        d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+                    <circle cx="12" cy="10" r="3"/>
                 </svg>
                 <p><?php echo $offerData["location"] ?></p>
             </div>
@@ -63,7 +62,6 @@ var_dump($offerData);
                 </div>
             <?php endif; ?>
 
-
             <?php if (in_array($offerData["category"], ["Activité", "Parc d'attraction"])): ?>
                 <div class="inlineOffer">
                     <p>A partir de </p>
@@ -71,6 +69,70 @@ var_dump($offerData);
                     <p>ans</p>
                 </div>
             <?php endif; ?>
+
+        </div>
+
+        <div class="inlineOfferGap">
+            <?php if ($offerData["category"] !== "Restaurant"): ?>
+                <div class="inlineOffer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-coins">
+                        <circle cx="8" cy="8" r="6"/>
+                        <path d="M18.09 10.37A6 6 0 1 1 10.34 18"/>
+                        <path d="M7 6h1v4"/>
+                        <path d="m16.71 13.88.7.71-2.82 2.82"/>
+                    </svg>
+                    <p>
+                        <?php if ($offerData["price"] == 0): ?>
+                            Gratuit
+                        <?php else: ?>
+                            À partir de <?php echo $offerData["price"]; ?> € / personne
+                        <?php endif; ?>
+                    </p>
+                </div>
+            <?php elseif ($offerData["category"] === "Restaurant"): ?>
+                <div class="inlineOffer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-coins">
+                        <circle cx="8" cy="8" r="6"/>
+                        <path d="M18.09 10.37A6 6 0 1 1 10.34 18"/>
+                        <path d="M7 6h1v4"/>
+                        <path d="m16.71 13.88.7.71-2.82 2.82"/>
+                    </svg>
+                    <p>
+                        <?php
+                        for ($i = 0; $i < $offerData['range_price']; $i++) {
+                            echo "€";
+                        }
+                        ?>
+                    </p>
+                </div>
+            <?php endif; ?>
+
+            <div class="inlineOffer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                     class="lucide lucide-clock">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <?php
+                $status = $offerData["status"];
+                $class = "";
+
+                if ($status == "Fermé") {
+                    $class = "closed";
+                } elseif ($status == "Ferme bientôt") {
+                    $class = "closing-soon";
+                } elseif ($status == "Ouvert") {
+                    $class = "open";
+                }
+                ?>
+
+                <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+            </div>
 
         </div>
     </div>
@@ -92,60 +154,6 @@ var_dump($offerData);
                 <circle cx="12" cy="10" r="3" />
             </svg>
             <p><?php echo $offerData["address"] ?></p>
-        </div>
-
-        <?php if ($offerData["category"] !== "Restaurant"): ?>
-            <div class="inlineOffer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                     class="lucide lucide-coins">
-                    <circle cx="8" cy="8" r="6" />
-                    <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
-                    <path d="M7 6h1v4" />
-                    <path d="m16.71 13.88.7.71-2.82 2.82" />
-                </svg>
-                <p>
-                    <?php if ($offerData["price"] == 0): ?>
-                        Gratuit
-                    <?php else: ?>
-                        À partir de <?php echo $offerData["price"]; ?> € / personne
-                    <?php endif; ?>
-                </p>
-            </div>
-        <?php elseif ($offerData["category"] === "Restaurant"): ?>
-            <div class="inlineOffer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                     class="lucide lucide-coins">
-                    <circle cx="8" cy="8" r="6" />
-                    <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
-                    <path d="M7 6h1v4" />
-                    <path d="m16.71 13.88.7.71-2.82 2.82" />
-                </svg>
-                <p>
-                    <?php
-                        for ($i = 0; $i < $offerData['range_price']; $i++) {
-                            echo "€";
-                        }
-                    ?>
-                </p>
-            </div>
-        <?php endif; ?>
-
-
-
-
-
-
-
-        <div class="inlineOffer">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-clock">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-            </svg>
-            <p><?php echo $offerData["status"] ?></p>
         </div>
 
 
@@ -195,11 +203,21 @@ var_dump($offerData);
         <p><?php echo $offerData["description"] ?></p>
     </div>
 
-    <div class="inlineOffer">
+    <div class="containerAcordeon">
         <h2 class="heading-2">Tags : </h2>
-        <?php if (!empty($offerData['tags'])): ?>
-            <?php foreach ($offerData['tags'] as $tag): ?>
-                <p><?php echo $tag ;?>, </p>
+        <?php
+            $nbTags = count($offerData['tags']);
+            $compteurTag = 0;
+            if (!empty($offerData['tags'])):
+            foreach ($offerData['tags'] as $tag):
+                $compteurTag++; ?>
+                <p><?php echo $tag ;?>
+                <?php if($nbTags > $compteurTag){?>
+                    ,</p>
+                <?php }
+                else {?>
+                    </p>
+                <?php } ?>
             <?php endforeach; ?>
         <?php else: ?>
             <p>Aucun tag associé à cette offre.</p>
@@ -210,7 +228,7 @@ var_dump($offerData);
 
 
     <div class="acordeonSize">
-        <x-acordeon text="Grille tarifaire">
+        <!--- <x-acordeon text="Grille tarifaire">
             <div slot="content">
                 <p>Adhérent enfant : 0 € <br>
                     Adhérent adulte : 2 € <br>
@@ -218,32 +236,32 @@ var_dump($offerData);
                     Non adhérent adulte : 15 €
                 </p>
             </div>
-        </x-acordeon>
+        </x-acordeon> --->
 
-        <x-acordeon text="Prestations incluses">
-            <div slot="content">
-                <p>Encadrant <br>
-                    Kit de crevaison <br>
-                    Déjeuner et sandwich
-                </p>
-            </div>
-        </x-acordeon>
+        <?php if (!empty($offerData["prestationsIncluses"])): ?>
+            <x-acordeon text="Prestations incluses">
+                <div slot="content">
+                    <p><?php echo $offerData["prestationsIncluses"] ?></p>
+                </div>
+            </x-acordeon>
+        <?php endif; ?>
 
-        <x-acordeon text="Prestations non incluses">
-            <div slot="content">
-                <p>Bicyclette <br>
-                    Crème solaire
-                </p>
-            </div>
-        </x-acordeon>
+        <?php if (!empty($offerData["prestationsNonIncluses"])): ?>
+            <x-acordeon text="Prestations non incluses">
+                <div slot="content">
+                    <p><?php echo $offerData["prestationsNonIncluses"] ?></p>
+                </div>
+            </x-acordeon>
+        <?php endif; ?>
 
-        <x-acordeon text="Accessibilité">
-            <div slot="content">
-                <p>Le public en situation de handicap est le bienvenu, ne pas hésiter à nous appeler pour préparer la
-                    balade
-                </p>
-            </div>
-        </x-acordeon>
+        <?php if (!empty($offerData["accessibilite"])): ?>
+            <x-acordeon text="Accessibilité">
+                <div slot="content">
+                    <p><?php echo $offerData["accessibilite"] ?></p>
+                </div>
+            </x-acordeon>
+        <?php endif; ?>
+
     </div>
 
 
