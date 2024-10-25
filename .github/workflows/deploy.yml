@@ -1,0 +1,30 @@
+name: Deploy to Production
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Set up SSH key
+              uses: webfactory/ssh-agent@v0.7.0
+              with:
+                  ssh-private-key: ${{ secrets.PROD_SSH_KEY }}
+
+            - name: Connect to Production Server and Pull Latest Code
+              env:
+                  PROJECT_DIRECTORY: "/docker/sae/data/web"
+                  SERVER_USER: "debian"
+                  SERVER_IP: "a7.ventsdouest.dev"
+              run: |
+                  ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "
+                    cd $PROJECT_DIRECTORY &&
+                    git pull
+                  "
