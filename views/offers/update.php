@@ -453,7 +453,7 @@ $form = new Form();
                     <div class="flex gap-4 items-center">
                         <div class="flex items-center">
                             <input class="switch" type="checkbox" id="switch-online" name="online"
-                                <?php if ($offer['offline'] == 1) { echo'checked';} ?> />
+                                <?php if ($offer['offline'] == 0) { echo'checked';} ?> />
                             <label class="switch" for="switch-online"></label>
                         </div>
                         <label for="switch-online">Mise en ligne de l'offre</label>

@@ -358,13 +358,15 @@ class OfferController extends Controller
             $offer->loadData($request->getBody());
             $offer->professional_id = Application::$app->user->account_id;
             $offer->address_id = $address->id;
+
             if (array_key_exists("online", array: $body)) {
+//                echo "Switching to online";
                 $offer->offline = 0;
                 $offer->last_online_date = date('Y-m-d');
             } else {
+//                echo "Switching to offline";
                 $offer->offline_date = date('Y-m-d');
                 $offer->offline = 1;
-
             }
 
             // Offer minimum price
@@ -373,9 +375,8 @@ class OfferController extends Controller
                 $offer->minimum_price = intval($body['offer-minimum-price']);
             }
 
-            if ($offer->update()) {
-                echo "Offer updated successfully";
-            }
+            $offer->update();
+
             // Add tags to the offer
             if (array_key_exists('tags', $body)) {
                 foreach ($body['tags'] as $tag) {
