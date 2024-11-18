@@ -70,7 +70,7 @@ $this->cssFile = "dashboard/offers";
 
                 <div class="card-body">
                     <header>
-                        <h3 class="title"><?php echo $offer->title ?></h3>
+                        <h3 class="title"><a href="/offres/<?php echo $offer->id ?>"><?php echo $offer->title ?></a></h3>
                         <span
                             class="badge <?php echo $type === 'standard' ? 'blue' : 'yellow' ?>"><?php echo ucfirst($type) ?></span>
                     </header>

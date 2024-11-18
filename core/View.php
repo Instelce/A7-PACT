@@ -10,6 +10,9 @@ class View
     // Name of the custom js file for the view
     public string $jsFile = '';
 
+    public bool $waves = false;
+    public bool $leaflet = false;
+
     public function renderView(string $view, array $params = [])
     {
         $viewContent = $this->renderOnlyView($view, $params);

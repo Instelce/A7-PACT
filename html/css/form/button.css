@@ -136,6 +136,12 @@ Default size is medium.
     padding-right: 1rem;
 }
 
+.button.spaced {
+    justify-content: space-between;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
 .button.no-border {
     border: none;
 }

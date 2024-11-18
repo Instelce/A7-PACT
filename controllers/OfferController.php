@@ -242,8 +242,6 @@ class OfferController extends Controller
             array_push($url_images, $image->url_photo);
         }
 
-        var_dump(date('N'));
-
         $closingHour = OfferSchedule::findOne(['id' => $id])->closing_hours;
 
         if ($closingHour === 'fermé') {

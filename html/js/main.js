@@ -87,8 +87,28 @@ if (avatarButton) {
 // Set sidebar top position
 // -------------------------------------------------------------------------- //
 
-let sidebar = document.querySelector('.top-navbar-height');
+let sticky = document.querySelectorAll('.top-navbar-height');
 
-if (sidebar) {
-    sidebar.style.top = `${navbar.offsetHeight + 16}px`;
+for (let el of sticky) {
+    el.style.top = `${navbar.offsetHeight + 16}px`;
+}
+
+// add variable to the body
+document.body.style.setProperty('--navbar-height', `${navbar.offsetHeight}px`);
+
+
+// -------------------------------------------------------------------------- //
+// Random color for badges
+// -------------------------------------------------------------------------- //
+
+let badges = document.querySelectorAll('.badge.random');
+
+for (let badge of badges) {
+    // Existing Tailwind light colors
+    let colors = ['bg-blue-300', 'bg-red-300', 'bg-green-300', 'bg-yellow-300', 'bg-indigo-300', 'bg-pink-300', 'bg-purple-300', 'bg-gray-300', 'bg-teal-300', 'bg-orange-300'];
+    let randomColor = colors[Math.floor(Math.random() * colors.length)];
+    badge.classList.add(randomColor);
+
+    // Remove selected color from the array
+    colors = colors.filter(color => color !== randomColor);
 }

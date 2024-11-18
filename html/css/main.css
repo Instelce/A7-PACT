@@ -65,12 +65,21 @@ a {
     font-weight: 500;
 }
 
+.font-title {
+    font-family: var(--font-title);
+}
+
 .hidden {
     display: none;
 }
 
 .opacity-0 {
     opacity: 0;
+}
+
+.height-top {
+    top: 0;
+    display: block;
 }
 
 .dot {
@@ -82,6 +91,7 @@ a {
 }
 
 .underline {
+    width: fit-content;
     position: relative;
     text-decoration-line: none !important;
 }
@@ -149,6 +159,30 @@ a {
     border: 1px solid rgba(var(--color-purple-primary), .1);
     border-radius: var(--radius-small);
     margin-bottom: 1rem;
+}
+
+/* Waves */
+.waves {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+}
+
+.waves svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.waves path {
+    width: 100vw;
+}
+
+.waves .orange {
+    top: 100px;
 }
 
 @tailwind components;

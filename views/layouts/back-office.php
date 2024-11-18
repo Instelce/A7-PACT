@@ -19,6 +19,12 @@ use app\core\Application;
     <!-- Styles -->
     <link rel="stylesheet" href="/css/dist/output.css">
 
+    <?php if ($this->leaflet) { ?>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+              integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+              crossorigin=""/>
+    <?php } ?>
+
     <?php if ($this->cssFile): ?>
         <link rel="stylesheet"
               href="/css/pages/<?php echo $this->cssFile ?>.css">
@@ -61,15 +67,15 @@ use app\core\Application;
         <?php } ?>
     </div>
     <div class="navbar-right">
-<!--        <a href="/recherche">-->
-<!--            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"-->
-<!--                 viewBox="0 0 24 24" fill="none" stroke="currentColor"-->
-<!--                 stroke-width="1" stroke-linecap="round" stroke-linejoin="round"-->
-<!--                 class="lucide lucide-search">-->
-<!--                <circle cx="11" cy="11" r="8"/>-->
-<!--                <path d="m21 21-4.3-4.3"/>-->
-<!--            </svg>-->
-<!--        </a>-->
+        <!--        <a href="/recherche">-->
+        <!--            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"-->
+        <!--                 viewBox="0 0 24 24" fill="none" stroke="currentColor"-->
+        <!--                 stroke-width="1" stroke-linecap="round" stroke-linejoin="round"-->
+        <!--                 class="lucide lucide-search">-->
+        <!--                <circle cx="11" cy="11" r="8"/>-->
+        <!--                <path d="m21 21-4.3-4.3"/>-->
+        <!--            </svg>-->
+        <!--        </a>-->
 
         <a href="/dashboard" class="link pro">Mon dashboard</a>
 
@@ -77,7 +83,8 @@ use app\core\Application;
             <!-- Avatar -->
             <div class="avatar">
                 <div class="image-container">
-                    <img src="<?php echo Application::$app->user->avatar_url ?>" alt="<?php echo Application::$app->user->mail ?>">
+                    <img src="<?php echo Application::$app->user->avatar_url ?>"
+                         alt="<?php echo Application::$app->user->mail ?>">
                 </div>
 
                 <div class="avatar-options">
@@ -109,6 +116,49 @@ use app\core\Application;
         <li><a href="/login">Connexion</a></li>
     </ul>
 </div>
+
+<!-- Waves -->
+<?php if ($this->waves) { ?>
+    <div class="waves">
+        <!-- Orange wave -->
+        <svg width="100%" height="432" preserveAspectRatio="none" viewBox="0 0 1456 432" fill="none"
+             xmlns="http://www.w3.org/2000/svg" class="orange">
+            <path
+                d="M453.577 267C265.617 254.436 0 431.5 0 431.5V0H1455.04V369.5C1455.04 369.5 1337.89 299.429 1253.95 285.5C1080.26 256.677 1003.04 442.381 827.317 431.5C668.207 421.648 612.638 277.633 453.577 267Z"
+                fill="url(#paint0_linear_2930_6089)"/>
+            <defs>
+                <linearGradient id="paint0_linear_2930_6089" x1="727.52" y1="431.5" x2="727.52"
+                                y2="0" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#FFD884" stop-opacity="0"/>
+                    <stop offset="1" stop-color="#FFC14E"/>
+                </linearGradient>
+            </defs>
+        </svg>
+
+        <!-- White wave -->
+        <svg width="100%" height="448" preserveAspectRatio="none" viewBox="0 0 1457 448" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M817.338 447.5C658.227 437.648 602.658 293.633 443.598 283C277.783 271.916 51.532 408.409 0.520264 440.726V0H1456.52V381.252C1425.35 365.868 1315.4 313.354 1243.97 301.5C1070.28 272.677 993.061 458.381 817.338 447.5Z"
+                fill="white"/>
+        </svg>
+
+        <!-- Purple wave -->
+        <svg width="100%" height="432" preserveAspectRatio="none" viewBox="0 0 1456 432"
+             fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M453.577 267C265.617 254.436 0 431.5 0 431.5V0H1455.04V369.5C1455.04 369.5 1337.89 299.429 1253.95 285.5C1080.26 256.677 1003.04 442.381 827.317 431.5C668.207 421.648 612.638 277.633 453.577 267Z"
+                fill="url(#paint0_linear_2930_6091)"/>
+            <defs>
+                <linearGradient id="paint0_linear_2930_6091" x1="727.52" y1="431.5" x2="727.52"
+                                y2="0" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="rgb(var(--color-purple-primary))" stop-opacity="0.1"/>
+                    <stop offset="1" stop-color="rgb(var(--color-purple-primary))"/>
+                </linearGradient>
+            </defs>
+        </svg>
+    </div>
+<?php } ?>
 
 
 <main class="main-container">
@@ -198,10 +248,17 @@ use app\core\Application;
 
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<?php if ($this->leaflet) { ?>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+<?php } ?>
+
 <script type="module" src="/js/main.js"></script>
 
 <?php if ($this->jsFile) ?>
-    <script type="module" src="/js/pages/<?php echo $this->jsFile ?>.js"></script>
+<script type="module" src="/js/pages/<?php echo $this->jsFile ?>.js"></script>
 </body>
 
 </html>
