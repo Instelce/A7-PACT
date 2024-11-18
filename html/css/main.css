@@ -127,7 +127,7 @@ a {
 
 
 .hidden-anim {
-    animation: to-hidden 4s forwards;
+    animation: to-hidden 10s forwards;
 }
 
 @keyframes to-hidden {
