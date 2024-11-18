@@ -76,7 +76,7 @@ export class Carousel extends WebComponent {
         align-items: center;
         position: relative;
         width: 100%;
-        height: 300px;
+        height: auto;
         overflow: hidden; 
     }
     .slider-wrapper::after {
@@ -86,7 +86,7 @@ export class Carousel extends WebComponent {
         position:absolute;
         top: 0;
         right: 0;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0), white);
+        /*background: linear-gradient(to right, rgba(255, 255, 255, 0), white);*/
     }
 
     .slider-container {
@@ -111,11 +111,15 @@ export class Carousel extends WebComponent {
         justify-content: center;
         align-items: center;
     }
+    .slide:last-child {
+        margin: 0;
+    }
 
     .slide img {
         width: 100%; 
         max-width: 350px; 
         height: 250px;
+        max-height: 250px;
         object-fit: cover;
         border-radius: 20px;
     }
@@ -134,8 +138,8 @@ export class Carousel extends WebComponent {
     button {
         margin-left: 10px;
         margin-right: 10px;
-        width: 50px;
-        height: 50px;
+        width: 30px;
+        height: 30px;
         
         display: flex;
         justify-content: center;
@@ -145,33 +149,34 @@ export class Carousel extends WebComponent {
     }
     
    .button {
-    --background: var(--color-blue-primary);
-    --border: var(--color-blue-primary);
-    --color: var(--color-white);
-    --background-hover: var(--color-white);
-    --border-hover: var(--color-white);
-    --color-hover: var(--color-blue-primary);
-
-    padding: .8rem 2rem;
-
-    background: rgb(var(--background));
-    border: 1px solid rgb(var(--border));
-    border-radius: var(--radius-rounded);
-    outline: none;
-
-    font-size: inherit;
-    font-weight: 500;
-    white-space: nowrap;
-    color: rgb(var(--color));
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-
-    cursor: pointer;
-    transition: color .2s, background .2s, border .2s, box-shadow .2s;
-}
+        --background: var(--color-blue-primary);
+        --border: var(--color-blue-primary);
+        --color: var(--color-white);
+        --background-hover: var(--color-white);
+        --border-hover: var(--color-white);
+        --color-hover: var(--color-blue-primary);
+    
+        padding: .8rem 2rem;
+    
+        background: rgb(var(--background));
+        border: 1px solid rgb(var(--border));
+        border-radius: var(--radius-rounded);
+        outline: none;
+    
+        font-size: inherit;
+        font-weight: 500;
+        white-space: nowrap;
+        color: rgb(var(--color));
+        opacity: 0;
+    
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    
+        cursor: pointer;
+        transition: color .2s, background .2s, border .2s, box-shadow .2s, opacity .2s;
+    }
 
     .button:hover {
         background: rgb(var(--background-hover));
@@ -185,6 +190,7 @@ export class Carousel extends WebComponent {
     
     .button.only-icon.sm {
         height: 2.5rem;
+        width: 2.5rem;
     }
     
     .button.only-icon {
@@ -201,6 +207,10 @@ export class Carousel extends WebComponent {
         box-shadow: 0 0 0 3px rgba(var(--background), .5);
         transform: scale(1.02);
     }
+    
+    .slider-wrapper:hover button {
+        opacity: 1;
+    }
 
 </style>
         `;
@@ -213,8 +223,8 @@ export class Carousel extends WebComponent {
     </div>
 
     <div class="controls">
-        <button id="prev" class="button only-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></button>        
-        <button id="next" class="button only-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>  
+        <button id="prev" class="button sm only-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></button>        
+        <button id="next" class="button sm only-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>  
     </div>
 </div>
         `;

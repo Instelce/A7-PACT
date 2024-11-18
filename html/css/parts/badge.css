@@ -28,3 +28,7 @@
     --foreground: var(--color-gray-3);
     --background: var(--color-gray-1);
 }
+
+.badge.random {
+    --foreground: var(--color-black);
+}

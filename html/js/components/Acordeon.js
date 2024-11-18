@@ -48,12 +48,10 @@ export class Acordeon extends WebComponent {
             .acordeon {
                 width: 100%;
                 position: relative;
-                padding: 0 0.5rem;
-                border-top: 1px solid rgb(var(--color-gray-2));
+                border-top: 1px solid rgb(var(--color-gray-1));
             }
             .titre {
                 width: 100%;
-                padding: 0.5rem 0;
                 background: none;
                 font-size: inherit;
                 font-weight: bold;
@@ -65,7 +63,7 @@ export class Acordeon extends WebComponent {
             }
             .arrow {
                 float: right;
-                transition: all 0.5s;
+                transition: transform 0.3s;
                 transform: rotate(0deg);
             }
             .open {
