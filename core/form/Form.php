@@ -26,4 +26,9 @@ class Form
     {
         return new TextareaField($model, $attr, $rows);
     }
+
+    public function errors(Model $model, $attr)
+    {
+        return new FieldErrors($model, $attr);
+    }
 }

@@ -72,7 +72,7 @@ class Application
                 $this->response->setStatusCode(500);
             }
 
-            if ($this->user->isProfessional()) {
+            if ($this->user && $this->user->isProfessional()) {
                 $this->layout = 'back-office';
             }
 
