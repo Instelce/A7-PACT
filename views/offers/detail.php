@@ -233,14 +233,14 @@ if ($status == "Fermé") {
     <aside class="sticky col-span-2 h-fit flex flex-col gap-4 top-navbar-height">
         <div class="map-container">
             <div id="map" class="map"></div>
-            <button class="button gray spaced">
+            <!-- <button class="button gray spaced">
                 Itinéraire
                 <i data-lucide="map"></i>
             </button>
             <button class="button gray spaced">
                 Ouvrir dans Maps
                 <i data-lucide="arrow-up-right"></i>
-            </button>
+            </button> -->
         </div>
 
         <?php if (Application::$app->user?->isProfessional()) { ?>
