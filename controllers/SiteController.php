@@ -67,6 +67,9 @@ class SiteController extends Controller
     public function research()//render research
     {
         $allOffers = Offer::all();//get all offer from the model
+        usort($allOffers, function ($a, $b) {//sort the offer by created_at
+            return strtotime($b['created_at']) - strtotime($a['created_at']);
+        });
         $offers = [];//create final table to send into the vue
         foreach ($allOffers as $offer) {//foreach offer
             if ($offer["offline"] == Offer::STATUS_ONLINE) {//show only online offer
