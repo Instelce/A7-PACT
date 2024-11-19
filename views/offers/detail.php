@@ -1,5 +1,8 @@
 <?php
 /** @var $model Offer */
+/** @var $opinion \app\models\opinion\Opinion */
+/** @var $opinionSubmitted bool */
+/** @var $userOpinion \app\models\opinion\Opinion */
 /** @var $offerTags OfferTag[] */
 
 /** @var $this View */
@@ -57,6 +60,8 @@ if ($status == "Fermé") {
                 par
                 <a href="/comptes/" class="underline"><?php echo $offerData["author"] ?></a></p>
         </header>
+        
+        <?php echo $opinionExit ?>
 
         <!-- Tags -->
         <div class="flex gap-2 mb-8">
@@ -236,10 +241,77 @@ if ($status == "Fermé") {
         <section>
             <h2 class="section-header">Les avis</h2>
 
-            <button class="button gray spaced w-full">
-                Rédiger un avis
-                <i data-lucide="pen-line"></i>
-            </button>
+            <input type="hidden" id="opinion-submitted" value="<?php echo $opinionSubmitted ?>">
+
+            <?php if (!Application::$app->user?->isProfessional() && !$userOpinion) { ?>
+                <button class="button gray spaced w-full" id="opinion-add">
+                    Rédiger un avis
+                    <i data-lucide="pen-line"></i>
+                </button>
+            <?php } ?>
+
+            <!-- Creation form -->
+            <?php if (Application::$app->isAuthenticated()) { ?>
+                <?php $opinionForm = Form::begin('', "post", "opinion-form", "flex flex-col gap-2"); ?>
+
+                <!-- Rating choice -->
+                <div class="flex flex-col gap-2 mb-2">
+                    <label for="">Quelle note donneriez-vous à votre expérience ?</label>
+                    <div class="rating-choice">
+                        <input type="hidden" name="rating">
+                    </div>
+                    <?php echo $opinionForm->error($opinion, 'rating') ?>
+                </div>
+
+                <?php echo $opinionForm->field($opinion, 'visit_date')->dateField() ?>
+
+                <!-- Visit context -->
+                <div class="flex flex-col gap-2 mb-2">
+                    <x-select id="opinion-context" name="visit_context" required>
+                        <label slot="label">Qui vous accompagnait ?</label>
+                        <span slot="trigger">Choisir une option</span>
+                        <div slot="options">
+                            <div data-value="affaires">Affaires</div>
+                            <div data-value="couple">Couple</div>
+                            <div data-value="famille">Famille</div>
+                            <div data-value="amis">Amis</div>
+                            <div data-value="solo">Solo</div>
+                        </div>
+                    </x-select>
+
+                    <?php echo $opinionForm->error($opinion, 'visit_context') ?>
+                </div>
+
+                <?php echo $opinionForm->field($opinion, 'title') ?>
+                <?php echo $opinionForm->textarea($opinion, 'comment') ?>
+
+                <div class="flex items-center gap-2">
+                    <input class="checkbox checkbox-normal" type="checkbox"
+                           id="opinion-certification">
+                    <label for="opinion-certification" class="w-[400px]">Vous certifiez que votre Avis reflète
+                        votre propre expérience et votre opinion sur cette Offre</label>
+                </div>
+
+                <div class="flex gap-4 mt-2">
+                    <button id="opinion-submit" type="submit" class="button gray w-full">
+                        Publier
+                        <i data-lucide="send"></i>
+                    </button>
+
+                    <button type="button" class="button gray" id="opinion-remove">
+                        Annuler
+                    </button>
+                </div>
+
+                <?php Form::end() ?>
+            <?php } else { ?>
+                <div id="opinion-form" class="flex flex-col gap-4 hidden">
+                    <p>Connectez-vous pour laisser un avis.</p>
+                    <a href="/connexion" class="button sm">
+                        Se connecter
+                    </a>
+                </div>
+            <?php } ?>
         </section>
     </div>
 

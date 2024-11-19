@@ -1,5 +1,8 @@
 <?php
-/** @var $model \app\models\User */
+/** @var $model User */
+
+use app\core\form\Form;
+use app\models\User;
 
 $this->title = 'Connexion';
 ?>
@@ -12,12 +15,12 @@ $this->title = 'Connexion';
             <a href="inscription" class="link">S'inscrire</a>
         </div>
     </div>
-    <?php $form = \app\core\form\Form::begin('', 'post', '', 'form-w') ?>
+    <?php $form = Form::begin('', 'post', '', 'form-w') ?>
         <div class="form-inputs">
             <?php echo $form->field($model, 'mail') ?>
             <?php echo $form->field($model, 'password')->passwordField() ?>
         </div>
 
         <button type="submit" class="button w-full ">Connexion</button>
-    <?php \app\core\form\Form::end() ?>
+    <?php Form::end() ?>
 </div>

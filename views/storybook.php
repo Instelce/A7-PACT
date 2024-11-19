@@ -195,7 +195,6 @@ $this->cssFile = "storybook";
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
                 <x-slider color="#0057FF" label="Prix" min="0" max="55" type=""></x-slider>
-
             </div>
 
             <div class="flex gap-2">

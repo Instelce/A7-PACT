@@ -20,7 +20,11 @@ abstract class Model
     {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
-                $this->{$key} = $value;
+                if (is_int($this->{$key})) {
+                    $this->{$key} = intval($value);
+                } else {
+                    $this->{$key} = $value;
+                }
             }
         }
     }

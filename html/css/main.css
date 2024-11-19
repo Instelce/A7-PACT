@@ -10,6 +10,7 @@
 @import "parts/table.css";
 @import "parts/image-upload.css";
 @import "parts/badge.css";
+@import "parts/stars.css";
 
 @import "form/form.css";
 @import "form/button.css";
