@@ -30,7 +30,7 @@ $config = [
 $app = new Application(__DIR__ . '/..', $config);
 $db = $app->db;
 
-$password = password_hash("1234", PASSWORD_DEFAULT);
+$password = password_hash("JuPeNoCs24", PASSWORD_DEFAULT);
 
 
 

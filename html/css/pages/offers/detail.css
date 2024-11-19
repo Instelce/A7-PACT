@@ -127,3 +127,8 @@ x-acordeon {
     border-top: 1px solid rgb(var(--color-gray-1));
 }
 
+/* Sections */
+section {
+    width: 100%;
+    padding: 2rem 0;
+}
