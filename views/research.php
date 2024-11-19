@@ -20,8 +20,8 @@ $this->cssFile = "research";
                 <span slot="title"><?php echo $offer["title"]; ?> </span>
                 <span slot="author"><?php echo $offer["author"]; ?> </span>
                 <span slot="type"><?php echo $offer["type"]; ?> </span>
-                <?php if ($offer["price"] > 0) { ?>
-                    <span slot="price">À partir de <?php echo $offer["price"]; ?>€ </span>
+                <?php if ($offer["info"] > 0) { ?>
+                    <span slot="info"><?php echo $offer["info"]; ?></span>
                 <?php } ?>
                 <span slot="location"><?php echo $offer["location"]; ?> </span>
                 <!-- <span slot="locationDistance"> • <?php //show the distance between location and user position ?> </span> -->
