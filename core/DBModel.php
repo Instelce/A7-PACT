@@ -188,6 +188,11 @@ abstract class DBModel extends Model
         return $statement->fetchAll();
     }
 
+    public function query(): DBQueryBuilder
+    {
+        return new DBQueryBuilder($this);
+    }
+
     public static function prepare($sql)
     {
         return Application::$app->db->pdo->prepare($sql);
