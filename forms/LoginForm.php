@@ -27,13 +27,8 @@ class LoginForm extends Model
          */
         $user = UserAccount::findOne(['mail' => $this->mail]);
 
-        if (!$user) {
-            $this->addError('mail', 'Aucun compte n\'a été trouvé avec cet e-mail.');
-            return false;
-        }
-
-        if (!password_verify($this->password, $user->password)) {
-            $this->addError('password', 'Mot-de-passe incorrect.');
+        if (!password_verify($this->password, $user->password) || (!$user)) {
+            $this->addError('password', 'Mot-de-passe ou e-mail incorrect.');
             return false;
         }
 
