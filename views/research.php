@@ -4,8 +4,49 @@
 $this->title = "Recherche";
 $this->cssFile = "research";
 
+$filtersNames = [
+    "Spectacles",
+    "Restauration",
+    "Visites",
+    "Activités",
+    "Attractions",
+];
+$iconsNames = [
+    "ticket",
+    "utensils-crossed",
+    "map-pin-house",
+    "bike",
+    "ferris-wheel",
+];
 ?>
 <main class="vertical-list">
+    <!-- Search bar, sort and filter -->
+    <div>
+        <x-input rounded>
+            <input slot="input" type="text" placeholder="Placeholder">
+            <button slot="button" class="button only-icon sm">
+                <i data-lucide="search"></i>
+            </button>
+        </x-input>
+        <div
+            class="h-[70px justify-start items-start gap-2.5 inline-flex mb-[25px] mt-[25px] sm:horizontal-scroll w-full">
+
+            <?php
+            foreach ($filtersNames as $key => $filterName) {
+                $iconName = $iconsNames[$key];
+                ?>
+                <div
+                    class="w-[100px] h-[70px] rounded-[20px] border border-[#bbbbbb] flex-col justify-center items-center gap-[3px] inline-flex border-solid w-full">
+                    <i data-lucide="<?php echo $iconName ?>" class=" h-[20px] w-[20px] "></i>
+                    <span>
+                        <?php echo $filterName; ?>
+                    </span>
+                </div>
+                <?php
+            }
+            ?>
+        </div>
+    </div>
     <?php
     foreach ($offers as $offer) {//for each offer show, the composant x-search-page-card with a link to the detail offer
         ?>
