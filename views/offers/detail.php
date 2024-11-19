@@ -227,6 +227,20 @@ if ($status == "Fermé") {
             </div>
 
         </div>
+
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- Avis                                                                -->
+        <!-- ------------------------------------------------------------------- -->
+
+        <section>
+            <h2 class="section-header">Les avis</h2>
+
+            <button class="button gray spaced w-full">
+                Rédiger un avis
+                <i data-lucide="pen-line"></i>
+            </button>
+        </section>
     </div>
 
     <!-- Sidebar -->

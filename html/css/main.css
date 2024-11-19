@@ -27,6 +27,13 @@
     outline: none;
 }
 
+*::selection {
+    background: rgba(var(--color-blue-primary), .2);
+}
+.professional-mode *::selection {
+    background: rgba(var(--color-purple-primary), .2);
+}
+
 html {
     scroll-behavior: smooth;
 }
