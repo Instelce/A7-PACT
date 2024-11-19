@@ -7,7 +7,7 @@ import { WebComponent } from './WebComponent.js';
  * @arg {string} title - Activity's title
  * @arg {string} author - Activity's author
  * @arg {string} type - Activity's type
- * @arg {string} price - Activity's price
+ * @arg {string} info - Activity's info
  * @arg {string} location - Activity's location
  * @arg {string} locationDistance - Travel time between location and user
  * @arg {string} date - Date of publication
@@ -112,7 +112,7 @@ export class SearchPageCard extends WebComponent {
                         <p class="name"><slot name="author"></slot></p>
                     </div>
 
-                    <p><slot name="type"></slot><slot name="price"></slot></p>
+                    <p><slot name="type"></slot><slot name="info"></slot></p>
 
                     <div class="location">
                         <span>
