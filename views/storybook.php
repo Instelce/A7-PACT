@@ -155,9 +155,9 @@ $this->cssFile = "storybook";
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-                <input class="checkbox" type="checkbox" id="bla">
+                <input class="checkbox checkbox-normal" type="checkbox" id="bla">
                 <label class="checkbox">blablabla</label>
-                <input class="checkbox" type="checkbox" id="bla">
+                <input class="checkbox checkbox-normal" type="checkbox" id="bla">
                 <label class="checkbox">blablabla</label>
             </div>
 
