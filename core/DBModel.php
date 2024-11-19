@@ -129,7 +129,7 @@ abstract class DBModel extends Model
         $tableName = static::tableName();
         $attributes = array_keys($where);
 
-        $whereStr = implode("AND ", array_map(fn($attr) => "$attr = :$attr", $attributes));
+        $whereStr = implode(" AND ", array_map(fn($attr) => "$attr = :$attr", $attributes));
 
         $statement = self::prepare("SELECT * FROM $tableName WHERE " . $whereStr);
 
@@ -164,7 +164,7 @@ abstract class DBModel extends Model
         $tableName = static::tableName();
         $attributes = array_keys($where);
 
-        $whereStr = implode("AND ", array_map(fn($attr) => "$attr = :$attr", $attributes));
+        $whereStr = implode(" AND ", array_map(fn($attr) => "$attr = :$attr", $attributes));
 
         $statement = self::prepare("SELECT * FROM $tableName WHERE " . $whereStr);
         foreach ($where as $key => $item) {

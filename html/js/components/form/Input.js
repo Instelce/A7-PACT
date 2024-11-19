@@ -28,7 +28,7 @@ export class Input extends WebComponent {
         let label = this.shadow.querySelector('label');
         let input = this.querySelector('[slot="input"]');
         let field = this.shadow.querySelector('.input-field');
-        let required = input.hasAttribute('required');
+        let required = input.hasAttribute('required') || this.hasAttribute('required');
 
         if (input.id) {
             label.setAttribute('for', input.id);

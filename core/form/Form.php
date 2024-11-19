@@ -6,7 +6,7 @@ use app\core\Model;
 
 class Form
 {
-    public static function begin($action, $method, $id = '', $class='')
+    public static function begin($action, $method, $id = '', $class = '')
     {
         echo "<form action='$action' method='$method' id='$id' class='$class'>";
         return new Form();
@@ -27,7 +27,7 @@ class Form
         return new TextareaField($model, $attr, $rows);
     }
 
-    public function errors(Model $model, $attr)
+    public function error(Model $model, $attr)
     {
         return new FieldErrors($model, $attr);
     }

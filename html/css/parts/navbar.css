@@ -182,6 +182,10 @@
 }
 
 .navbar .avatar .image-container:hover {
+    box-shadow: 0 0 0 2px rgba(var(--color-blue-primary), .5);
+}
+
+.professional-mode .navbar .avatar .image-container:hover {
     box-shadow: 0 0 0 2px rgba(var(--color-purple-primary), .5);
 }
 
@@ -239,6 +243,10 @@
 }
 
 .avatar .avatar-options a:hover {
+    background-color: rgba(var(--color-blue-primary), .1);
+}
+
+.professional-mode .avatar .avatar-options a:hover {
     background-color: rgba(var(--color-purple-primary), .1);
 }
 

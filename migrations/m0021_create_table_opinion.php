@@ -17,11 +17,13 @@ class m0021_create_table_opinion
             visit_context VARCHAR(60) NOT NULL,
             
             account_id INT NOT NULL,
+            offer_id INT NOT NULL,
             
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             
-            FOREIGN KEY (account_id) REFERENCES account(id)
+            FOREIGN KEY (account_id) REFERENCES account(id),
+            FOREIGN KEY (offer_id) REFERENCES offer(id)
         );
         CREATE TABLE opinion_photo (
             id SERIAL PRIMARY KEY,
