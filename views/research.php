@@ -73,6 +73,7 @@ $iconsNames = [
                     <span slot="info"><?php echo $offer["info"]; ?></span>
                 <?php } ?>
                 <span slot="location"><?php echo $offer["location"]; ?> </span>
+                <!-- <span slot="locationDistance"> • <?php //show the distance between location and user position ?> </span> -->
                 <span slot="date"> • Il y a <?php
                 $date = new DateTime($offer["date"]);
                 $now = new DateTime();
@@ -88,7 +89,7 @@ $iconsNames = [
                 } elseif ($interval->d > 0) {
                     echo $interval->d . ' ' . ($interval->d > 1 ? 'jours' : 'jour');
                 } else {
-                    echo 'moins de 24h';
+                    echo 'mois de 24h';
                 }
                 ?>
                 </span>
