@@ -165,12 +165,4 @@ abstract class Model
     {
         return $this->errors[$attr][0] ?? '';
     }
-
-    public function serialize() {
-        $res = [];
-        foreach ($this->attributes() as $key => $value) {
-            $res[$key] = $value;
-        }
-        return $res;
-    }
 }

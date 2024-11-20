@@ -1,6 +1,7 @@
 <?php
 
 use app\controllers\AuthController;
+use app\controllers\ApiController;
 use app\core\Application;
 use app\controllers\SiteController;
 use app\models\account\UserAccount;
@@ -66,5 +67,8 @@ $app->router->get('/inscription/professionnel', [AuthController::class, 'registe
 $app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/profile', [AuthController::class, 'profile']);
 
-$app->run();
+//api routes
+$app->router->get('/api/offers', [ApiController::class, 'offers']);
 
+
+$app->run();

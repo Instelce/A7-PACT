@@ -58,7 +58,8 @@ if ($status == "Fermé") {
             <p>
                 <?php echo $offerData["category"] ?>
                 par
-                <a href="/comptes/" class="underline"><?php echo $offerData["author"] ?></a></p>
+                <a href="/comptes/" class="underline"><?php echo $offerData["author"] ?></a>
+            </p>
         </header>
 
         <?php echo $opinionExit ?>
@@ -164,9 +165,8 @@ if ($status == "Fermé") {
             <div class="mb-8">
                 <?php if (!empty($offerData["carteRestaurant"]) && filter_var($offerData["carteRestaurant"], FILTER_VALIDATE_URL)): ?>
                     <a href="<?php echo $offerData["carteRestaurant"] ?>" target="_blank">
-                        <img class="rounded mb-2 max-w-64 max-h-64"
-                             src="<?php echo $offerData["carteRestaurant"] ?>"
-                             alt="Carte du Restaurant">
+                        <img class="rounded mb-2 max-w-64 max-h-64" src="<?php echo $offerData["carteRestaurant"] ?>"
+                            alt="Carte du Restaurant">
                     </a>
                 <?php else: ?>
                     <p>Aucune carte disponible pour ce restaurant.</p>
@@ -176,8 +176,8 @@ if ($status == "Fermé") {
             <div class="mb-8">
                 <?php if (!empty($offerData["cartePark"]) && filter_var($offerData["cartePark"], FILTER_VALIDATE_URL)): ?>
                     <a href="<?php echo $offerData["cartePark"] ?>" target="_blank">
-                        <img class="rounded mb-4 max-w-64 max-h-64"
-                             src="<?php echo $offerData["cartePark"] ?>" alt="Carte du Park">
+                        <img class="rounded mb-4 max-w-64 max-h-64" src="<?php echo $offerData["cartePark"] ?>"
+                            alt="Carte du Park">
                     </a>
                 <?php else: ?>
                     <p>Aucune carte disponible pour ce parc d'attraction.</p>
@@ -200,33 +200,33 @@ if ($status == "Fermé") {
             </x-acordeon> --->
 
                 <?php if (!empty($offerData["prestationsIncluses"])): ?>
-                    <x-acordeon text="Prestations incluses">
-                        <div slot="content">
-                            <p>
-                                <?php echo $offerData["prestationsIncluses"] ?>
-                            </p>
-                        </div>
-                    </x-acordeon>
+                <x-acordeon text="Prestations incluses">
+                    <div slot="content">
+                        <p>
+                            <?php echo $offerData["prestationsIncluses"] ?>
+                        </p>
+                    </div>
+                </x-acordeon>
                 <?php endif; ?>
 
                 <?php if (!empty($offerData["prestationsNonIncluses"])): ?>
-                    <x-acordeon text="Prestations non incluses">
-                        <div slot="content">
-                            <p>
-                                <?php echo $offerData["prestationsNonIncluses"] ?>
-                            </p>
-                        </div>
-                    </x-acordeon>
+                <x-acordeon text="Prestations non incluses">
+                    <div slot="content">
+                        <p>
+                            <?php echo $offerData["prestationsNonIncluses"] ?>
+                        </p>
+                    </div>
+                </x-acordeon>
                 <?php endif; ?>
 
                 <?php if (!empty($offerData["accessibilite"])): ?>
-                    <x-acordeon text="Accessibilité">
-                        <div slot="content">
-                            <p>
-                                <?php echo $offerData["accessibilite"] ?>
-                            </p>
-                        </div>
-                    </x-acordeon>
+                <x-acordeon text="Accessibilité">
+                    <div slot="content">
+                        <p>
+                            <?php echo $offerData["accessibilite"] ?>
+                        </p>
+                    </div>
+                </x-acordeon>
                 <?php endif; ?>
 
             </div>
@@ -286,8 +286,7 @@ if ($status == "Fermé") {
                 <?php echo $opinionForm->textarea($opinion, 'comment') ?>
 
                 <div class="flex items-center gap-2">
-                    <input class="checkbox checkbox-normal" type="checkbox"
-                           id="opinion-certification">
+                    <input class="checkbox checkbox-normal" type="checkbox" id="opinion-certification">
                     <label for="opinion-certification" class="w-[400px]">Vous certifiez que votre
                         Avis reflète
                         votre propre expérience et votre opinion sur cette Offre</label>
@@ -323,7 +322,7 @@ if ($status == "Fermé") {
                             <a class="avatar" href="/comptes/">
                                 <div class="image-container">
                                     <img src="<?php echo Application::$app->user->avatar_url ?>"
-                                         alt="<?php echo Application::$app->user->mail ?>">
+                                        alt="<?php echo Application::$app->user->mail ?>">
                                 </div>
                             </a>
                             <p class="user-name">pablo</p>
@@ -365,8 +364,7 @@ if ($status == "Fermé") {
         </div>
 
         <?php if (Application::$app->user?->isProfessional()) { ?>
-            <a href="/offres/<?php echo $pk ?>/modification"
-               class="button purple">
+            <a href="/offres/<?php echo $pk ?>/modification" class="button purple">
                 Modifier l'offre
             </a>
         <?php } ?>

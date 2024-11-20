@@ -14,11 +14,13 @@ class Controller
      */
     protected array $middlewares = [];
 
-    public function setLayout(string $layout) {
+    public function setLayout(string $layout)
+    {
         $this->layout = $layout;
     }
 
-    public function render($view, $params = []) {
+    public function render($view, $params = [])
+    {
         return Application::$app->view->renderView($view, $params);
     }
 
@@ -33,9 +35,10 @@ class Controller
     }
 
     /**
-     * @param $model Model | Model[]
+     * @param $model DBModel | DBModel[]
      */
-    function json($model) {
+    public function json($model)
+    {
         return Application::$app->view->json($model);
     }
 }
