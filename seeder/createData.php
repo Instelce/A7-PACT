@@ -704,36 +704,6 @@ $photoRecree5->offer_id = $offre6->id;
 $photoRecree5->save();
 
 
-
-// ---------------------------------------------------------------------- //
-// photos offre7
-// ---------------------------------------------------------------------- //
-
-$photovalleedessaints1 = new OfferPhoto();
-$photovalleedessaints1->url_photo = 'https://www.francetvinfo.fr/pictures/Q1e3C7l3TscaP5lbRMjbNRTynVk/fit-in/720x/2019/08/11/phpHz9llI.jpg';
-$photovalleedessaints1->offer_id = $offre7->id;
-$photovalleedessaints1->save();
-
-$photovalleedessaints2 = new OfferPhoto();
-$photovalleedessaints2->url_photo = 'https://www.tourismebretagne.com/app/uploads/crt-bretagne/2018/10/la-vallee-des-saints-3-640x480.jpg';
-$photovalleedessaints2->offer_id = $offre7->id;
-$photovalleedessaints2->save();
-
-$photovalleedessaints3 = new OfferPhoto();
-$photovalleedessaints3->url_photo = 'https://static.actu.fr/uploads/2020/09/img-1876-960x640.jpg';
-$photovalleedessaints3->offer_id = $offre7->id;
-$photovalleedessaints3->save();
-
-$photovalleedessaints4 = new OfferPhoto();
-$photovalleedessaints4->url_photo = 'https://www.tourismebretagne.com/app/uploads/crt-bretagne/2024/04/thumbs/Vallee%20des%20Saints_YB-640x480-crop-1715068176.jpg';
-$photovalleedessaints4->offer_id = $offre7->id;
-$photovalleedessaints4->save();
-
-$photovalleedessaints5 = new OfferPhoto();
-$photovalleedessaints5->url_photo = 'https://www.lavalleedessaints.bzh/img/presentations/vallee-from-sky.webp';
-$photovalleedessaints5->offer_id = $offre7->id;
-$photovalleedessaints5->save();
-
 echo "Database seeded successfully.\n";
 
 ?>
