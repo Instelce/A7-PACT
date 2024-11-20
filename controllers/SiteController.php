@@ -36,6 +36,66 @@ class SiteController extends Controller
             ];
         }
 
+        $allOffers = Offer::all();
+        usort($allOffers, function ($a, $b) {
+            return strtotime($b['created_at']) - strtotime($a['created_at']);
+        });
+
+        $offers = [];
+        foreach ($allOffers as $offer) {
+            if ($offer["offline"] == Offer::STATUS_ONLINE) {
+                $image = OfferPhoto::findOne(['offer_id' => $offer["id"]])->url_photo ?? null;
+                $professional = ProfessionalUser::findOne(['user_id' => $offer["professional_id"]])->denomination ?? null;
+                $type = null;
+                $price = null;
+
+                switch ($offer["category"]) {
+                    case 'restaurant':
+                        $type = "Restaurant";
+                        $offerInfo = RestaurantOffer::findOne(['offer_id' => $offer["id"]]);
+                        $rangePrice = $offerInfo->range_price ?? null;
+                        $price = $rangePrice === 1 ? "• €" : ($rangePrice === 2 ? "• €€" : "• €€€");
+                        break;
+
+                    case 'activity':
+                        $type = "Activité";
+                        $price = ActivityOffer::findOne(['offer_id' => $offer["id"]])->price ?? null;
+                        break;
+
+                    case 'show':
+                        $type = "Spectacle";
+                        break;
+
+                    case 'visit':
+                        $type = "Visite";
+                        break;
+
+                    case 'attraction_park':
+                        $type = "Parc d'attraction";
+                        break;
+                }
+
+                $location = Address::findOne(['id' => $offer["address_id"]])->city ?? null;
+                $lastOnlineDate = strtotime($offer["last_online_date"] ?? 'now');
+                $currentDate = strtotime(date('Y-m-d'));
+                $daysSinceOnline = floor(($currentDate - $lastOnlineDate) / (60 * 60 * 24));
+
+                $offers[$offer["id"]] = [
+                    "id" => $offer["id"],
+                    "image" => $image,
+                    "title" => $offer["title"],
+                    "author" => $professional,
+                    "type" => $type,
+                    "price" => $price,
+                    "location" => $location,
+                    "description" => $offer["description"] ?? "",
+                    "days_since_online" => $daysSinceOnline,
+                ];
+            }
+        }
+
+        $params['offers'] = $offers;
+
         return $this->render("home", $params);
     }
 
