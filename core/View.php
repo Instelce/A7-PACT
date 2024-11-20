@@ -33,34 +33,35 @@ class View
             $layout = Application::$app->controller->layout;
         }
         ob_start();
-        include_once Application::$ROOT_DIR."/views/layouts/$layout.php";
+        include_once Application::$ROOT_DIR . "/views/layouts/$layout.php";
         return ob_get_clean();
     }
 
-    protected function renderOnlyView($view, $params = []) {
+    protected function renderOnlyView($view, $params = [])
+    {
         foreach ($params as $key => $value) {
             $$key = $value; //
         }
 
         ob_start();
-        include_once Application::$ROOT_DIR."/views/$view.php";
+        include_once Application::$ROOT_DIR . "/views/$view.php";
         return ob_get_clean();
     }
 
     /**
-     * @param $model Model | Model[]
+     * @param $model DBModel | DBModel[]
      */
-    function json($model)
+    public function json($model)
     {
         header('Content-Type: application/json');
         if (is_array($model)) {
             $res = [];
             foreach ($model as $m) {
-                $res[] = $m->serialize();
+                $res[] = $m->toJson();
             }
             echo json_encode($res);
         } else {
-            echo json_encode($model->serialize());
+            echo json_encode($model->toJson());
         }
     }
 }

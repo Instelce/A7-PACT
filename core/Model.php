@@ -13,6 +13,7 @@ abstract class Model
     public const RULE_DATE = 'date';
     public const RULE_EXP_DATE = 'exp_date';
     public const RULE_HOUR = 'hour';
+    public const RULE_PASSWORD = 'password';
 
     public array $errors = [];
 
@@ -114,6 +115,12 @@ abstract class Model
                         $this->addError($attr, self::RULE_MATCH, $rule);
                     }
                 }
+                if ($rule_name === self::RULE_PASSWORD) {
+                    $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/';
+                    if (!preg_match($pattern, $value)) {
+                        $this->addError($attr, self::RULE_MATCH, $rule);
+                    }
+                }
             }
         }
 
@@ -157,13 +164,5 @@ abstract class Model
     public function getFirstError($attr)
     {
         return $this->errors[$attr][0] ?? '';
-    }
-
-    public function serialize() {
-        $res = [];
-        foreach ($this->attributes() as $key => $value) {
-            $res[$key] = $value;
-        }
-        return $res;
     }
 }

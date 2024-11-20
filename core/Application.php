@@ -59,7 +59,8 @@ class Application
         }
     }
 
-    public function run() {
+    public function run()
+    {
         try {
             echo $this->router->resolve();
         } catch (\Exception $e) {

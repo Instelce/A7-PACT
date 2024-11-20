@@ -7,6 +7,8 @@ import {Acordeon} from "./components/Acordeon.js";
 import {Tabs} from "./components/tabs/Tabs.js";
 import {Tab} from "./components/tabs/Tab.js";
 import {Panel} from "./components/tabs/Panel.js";
+import {HomeCard} from "./components/HomeCard.js";
+
 
 // Do not change
 try {
@@ -28,6 +30,8 @@ customElements.define("x-select", Select);
 customElements.define("x-search-page-card", SearchPageCard);
 customElements.define("x-acordeon", Acordeon);
 customElements.define("x-carousel", Carousel);
+customElements.define("x-home-card", HomeCard);
+
 
 
 customElements.define('x-tabs', Tabs);
