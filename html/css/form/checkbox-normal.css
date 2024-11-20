@@ -50,8 +50,12 @@ input.checkbox[type="checkbox"]:checked::before
 {
     transform: scale(0.7);
     transition: 120ms ease-in-out;
-    background-color: rgb(var(--color-purple-primary));
+    background-color: rgb(var(--color-blue-primary));
     border-radius: 0.15em;
+}
+
+input.checkbox[type="checkbox"].pro:checked::before {
+    background-color: rgb(var(--color-purple-primary));
 }
 
 

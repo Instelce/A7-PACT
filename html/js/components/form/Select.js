@@ -8,7 +8,7 @@ export class Select extends WebComponent {
         this.input = this.querySelector('input');
         this.input.id = this.id;
         this.input.setAttribute('name', this.getAttribute('name'));
-        this.input.setAttribute('value', this.getAttribute('value'));
+        this.input.setAttribute('value', this.getAttribute('value') ?? '');
         if (this.hasAttribute('required'))
             this.input.setAttribute('required', '');
 

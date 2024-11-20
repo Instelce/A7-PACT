@@ -1,5 +1,8 @@
 <?php
 /** @var $model Offer */
+/** @var $opinion \app\models\opinion\Opinion */
+/** @var $opinionSubmitted bool */
+/** @var $userOpinion \app\models\opinion\Opinion */
 /** @var $offerTags OfferTag[] */
 
 /** @var $this View */
@@ -57,6 +60,8 @@ if ($status == "Fermé") {
                 par
                 <a href="/comptes/" class="underline"><?php echo $offerData["author"] ?></a></p>
         </header>
+
+        <?php echo $opinionExit ?>
 
         <!-- Tags -->
         <div class="flex gap-2 mb-8">
@@ -227,20 +232,136 @@ if ($status == "Fermé") {
             </div>
 
         </div>
+
+
+        <!-- ------------------------------------------------------------------- -->
+        <!-- Avis                                                                -->
+        <!-- ------------------------------------------------------------------- -->
+
+        <section>
+            <h2 class="section-header">Les avis</h2>
+
+            <input type="hidden" id="opinion-submitted" value="<?php echo $opinionSubmitted ?>">
+
+            <?php if (!Application::$app->user?->isProfessional() && !$userOpinion) { ?>
+                <button class="button gray spaced w-full" id="opinion-add">
+                    Rédiger un avis
+                    <i data-lucide="pen-line"></i>
+                </button>
+            <?php } ?>
+
+            <!-- Creation form -->
+            <?php if (Application::$app->isAuthenticated()) { ?>
+                <?php $opinionForm = Form::begin('', "post", "opinion-form", "flex flex-col gap-2"); ?>
+
+                <!-- Rating choice -->
+                <div class="flex flex-col gap-2 mb-2">
+                    <label for="">Quelle note donneriez-vous à votre expérience ?</label>
+                    <div class="rating-choice">
+                        <input type="hidden" name="rating">
+                    </div>
+                    <?php echo $opinionForm->error($opinion, 'rating') ?>
+                </div>
+
+                <?php echo $opinionForm->field($opinion, 'visit_date')->dateField() ?>
+
+                <!-- Visit context -->
+                <div class="flex flex-col gap-2 mb-2">
+                    <x-select id="opinion-context" name="visit_context" required>
+                        <label slot="label">Qui vous accompagnait ?</label>
+                        <span slot="trigger">Choisir une option</span>
+                        <div slot="options">
+                            <div data-value="affaires">Affaires</div>
+                            <div data-value="couple">Couple</div>
+                            <div data-value="famille">Famille</div>
+                            <div data-value="amis">Amis</div>
+                            <div data-value="solo">Solo</div>
+                        </div>
+                    </x-select>
+
+                    <?php echo $opinionForm->error($opinion, 'visit_context') ?>
+                </div>
+
+                <?php echo $opinionForm->field($opinion, 'title') ?>
+                <?php echo $opinionForm->textarea($opinion, 'comment') ?>
+
+                <div class="flex items-center gap-2">
+                    <input class="checkbox checkbox-normal" type="checkbox"
+                           id="opinion-certification">
+                    <label for="opinion-certification" class="w-[400px]">Vous certifiez que votre
+                        Avis reflète
+                        votre propre expérience et votre opinion sur cette Offre</label>
+                </div>
+
+                <div class="flex gap-4 mt-2">
+                    <button id="opinion-submit" type="submit" class="button gray w-full">
+                        Publier
+                        <i data-lucide="send"></i>
+                    </button>
+
+                    <button type="button" class="button gray" id="opinion-remove">
+                        Annuler
+                    </button>
+                </div>
+
+                <?php Form::end() ?>
+            <?php } else { ?>
+                <div id="opinion-form" class="flex flex-col gap-4 hidden">
+                    <p>Connectez-vous pour laisser un avis.</p>
+                    <a href="/connexion" class="button sm">
+                        Se connecter
+                    </a>
+                </div>
+            <?php } ?>
+
+            <!-- All opinions -->
+            <div class="flex flex-col">
+                <article class="opinion-card">
+                    <!-- Header -->
+                    <header>
+                        <div>
+                            <a class="avatar" href="/comptes/">
+                                <div class="image-container">
+                                    <img src="<?php echo Application::$app->user->avatar_url ?>"
+                                         alt="<?php echo Application::$app->user->mail ?>">
+                                </div>
+                            </a>
+                            <p class="user-name">pablo</p>
+                            <p class="opinion-date">1j</p>
+                        </div>
+                        <div class="buttons">
+
+                        </div>
+                    </header>
+
+                    <!-- Title -->
+                    <h3></h3>
+
+                    <!-- Stars -->
+                    <div class="opinion-card-stars">
+                        <p>A noté</p>
+                        <div class="stars" data-number="2"></div>
+                    </div>
+
+                    <!-- Comment -->
+                    <p></p>
+                </article>
+            </div>
+        </section>
     </div>
 
     <!-- Sidebar -->
     <aside class="sticky col-span-2 h-fit flex flex-col gap-4 top-navbar-height">
         <div class="map-container">
             <div id="map" class="map"></div>
-            <button class="button gray spaced">
+            <!-- <button class="button gray spaced">
                 Itinéraire
                 <i data-lucide="map"></i>
             </button>
             <button class="button gray spaced">
                 Ouvrir dans Maps
                 <i data-lucide="arrow-up-right"></i>
-            </button>
+            </button> -->
         </div>
 
         <?php if (Application::$app->user?->isProfessional()) { ?>

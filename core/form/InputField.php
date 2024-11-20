@@ -10,6 +10,7 @@ class InputField extends BaseField
     public const NUMBER_TYPE = 'number';
     public const EMAIL_TYPE = 'email';
     public const PASSWORD_TYPE = 'password';
+    public const DATE_TYPE = 'date';
 
     public string $type;
 
@@ -31,21 +32,28 @@ class InputField extends BaseField
         return $this;
     }
 
+    public function dateField()
+    {
+        $this->type = self::DATE_TYPE;
+        return $this;
+    }
+
     public function renderInput(): string
     {
-        return sprintf('<x-input %s>
+        return sprintf('<x-input %s %s>
                     <p slot="label">%s</p>
                     <input slot="input" id="%s" type="%s" name="%s" value="%s" placeholder="%s" %s>
                     %s
         </x-input>',
             $this->model->hasError($this->attr) ? 'data-invalid' : '', // other class
+            $this->model->rules()[$this->attr][0] === Model::RULE_REQUIRED ? 'required' : '', // required or not
             $this->model->getLabel($this->attr) ?? ucfirst($this->attr), // label
             $this->attr, // id
             $this->type, // type
             $this->attr, // name
             $this->model->{$this->attr}, // value
             $this->model->getPlaceholder($this->attr) ?? '', // placeholder
-            $this->model->rules()[$this->attr][0] === Model::RULE_REQUIRED ? 'required' : '', // required or not
+            $this->model->rules()[$this->attr][0] === Model::RULE_REQUIRED ? '' : '', // required or not
             $this->renderError()
         );
     }

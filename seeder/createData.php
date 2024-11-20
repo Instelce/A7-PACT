@@ -183,20 +183,48 @@ RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas5->meal_id)
 RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas6->meal_id);
 
 //add tags
-for($i = 0; $i<4; $i++){
+for ($i = 0; $i < 4; $i++) {
     $tag = $tagsIds['restaurant'][array_rand($tagsIds['restaurant'])];
-    if(!in_array($tag, $offre1->tags())){
+    if (!in_array($tag, $offre1->tags())) {
         $offre1->addTag($tag);
     }
 }
 
-$horaire1o1 = new OfferSchedule(); $horaire1o1->day = 1; $horaire1o1->opening_hours = '12:00'; $horaire1o1->closing_hours = '23:00'; $horaire1o1-> save();
-$horaire2o1 = new OfferSchedule(); $horaire2o1->day = 2; $horaire2o1->opening_hours = '12:00'; $horaire2o1->closing_hours = '23:00'; $horaire2o1-> save();
-$horaire3o1 = new OfferSchedule(); $horaire3o1->day = 3; $horaire3o1->opening_hours = 'fermé'; $horaire3o1->closing_hours = 'fermé'; $horaire3o1-> save();
-$horaire4o1 = new OfferSchedule(); $horaire4o1->day = 4; $horaire4o1->opening_hours = '12:00'; $horaire4o1->closing_hours = '23:00'; $horaire4o1-> save();
-$horaire5o1 = new OfferSchedule(); $horaire5o1->day = 5; $horaire5o1->opening_hours = '12:00'; $horaire5o1->closing_hours = '23:00'; $horaire5o1-> save();
-$horaire6o1 = new OfferSchedule(); $horaire6o1->day = 6; $horaire6o1->opening_hours = '19:30'; $horaire6o1->closing_hours = '23:00'; $horaire6o1-> save();
-$horaire7o1 = new OfferSchedule(); $horaire7o1->day = 7; $horaire7o1->opening_hours = 'fermé'; $horaire7o1->closing_hours = 'fermé'; $horaire7o1-> save();
+$horaire1o1 = new OfferSchedule();
+$horaire1o1->day = 1;
+$horaire1o1->opening_hours = '12:00';
+$horaire1o1->closing_hours = '23:00';
+$horaire1o1->save();
+$horaire2o1 = new OfferSchedule();
+$horaire2o1->day = 2;
+$horaire2o1->opening_hours = '12:00';
+$horaire2o1->closing_hours = '23:00';
+$horaire2o1->save();
+$horaire3o1 = new OfferSchedule();
+$horaire3o1->day = 3;
+$horaire3o1->opening_hours = 'fermé';
+$horaire3o1->closing_hours = 'fermé';
+$horaire3o1->save();
+$horaire4o1 = new OfferSchedule();
+$horaire4o1->day = 4;
+$horaire4o1->opening_hours = '12:00';
+$horaire4o1->closing_hours = '23:00';
+$horaire4o1->save();
+$horaire5o1 = new OfferSchedule();
+$horaire5o1->day = 5;
+$horaire5o1->opening_hours = '12:00';
+$horaire5o1->closing_hours = '23:00';
+$horaire5o1->save();
+$horaire6o1 = new OfferSchedule();
+$horaire6o1->day = 6;
+$horaire6o1->opening_hours = '19:30';
+$horaire6o1->closing_hours = '23:00';
+$horaire6o1->save();
+$horaire7o1 = new OfferSchedule();
+$horaire7o1->day = 7;
+$horaire7o1->opening_hours = 'fermé';
+$horaire7o1->closing_hours = 'fermé';
+$horaire7o1->save();
 
 RestaurantOffer::findOne(['offer_id' => $offre1->id])->addSchedule($horaire1o1->id);
 RestaurantOffer::findOne(['offer_id' => $offre1->id])->addSchedule($horaire2o1->id);
@@ -230,20 +258,48 @@ $offre2->save();
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
 
 //add tags
-for($i = 0; $i<2; $i++){
+for ($i = 0; $i < 2; $i++) {
     $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
-    if(!in_array($tag, $offre2->tags())){
+    if (!in_array($tag, $offre2->tags())) {
         $offre2->addTag($tag);
     }
 }
 
-$horaire1o2 = new OfferSchedule(); $horaire1o2->day = 1; $horaire1o2->opening_hours = 'fermé'; $horaire1o2->closing_hours = 'fermé'; $horaire1o2-> save();
-$horaire2o2 = new OfferSchedule(); $horaire2o2->day = 2; $horaire2o2->opening_hours = '09:00'; $horaire2o2->closing_hours = '19:00'; $horaire2o2-> save();
-$horaire3o2 = new OfferSchedule(); $horaire3o2->day = 3; $horaire3o2->opening_hours = '09:00'; $horaire3o2->closing_hours = '19:00'; $horaire3o2-> save();
-$horaire4o2 = new OfferSchedule(); $horaire4o2->day = 4; $horaire4o2->opening_hours = 'fermé'; $horaire4o2->closing_hours = 'fermé'; $horaire4o2-> save();
-$horaire5o2 = new OfferSchedule(); $horaire5o2->day = 5; $horaire5o2->opening_hours = '09:00'; $horaire5o2->closing_hours = '19:00'; $horaire5o2-> save();
-$horaire6o2 = new OfferSchedule(); $horaire6o2->day = 6; $horaire6o2->opening_hours = '09:00'; $horaire6o2->closing_hours = '20:00'; $horaire6o2-> save();
-$horaire7o2 = new OfferSchedule(); $horaire7o2->day = 7; $horaire7o2->opening_hours = '09:00'; $horaire7o2->closing_hours = '20:00'; $horaire7o2-> save();
+$horaire1o2 = new OfferSchedule();
+$horaire1o2->day = 1;
+$horaire1o2->opening_hours = 'fermé';
+$horaire1o2->closing_hours = 'fermé';
+$horaire1o2->save();
+$horaire2o2 = new OfferSchedule();
+$horaire2o2->day = 2;
+$horaire2o2->opening_hours = '09:00';
+$horaire2o2->closing_hours = '19:00';
+$horaire2o2->save();
+$horaire3o2 = new OfferSchedule();
+$horaire3o2->day = 3;
+$horaire3o2->opening_hours = '09:00';
+$horaire3o2->closing_hours = '19:00';
+$horaire3o2->save();
+$horaire4o2 = new OfferSchedule();
+$horaire4o2->day = 4;
+$horaire4o2->opening_hours = 'fermé';
+$horaire4o2->closing_hours = 'fermé';
+$horaire4o2->save();
+$horaire5o2 = new OfferSchedule();
+$horaire5o2->day = 5;
+$horaire5o2->opening_hours = '09:00';
+$horaire5o2->closing_hours = '19:00';
+$horaire5o2->save();
+$horaire6o2 = new OfferSchedule();
+$horaire6o2->day = 6;
+$horaire6o2->opening_hours = '09:00';
+$horaire6o2->closing_hours = '20:00';
+$horaire6o2->save();
+$horaire7o2 = new OfferSchedule();
+$horaire7o2->day = 7;
+$horaire7o2->opening_hours = '09:00';
+$horaire7o2->closing_hours = '20:00';
+$horaire7o2->save();
 
 AttractionParkOffer::findOne(['offer_id' => $offre2->id])->addSchedule($horaire1o2->id);
 AttractionParkOffer::findOne(['offer_id' => $offre2->id])->addSchedule($horaire2o2->id);
@@ -278,9 +334,9 @@ $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . 
 $db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre3->id . ", 'français'), (" . $offre3->id . ", 'anglais')");
 
 //add tags
-for($i = 0; $i<3; $i++){
+for ($i = 0; $i < 3; $i++) {
     $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
-    if(!in_array($tag, $offre3->tags())){
+    if (!in_array($tag, $offre3->tags())) {
         $offre3->addTag($tag);
     }
 }
@@ -306,7 +362,7 @@ $offre4->save();
 
 $db->pdo->exec("INSERT INTO offer_period (id, start_date,end_date) VALUES (1,'2024-06-01', '2024-09-01');");
 
-$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity, period_id) VALUES (" .$offre4->id . ", 1.5, 33, 1);");
+$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity, period_id) VALUES (" . $offre4->id . ", 1.5, 33, 1);");
 
 //no tags
 
@@ -336,20 +392,48 @@ $offre5->save();
 $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES ($offre5->id, 1.0, 3);");
 
 //add tags
-for($i = 0; $i<3; $i++){
+for ($i = 0; $i < 3; $i++) {
     $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
-    if(!in_array($tag, $offre5->tags())){
+    if (!in_array($tag, $offre5->tags())) {
         $offre5->addTag($tag);
     }
 }
 
-$horaire1o5 = new OfferSchedule(); $horaire1o5->day = 1; $horaire1o5->opening_hours = '09:00'; $horaire1o5->closing_hours = '17:00'; $horaire1o5-> save();
-$horaire2o5 = new OfferSchedule(); $horaire2o5->day = 2; $horaire2o5->opening_hours = '09:00'; $horaire2o5->closing_hours = '17:00'; $horaire2o5-> save();
-$horaire3o5 = new OfferSchedule(); $horaire3o5->day = 3; $horaire3o5->opening_hours = 'fermé'; $horaire3o5->closing_hours = 'fermé'; $horaire3o5-> save();
-$horaire4o5 = new OfferSchedule(); $horaire4o5->day = 4; $horaire4o5->opening_hours = 'fermé'; $horaire4o5->closing_hours = 'fermé'; $horaire4o5-> save();
-$horaire5o5 = new OfferSchedule(); $horaire5o5->day = 5; $horaire5o5->opening_hours = '09:00'; $horaire5o5->closing_hours = '17:00'; $horaire5o5-> save();
-$horaire6o5 = new OfferSchedule(); $horaire6o5->day = 6; $horaire6o5->opening_hours = '09:00'; $horaire6o5->closing_hours = '17:00'; $horaire6o5-> save();
-$horaire7o5 = new OfferSchedule(); $horaire7o5->day = 7; $horaire7o5->opening_hours = '09:00'; $horaire7o5->closing_hours = '17:00'; $horaire7o5-> save();
+$horaire1o5 = new OfferSchedule();
+$horaire1o5->day = 1;
+$horaire1o5->opening_hours = '09:00';
+$horaire1o5->closing_hours = '17:00';
+$horaire1o5->save();
+$horaire2o5 = new OfferSchedule();
+$horaire2o5->day = 2;
+$horaire2o5->opening_hours = '09:00';
+$horaire2o5->closing_hours = '17:00';
+$horaire2o5->save();
+$horaire3o5 = new OfferSchedule();
+$horaire3o5->day = 3;
+$horaire3o5->opening_hours = 'fermé';
+$horaire3o5->closing_hours = 'fermé';
+$horaire3o5->save();
+$horaire4o5 = new OfferSchedule();
+$horaire4o5->day = 4;
+$horaire4o5->opening_hours = 'fermé';
+$horaire4o5->closing_hours = 'fermé';
+$horaire4o5->save();
+$horaire5o5 = new OfferSchedule();
+$horaire5o5->day = 5;
+$horaire5o5->opening_hours = '09:00';
+$horaire5o5->closing_hours = '17:00';
+$horaire5o5->save();
+$horaire6o5 = new OfferSchedule();
+$horaire6o5->day = 6;
+$horaire6o5->opening_hours = '09:00';
+$horaire6o5->closing_hours = '17:00';
+$horaire6o5->save();
+$horaire7o5 = new OfferSchedule();
+$horaire7o5->day = 7;
+$horaire7o5->opening_hours = '09:00';
+$horaire7o5->closing_hours = '17:00';
+$horaire7o5->save();
 
 ActivityOffer::findOne(['offer_id' => $offre5->id])->addSchedule($horaire1o5->id);
 ActivityOffer::findOne(['offer_id' => $offre5->id])->addSchedule($horaire2o5->id);
@@ -384,13 +468,41 @@ $offre6->save();
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre6->id . ", 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
 
 
-$horaire1o6 = new OfferSchedule(); $horaire1o6->day = 1; $horaire1o6->opening_hours = '09:00'; $horaire1o6->closing_hours = '19:00'; $horaire1o6-> save();
-$horaire2o6 = new OfferSchedule(); $horaire2o6->day = 2; $horaire2o6->opening_hours = '09:00'; $horaire2o6->closing_hours = '19:00'; $horaire2o6-> save();
-$horaire3o6 = new OfferSchedule(); $horaire3o6->day = 3; $horaire3o6->opening_hours = 'fermé'; $horaire3o6->closing_hours = 'fermé'; $horaire3o6-> save();
-$horaire4o6 = new OfferSchedule(); $horaire4o6->day = 4; $horaire4o6->opening_hours = 'fermé'; $horaire4o6->closing_hours = 'fermé'; $horaire4o6-> save();
-$horaire5o6 = new OfferSchedule(); $horaire5o6->day = 5; $horaire5o6->opening_hours = '09:00'; $horaire5o6->closing_hours = '19:00'; $horaire5o6-> save();
-$horaire6o6 = new OfferSchedule(); $horaire6o6->day = 6; $horaire6o6->opening_hours = '09:00'; $horaire6o6->closing_hours = '20:00'; $horaire6o6-> save();
-$horaire7o6 = new OfferSchedule(); $horaire7o6->day = 7; $horaire7o6->opening_hours = '09:00'; $horaire7o6->closing_hours = '20:00'; $horaire7o6-> save();
+$horaire1o6 = new OfferSchedule();
+$horaire1o6->day = 1;
+$horaire1o6->opening_hours = '09:00';
+$horaire1o6->closing_hours = '19:00';
+$horaire1o6->save();
+$horaire2o6 = new OfferSchedule();
+$horaire2o6->day = 2;
+$horaire2o6->opening_hours = '09:00';
+$horaire2o6->closing_hours = '19:00';
+$horaire2o6->save();
+$horaire3o6 = new OfferSchedule();
+$horaire3o6->day = 3;
+$horaire3o6->opening_hours = 'fermé';
+$horaire3o6->closing_hours = 'fermé';
+$horaire3o6->save();
+$horaire4o6 = new OfferSchedule();
+$horaire4o6->day = 4;
+$horaire4o6->opening_hours = 'fermé';
+$horaire4o6->closing_hours = 'fermé';
+$horaire4o6->save();
+$horaire5o6 = new OfferSchedule();
+$horaire5o6->day = 5;
+$horaire5o6->opening_hours = '09:00';
+$horaire5o6->closing_hours = '19:00';
+$horaire5o6->save();
+$horaire6o6 = new OfferSchedule();
+$horaire6o6->day = 6;
+$horaire6o6->opening_hours = '09:00';
+$horaire6o6->closing_hours = '20:00';
+$horaire6o6->save();
+$horaire7o6 = new OfferSchedule();
+$horaire7o6->day = 7;
+$horaire7o6->opening_hours = '09:00';
+$horaire7o6->closing_hours = '20:00';
+$horaire7o6->save();
 
 AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire1o6->id);
 AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire2o6->id);
@@ -401,44 +513,13 @@ AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire6
 AttractionParkOffer::findOne(['offer_id' => $offre6->id])->addSchedule($horaire7o6->id);
 
 //add tags
-for($i = 0; $i<3; $i++){
+for ($i = 0; $i < 3; $i++) {
     $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
-    if(!in_array($tag, $offre6->tags())){
+    if (!in_array($tag, $offre6->tags())) {
         $offre6->addTag($tag);
     }
 }
 
-
-$offre7 = new Offer();
-$offre7->title = "Vallée des Saints";
-$offre7->summary = 'Il y a de la magie dans ce site hors norme. Un peu comme sur l’île de Pâques... mais à la manière bretonne ! ';
-$offre7->description = 'Au coeur de Carnoët, vous vous promènerez au milieu de géants de granit. Le site compte 180 statues, dont certaines atteignent 7 mètres de haut ! Véritable jeu de piste pour les enfants, demandez-leur de trouver Sainte Riwanon ou Sainte Katell, et laissez place à votre imagination.';
-$offre7->likes = 2014;
-$offre7->offline = 0;
-$offre7->offline_date = null;
-$offre7->last_online_date = "2023-01-12";
-$offre7->view_counter = 14856;
-$offre7->click_counter = 3101;
-$offre7->website = 'https://www.lavalleedessaints.com/';
-$offre7->phone_number = '0296916226';
-$offre7->category = 'visit_offer';
-$offre7->offer_type_id = 1;
-$offre7->professional_id = 10;
-$offre7->address_id = 18;
-$offre7->save();
-
-$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre7->id . ", 2.5, false);");
-
-$db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre7->id . ", 'français')");
-
-//add tags
-
-for($i = 0; $i<4; $i++){
-    $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
-    if(!in_array($tag, $offre7->tags())){
-        $offre7->addTag($tag);
-    }
-}
 
 
 
@@ -627,27 +708,22 @@ $photoRecree5->save();
 // ---------------------------------------------------------------------- //
 // photos offre7
 // ---------------------------------------------------------------------- //
-
 $photovalleedessaints1 = new OfferPhoto();
 $photovalleedessaints1->url_photo = 'https://www.francetvinfo.fr/pictures/Q1e3C7l3TscaP5lbRMjbNRTynVk/fit-in/720x/2019/08/11/phpHz9llI.jpg';
 $photovalleedessaints1->offer_id = $offre7->id;
 $photovalleedessaints1->save();
-
 $photovalleedessaints2 = new OfferPhoto();
 $photovalleedessaints2->url_photo = 'https://www.tourismebretagne.com/app/uploads/crt-bretagne/2018/10/la-vallee-des-saints-3-640x480.jpg';
 $photovalleedessaints2->offer_id = $offre7->id;
 $photovalleedessaints2->save();
-
 $photovalleedessaints3 = new OfferPhoto();
 $photovalleedessaints3->url_photo = 'https://static.actu.fr/uploads/2020/09/img-1876-960x640.jpg';
 $photovalleedessaints3->offer_id = $offre7->id;
 $photovalleedessaints3->save();
-
 $photovalleedessaints4 = new OfferPhoto();
 $photovalleedessaints4->url_photo = 'https://www.tourismebretagne.com/app/uploads/crt-bretagne/2024/04/thumbs/Vallee%20des%20Saints_YB-640x480-crop-1715068176.jpg';
 $photovalleedessaints4->offer_id = $offre7->id;
 $photovalleedessaints4->save();
-
 $photovalleedessaints5 = new OfferPhoto();
 $photovalleedessaints5->url_photo = 'https://www.lavalleedessaints.bzh/img/presentations/vallee-from-sky.webp';
 $photovalleedessaints5->offer_id = $offre7->id;

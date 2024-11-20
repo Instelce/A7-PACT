@@ -1,0 +1,25 @@
+/* Generic style of stars */
+
+.stars {
+    display: flex;
+    gap: .5rem;
+}
+
+.star {
+    width: 1.2rem;
+    height: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgb(var(--color-gray-1));
+}
+
+.star.fill {
+    background: rgb(var(--color-orange-secondary));
+}
+
+.star svg {
+    position: absolute;
+    fill: white;
+}

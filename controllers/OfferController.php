@@ -23,6 +23,7 @@ use app\models\offer\RestaurantOffer;
 use app\models\offer\schedule\OfferSchedule;
 use app\models\offer\ShowOffer;
 use app\models\offer\VisitOffer;
+use app\models\opinion\Opinion;
 use app\models\user\professional\ProfessionalUser;
 use app\models\VisitLanguage;
 use DateInterval;
@@ -214,10 +215,6 @@ class OfferController extends Controller
 
     public function detail(Request $request, Response $response, $routeparams)
     {
-        if (Application::$app->isAuthenticated()) {
-            $this->setLayout('back-office');
-        }
-
         $id = $routeparams['pk'];
         $offerData = [];
         $offer = Offer::findOne(['id' => $id]);
@@ -230,9 +227,9 @@ class OfferController extends Controller
             $tagsName[] = $tag->name;
         }
 
-        $prestationsIncluses = "A";
-        $prestationsNonIncluses = "B";
-        $accessibilite = "C";
+        $prestationsIncluses = "";
+        $prestationsNonIncluses = "";
+        $accessibilite = "";
 
         $languages = VisitLanguage::findOne(['offer_id' => $id])->language;
         $formattedAddress = $address->number . ' ' . $address->street . ', ' . $address->postal_code . ' ' . $address->city;
@@ -321,9 +318,36 @@ class OfferController extends Controller
             'cartePark' => $carte_park
         ];
 
+        // Opinion creation
+        $opinion = new Opinion();
+        $opinionSubmitted = false;
+
+        if ($request->isPost()) {
+            $opinion->loadData($request->getBody());
+
+            if ($opinion->validate()) {
+                $opinion->account_id = Application::$app->user->account_id;
+                $opinion->offer_id = $id;
+                $opinion->save();
+                $opinionSubmitted = false;
+            } else {
+                $opinionSubmitted = true;
+            }
+        }
+
+        // Retrieve the user opinion
+        if (Application::$app->isAuthenticated()) {
+            $userOpinion = Opinion::findOne(['account_id' => Application::$app->user->account_id, 'offer_id' => $id]);
+        } else {
+            $userOpinion = false;
+        }
+
         return $this->render('offers/detail', [
             'pk' => $routeparams['pk'],
-            'offerData' => $offerData
+            'offerData' => $offerData,
+            'opinion' => $opinion,
+            'opinionSubmitted' => $opinionSubmitted,
+            'userOpinion' => $userOpinion
         ]);
     }
 

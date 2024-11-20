@@ -195,7 +195,6 @@ $this->cssFile = "storybook";
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
                 <x-slider color="#0057FF" label="Prix" min="0" max="55" type=""></x-slider>
-
             </div>
 
             <div class="flex gap-2">
@@ -388,6 +387,26 @@ $this->cssFile = "storybook";
                 <img slot="image" src="/assets/images/exemples/PG8.jpg" alt="img10">
                 <img slot="image" src="/assets/images/exemples/PG9.jpg" alt="img11">
             </x-carousel>
+
+        </div>
+    </section>
+
+    <section class="flex flex-col gap-4">
+        <header>
+            <h2>Carte accueil</h2>
+        </header>
+
+        <div class="flex gap-2">
+            <x-home-card>
+                <img slot="image" src="/assets/images/brehat.jpeg" alt="Brehat">
+                <span slot="title">Balade familiale à vélo "Qui m’aime me suive"</span>
+                <span slot="author">Jean Bergeron</span>
+                <span slot="type">Activité</span>
+                <span slot="price">0</span>
+                <span slot="location">Bréhat</span>
+                <span slot="description">Explorez Bréhat à vélo sur de petites routes tranquilles et sans fortes montées, parfait pour une sortie familiale relaxante.</span>
+                <span slot="date">1</span>
+            </x-home-card>
 
         </div>
     </section>
