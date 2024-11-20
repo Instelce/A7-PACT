@@ -60,7 +60,7 @@ if ($status == "Fermé") {
                 par
                 <a href="/comptes/" class="underline"><?php echo $offerData["author"] ?></a></p>
         </header>
-        
+
         <?php echo $opinionExit ?>
 
         <!-- Tags -->
@@ -288,7 +288,8 @@ if ($status == "Fermé") {
                 <div class="flex items-center gap-2">
                     <input class="checkbox checkbox-normal" type="checkbox"
                            id="opinion-certification">
-                    <label for="opinion-certification" class="w-[400px]">Vous certifiez que votre Avis reflète
+                    <label for="opinion-certification" class="w-[400px]">Vous certifiez que votre
+                        Avis reflète
                         votre propre expérience et votre opinion sur cette Offre</label>
                 </div>
 
@@ -312,6 +313,40 @@ if ($status == "Fermé") {
                     </a>
                 </div>
             <?php } ?>
+
+            <!-- All opinions -->
+            <div class="flex flex-col">
+                <article class="opinion-card">
+                    <!-- Header -->
+                    <header>
+                        <div>
+                            <a class="avatar" href="/comptes/">
+                                <div class="image-container">
+                                    <img src="<?php echo Application::$app->user->avatar_url ?>"
+                                         alt="<?php echo Application::$app->user->mail ?>">
+                                </div>
+                            </a>
+                            <p class="user-name">pablo</p>
+                            <p class="opinion-date">1j</p>
+                        </div>
+                        <div class="buttons">
+
+                        </div>
+                    </header>
+
+                    <!-- Title -->
+                    <h3></h3>
+
+                    <!-- Stars -->
+                    <div class="opinion-card-stars">
+                        <p>A noté</p>
+                        <div class="stars" data-number="2"></div>
+                    </div>
+
+                    <!-- Comment -->
+                    <p></p>
+                </article>
+            </div>
         </section>
     </div>
 

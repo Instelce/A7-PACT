@@ -11,6 +11,8 @@
 @import "parts/image-upload.css";
 @import "parts/badge.css";
 @import "parts/stars.css";
+@import "parts/opinion-card.css";
+@import "parts/avatar.css";
 
 @import "form/form.css";
 @import "form/button.css";

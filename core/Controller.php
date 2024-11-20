@@ -32,4 +32,10 @@ class Controller
         return $this->middlewares;
     }
 
+    /**
+     * @param $model Model | Model[]
+     */
+    function json($model) {
+        return Application::$app->view->json($model);
+    }
 }

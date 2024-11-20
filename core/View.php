@@ -46,4 +46,21 @@ class View
         include_once Application::$ROOT_DIR."/views/$view.php";
         return ob_get_clean();
     }
+
+    /**
+     * @param $model Model | Model[]
+     */
+    function json($model)
+    {
+        header('Content-Type: application/json');
+        if (is_array($model)) {
+            $res = [];
+            foreach ($model as $m) {
+                $res[] = $m->serialize();
+            }
+            echo json_encode($res);
+        } else {
+            echo json_encode($model->serialize());
+        }
+    }
 }

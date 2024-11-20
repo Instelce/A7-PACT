@@ -1,0 +1,31 @@
+
+.opinion-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Header */
+.opinion-card header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.opinion-card header div:nth-child(1) {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.opinion-card header .opinion-date {
+    color: rgb(var(--color-gray-4));
+}
+
+
+/* Stars */
+.opinion-card-stars {
+    display: flex;
+    gap: 0.5rem;
+
+    color: rgb(var(--color-gray-4));
+}

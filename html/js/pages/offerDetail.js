@@ -54,7 +54,8 @@ if (opinionSubmitted) {
     window.scrollTo(0, opinionForm.offsetTop + navbarHeight, 'auto');
 } else {
     opinionForm.classList.add('hidden');
-    opinionAddButton.classList.remove('hidden');
+    if (opinionAddButton)
+        opinionAddButton.classList.remove('hidden');
 }
 
 if (opinionAddButton) {
@@ -144,3 +145,5 @@ if (opinionForm) {
         });
     }
 }
+
+fetch(`/api/offers?limit=5&q=${azeazeaze}?order_by=created_at,-price`)
