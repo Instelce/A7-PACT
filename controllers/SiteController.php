@@ -128,19 +128,19 @@ class SiteController extends Controller
     {
         $allOffers = Offer::all();//get all offer from the model
         usort($allOffers, function ($a, $b) {//sort the offer by created_at
-            return strtotime($b['created_at']) - strtotime($a['created_at']);
+            return strtotime($b->created_at) - strtotime($a->created_at);
         });
         $offers = [];//create final table to send into the vue
         foreach ($allOffers as $offer) {//foreach offer
-            if ($offer["offline"] == Offer::STATUS_ONLINE) {//show only online offer
-                $image = OfferPhoto::findOne(['offer_id' => $offer["id"]])->url_photo ?? NULL;//get the first image of the offer for the preview
-                $professional = ProfessionalUser::findOne(where: ['user_id' => $offer["professional_id"]])->denomination ?? NULL;//get the name of the professionnal who post the offer
+            if ($offer->offline == Offer::STATUS_ONLINE) {//show only online offer
+                $image = OfferPhoto::findOne(['offer_id' => $offer->id])->url_photo ?? NULL;//get the first image of the offer for the preview
+                $professional = ProfessionalUser::findOne(where: ['user_id' => $offer->professional_id])->denomination ?? NULL;//get the name of the professionnal who post the offer
                 $info = NULL;
                 $type = NULL;
-                switch ($offer["category"]) {
+                switch ($offer->category) {
                     case 'restaurant':
                         $type = "Restaurant";
-                        $OfferInfo = RestaurantOffer::findOne(['offer_id' => $offer["id"]]) ?? NULL;//get the type unique information
+                        $OfferInfo = RestaurantOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
                         $tmp = $OfferInfo->range_price ?? NULL;
                         if ($tmp == 1) {
                             $info = "• €";
@@ -152,7 +152,7 @@ class SiteController extends Controller
                         break;
                     case 'activity':
                         $type = "Activité";
-                        $OfferInfo = ActivityOffer::findOne(['offer_id' => $offer["id"]]) ?? NULL;//get the type unique information
+                        $OfferInfo = ActivityOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
                         $tmp = $OfferInfo->duration ?? NULL;
                         $tmp2 = $OfferInfo->required_age ?? NULL;
                         if ($tmp) {
@@ -165,7 +165,7 @@ class SiteController extends Controller
                         break;
                     case 'show':
                         $type = "Spectacle";
-                        $OfferInfo = ShowOffer::findOne(['offer_id' => $offer["id"]]) ?? NULL;//get the type unique information
+                        $OfferInfo = ShowOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
                         $PeriodInfo = OfferPeriod::findOne(['id' => $OfferInfo->period_id]) ?? NULL;
                         $tmp = $OfferInfo->duration ?? NULL;
                         $start_date = $PeriodInfo->start_date ?? NULL;
@@ -186,7 +186,7 @@ class SiteController extends Controller
                         break;
                     case 'visit':
                         $type = "Visite";
-                        $OfferInfo = VisitOffer::findOne(['offer_id' => $offer["id"]]) ?? NULL;//get the type unique information
+                        $OfferInfo = VisitOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
                         $PeriodInfo = OfferPeriod::findOne(['id' => $OfferInfo->period_id]) ?? NULL;
                         var_dump($PeriodInfo);
                         $tmp = $OfferInfo->duration ?? NULL;
@@ -217,7 +217,7 @@ class SiteController extends Controller
                         break;
                     case 'attraction_park':
                         $type = "Parc d'attraction";
-                        $OfferInfo = AttractionParkOffer::findOne(['offer_id' => $offer["id"]]) ?? NULL;//get the type unique information
+                        $OfferInfo = AttractionParkOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
                         $tmp = $OfferInfo->attraction_number ?? NULL;
                         $tmp2 = $OfferInfo->required_age ?? NULL;
                         if ($tmp) {
@@ -229,11 +229,11 @@ class SiteController extends Controller
                         $info = $str1 . $str2;
                         break;
                 }
-                $location = Address::findOne(['id' => $offer["address_id"]])->city ?? NULL; // get the city of the offer
-                $offers[$offer["id"]] = [//set up the final array to send to the vue
-                    "id" => $offer["id"], //id for the link into the detail offer and the traitement of click and vue statistiques
+                $location = Address::findOne(['id' => $offer->address_id])->city ?? NULL; // get the city of the offer
+                $offers[$offer->id] = [//set up the final array to send to the vue
+                    "id" => $offer->id, //id for the link into the detail offer and the traitement of click and vue statistiques
                     "image" => $image,//preview image
-                    "title" => $offer["title"],
+                    "title" => $offer->title,
                     "author" => $professional,
                     "type" => $type,
                     "info" => $info,
