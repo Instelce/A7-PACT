@@ -185,7 +185,7 @@ abstract class DBModel extends Model
         $statement = self::prepare("SELECT * FROM $tableName");
         $statement->execute();
 
-        return $statement->fetchAll();
+        return $statement->fetchAll(\PDO::FETCH_CLASS, static::class);
     }
 
     public function query(): DBQueryBuilder
@@ -196,5 +196,15 @@ abstract class DBModel extends Model
     public static function prepare($sql)
     {
         return Application::$app->db->pdo->prepare($sql);
+    }
+
+
+    public function toJson()
+    {
+        $res = [];
+        foreach ($this->attributes() as $key) {
+            $res[$key] = $this->{$key};
+        }
+        return $res;
     }
 }
