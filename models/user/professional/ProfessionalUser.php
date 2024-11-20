@@ -7,7 +7,7 @@ class ProfessionalUser extends DBModel
 {
 
   public int $user_id = 0;
-  public int $code = 0;
+  public string $code = '';
   public string $denomination = '';
   public string $siren = '';
 
@@ -29,7 +29,7 @@ class ProfessionalUser extends DBModel
   public function rules(): array
   {
     return [
-      'code' => [self::RULE_REQUIRED],
+      'code' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 16], [self::RULE_UNIQUE]],
       'denomination' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 100], [self::RULE_UNIQUE]],
       'siren' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 14], [self::RULE_UNIQUE]]
     ];
