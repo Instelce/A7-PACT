@@ -6,14 +6,10 @@ class DBQueryBuilder
 {
     public Model $model;
 
-    /**
-     * @var 'select' | 'create' | 'update' | 'delete'
-     */
-    public string $action = 'select';
-
     public array $filters = [];
     public array $order_by = [];
-    public int $limit = 0;
+    public ?int $limit;
+    public ?int $offset;
 
     public function __construct(Model $model)
     {
@@ -26,14 +22,8 @@ class DBQueryBuilder
     public function make()
     {
         $tableName = $this->model->tableName();
-        $attributes = $this->model->attributes();
 
-        $sql = match ($this->action) {
-            'select' => "SELECT * FROM $tableName",
-            'create' => "INSERT INTO $tableName (" . implode(",", $attributes) . ") VALUES (" . implode(",", array_map(fn($attr) => ":$attr", $attributes)) . ")",
-            'update' => "UPDATE $tableName SET " . implode(",", array_map(fn($attr) => "$attr = :$attr", $this->model->updateAttributes())) . " WHERE id = :id",
-            'delete' => "DELETE FROM $tableName WHERE id = :id",
-        };
+        $sql = "SELECT * FROM $tableName";
 
         if (!empty($this->filters)) {
             $sql .= " WHERE " . implode(" AND ", array_map(fn($attr) => "$attr = :$attr", array_keys($this->filters)));
@@ -47,25 +37,19 @@ class DBQueryBuilder
             $sql .= " LIMIT $this->limit";
         }
 
-        $statement = self::prepare($sql);
+        if ($this->offset) {
+            $sql .= " OFFSET $this->offset";
+        }
+
+        $statement = Application::$app->db->pdo->prepare($sql);
 
         foreach ($this->filters as $key => $value) {
             $statement->bindValue(":$key", $value);
         }
 
-        if ($this->action === 'create' || $this->action === 'update') {
-            foreach ($attributes as $attribute) {
-                $statement->bindValue(":$attribute", $this->model->{$attribute});
-            }
-        }
-
-        if ($this->action === 'update' || $this->action === 'delete') {
-            $statement->bindValue(":id", $this->model->pk());
-        }
-
         $statement->execute();
 
-        return $this->action === 'select' ? $statement->fetchAll($this->model::class) : null;
+        return $statement->fetchAll(\PDO::FETCH_CLASS, $this->model::class);
     }
 
     /**
@@ -93,29 +77,22 @@ class DBQueryBuilder
     /**
      * Limit the number of results
      *
-     * @param int $limit The number of results to return
+     * @param int | null $limit The number of results to return
      */
-    public function limit(int $limit): DBQueryBuilder
+    public function limit(int $limit = null): DBQueryBuilder
     {
         $this->limit = $limit;
         return $this;
     }
 
-    public function create(): DBQueryBuilder
+    /**
+     * Offset the results
+     *
+     * @param int | null $offset The number of results to skip
+     */
+    public function offset(int $offset = null): DBQueryBuilder
     {
-        $this->action = 'create';
-        return $this;
-    }
-
-    public function update(): DBQueryBuilder
-    {
-        $this->action = 'update';
-        return $this;
-    }
-
-    public function delete(): DBQueryBuilder
-    {
-        $this->action = 'delete';
+        $this->offset = $offset;
         return $this;
     }
 }

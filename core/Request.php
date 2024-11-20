@@ -5,7 +5,7 @@ namespace app\core;
 
 class Request
 {
-    public function getPath ()
+    public function getPath()
     {
         $path = $_SERVER['REQUEST_URI'] ?? '/';
         $position = strpos($path, '?');
@@ -17,7 +17,7 @@ class Request
         return substr($path, 0, $position);
     }
 
-    public function method ()
+    public function method()
     {
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
@@ -57,5 +57,18 @@ class Request
         }
 
         return $body;
+    }
+
+    public function getQueryParams($key)
+    {
+        if ($this->isGet()) {
+            return filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+        }
+        return null;
+    }
+
+    public function formName()
+    {
+        return filter_input(INPUT_POST, 'form-name', FILTER_SANITIZE_SPECIAL_CHARS);
     }
 }

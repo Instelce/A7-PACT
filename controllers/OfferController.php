@@ -44,10 +44,6 @@ class OfferController extends Controller
 
         if ($request->isPost()) {
             $body = $request->getBody();
-            //            echo "<pre>";
-//            var_dump($_FILES);
-//            var_dump($request->getBody());
-//            echo "</pre>";
 
             // Retrieve the offer type
             $type = $body['type'] ?? 'gratuite';
@@ -322,13 +318,21 @@ class OfferController extends Controller
         $opinion = new Opinion();
         $opinionSubmitted = false;
 
-        if ($request->isPost()) {
+        if ($request->isPost() && $request->formName() === 'create-opinion') {
             $opinion->loadData($request->getBody());
 
             if ($opinion->validate()) {
                 $opinion->account_id = Application::$app->user->account_id;
                 $opinion->offer_id = $id;
                 $opinion->save();
+
+                // Save opinion photos
+                $files = Application::$app->storage->saveFiles('opinion-photos', 'opinions');
+
+                foreach ($files as $file) {
+                    $opinion->addPhoto($file);
+                }
+
                 $opinionSubmitted = false;
             } else {
                 $opinionSubmitted = true;
@@ -339,6 +343,13 @@ class OfferController extends Controller
         if (Application::$app->isAuthenticated()) {
             $userOpinion = Opinion::findOne(['account_id' => Application::$app->user->account_id, 'offer_id' => $id]);
         } else {
+            $userOpinion = false;
+        }
+
+        // Delete user opinion
+        if ($request->isPost() && $request->formName() === 'delete-opinion') {
+            $opinion = Opinion::findOneByPk($request->getBody()['opinion_id']);
+            $opinion->destroy();
             $userOpinion = false;
         }
 

@@ -22,15 +22,15 @@ class m0021_create_table_opinion
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             
-            FOREIGN KEY (account_id) REFERENCES account(id),
-            FOREIGN KEY (offer_id) REFERENCES offer(id)
+            FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE,
+            FOREIGN KEY (offer_id) REFERENCES offer(id) ON DELETE CASCADE
         );
         CREATE TABLE opinion_photo (
             id SERIAL PRIMARY KEY,
             photo_url VARCHAR(255) NOT NULL,
             opinion_id INT NOT NULL,
             
-            FOREIGN KEY (opinion_id) REFERENCES opinion(id)
+            FOREIGN KEY (opinion_id) REFERENCES opinion(id) ON DELETE CASCADE
         );";
         $db->pdo->exec($sql);
     }

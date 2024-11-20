@@ -33,10 +33,10 @@ abstract class DBModel extends Model
 
         // If a model has created_at or updated_at class attribute are not set, set them to the current time
         if (property_exists($this, 'created_at') && !$this->created_at) {
-            $this->created_at = date('Y-m-d');
+            $this->created_at = date('Y-m-d H:i:s');
         }
         if (property_exists($this, 'updated_at')) {
-            $this->updated_at = date('Y-m-d');
+            $this->updated_at = date('Y-m-d H:i:s');
         }
 
         // Add the created_at and updated_at attributes to the model
@@ -188,9 +188,9 @@ abstract class DBModel extends Model
         return $statement->fetchAll(\PDO::FETCH_CLASS, static::class);
     }
 
-    public function query(): DBQueryBuilder
+    public static function query(): DBQueryBuilder
     {
-        return new DBQueryBuilder($this);
+        return new DBQueryBuilder(new static());
     }
 
     public static function prepare($sql)
@@ -198,13 +198,21 @@ abstract class DBModel extends Model
         return Application::$app->db->pdo->prepare($sql);
     }
 
-
     public function toJson()
     {
         $res = [];
         foreach ($this->attributes() as $key) {
             $res[$key] = $this->{$key};
         }
+
+        if (property_exists($this, 'created_at')) {
+            $res['created_at'] = $this->created_at;
+        }
+
+        if (property_exists($this, 'updated_at')) {
+            $res['updated_at'] = $this->updated_at;
+        }
+
         return $res;
     }
 }

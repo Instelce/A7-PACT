@@ -73,7 +73,7 @@ if (navbar && heightTop) {
 const avatarButton = document.querySelector('.avatar .image-container');
 const avatarOptions = document.querySelector('.avatar .avatar-options');
 
-if (avatarButton) {
+if (avatarButton && avatarOptions) {
     avatarButton.addEventListener('click', function () {
         avatarOptions.classList.toggle('open');
     });

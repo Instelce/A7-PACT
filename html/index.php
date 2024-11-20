@@ -56,7 +56,6 @@ $app->router->get('/dashboard/offres', [\app\controllers\DashboardController::cl
 $app->router->get('/dashboard/avis', [\app\controllers\DashboardController::class, 'avis']);
 $app->router->get('/dashboard/factures', [\app\controllers\DashboardController::class, 'factures']);
 
-
 // Auth routes
 $app->router->get('/connexion', [AuthController::class, 'login']);
 $app->router->post('/connexion', [AuthController::class, 'login']);
@@ -67,8 +66,10 @@ $app->router->get('/inscription/professionnel/public', [AuthController::class, '
 $app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/profile', [AuthController::class, 'profile']);
 
-//api routes
+// Api routes
+$app->router->get('/api/auth/user', [ApiController::class, 'user']);
 $app->router->get('/api/offers', [ApiController::class, 'offers']);
+$app->router->get('/api/opinions/<offer_id:int>', [ApiController::class, 'opinions']);
 
 
 $app->run();

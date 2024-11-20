@@ -37,9 +37,9 @@ class m0007_create_table_offer
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             
-            FOREIGN KEY (professional_id) REFERENCES professional_user(user_id),
-            FOREIGN KEY (address_id) REFERENCES address(id),
-            FOREIGN KEY (offer_type_id) REFERENCES offer_type(id)
+            FOREIGN KEY (professional_id) REFERENCES professional_user(user_id) ON DELETE CASCADE,
+            FOREIGN KEY (address_id) REFERENCES address(id) ON DELETE CASCADE,
+            FOREIGN KEY (offer_type_id) REFERENCES offer_type(id) ON DELETE CASCADE
         );
 
         CREATE TABLE offer_option (
@@ -49,7 +49,7 @@ class m0007_create_table_offer
             duration INT NOT NULL,
             offer_id INT NOT NULL,
 
-            FOREIGN KEY (offer_id) REFERENCES offer(id) 
+            FOREIGN KEY (offer_id) REFERENCES offer(id) ON DELETE CASCADE
         );
 
 
@@ -58,7 +58,7 @@ class m0007_create_table_offer
             url_photo VARCHAR(255) NOT NULL,
             offer_id INT NOT NULL,
  
-            FOREIGN KEY (offer_id) REFERENCES offer(id)
+            FOREIGN KEY (offer_id) REFERENCES offer(id) ON DELETE CASCADE
         );";
         $db->pdo->exec($sql);
     }

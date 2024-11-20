@@ -3,6 +3,7 @@
 namespace app\models\opinion;
 
 use app\core\DBModel;
+use app\models\offer\OfferPhoto;
 
 class Opinion extends DBModel
 {
@@ -49,5 +50,18 @@ class Opinion extends DBModel
             'visit_date' => 'Quand y êtes-vous allé ?',
             'visit_context' => 'Qui vous accompagnait ?',
         ];
+    }
+
+    public function addPhoto(string $photo_url)
+    {
+        $photo = new OpinionPhoto();
+        $photo->photo_url = $photo_url;
+        $photo->opinion_id = $this->id;
+        $photo->save();
+    }
+
+    public function photos()
+    {
+        return OpinionPhoto::find(['opinion_id' => $this->id]);
     }
 }
