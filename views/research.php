@@ -3,6 +3,7 @@
 
 $this->title = "Recherche";
 $this->cssFile = "research";
+$this->jsFile = "research";
 
 $filtersNames = [
     "Spectacles",
@@ -33,28 +34,35 @@ $iconsNames = [
             foreach ($filtersNames as $key => $filterName) {
                 $iconName = $iconsNames[$key];
                 ?>
-                <div class="filter-item">
+                <button class="filter-item">
                     <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
                     <span><?php echo htmlentities($filterName); ?></span>
-                </div>
+                </button>
                 <?php
             }
             ?>
         </div>
         <div class="h-[39px] justify-start items-start gap-2.5 inline-flex mb-[45px] w-full">
-            <div
-                class="grow shrink basis-0 px-5 py-2.5 rounded-full border border-solid border-[#bbbbbb] justify-between items-center flex w-full">
+            <button onclick="showPopup()" class="grow shrink basis-0 px-5 py-2.5 rounded-full border border-solid border-[#bbbbbb] justify-between
+    items-center flex w-full">
                 <span>Plus de filtres</span>
                 <i data-lucide="sliders-horizontal" class="w-[18px] h-[18px]"> </i>
-            </div>
-            <div
-                class="grow shrink basis-0 px-5 py-2.5 rounded-full border border-solid border-[#bbbbbb] justify-between items-center flex w-full">
+            </button>
+            <button class="grow shrink basis-0 px-5 py-2.5 rounded-full border border-solid border-[#bbbbbb] justify-between
+                items-center flex w-full">
                 <span>A proximité</span>
                 <i data-lucide="navigation" class="w-[18px] h-[18px]"> </i>
-            </div>
+            </button>
         </div>
     </div>
+    <!-- more filters-->
+    <div id="popup" class="hidden absolute w-full h-full blur-sm z-0">
+        <div class=" max-w-[500px] h-full bg-white z-10">
 
+        </div>
+    </div>
+    </div>
+    <!-- Offers -->
     <?php
     foreach ($offers as $offer) {
         ?>
