@@ -28,34 +28,42 @@ $iconsNames = [
                 <i data-lucide="search"></i>
             </button>
         </x-input>
-        <div
-            class="h-[70px justify-start items-start gap-2.5 inline-flex mb-[25px] mt-[25px] sm:horizontal-scroll w-full">
-
+        <div class="filters-container">
             <?php
             foreach ($filtersNames as $key => $filterName) {
                 $iconName = $iconsNames[$key];
                 ?>
-                <div
-                    class="w-[100px] h-[70px] rounded-[20px] border border-[#bbbbbb] flex-col justify-center items-center gap-[3px] inline-flex border-solid w-full">
-                    <i data-lucide="<?php echo $iconName ?>" class=" h-[20px] w-[20px] "></i>
-                    <span>
-                        <?php echo $filterName; ?>
-                    </span>
+                <div class="filter-item">
+                    <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
+                    <span><?php echo htmlentities($filterName); ?></span>
                 </div>
                 <?php
             }
             ?>
         </div>
+        <div class="h-[39px] justify-start items-start gap-2.5 inline-flex mb-[45px] w-full">
+            <div
+                class="grow shrink basis-0 px-5 py-2.5 rounded-full border border-solid border-[#bbbbbb] justify-between items-center flex w-full">
+                <span>Plus de filtres</span>
+                <i data-lucide="sliders-horizontal" class="w-[18px] h-[18px]"> </i>
+            </div>
+            <div
+                class="grow shrink basis-0 px-5 py-2.5 rounded-full border border-solid border-[#bbbbbb] justify-between items-center flex w-full">
+                <span>A proximité</span>
+                <i data-lucide="navigation" class="w-[18px] h-[18px]"> </i>
+            </div>
+        </div>
     </div>
+
     <?php
-    foreach ($offers as $offer) {//for each offer show, the composant x-search-page-card with a link to the detail offer
+    foreach ($offers as $offer) {
         ?>
         <a href="/offres/<?php echo $offer["id"]; ?>">
             <x-search-page-card>
                 <?php if ($offer["image"] == NULL) {
-                    ?><img slot="image" alt="l offre ne contient pas d image" /> <?php //no image for the offer
+                    ?><img slot="image" alt="l'offre ne contient pas d'image" /> <?php
                 } else {
-                    ?><img slot="image" alt="photo d article" src="<?php echo $offer["image"] ?>" /> <?php //image of the offer
+                    ?><img slot="image" alt="photo d'article" src="<?php echo $offer["image"] ?>" /> <?php
                 } ?>
 
                 <span slot="title"><?php echo $offer["title"]; ?> </span>
@@ -65,7 +73,6 @@ $iconsNames = [
                     <span slot="info"><?php echo $offer["info"]; ?></span>
                 <?php } ?>
                 <span slot="location"><?php echo $offer["location"]; ?> </span>
-                <!-- <span slot="locationDistance"> • <?php //show the distance between location and user position ?> </span> -->
                 <span slot="date"> • Il y a <?php
                 $date = new DateTime($offer["date"]);
                 $now = new DateTime();
@@ -81,7 +88,7 @@ $iconsNames = [
                 } elseif ($interval->d > 0) {
                     echo $interval->d . ' ' . ($interval->d > 1 ? 'jours' : 'jour');
                 } else {
-                    echo 'mois de 24h';
+                    echo 'moins de 24h';
                 }
                 ?>
                 </span>

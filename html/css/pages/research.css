@@ -13,15 +13,48 @@
     border-bottom: none;
 }
 
-.horizontal-scroll {
+.filters-container {
     display: flex;
     flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
+    gap: 10px;
+    margin: 25px 0;
 }
 
-.horizontal-scroll > div {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
+.filter-item {
+    width: 100px;
+    height: 70px;
+    border-radius: 20px;
+    border: 1px solid #bbbbbb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    padding: 10px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .filters-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+    }
+
+    .filter-item {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+    }
+}
+
+@media (min-width: 769px) {
+    .filters-container {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+    }
+
+    .filter-item {
+        flex: 1;
+        max-width: calc(100% / 5 - 10px); /* Ensures each filter takes up 1/5th of the container */
+    }
 }
