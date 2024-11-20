@@ -58,7 +58,7 @@ $iconsNames = [
     <!-- more filters-->
     <div id="popup" class="hidden absolute w-full h-full blur-sm z-0">
         <div class=" max-w-[500px] h-full bg-white z-10">
-
+            <h1>zzzz</h1>
         </div>
     </div>
     </div>
