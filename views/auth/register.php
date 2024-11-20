@@ -14,6 +14,6 @@ $this->title = 'Register';
     <div class="form-w">
         <a class="w-full" href="inscription/membre"></a><button class="button w-full">Membre</button>
 
-        <a class="w-full" href="inscription/professionnel"><button class="button w-full gray">Professionnel</button></a>
+        <a class="w-full" href="inscription/professionnel/public"><button class="button w-full gray">Professionnel</button></a>
     </div>
 </div>

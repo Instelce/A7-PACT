@@ -11,6 +11,7 @@ class Address extends DBModel
     public string $street = '';
     public string $city = '';
     public string $postal_code = '';
+    public string $country = '';
     public float $longitude = 0.0;
     public float $latitude = 0.0;
 
@@ -21,7 +22,7 @@ class Address extends DBModel
 
     public function attributes(): array
     {
-        return ['number', 'street', 'city', 'postal_code', 'longitude', 'latitude'];
+        return ['number', 'street', 'city', 'postal_code', 'country', 'longitude', 'latitude'];
     }
 
     public function rules(): array
@@ -29,7 +30,8 @@ class Address extends DBModel
         return [
             'street' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
             'city' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
-            'postal_code' => [self::RULE_REQUIRED]
+            'postal_code' => [self::RULE_REQUIRED],
+            'country' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
         ];
     }
 }

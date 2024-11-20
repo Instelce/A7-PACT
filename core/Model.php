@@ -14,6 +14,8 @@ abstract class Model
     public const RULE_EXP_DATE = 'exp_date';
     public const RULE_HOUR = 'hour';
     public const RULE_PASSWORD = 'password';
+    public const RULE_SIREN = 'siren';
+    public const RULE_POSTAL = 'postaleCode';
 
     public array $errors = [];
 
@@ -121,6 +123,18 @@ abstract class Model
                         $this->addError($attr, self::RULE_MATCH, $rule);
                     }
                 }
+                if ($rule_name === self::RULE_SIREN) {
+                    $pattern = '/^\d{9}$/';
+                    if (!preg_match($pattern, $value)) {
+                        $this->addError($attr, self::RULE_MATCH, $rule);
+                    }
+                }
+                if ($rule_name === self::RULE_POSTAL) {
+                    $pattern = '/^\d{5}$/';
+                    if (!preg_match($pattern, $value)) {
+                        $this->addError($attr, self::RULE_MATCH, $rule);
+                    }
+                }
             }
         }
 
@@ -152,7 +166,10 @@ abstract class Model
             self::RULE_UNIQUE => '{field} existe déjà',
             self::RULE_DATE => 'Format de date incorrecte',
             self::RULE_EXP_DATE => 'Format de date d\'expiration incorrecte',
-            self::RULE_HOUR => 'Format d\'heure incorrecte'
+            self::RULE_HOUR => 'Format d\'heure incorrecte',
+            self::RULE_PASSWORD => 'Vérifiez que votre mot de passe comporte, au moins une majuscule, au moins un chiffre, au moins un caractère spécialavec au moins 12 caractères',
+            self::RULE_SIREN => 'Format de siren incorrect',
+            self::RULE_POSTAL => 'Veuillez entrez un code postal valide'
         ];
     }
 

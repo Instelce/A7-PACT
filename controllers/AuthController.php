@@ -8,6 +8,7 @@ use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\forms\LoginForm;
+use app\forms\PublicProfessionalRegister;
 use app\models\account\UserAccount;
 use app\models\User;
 
@@ -38,24 +39,28 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $user = new UserAccount();
+        return $this->render('auth/register');
+    }
+    public function registerProfessionalPublic(Request $request)
+    {
+        $pro = new PublicProfessionalRegister();
 
         if ($request->isPost()) {
-            $user->loadData($request->getBody());
+            $pro->loadData($request->getBody());
 
-            if ($user->validate() && $user->save()) {
+            if ($pro->validate() && $pro->register()) {
                 Application::$app->session->setFlash("success", "Your account has been created successfully");
                 Application::$app->response->redirect('/');
                 exit;
             }
 
-            return $this->render('auth/register', [
-                'model' => $user
+            return $this->render('auth/registerProfessionalPublic', [
+                'model' => $pro
             ]);
         }
 
-        return $this->render('auth/register', [
-            'model' => $user
+        return $this->render('auth/registerProfessionalPublic', [
+            'model' => $pro
         ]);
     }
 
