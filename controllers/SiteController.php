@@ -178,7 +178,6 @@ class SiteController extends Controller
                     "type" => $type,
                     "info" => $info,
                     "location" => $location,
-                    "date" => $offer["last_online_date"],
                 ];
             }
         }
