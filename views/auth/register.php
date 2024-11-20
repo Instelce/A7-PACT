@@ -1,5 +1,6 @@
 <?php
 /** @var $model \app\models\User */
+$this->title = 'Register';
 ?>
 
 <div class="flex flex-col items-center justify-center form form-page gap-12">
@@ -11,8 +12,8 @@
         </div>
     </div>
     <div class="form-w">
-        <button class="button w-full">Membre</button>
+        <a class="w-full" href="inscription/membre"></a><button class="button w-full">Membre</button>
 
-        <button class="button w-full gray">Professionnel</button>
+        <a class="w-full" href="inscription/professionnel"><button class="button w-full gray">Professionnel</button></a>
     </div>
 </div>
