@@ -4,9 +4,9 @@ namespace app\controllers;
 
 use app\core\Application;
 use app\core\Controller;
+use app\core\Model;
 use app\core\Request;
 use app\core\Response;
-use app\models\ContactForm;
 use app\models\offer\AttractionParkOffer;
 use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
@@ -23,43 +23,31 @@ class SiteController extends Controller
 {
     public function home(Request $request)
     {
-        $params = [
-            "name" => "Foufouille",
-            "value" => "1"
-        ];
-        if ($request->isPost()) {
-            $data = $request->getBody();
-
-            $params = [
-                "name" => $data['name'],
-                "value" => $data['value']
-            ];
-        }
-
+        /** @var Offer[] $allOffers */
         $allOffers = Offer::all();
         usort($allOffers, function ($a, $b) {
-            return strtotime($b['created_at']) - strtotime($a['created_at']);
+            return strtotime($b->created_at - strtotime($a->created_at));
         });
 
         $offers = [];
         foreach ($allOffers as $offer) {
-            if ($offer["offline"] == Offer::STATUS_ONLINE) {
-                $image = OfferPhoto::findOne(['offer_id' => $offer["id"]])->url_photo ?? null;
-                $professional = ProfessionalUser::findOne(['user_id' => $offer["professional_id"]])->denomination ?? null;
+            if ($offer->offline == Offer::STATUS_ONLINE) {
+                $image = OfferPhoto::findOne(['offer_id' => $offer->id])->url_photo ?? null;
+                $professional = ProfessionalUser::findOne(['user_id' => $offer->professional_id])->denomination ?? null;
                 $type = null;
                 $price = null;
 
-                switch ($offer["category"]) {
+                switch ($offer->category) {
                     case 'restaurant':
                         $type = "Restaurant";
-                        $offerInfo = RestaurantOffer::findOne(['offer_id' => $offer["id"]]);
+                        $offerInfo = RestaurantOffer::findOne(['offer_id' => $offer->id]);
                         $rangePrice = $offerInfo->range_price ?? null;
                         $price = $rangePrice === 1 ? "• €" : ($rangePrice === 2 ? "• €€" : "• €€€");
                         break;
 
                     case 'activity':
                         $type = "Activité";
-                        $price = ActivityOffer::findOne(['offer_id' => $offer["id"]])->price ?? null;
+                        $price = ActivityOffer::findOne(['offer_id' => $offer->id])->price ?? null;
                         break;
 
                     case 'show':
@@ -75,20 +63,20 @@ class SiteController extends Controller
                         break;
                 }
 
-                $location = Address::findOne(['id' => $offer["address_id"]])->city ?? null;
-                $lastOnlineDate = strtotime($offer["last_online_date"] ?? 'now');
+                $location = Address::findOne(['id' => $offer->address_id])->city ?? null;
+                $lastOnlineDate = strtotime($offer->last_online_date ?? 'now');
                 $currentDate = strtotime(date('Y-m-d'));
                 $daysSinceOnline = floor(($currentDate - $lastOnlineDate) / (60 * 60 * 24));
 
-                $offers[$offer["id"]] = [
-                    "id" => $offer["id"],
+                $offers[$offer->id] = [
+                    "id" => $offer->id,
                     "image" => $image,
-                    "title" => $offer["title"],
+                    "title" => $offer->title,
                     "author" => $professional,
                     "type" => $type,
                     "price" => $price,
                     "location" => $location,
-                    "description" => $offer["description"] ?? "",
+                    "description" => $offer->description ?? "",
                     "days_since_online" => $daysSinceOnline,
                 ];
             }

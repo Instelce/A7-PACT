@@ -364,6 +364,9 @@ $form = new Form();
 
                     <div class="flex flex-col gap-4">
 
+                        <!-- Name for FILES -->
+                        <div id="input-name" data-name="photos"></div>
+
                         <!-- Uploader -->
                         <label for="photo-input" class="image-uploader">
                             <input type="file" accept="image/png, image/jpeg" id="photo-input" multiple hidden>
@@ -373,7 +376,7 @@ $form = new Form();
                             <span class="button gray">Selectionner les fichier à uploader</span>
                         </label>
 
-                        <!-- Photos -->
+                        <!-- Existing photos -->
                         <div id="photos" class="flex flex-col gap-2">
                             <?php foreach ($offer['images'] as $image) { ?>
                             <div class="uploaded-image-card" draggable="true">
@@ -384,52 +387,19 @@ $form = new Form();
                                 </div>
                                 <div class="card-buttons">
                                     <div>
-                                        <button class="photo-remove button gray no-border only-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-trash-2">
-                                                <path d="M3 6h18" />
-                                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                                                <line x1="10" x2="10" y1="11" y2="17" />
-                                                <line x1="14" x2="14" y1="11" y2="17" />
-                                            </svg>
+                                        <button type="button" class="photo-remove button gray no-border only-icon">
+                                            <i data-lucide="trash-2" stroke-width="2"></i>
                                         </button>
-                                        <button class="photo-maximise button gray no-border only-icon" disabled>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-maximize-2">
-                                                <polyline points="15 3 21 3 21 9" />
-                                                <polyline points="9 21 3 21 3 15" />
-                                                <line x1="21" x2="14" y1="3" y2="10" />
-                                                <line x1="3" x2="10" y1="21" y2="14" />
-                                            </svg>
+                                        <button type="button" class="photo-maximise button gray no-border only-icon" disabled>
+                                            <i data-lucide="maximize-2" stroke-width="2"></i>
                                         </button>
-                                        <button class="photo-crop button gray no-border only-icon" disabled>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-crop">
-                                                <path d="M6 2v14a2 2 0 0 0 2 2h14" />
-                                                <path d="M18 22V8a2 2 0 0 0-2-2H2" />
-                                            </svg>
+                                        <button type="button" class="photo-crop button gray no-border only-icon" disabled>
+                                            <i data-lucide="crop" stroke-width="2"></i>
                                         </button>
                                     </div>
 
                                     <button class="photo-drag button gray no-border only-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-grip-vertical">
-                                            <circle cx="9" cy="12" r="1" />
-                                            <circle cx="9" cy="5" r="1" />
-                                            <circle cx="9" cy="19" r="1" />
-                                            <circle cx="15" cy="12" r="1" />
-                                            <circle cx="15" cy="5" r="1" />
-                                            <circle cx="15" cy="19" r="1" />
-                                        </svg>
+                                        <i data-lucide="grip-vertical" stroke-width="2"></i>
                                     </button>
                                 </div>
                             </div>

@@ -1,17 +1,20 @@
 <?php
+/** @var $pk int */
 /** @var $model Offer */
-/** @var $opinion \app\models\opinion\Opinion */
+/** @var $opinion Opinion */
 /** @var $opinionSubmitted bool */
-/** @var $userOpinion \app\models\opinion\Opinion */
+/** @var $userOpinion Opinion */
 /** @var $offerTags OfferTag[] */
 
 /** @var $this View */
 
 use app\core\Application;
 use app\core\form\Form;
+use app\core\Utils;
 use app\core\View;
 use app\models\offer\Offer;
 use app\models\offer\OfferTag;
+use app\models\opinion\Opinion;
 
 $this->title = $offerData["title"];
 $this->jsFile = "offerDetail";
@@ -33,12 +36,7 @@ if ($status == "Fermé") {
 
 ?>
 
-
-<!-- Publication date -->
-<!--<div class="publication">-->
-<!--    <p>Paru le </p>-->
-<!--    <p>--><?php //echo \app\core\Utils::formatDate($offerData["date"]) ?><!--</p>-->
-<!--</div>-->
+<input id="offer-id" type="hidden" value="<?php echo $pk ?>">
 
 <div class="lg:grid grid-cols-6 gap-8 md:flex">
 
@@ -165,8 +163,9 @@ if ($status == "Fermé") {
             <div class="mb-8">
                 <?php if (!empty($offerData["carteRestaurant"]) && filter_var($offerData["carteRestaurant"], FILTER_VALIDATE_URL)): ?>
                     <a href="<?php echo $offerData["carteRestaurant"] ?>" target="_blank">
-                        <img class="rounded mb-2 max-w-64 max-h-64" src="<?php echo $offerData["carteRestaurant"] ?>"
-                            alt="Carte du Restaurant">
+                        <img class="rounded mb-2 max-w-64 max-h-64"
+                             src="<?php echo $offerData["carteRestaurant"] ?>"
+                             alt="Carte du Restaurant">
                     </a>
                 <?php else: ?>
                     <p>Aucune carte disponible pour ce restaurant.</p>
@@ -176,8 +175,9 @@ if ($status == "Fermé") {
             <div class="mb-8">
                 <?php if (!empty($offerData["cartePark"]) && filter_var($offerData["cartePark"], FILTER_VALIDATE_URL)): ?>
                     <a href="<?php echo $offerData["cartePark"] ?>" target="_blank">
-                        <img class="rounded mb-4 max-w-64 max-h-64" src="<?php echo $offerData["cartePark"] ?>"
-                            alt="Carte du Park">
+                        <img class="rounded mb-4 max-w-64 max-h-64"
+                             src="<?php echo $offerData["cartePark"] ?>"
+                             alt="Carte du Park">
                     </a>
                 <?php else: ?>
                     <p>Aucune carte disponible pour ce parc d'attraction.</p>
@@ -200,33 +200,33 @@ if ($status == "Fermé") {
             </x-acordeon> --->
 
                 <?php if (!empty($offerData["prestationsIncluses"])): ?>
-                <x-acordeon text="Prestations incluses">
-                    <div slot="content">
-                        <p>
-                            <?php echo $offerData["prestationsIncluses"] ?>
-                        </p>
-                    </div>
-                </x-acordeon>
+                    <x-acordeon text="Prestations incluses">
+                        <div slot="content">
+                            <p>
+                                <?php echo $offerData["prestationsIncluses"] ?>
+                            </p>
+                        </div>
+                    </x-acordeon>
                 <?php endif; ?>
 
                 <?php if (!empty($offerData["prestationsNonIncluses"])): ?>
-                <x-acordeon text="Prestations non incluses">
-                    <div slot="content">
-                        <p>
-                            <?php echo $offerData["prestationsNonIncluses"] ?>
-                        </p>
-                    </div>
-                </x-acordeon>
+                    <x-acordeon text="Prestations non incluses">
+                        <div slot="content">
+                            <p>
+                                <?php echo $offerData["prestationsNonIncluses"] ?>
+                            </p>
+                        </div>
+                    </x-acordeon>
                 <?php endif; ?>
 
                 <?php if (!empty($offerData["accessibilite"])): ?>
-                <x-acordeon text="Accessibilité">
-                    <div slot="content">
-                        <p>
-                            <?php echo $offerData["accessibilite"] ?>
-                        </p>
-                    </div>
-                </x-acordeon>
+                    <x-acordeon text="Accessibilité">
+                        <div slot="content">
+                            <p>
+                                <?php echo $offerData["accessibilite"] ?>
+                            </p>
+                        </div>
+                    </x-acordeon>
                 <?php endif; ?>
 
             </div>
@@ -252,13 +252,16 @@ if ($status == "Fermé") {
 
             <!-- Creation form -->
             <?php if (Application::$app->isAuthenticated()) { ?>
-                <?php $opinionForm = Form::begin('', "post", "opinion-form", "flex flex-col gap-2"); ?>
+                <?php $opinionForm = Form::begin('', "post", "opinion-form", "flex flex-col gap-2", 'multipart/form-data'); ?>
+
+                <!-- Form name (used in controller) -->
+                <input type="hidden" name="form-name" value="create-opinion">
 
                 <!-- Rating choice -->
                 <div class="flex flex-col gap-2 mb-2">
                     <label for="">Quelle note donneriez-vous à votre expérience ?</label>
                     <div class="rating-choice">
-                        <input type="hidden" name="rating">
+                        <input type="hidden" name="rating" value="<?php echo $opinion->rating ?>">
                     </div>
                     <?php echo $opinionForm->error($opinion, 'rating') ?>
                 </div>
@@ -267,7 +270,7 @@ if ($status == "Fermé") {
 
                 <!-- Visit context -->
                 <div class="flex flex-col gap-2 mb-2">
-                    <x-select id="opinion-context" name="visit_context" required>
+                    <x-select id="opinion-context" name="visit_context" value="<?php echo $opinion->visit_context ?>" required>
                         <label slot="label">Qui vous accompagnait ?</label>
                         <span slot="trigger">Choisir une option</span>
                         <div slot="options">
@@ -285,13 +288,42 @@ if ($status == "Fermé") {
                 <?php echo $opinionForm->field($opinion, 'title') ?>
                 <?php echo $opinionForm->textarea($opinion, 'comment') ?>
 
-                <div class="flex items-center gap-2">
-                    <input class="checkbox checkbox-normal" type="checkbox" id="opinion-certification">
-                    <label for="opinion-certification" class="w-[400px]">Vous certifiez que votre
+                <div>
+                    <h3 class="mb-2">Ajoutez des photos <span class="text-sm text-gray-4">(facultatif)</span>
+                    </h3>
+
+                    <div class="flex flex-col gap-4">
+                        <!-- Name for FILES -->
+                        <div id="input-name" data-name="opinion-photos"></div>
+
+                        <!-- Uploader -->
+                        <label for="photo-input" class="image-uploader">
+                            <input type="file" accept="image/png, image/jpeg" name="images[]"
+                                   id="photo-input" multiple hidden>
+
+                            <i data-lucide="upload"></i>
+                            <p>Faire glisser des fichiers pour les uploader</p>
+                            <span class="button gray">Selectionner les fichier à uploader</span>
+                        </label>
+
+                        <!-- Photos -->
+                        <div id="photos" class="flex flex-col gap-2">
+                            <div class="drag-line hidden"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 mt-2 mb-2">
+                    <input class="checkbox checkbox-normal" type="checkbox"
+                           id="opinion-certification">
+                    <label for="opinion-certification" class="max-w-[400px]">Vous certifiez que
+                        votre
                         Avis reflète
                         votre propre expérience et votre opinion sur cette Offre</label>
                 </div>
 
+                <!-- Form buttons -->
                 <div class="flex gap-4 mt-2">
                     <button id="opinion-submit" type="submit" class="button gray w-full">
                         Publier
@@ -305,6 +337,7 @@ if ($status == "Fermé") {
 
                 <?php Form::end() ?>
             <?php } else { ?>
+                <!-- Sign in reminder if not connected -->
                 <div id="opinion-form" class="flex flex-col gap-4 hidden">
                     <p>Connectez-vous pour laisser un avis.</p>
                     <a href="/connexion" class="button sm">
@@ -313,38 +346,64 @@ if ($status == "Fermé") {
                 </div>
             <?php } ?>
 
-            <!-- All opinions -->
-            <div class="flex flex-col">
-                <article class="opinion-card">
-                    <!-- Header -->
-                    <header>
-                        <div>
-                            <a class="avatar" href="/comptes/">
-                                <div class="image-container">
-                                    <img src="<?php echo Application::$app->user->avatar_url ?>"
-                                        alt="<?php echo Application::$app->user->mail ?>">
+            <!-- All opinions, generated in js file -->
+            <div class="opinions-container">
+
+                <!-- If the current user has already created an opinion -->
+                <?php if ($userOpinion) { ?>
+                    <div>
+                        <p class="text-sm ml-5 mb-1">Votre avis</p>
+                        <article class="opinion-card user-own">
+                            <header>
+                                <div>
+                                    <a class="avatar" href="/comptes/<?php echo Application::$app->user->account_id ?>">
+                                        <div class="image-container">
+                                            <img src="<?php echo Application::$app->user->avatar_url ?>"
+                                                 alt="<?php echo Application::$app->user->mail ?>">
+                                        </div>
+                                    </a>
+                                    <a href="/comptes/<?php echo Application::$app->user->account_id ?>" class="user-name"><?php echo Application::$app->user->specific()->pseudo ?></a>
+                                    <p class="text-sm text-gray-4">Créer le <?php echo Utils::formatDate($userOpinion->created_at) ?></p>
                                 </div>
-                            </a>
-                            <p class="user-name">pablo</p>
-                            <p class="opinion-date">1j</p>
-                        </div>
-                        <div class="buttons">
+                                
+                                <div class="buttons">
 
-                        </div>
-                    </header>
+                                    <!-- Delete button -->
+                                    <form method="post">
+                                        <input type="hidden" name="form-name" value="delete-opinion">
+                                        <input type="hidden" name="opinion_id" value="<?php echo $userOpinion->id ?>">
+                                        <button class="button danger only-icon" title="Supprimer votre avis">
+                                            <i data-lucide="trash" stroke-width="2"></i>
+                                        </button>
+                                    </form>
 
-                    <!-- Title -->
-                    <h3></h3>
+                                </div>
+                            </header>
 
-                    <!-- Stars -->
-                    <div class="opinion-card-stars">
-                        <p>A noté</p>
-                        <div class="stars" data-number="2"></div>
+                            <!-- Stars -->
+                            <div class="opinion-card-stars">
+                                <p class="text-sm text-gray-4">A noté</p>
+                                <div class="stars" data-number="<?php echo $userOpinion->rating ?>"></div>
+                            </div>
+
+                            <div class="flex flex-col gap-1 mb-4">
+                                <!-- Title -->
+                                <h3 class="heading-2 font-title"><?php echo $userOpinion->title ?></h3>
+
+                                <!-- Comment -->
+                                <p><?php echo $userOpinion->comment ?></p>
+                            </div>
+
+                            <div class="opinion-card-photos">
+                                <?php foreach ($userOpinion->photos() as $photo) { ?>
+                                    <img src="<?php echo $photo->photo_url ?>" alt="<?php echo $userOpinion->title ?>">
+                                <?php } ?>
+                            </div>
+                        </article>
                     </div>
+                <?php } ?>
 
-                    <!-- Comment -->
-                    <p></p>
-                </article>
+                <button id="loader-button" class="button gray">Charger plus d'avis</button>
             </div>
         </section>
     </div>

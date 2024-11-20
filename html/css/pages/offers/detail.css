@@ -149,3 +149,21 @@ section {
 .rating-choice .star.not-high {
     background: rgb(var(--color-gray-1)) !important;
 }
+
+
+/* Opinions container */
+.opinions-container {
+    margin-top: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.opinions-container .opinion-card {
+    border-bottom: 1px solid rgb(var(--color-gray-1));
+}
+
+.opinions-container .opinion-card:last-child {
+    border-bottom: 0;
+}

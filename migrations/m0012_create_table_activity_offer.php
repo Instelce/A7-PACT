@@ -13,7 +13,7 @@ class m0012_create_table_activity_offer
             duration FLOAT NOT NULL,
             required_age INT NOT NULL,
             
-            FOREIGN KEY (offer_id) REFERENCES offer(id)
+            FOREIGN KEY (offer_id) REFERENCES offer(id) ON DELETE CASCADE
         );";
         $db->pdo->exec($sql);
     }

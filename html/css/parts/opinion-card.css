@@ -2,13 +2,13 @@
 .opinion-card {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
 }
 
 /* Header */
 .opinion-card header {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 1rem;
 }
 
 .opinion-card header div:nth-child(1) {
@@ -17,15 +17,37 @@
     gap: 1rem;
 }
 
-.opinion-card header .opinion-date {
-    color: rgb(var(--color-gray-4));
-}
-
-
 /* Stars */
 .opinion-card-stars {
     display: flex;
     gap: 0.5rem;
 
     color: rgb(var(--color-gray-4));
+}
+
+/* Photos */
+.opinion-card-photos {
+    height: 200px;
+    border-radius: var(--radius-medium);
+    overflow-x: scroll;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.opinion-card-photos::-webkit-scrollbar {
+    display: none;
+}
+
+.opinion-card-photos img {
+    object-fit: cover;
+    border-radius: var(--radius-medium);
+}
+
+
+/* Opinion own by user */
+.opinion-card.user-own {
+    padding: 1rem;
+    border: 1px solid rgb(var(--color-gray-1));
+    border-bottom: 1px solid rgb(var(--color-gray-1)) !important;
+    border-radius: var(--radius-medium);
 }

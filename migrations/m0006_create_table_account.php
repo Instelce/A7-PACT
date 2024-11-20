@@ -17,7 +17,7 @@ class m0006_create_table_account
             account_id INT PRIMARY KEY,
             pseudo VARCHAR(15) NOT NULL,
             
-            FOREIGN KEY (account_id) REFERENCES account (id)
+            FOREIGN KEY (account_id) REFERENCES account (id) ON DELETE CASCADE
         );
 
         CREATE TABLE user_account (
@@ -28,13 +28,13 @@ class m0006_create_table_account
             avatar_url VARCHAR(255) NOT NULL,
             address_id INT NOT NULL,
             
-            FOREIGN KEY (account_id) REFERENCES account(id),
-            FOREIGN KEY (address_id) REFERENCES address(id)
+            FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE,
+            FOREIGN KEY (address_id) REFERENCES address(id) ON DELETE CASCADE
         );
         CREATE TABLE administrator_user (
             user_id INT PRIMARY KEY,
 
-            CONSTRAINT administrator_user_fk FOREIGN KEY (user_id) REFERENCES user_account(account_id)
+            CONSTRAINT administrator_user_fk FOREIGN KEY (user_id) REFERENCES user_account(account_id) ON DELETE CASCADE
         );
         CREATE TABLE member_user (
             user_id INT PRIMARY KEY,
@@ -45,7 +45,7 @@ class m0006_create_table_account
             pseudo VARCHAR(50) UNIQUE NOT NULL,
             allows_notifications BOOLEAN DEFAULT FALSE NOT NULL,
             
-            CONSTRAINT member_user_fk FOREIGN KEY (user_id) REFERENCES user_account(account_id)
+            CONSTRAINT member_user_fk FOREIGN KEY (user_id) REFERENCES user_account(account_id) ON DELETE CASCADE
         );
         CREATE TABLE professional_user (
             user_id INT PRIMARY KEY,
@@ -54,7 +54,7 @@ class m0006_create_table_account
             denomination VARCHAR(100) UNIQUE NOT NULL,
             siren VARCHAR(14) UNIQUE NOT NULL,
             
-            CONSTRAINT professional_user_fk FOREIGN KEY (user_id) REFERENCES user_account(account_id)
+            CONSTRAINT professional_user_fk FOREIGN KEY (user_id) REFERENCES user_account(account_id) ON DELETE CASCADE
         );
         CREATE TABLE private_professional (
             pro_id INT PRIMARY KEY,
@@ -62,13 +62,13 @@ class m0006_create_table_account
             last_veto DATE NOT NULL,
             payment_id INT NOT NULL,
             
-            CONSTRAINT private_professional_fk FOREIGN KEY (pro_id) REFERENCES professional_user(user_id),
-            FOREIGN KEY (payment_id) REFERENCES mean_of_payment(id)
+            CONSTRAINT private_professional_fk FOREIGN KEY (pro_id) REFERENCES professional_user(user_id) ON DELETE CASCADE,
+            FOREIGN KEY (payment_id) REFERENCES mean_of_payment(id) ON DELETE CASCADE
         );
         CREATE TABLE public_professional (
             pro_id INT PRIMARY KEY,
 
-            CONSTRAINT public_professional_fk FOREIGN KEY (pro_id) REFERENCES professional_user(user_id)
+            CONSTRAINT public_professional_fk FOREIGN KEY (pro_id) REFERENCES professional_user(user_id) ON DELETE CASCADE
         );";
         $db->pdo->exec($sql);
     }
