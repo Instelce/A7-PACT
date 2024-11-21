@@ -67,7 +67,7 @@ abstract class DBModel extends Model
 
         $result = $statement->execute();
 
-        if ($result) {
+        if ($result && property_exists($this, 'id')) {
             $this->{static::pk()} = Application::$app->db->pdo->lastInsertId();
         }
 

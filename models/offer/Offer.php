@@ -4,6 +4,7 @@ namespace app\models\offer;
 
 use app\core\DBModel;
 use app\models\Address;
+use app\models\opinion\Opinion;
 use app\models\user\professional\ProfessionalUser;
 
 class Offer extends DBModel
@@ -169,5 +170,18 @@ class Offer extends DBModel
         $option->launch_date = $launchDate;
         $option->duration = $duration;
         $option->save();
+    }
+
+    /**
+     * @return Opinion[]
+     */
+    public function opinions(): array
+    {
+        return Opinion::find(['offer_id' => $this->id]);
+    }
+
+    public function opinionsCount(): int
+    {
+        return count($this->opinions());
     }
 }

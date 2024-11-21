@@ -184,7 +184,6 @@ class SiteController extends Controller
                         $type = "Visite";
                         $OfferInfo = VisitOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
                         $PeriodInfo = OfferPeriod::findOne(['id' => $OfferInfo->period_id]) ?? NULL;
-                        var_dump($PeriodInfo);
                         $tmp = $OfferInfo->duration ?? NULL;
                         $start_date = $PeriodInfo->start_date ?? NULL;
                         $end_date = $PeriodInfo->end_date ?? NULL;

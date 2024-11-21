@@ -2,6 +2,7 @@
 namespace app\models\user\professional;
 use app\core\DBModel;
 use app\models\account\UserAccount;
+use app\models\offer\Offer;
 
 class ProfessionalUser extends DBModel
 {
@@ -47,5 +48,9 @@ class ProfessionalUser extends DBModel
 
     public function user(): UserAccount {
         return UserAccount::findOne(['account_id' => $this->user_id]);
+    }
+
+    public function hasOffer($offerId): bool {
+        return Offer::findOne(['professional_id' => $this->user_id, 'id' => $offerId]) !== false;
     }
 }

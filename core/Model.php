@@ -16,6 +16,8 @@ abstract class Model
     public const RULE_PASSWORD = 'password';
     public const RULE_SIREN = 'siren';
     public const RULE_POSTAL = 'postaleCode';
+    public const RULE_PHONE = 'phone';
+    public const RULE_NUMBER = 'number';
 
     public array $errors = [];
 
@@ -95,44 +97,56 @@ abstract class Model
                 }
 
                 if ($rule_name === self::RULE_DATE) {
-                    $pattern = '/^\d{4}-\d{2}-\d{2}$/';
+                    $pattern = '/^\d{2}\/\d{2}\/\d{4}$/';
                     if (!preg_match($pattern, $value)) {
-                        $this->addError($attr, self::RULE_MATCH, $rule);
+                        $this->addErrorForRule($attr, self::RULE_DATE, $rule);
                     } else {
-                        [$year, $month, $day] = explode('-', $value);
+                        [$day, $month, $year] = explode('-', $value);
                         if (!checkdate($month, $day, $year)) {
-                            $this->addError($attr, self::RULE_MATCH);
+                            $this->addErrorForRule($attr, self::RULE_DATE);
                         }
                     }
                 }
                 if ($rule_name === self::RULE_EXP_DATE) {
                     $pattern = '/^\d{2}/\d{2}$/';
                     if (!preg_match($pattern, $value)) {
-                        $this->addError($attr, self::RULE_MATCH, $rule);
+                        $this->addErrorForRule($attr, self::RULE_EXP_DATE, $rule);
                     }
                 }
                 if ($rule_name === self::RULE_HOUR) {
                     $pattern = '/^\d{1,2}h\d{2}$/';
                     if (!preg_match($pattern, $value)) {
-                        $this->addError($attr, self::RULE_MATCH, $rule);
+                        $this->addErrorForRule($attr, self::RULE_HOUR, $rule);
                     }
                 }
                 if ($rule_name === self::RULE_PASSWORD) {
                     $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/';
                     if (!preg_match($pattern, $value)) {
-                        $this->addError($attr, self::RULE_MATCH, $rule);
+                        $this->addErrorForRule($attr, self::RULE_MATCH, $rule);
                     }
                 }
                 if ($rule_name === self::RULE_SIREN) {
                     $pattern = '/^\d{9}$/';
                     if (!preg_match($pattern, $value)) {
-                        $this->addError($attr, self::RULE_MATCH, $rule);
+                        $this->addErrorForRule($attr, self::RULE_SIREN, $rule);
                     }
                 }
                 if ($rule_name === self::RULE_POSTAL) {
                     $pattern = '/^\d{5}$/';
                     if (!preg_match($pattern, $value)) {
-                        $this->addError($attr, self::RULE_MATCH, $rule);
+                        $this->addErrorForRule($attr, self::RULE_POSTAL, $rule);
+                    }
+                }
+                if ($rule_name === self::RULE_PHONE) {
+                    $pattern = '/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/';
+                    if (!preg_match($pattern, $value)) {
+                        $this->addErrorForRule($attr, self::RULE_PHONE, $rule);
+                    }
+                }
+                if ($rule_name === self::RULE_NUMBER) {
+                    $pattern = '/^\d+$/';
+                    if (!preg_match($pattern, $value)) {
+                        $this->addErrorForRule($attr, self::RULE_NUMBER, $rule);
                     }
                 }
             }
@@ -169,7 +183,9 @@ abstract class Model
             self::RULE_HOUR => 'Format d\'heure incorrecte',
             self::RULE_PASSWORD => 'Vérifiez que votre mot de passe comporte, au moins une majuscule, au moins un chiffre, au moins un caractère spécialavec au moins 12 caractères',
             self::RULE_SIREN => 'Format de siren incorrect',
-            self::RULE_POSTAL => 'Veuillez entrez un code postal valide'
+            self::RULE_POSTAL => 'Veuillez entrez un code postal valide',
+            self::RULE_PHONE => 'Veuillez entrez un numéro de téléphone valide',
+            self::RULE_NUMBER => 'Veuillez entrez un nombre'
         ];
     }
 

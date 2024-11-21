@@ -54,16 +54,10 @@ class MemberRegisterForm extends Model
         $member->pseudo = $this->pseudo;
         $member->allows_notifications = false;
         $member->save();
-        
-        echo '<pre>';
-        var_dump($user);
-        echo '</pre>';
 
-        Application::$app->user = $user;
-        Application::$app->userType = 'member';
-        Application::$app->session->set('user', $user->account_id);
-        Application::$app->session->set('userType', 'member');
+        Application::$app->login($user);
     }
+
     public function rules(): array
     {
         return [
@@ -71,11 +65,11 @@ class MemberRegisterForm extends Model
             'firstname' => [self::RULE_REQUIRED],
             'pseudo' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attributes' => 'pseudo', 'class' => MemberUser::class]],
             'mail' => [self::RULE_REQUIRED, self::RULE_MAIL, [self::RULE_UNIQUE, 'attributes' => 'mail', 'class' => UserAccount::class]],
-            'streetNumber' => [self::RULE_REQUIRED],
+            'streetNumber' => [self::RULE_REQUIRED, self::RULE_NUMBER],
             'streetName' => [self::RULE_REQUIRED],
-            'postalCode' => [self::RULE_REQUIRED],
+            'postalCode' => [self::RULE_REQUIRED, self::RULE_POSTAL],
             'city' => [self::RULE_REQUIRED],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => MemberUser::class]],
+            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'min' => 5], [self::RULE_MAX, 'max' => 5], [self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => MemberUser::class]],
             'password' => [self::RULE_REQUIRED],
             'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
         ];

@@ -80,16 +80,10 @@ class AuthController extends Controller
         if ($request->isPost()) {
             $form->loadData($request->getBody());
 
-            echo '<pre>';
-            var_dump($form);
-            echo '</pre>';
-
             if ($form->validate()) {
-                echo "form valid !!!!";
                 $form->register();
-                echo "all data is created";
-                Application::$app->session->setFlash('success', 'Votre compte à bien été crée !');
-                // $response->redirect('/');
+                Application::$app->session->setFlash('success', "Bienvenu $form->pseudo. Votre compte à bien été crée !");
+                $response->redirect('/');
                 exit;
             }
         }

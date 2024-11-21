@@ -72,10 +72,6 @@ class Application
             } else {
                 $this->response->setStatusCode(500);
             }
-            
-            echo '<pre>';
-            var_dump($this->user, $this->userType);
-            echo '</pre>';
 
             if ($this->user && $this->user->isProfessional()) {
                 $this->layout = 'back-office';

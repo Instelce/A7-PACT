@@ -16,15 +16,18 @@ $this->title = 'Inscription membre';
     <?php $form = \app\core\form\Form::begin('', 'post', '', 'flex flex-col justify-center items-center') ?>
     <div class="flex flex-col w-[600px] gap-6">
         <div class="form-inputs">
-            <?php echo $form->field($model, 'lastname') ?>
-            <?php echo $form->field($model, 'firstname') ?>
+            <div class="flex gap-4">
+                <?php echo $form->field($model, 'lastname') ?>
+                <?php echo $form->field($model, 'firstname') ?>
+            </div>
+
             <?php echo $form->field($model, 'pseudo') ?>
             <?php echo $form->field($model, 'mail') ?>
+            <?php echo $form->field($model, 'phone') ?>
             <?php echo $form->field($model, 'streetNumber') ?>
             <?php echo $form->field($model, 'streetName') ?>
             <?php echo $form->field($model, 'postalCode') ?>
             <?php echo $form->field($model, 'city') ?>
-            <?php echo $form->field($model, 'phone') ?>
             <?php echo $form->field($model, 'password')->passwordField() ?>
             <?php echo $form->field($model, 'passwordConfirm')->passwordField() ?>
         </div>

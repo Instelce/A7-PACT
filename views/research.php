@@ -25,17 +25,17 @@ $iconsNames = [
         <!-- Search bar, sort and filter -->
         <div class="flex flex-col mb-4">
             <x-input rounded>
-                <input slot="input" type="text" placeholder="Placeholder">
+                <input slot="input" type="text" placeholder="Rechercher">
                 <button slot="button" class="button only-icon sm">
-                    <i data-lucide="search"></i>
+                    <i data-lucide="search" stroke-width="2"></i>
                 </button>
             </x-input>
-            <div class="filters-container">
+            <div class="categories-container">
                 <?php
                 foreach ($filtersNames as $key => $filterName) {
                     $iconName = $iconsNames[$key];
                     ?>
-                    <button class="filter-item">
+                    <button class="category-item">
                         <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
                         <span><?php echo htmlentities($filterName); ?></span>
                     </button>

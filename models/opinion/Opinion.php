@@ -33,7 +33,7 @@ class Opinion extends DBModel
     public function rules(): array
     {
         return [
-            'rating' => [self::RULE_REQUIRED],
+            'rating' => [self::RULE_REQUIRED, self::RULE_NUMBER],
             'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]],
             'comment' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
             'visit_date' => [self::RULE_REQUIRED],

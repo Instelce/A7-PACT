@@ -45,6 +45,7 @@ html {
 body {
     width: 100vw;
     min-height: 100vh;
+    overflow-x: hidden;
 
     font-family: var(--font-text);
     font-size: 16px;
@@ -119,12 +120,13 @@ a {
 
 /* Container */
 .main-container {
-    width: 100%;
+    width: 100vw;
     min-height: 70vh;
     display: block;
     position: relative;
     padding: 2rem 20%;
     margin: 2rem 0;
+    overflow-x: hidden;
 }
 
 @media only screen and (max-width: 728px) {

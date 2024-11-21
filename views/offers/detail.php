@@ -422,7 +422,7 @@ if ($status == "Fermé") {
             </button> -->
         </div>
 
-        <?php if (Application::$app->user?->isProfessional()) { ?>
+        <?php if (Application::$app->user?->isProfessional() && Application::$app->user->specific()->hasOffer($pk)) { ?>
             <a href="/offres/<?php echo $pk ?>/modification" class="button purple">
                 Modifier l'offre
             </a>
