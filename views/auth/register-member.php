@@ -44,7 +44,7 @@ $this->title = 'Inscription membre';
                     <label class="switch" for="switch-period2"></label>
                 </div>
                 <label for="switch-period" id="switch-period-label">J’autorise l’envoi de notifications concernant
-                    la mise en ligne de nouvelles offrees et autre</label>
+                    la mise en ligne de nouvelles offres et autre</label>
             </div>
         </div>
 
