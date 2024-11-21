@@ -8,6 +8,7 @@ use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\forms\LoginForm;
+use app\forms\MemberRegisterForm;
 use app\forms\PublicProfessionalRegister;
 use app\models\account\UserAccount;
 use app\models\User;
@@ -39,29 +40,60 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        return $this->render('auth/register');
-    }
-    public function registerProfessionalPublic(Request $request)
-    {
-        $pro = new PublicProfessionalRegister();
+        $user = new UserAccount();
 
         if ($request->isPost()) {
-            $pro->loadData($request->getBody());
+            $user->loadData($request->getBody());
 
-            if ($pro->validate() && $pro->register()) {
+            if ($user->validate() && $user->save()) {
                 Application::$app->session->setFlash("success", "Your account has been created successfully");
                 Application::$app->response->redirect('/');
                 exit;
             }
 
-            return $this->render('auth/registerProfessionalPublic', [
-                'model' => $pro
+            return $this->render('auth/register', [
+                'model' => $user
             ]);
         }
 
-        return $this->render('auth/registerProfessionalPublic', [
+        return $this->render('auth/register', [
+            'model' => $user
+        ]);
+    }
+
+    public function registerProfessional(Request $request)
+    {
+        $pro = new PublicProfessionalRegister();
+
+        if ($request->isPost()) {
+        }
+
+        return $this->render('auth/register-professional', [
             'model' => $pro
         ]);
+    }
+
+    public function registerMember(Request $request, Response $response)
+    {
+        $form = new MemberRegisterForm();
+
+        if ($request->isPost()) {
+            $form->loadData($request->getBody());
+
+            echo '<pre>';
+            var_dump($form);
+            echo '</pre>';
+
+            if ($form->validate()) {
+                echo "form valid !!!!";
+                $form->register();
+                echo "all data is created";
+                $response->redirect('/');
+                Application::$app->session->setFlash('success', 'Votre compte à bien été crée !');
+            }
+        }
+
+        return $this->render('auth/register-member', ['model' => $form]);
     }
 
     public function logout(Request $request, Response $response)

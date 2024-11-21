@@ -8,12 +8,12 @@ $this->title = 'Register';
         <h1 class="heading-1">S'inscrire</h1>
         <div class="q-auth">
             <p>Déjà un compte ?</p>
-            <a href="connexion" class="link">Connexion</a>
+            <a href="/connexion" class="link">Connexion</a>
         </div>
     </div>
     <div class="form-w">
-        <a class="w-full" href="inscription/membre"></a><button class="button w-full">Membre</button>
+        <a class="w-full" href="inscription/membre"><button class="button w-full">Membre</button></a>
 
-        <a class="w-full" href="inscription/professionnel/public"><button class="button w-full gray">Professionnel</button></a>
+        <a class="w-full" href="inscription/professionnel"><button class="button w-full gray">Professionnel</button></a>
     </div>
 </div>

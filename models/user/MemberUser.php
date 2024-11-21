@@ -23,7 +23,7 @@ class MemberUser extends DBModel
   
   public function attributes(): array
   {
-    return ['lastname', 'firstname', 'phone', 'pseudo', 'allows_notifications'];
+    return ['user_id', 'lastname', 'firstname', 'phone', 'pseudo', 'allows_notifications'];
   }
 
   public static function pk(): string
