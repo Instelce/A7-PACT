@@ -13,8 +13,8 @@ Please consult yann for more information regarding its creation
 
                 FOR THE CHECKBOX YOU CAN COPY THAT LINE
 
-            <input class="checkboxNormal" type="checkbox" id="bla">
-            <label class="checkboxNormal">lorem</label>
+            <input class="checkbox-normal" type="checkbox" id="bla">
+            <label class="checkbox-normal">lorem</label>
 
     The id is necessery in order to tick the correct parameters.
     each checkbox needs its own id to be recognized, never forget that.            
@@ -63,12 +63,12 @@ input.checkbox[type="checkbox"].pro:checked::before {
 
             FOR THE RADIO BUTTON VERSION YOU CAN COPY THAT LINE
 
-        <input class="checkboxNormal" type="radio" id="tezt" name="test">
-        <label class="checkboxNormal" for="tezt">gougou</label>
+        <input class="checkbox-normal" type="radio" id="tezt" name="test">
+        <label class="checkbox-normal" for="tezt">gougou</label>
 
     
     Don't forget use the type radio, even though the class is currently
-    called "checkboxNormal".
+    called "checkbox-normal".
 
     Name is really important to make the radio button works properly.
     If it isn't specified, it will work like a checkbox which can't be
