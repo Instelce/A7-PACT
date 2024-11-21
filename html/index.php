@@ -61,15 +61,14 @@ $app->router->get('/connexion', [AuthController::class, 'login']);
 $app->router->post('/connexion', [AuthController::class, 'login']);
 $app->router->get('/inscription', [AuthController::class, 'register']);
 $app->router->post('/inscription', [AuthController::class, 'register']);
-$app->router->get('/inscription/professionnel/public', [AuthController::class, 'registerProfessionalPublic']);
-$app->router->get('/inscription/professionnel/public', [AuthController::class, 'registerProfessionalPublic']);
+$app->router->get('/inscription/professionnel', [AuthController::class, 'registerProfessional']);
+$app->router->get('/inscription/professionnel', [AuthController::class, 'registerProfessional']);
+$app->router->get('/inscription/membre', [AuthController::class, 'registerMember']);
+$app->router->post('/inscription/membre', [AuthController::class, 'registerMember']);
 $app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/profile', [AuthController::class, 'profile']);
 
-// Api routes
-$app->router->get('/api/auth/user', [ApiController::class, 'user']);
+//api routes
 $app->router->get('/api/offers', [ApiController::class, 'offers']);
-$app->router->get('/api/opinions/<offer_id:int>', [ApiController::class, 'opinions']);
-
 
 $app->run();

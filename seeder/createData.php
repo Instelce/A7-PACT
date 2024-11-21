@@ -66,7 +66,10 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 // ---------------------------------------------------------------------- //
 // create users
 // ---------------------------------------------------------------------- //
-$db->pdo->exec("INSERT INTO account (id) VALUES (1), (2), (3), (4), (5), (6), (7), (8), (9), (10);");
+for ($j = 0; $j < 11; $j++) {
+    $a = new Account();
+    $a->save();
+}
 $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES 
                                                                      (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11), 
                                                                      (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',12), 

@@ -64,7 +64,12 @@ input.switch:checked + label.switch:after
 
 input.switch:checked + label {
 	transition: 0.3s;
-	background: rgb(var(--color-purple-primary));
+	background: rgb(var(--color-blue-primary));
+}
+
+.professional-mode input.switch:checked + label {
+    transition: 0.3s;
+    background: rgb(var(--color-purple-primary));
 }
 
 input.switch:checked + label:after {
