@@ -226,6 +226,7 @@ class OfferController extends Controller
         $prestationsIncluses = "";
         $prestationsNonIncluses = "";
         $accessibilite = "";
+        
 
         $languages = VisitLanguage::findOne(['offer_id' => $id])->language;
         $formattedAddress = $address->number . ' ' . $address->street . ', ' . $address->postal_code . ' ' . $address->city;
