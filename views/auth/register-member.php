@@ -10,7 +10,7 @@ $this->title = 'Inscription membre';
         <h1 class="heading-1">Inscription</h1>
         <div class="q-auth">
             <p>Déjà un compte ?</p>
-            <a href="/../../connexion" class="link">Se connecter</a>
+            <a href="/connexion" class="link">Se connecter</a>
         </div>
     </div>
     <?php $form = \app\core\form\Form::begin('', 'post', '', 'flex flex-col justify-center items-center') ?>
@@ -24,7 +24,6 @@ $this->title = 'Inscription membre';
             <?php echo $form->field($model, 'streetName') ?>
             <?php echo $form->field($model, 'postalCode') ?>
             <?php echo $form->field($model, 'city') ?>
-            <?php echo $form->field($model, 'country') ?>
             <?php echo $form->field($model, 'phone') ?>
             <?php echo $form->field($model, 'password')->passwordField() ?>
             <?php echo $form->field($model, 'passwordConfirm')->passwordField() ?>

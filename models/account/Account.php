@@ -12,25 +12,21 @@ class Account extends DBModel
 
     public static function tableName(): string
     {
-        // TODO: Implement tableName() method
         return 'account';
     }
 
     public function attributes(): array
     {
-        // TODO: Implement attributes() method.
         return ['created_at', 'updated_at'];
     }
 
     public static function pk(): string
     {
-        // TODO: Implement pk() method.
         return 'id';
     }
 
     public function rules(): array
     {
-        // TODO: Implement rules() method.
         return [
             'create_at' => [self::RULE_REQUIRED, self::RULE_DATE],
             'update_at' => [self::RULE_REQUIRED, self::RULE_DATE]

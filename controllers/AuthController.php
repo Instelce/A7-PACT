@@ -8,6 +8,7 @@ use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\forms\LoginForm;
+use app\forms\MemberRegisterForm;
 use app\forms\PublicProfessionalRegister;
 use app\models\account\UserAccount;
 use app\models\User;
@@ -39,52 +40,60 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        return $this->render('auth/register');
+        $user = new UserAccount();
+
+        if ($request->isPost()) {
+            $user->loadData($request->getBody());
+
+            if ($user->validate() && $user->save()) {
+                Application::$app->session->setFlash("success", "Your account has been created successfully");
+                Application::$app->response->redirect('/');
+                exit;
+            }
+
+            return $this->render('auth/register', [
+                'model' => $user
+            ]);
+        }
+
+        return $this->render('auth/register', [
+            'model' => $user
+        ]);
     }
-    public function registerProfessionalPublic(Request $request)
+
+    public function registerProfessional(Request $request)
     {
         $pro = new PublicProfessionalRegister();
 
         if ($request->isPost()) {
-            $pro->loadData($request->getBody());
-
-            if ($pro->validate() && $pro->register()) {
-                Application::$app->session->setFlash("success", "Your account has been created successfully");
-                Application::$app->response->redirect('/');
-                exit;
-            }
-
-            return $this->render('auth/registerProfessional', [
-                'model' => $pro
-            ]);
         }
 
-        return $this->render('auth/registerProfessional', [
+        return $this->render('auth/register-professional', [
             'model' => $pro
         ]);
     }
 
-    public function registerProfessionalPrivate(Request $request)
+    public function registerMember(Request $request, Response $response)
     {
-        $pro = new PrivateProfessionalRegister();
+        $form = new MemberRegisterForm();
 
         if ($request->isPost()) {
-            $pro->loadData($request->getBody());
+            $form->loadData($request->getBody());
 
-            if ($pro->validate() && $pro->register()) {
-                Application::$app->session->setFlash("success", "Your account has been created successfully");
-                Application::$app->response->redirect('/');
-                exit;
+            echo '<pre>';
+            var_dump($form);
+            echo '</pre>';
+
+            if ($form->validate()) {
+                echo "form valid !!!!";
+                $form->register();
+                echo "all data is created";
+                $response->redirect('/');
+                Application::$app->session->setFlash('success', 'Votre compte à bien été crée !');
             }
-
-            return $this->render('auth/registerProfessional', [
-                'model' => $pro
-            ]);
         }
 
-        return $this->render('auth/registerProfessional', [
-            'model' => $pro
-        ]);
+        return $this->render('auth/register-member', ['model' => $form]);
     }
 
     public function logout(Request $request, Response $response)
