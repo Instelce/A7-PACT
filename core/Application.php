@@ -25,6 +25,7 @@ class Application
     public Session $session;
     public Storage $storage;
     public ?UserAccount $user = null;
+    public Mailer $mailer;
 
     /**
      * @var 'visitor'|'member'|'professional'|'admin'
@@ -46,6 +47,7 @@ class Application
         $this->session = new Session();
         $this->view = new View();
         $this->storage = new Storage();
+        $this->mailer = new Mailer();
 
         // Get the primary key of the user from the session
         $pkValue = $this->session->get('user');

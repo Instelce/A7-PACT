@@ -80,9 +80,9 @@ class AuthController extends Controller
         if ($request->isPost()) {
             $form->loadData($request->getBody());
 
-            if ($form->validate()) {
-                $form->register();
+            if ($form->validate() && $form->register()) {
                 Application::$app->session->setFlash('success', "Bienvenu $form->pseudo. Votre compte à bien été crée !");
+                Application::$app->mailer->send($form->mail, "Bienvenu $form->pseudo", 'welcome', ['pseudo' => $form->pseudo]);
                 $response->redirect('/');
                 exit;
             }

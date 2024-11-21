@@ -254,6 +254,7 @@ class SiteController extends Controller
     public function users()
     {
         $users = UserAccount::all();
+        Application::$app->mailer->send("test@example.com", "Test", "welcome", ["pseudo" => "Célestin"]);
         return $this->render("auth/users", ["users" => $users]);
     }
 }
