@@ -40,17 +40,19 @@ class ApiController extends Controller
      * Params :
      * - offset : int
      * - limit : int
+     * - order_by : string (default: created_at)
      */
     public function opinions(Request $request, Response $response, $routeParams)
     {
         $offerId = $routeParams['offer_id'];
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
+        $orderBy = explode(',', $request->getQueryParams('order_by') ?? '-created_at');
 
         $data = [];
 
         /** @var Opinion[] $opinions */
-        $opinions = Opinion::query()->filters(['offer_id' => $offerId])->limit($limit)->offset($offset)->make();
+        $opinions = Opinion::query()->filters(['offer_id' => $offerId])->limit($limit)->offset($offset)->order_by($orderBy)->make();
 
         foreach ($opinions as $i => $opinion) {
             $data[$i] = $opinion->toJson();

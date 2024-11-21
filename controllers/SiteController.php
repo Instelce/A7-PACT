@@ -7,6 +7,7 @@ use app\core\Controller;
 use app\core\Model;
 use app\core\Request;
 use app\core\Response;
+use app\models\account\UserAccount;
 use app\models\offer\AttractionParkOffer;
 use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
@@ -118,6 +119,7 @@ class SiteController extends Controller
             return $this->render("404");
         }
     }
+
     public function research()//render research
     {
         $allOffers = Offer::all();//get all offer from the model
@@ -232,9 +234,19 @@ class SiteController extends Controller
                     "type" => $type,
                     "info" => $info,
                     "location" => $location,
+                    "summary" => $offer->summary ?? "",
                 ];
             }
         }
         return $this->render("research", ["offers" => $offers]);
+    }
+
+    /**
+     * Only for development purposes
+     */
+    public function users()
+    {
+        $users = UserAccount::all();
+        return $this->render("auth/users", ["users" => $users]);
     }
 }

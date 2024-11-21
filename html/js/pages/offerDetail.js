@@ -174,24 +174,25 @@ let user = null;
 getUser().then(u => user = u);
 
 loaderButton.addEventListener('click', () => {
-    fetch(`/api/opinions/${offerId}?limit=10&offset=${offset}`)
+    fetch(`/api/opinions/${offerId}?limit=5&offset=${offset}`)
         .then(response => response.json())
         .then(opinions => {
-            if (opinions.length <= 10) {
+            if (opinions.length <= 5) {
                 loaderButton.classList.add('hidden');
             }
 
             for (let opinion of opinions) {
                 if (user) {
                     if (opinion.user.account_id !== user.account_id) {
-                        opinionsContainer.appendChild(createOpinionCard(opinion));
+                        // insert before the loader button
+                        opinionsContainer.insertBefore(createOpinionCard(opinion), loaderButton);
                     }
                 } else {
-                    opinionsContainer.appendChild(createOpinionCard(opinion));
+                    opinionsContainer.insertBefore(createOpinionCard(opinion), loaderButton);
                 }
             }
 
-            offset += 10;
+            offset += 5;
         })
 })
 

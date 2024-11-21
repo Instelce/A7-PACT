@@ -30,7 +30,19 @@ class DBQueryBuilder
         }
 
         if (!empty($this->order_by)) {
-            $sql .= " ORDER BY " . implode(",", $this->order_by);
+            $sql .= " ORDER BY ";
+
+            foreach ($this->order_by as $i => $attr) {
+                if ($i > 0) {
+                    $sql .= ", ";
+                }
+
+                $sql .= str_starts_with($attr, '-') ? substr($attr, 1) : $attr;
+            }
+
+            if (str_starts_with($this->order_by[0], '-')) {
+                $sql .= " DESC";
+            }
         }
 
         if ($this->limit) {

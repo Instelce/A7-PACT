@@ -88,7 +88,8 @@ use app\core\Application;
                 </div>
             </div>
         <?php } else { ?>
-            <a href="/connexion" class="button sm">Connexion</a>
+            <a href="/connexion" class="link">Connexion</a>
+            <a href="/inscription" class="button sm">Inscription</a>
         <?php } ?>
 
         <div class="nav-burger" id="nav-burger">

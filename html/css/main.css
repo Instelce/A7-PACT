@@ -13,6 +13,7 @@
 @import "parts/stars.css";
 @import "parts/opinion-card.css";
 @import "parts/avatar.css";
+@import "parts/research-card.css";
 
 @import "form/form.css";
 @import "form/button.css";
@@ -42,7 +43,7 @@ html {
 }
 
 body {
-    width: 100%;
+    width: 100vw;
     min-height: 100vh;
 
     font-family: var(--font-text);
@@ -131,7 +132,6 @@ a {
         padding: 0 20px;
     }
 }
-
 
 @media only screen and (min-width: 768px) {
     .main-container {

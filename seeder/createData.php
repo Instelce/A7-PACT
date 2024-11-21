@@ -32,7 +32,32 @@ $db = $app->db;
 
 $password = password_hash("JuPeNoCs24", PASSWORD_DEFAULT);
 
+function generateUsername($count = 10)
+{
+    $usernames = [];
+    $firstNames = ['John', 'Jane', 'Michael', 'Emily', 'David', 'Sophia', 'Daniel', 'Emma', 'Chris', 'Olivia'];
+    $lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Martinez', 'Wilson'];
+    $numbers = range(100, 999);
 
+    for ($i = 0; $i < $count; $i++) {
+        $firstName = $firstNames[array_rand($firstNames)];
+        $lastName = $lastNames[array_rand($lastNames)];
+
+        // You can adjust the format of usernames here
+        $usernames[] = ["fullname" => "{$firstName}{$lastName}", "lastname" => $lastName, "firstname" => $firstName, "pseudo" => "{$firstName}{$lastName}" . $numbers[array_rand($numbers)]];
+    }
+
+    return $usernames;
+}
+
+function generatePhoneNumber()
+{
+    $phone = '0';
+    for ($i = 0; $i < 9; $i++) {
+        $phone .= rand(0, 9);
+    }
+    return $phone;
+}
 
 $db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, offer_option, offer, offer_type, offer_period, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
 
@@ -66,7 +91,7 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 // ---------------------------------------------------------------------- //
 // create users
 // ---------------------------------------------------------------------- //
-for ($j = 0; $j < 11; $j++) {
+for ($j = 0; $j <= 20; $j++) {
     $a = new Account();
     $a->save();
 }
@@ -80,6 +105,18 @@ $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url
                                                                      (8, 'brehat@gmail.com', '" . $password . "', 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png',16),
                                                                      (9, 'recree_trois_cures@gmail.com', '" . $password . "', 'https://www.larecredes3cures.com/app/uploads/2024/04/vertika-la-recre-des-3-cures-scaled-910x668-c-center.jpg',17),
                                                                      (10, 'valleedessaints@gmail.com', '" . $password . "', 'https://media.letelegramme.fr/api/v1/images/view/637cf1668f4302361f300639/web_golden_xl/637cf1668f4302361f300639.1',18);");
+
+
+// ---------------------------------------------------------------------- //
+// create 10 members users
+// ---------------------------------------------------------------------- //
+
+$members = generateUsername(10);
+
+foreach ($members as $i => $member) {
+    $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES (" . 11 + $i . ", '" . $member['pseudo'] . "@gmail.com', '" . $password . "', '/assets/images/brehat.jpeg', 19);");
+    $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (" . 11 + $i . ", '". $member["firstname"] ."', '". $member["lastname"] ."', '". generatePhoneNumber() ."', '" . $member["pseudo"] . "', TRUE);");
+}
 
 // ---------------------------------------------------------------------- //
 // create means of payment
@@ -370,8 +407,6 @@ $db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity, period_id)
 //no tags
 
 
-
-
 //create balade bréhat
 $offre5 = new Offer();
 $offre5->title = "Traversée et tour de l'île de Brehat";
@@ -447,8 +482,6 @@ ActivityOffer::findOne(['offer_id' => $offre5->id])->addSchedule($horaire6o5->id
 ActivityOffer::findOne(['offer_id' => $offre5->id])->addSchedule($horaire7o5->id);
 
 
-
-
 //create Récrée Curés
 $offre6 = new Offer();
 $offre6->title = "La Récrée des 3 Curés";
@@ -522,8 +555,6 @@ for ($i = 0; $i < 3; $i++) {
         $offre6->addTag($tag);
     }
 }
-
-
 
 
 // ---------------------------------------------------------------------- //

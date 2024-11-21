@@ -8,7 +8,7 @@
 .opinion-card header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
 }
 
 .opinion-card header div:nth-child(1) {

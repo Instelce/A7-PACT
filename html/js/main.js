@@ -1,6 +1,5 @@
 import {Input} from "./components/form/Input.js";
 import {Slider} from "./components/form/Slider.js";
-import {SearchPageCard} from "./components/SearchPageCard.js";
 import {Select} from "./components/form/Select.js";
 import {Carousel} from "./components/Carousel.js";
 import {Acordeon} from "./components/Acordeon.js";
@@ -27,7 +26,6 @@ try {
 customElements.define("x-input", Input);
 customElements.define("x-slider", Slider);
 customElements.define("x-select", Select);
-customElements.define("x-search-page-card", SearchPageCard);
 customElements.define("x-acordeon", Acordeon);
 customElements.define("x-carousel", Carousel);
 customElements.define("x-home-card", HomeCard);
