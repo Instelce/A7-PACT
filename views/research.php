@@ -43,7 +43,7 @@ $iconsNames = [
             ?>
         </div>
         <div class="h-[39px] justify-start items-start gap-2.5 inline-flex mb-[45px] w-full">
-            <button onclick="showPopup()" class="grow shrink basis-0 px-5 py-2.5 rounded-full border border-solid border-[#bbbbbb] justify-between
+            <button id="filterButton" class="grow shrink basis-0 px-5 py-2.5 rounded-full border border-solid border-[#bbbbbb] justify-between
     items-center flex w-full">
                 <span>Plus de filtres</span>
                 <i data-lucide="sliders-horizontal" class="w-[18px] h-[18px]"> </i>

@@ -1,7 +1,5 @@
-function showPopup() {
-    document.getElementById("popup").classList.remove("hidden");
-}
+let popup = document.getElementById("popup");
+let filterButton = document.getElementById("filterButton");
 
-function hidePopup() {
-    document.getElementById("popup").classList.add("hidden");
-}
+filterButton.addEventListener("click", () => { popup.classList.toggle("hidden"); });
+
