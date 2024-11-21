@@ -47,24 +47,24 @@ class SiteController extends Controller
 
                     case 'activity':
                         $type = "Activité";
-                        $priceData = ActivityOffer::findOne(['offer_id' =>  $offer->id]);
+                        $priceData = ActivityOffer::findOne(['offer_id' => $offer->id]);
                         $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
                         break;
 
                     case 'show':
                         $type = "Spectacle";
-                        $priceData = ShowOffer::findOne(['offer_id' =>  $offer->id]);
+                        $priceData = ShowOffer::findOne(['offer_id' => $offer->id]);
                         $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
                         break;
 
                     case 'visit':
                         $type = "Visite";
-                        $priceData = VisitOffer::findOne(['offer_id' =>  $offer->id]);
+                        $priceData = VisitOffer::findOne(['offer_id' => $offer->id]);
                         $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
                         break;
 
                     case 'attraction_park':
-                        $priceData = AttractionParkOffer::findOne(['offer_id' =>  $offer->id]);
+                        $priceData = AttractionParkOffer::findOne(['offer_id' => $offer->id]);
                         $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
                         $type = "Parc d'attraction";
                         break;
@@ -129,21 +129,23 @@ class SiteController extends Controller
         $offers = [];//create final table to send into the vue
         foreach ($allOffers as $offer) {//foreach offer
             if ($offer->offline == Offer::STATUS_ONLINE) {//show only online offer
+                $offers[$offer->id] = [//set up the final array to send to the vue
+                    "id" => $offer->id
+                ]; //id for the link into the detail offer and the traitement of click and vue statistiques
+
                 $image = OfferPhoto::findOne(['offer_id' => $offer->id])->url_photo ?? NULL;//get the first image of the offer for the preview
                 $professional = ProfessionalUser::findOne(where: ['user_id' => $offer->professional_id])->denomination ?? NULL;//get the name of the professionnal who post the offer
-                $info = NULL;
+                $info = [];
                 $type = NULL;
                 switch ($offer->category) {
                     case 'restaurant':
                         $type = "Restaurant";
                         $OfferInfo = RestaurantOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
                         $tmp = $OfferInfo->range_price ?? NULL;
-                        if ($tmp == 1) {
-                            $info = "• €";
-                        } elseif ($tmp == 2) {
-                            $info = "• €€";
-                        } elseif ($tmp == 3) {
-                            $info = "• €€€";
+                        if ($tmp && $tmp != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "range_price" => $tmp
+                            ];
                         }
                         break;
                     case 'activity':
@@ -151,13 +153,16 @@ class SiteController extends Controller
                         $OfferInfo = ActivityOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
                         $tmp = $OfferInfo->duration ?? NULL;
                         $tmp2 = $OfferInfo->required_age ?? NULL;
-                        if ($tmp) {
-                            $str1 = "• " . strval($tmp) . "h ";
+                        if ($tmp && $tmp != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "duration" => $tmp
+                            ];
                         }
-                        if ($tmp2) {
-                            $str2 = "• à partir de " . strval($tmp2) . " ans";
+                        if ($tmp2 && $tmp2 != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "required_age" => $tmp2
+                            ];
                         }
-                        $info = $str1 . $str2;
                         break;
                     case 'show':
                         $type = "Spectacle";
@@ -166,74 +171,77 @@ class SiteController extends Controller
                         $tmp = $OfferInfo->duration ?? NULL;
                         $start_date = $PeriodInfo->start_date ?? NULL;
                         $end_date = $PeriodInfo->end_date ?? NULL;
-                        if ($start_date) {
-                            $tmp2 = Utils::formatDate($start_date) ?? NULL;
+                        if ($start_date && $start_date != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "start_date" => Utils::formatDate($start_date)
+                            ];
                         }
-                        if ($end_date) {
-                            $tmp3 = Utils::formatDate($end_date) ?? NULL;
+                        if ($end_date && $end_date != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "end_date" => Utils::formatDate($end_date)
+                            ];
                         }
-                        if ($tmp) {
-                            $str1 = "• " . strval($tmp) . "h ";
+                        if ($tmp && $tmp != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "duration" => $tmp
+                            ];
                         }
-                        if ($tmp2 && $tmp3) {
-                            $str2 = "• du " . strval($tmp2) . " au " . strval($tmp3);
-                        }
-                        $info = $str1 . $str2;
                         break;
                     case 'visit':
                         $type = "Visite";
                         $OfferInfo = VisitOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
                         $PeriodInfo = OfferPeriod::findOne(['id' => $OfferInfo->period_id]) ?? NULL;
                         $tmp = $OfferInfo->duration ?? NULL;
+                        $tmp2 = $OfferInfo->guide ?? NULL;
                         $start_date = $PeriodInfo->start_date ?? NULL;
                         $end_date = $PeriodInfo->end_date ?? NULL;
-                        if ($start_date) {
-                            $tmp2 = Utils::formatDate($start_date) ?? NULL;
+                        if ($start_date && $start_date != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "start_date" => Utils::formatDate($start_date)
+                            ];
                         }
-                        if ($end_date) {
-                            $tmp3 = Utils::formatDate($end_date) ?? NULL;
+                        if ($end_date && $end_date != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "end_date" => Utils::formatDate($end_date)
+                            ];
                         }
-                        $tmp4 = $OfferInfo->guide ?? NULL;
-                        if ($tmp4 == true) {
-                            $tmp4 = "• Avec guide";
-                        } else {
-                            $tmp4 = "• Sans guide";
+                        if ($tmp2 && $tmp2 != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "guide" => $tmp2
+                            ];
                         }
-                        if ($tmp) {
-                            $str1 = "• " . strval($tmp) . "h ";
+                        if ($tmp && $tmp != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "duration" => $tmp
+                            ];
                         }
-                        if ($tmp2 && $tmp3) {
-                            $str2 = "• du " . strval($tmp2) . " au " . strval($tmp3);
-                        }
-                        if ($tmp4) {
-                            $str3 = $tmp4;
-                        }
-                        $info = $str1 . $str2 . $str3;
                         break;
                     case 'attraction_park':
                         $type = "Parc d'attraction";
                         $OfferInfo = AttractionParkOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
                         $tmp = $OfferInfo->attraction_number ?? NULL;
                         $tmp2 = $OfferInfo->required_age ?? NULL;
-                        if ($tmp) {
-                            $str1 = "• " . strval($tmp) . " attractions ";
+                        if ($tmp && $tmp != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "attraction_number" => $tmp
+                            ];
                         }
-                        if ($tmp2) {
-                            $str2 = "• à partir de " . strval($tmp2) . " ans";
+                        if ($tmp2 && $tmp2 != 0) {
+                            $info += [//set up the final array to send to the vue
+                                "required_age" => $tmp2
+                            ];
                         }
-                        $info = $str1 . $str2;
                         break;
                 }
                 $location = Address::findOne(['id' => $offer->address_id])->city ?? NULL; // get the city of the offer
-                $offers[$offer->id] = [//set up the final array to send to the vue
-                    "id" => $offer->id, //id for the link into the detail offer and the traitement of click and vue statistiques
+                $offers[$offer->id] += [//set up the final array to send to the vue
                     "image" => $image,//preview image
                     "title" => $offer->title,
                     "author" => $professional,
                     "type" => $type,
-                    "info" => $info,
                     "location" => $location,
                     "summary" => $offer->summary ?? "",
+                    "info" => $info
                 ];
             }
         }
