@@ -56,6 +56,8 @@ class MemberRegisterForm extends Model
         $member->save();
 
         Application::$app->login($user);
+
+        return true;
     }
 
     public function rules(): array
