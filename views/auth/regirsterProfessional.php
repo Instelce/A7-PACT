@@ -12,7 +12,7 @@ $this->title = 'RegisterProfessional';
         <h1 class="heading-1">S'inscrire</h1>
         <div class="q-auth">
             <p>Déjà un compte ?</p>
-            <a href="connexion" class="link">Connexion</a>
+            <a href="/../../connexion" class="link">Connexion</a>
         </div>
     </div>
     <?php $form = \app\core\form\Form::begin('', 'post', '', 'form-w') ?>
@@ -40,11 +40,11 @@ $this->title = 'RegisterProfessional';
                     <?php echo $form->field($model, 'passwordConfirm')->passwordField()?>
                     <div class="flex flex-row gap-2">
                         <input class="switch" type="checkbox" id="conditions">
-                        <label class="switch" for="conditions"></label>
+                        <label class="switch" for="conditions">J'accepte les <a href="" class="link">conditions générales d'utilisation</a></label>
                     </div>
                     <div class="flex flex-row gap-2">
                         <input class="switch" type="checkbox" id="notifications">
-                        <label class="switch" for="notifications"></label>
+                        <label class="switch" for="notifications">J'autorise l'envoie de notifications</label>
                     </div>
                  </div>
 
@@ -56,8 +56,29 @@ $this->title = 'RegisterProfessional';
             <x-tab role="heading" slot="tab">Privé</x-tab>
             <x-tab-panel role="region" slot="panel">
                 <div class="form-inputs">
-                    <?php echo $form->field($model, 'mail') ?>
-                    <?php echo $form->field($model, 'password')->passwordField() ?>
+                    <?php echo $form->field($model, 'denomination') ?>
+                    <?php echo $form->field($model, 'siren') ?>
+                    <?php echo $form->field($model, 'mail')?>
+                    <?php echo $form->field($model, 'streetnumber')?>
+                    <?php echo $form->field($model, 'streetname')?>
+                    <?php echo $form->field($model, 'postaleCode')?>
+                    <?php echo $form->field($model, 'city')?>
+                    <?php echo $form->field($model, 'phone')?>
+                    <?php echo $form->field($model, 'password')->passwordField()?>
+                    <?php echo $form->field($model, 'passwordConfirm')->passwordField()?>
+                    <div class="flex flex-row gap-2">
+                        <input class="checkbox checkbox-normal" type="checkbox" id="payement">
+                        <label class="checkbox" for="asso">Je souhaite rentrer mes coordonnées bancaires maintenant (possibilité de le faire plus tard)</label>
+                    </div>
+
+                    <div class="flex flex-row gap-2">
+                        <input class="switch" type="checkbox" id="conditions">
+                        <label class="switch" for="conditions">J'accepte les <a href="" class="link">conditions générales d'utilisation</a></label>
+                    </div>
+                    <div class="flex flex-row gap-2">
+                        <input class="switch" type="checkbox" id="notifications">
+                        <label class="switch" for="notifications">J'autorise l'envoie de notifications</label>
+                    </div>
                 </div>
 
                 <button type="submit" class="button w-full">S'inscrire</button>

@@ -12,7 +12,7 @@ $this->title = 'Connexion';
         <h1 class="heading-1">Connexion</h1>
         <div class="q-auth">
             <p>Pas de compte ?</p>
-            <a href="inscription" class="link">S'inscrire</a>
+            <a href="/../../inscription" class="link">S'inscrire</a>
         </div>
     </div>
     <?php $form = Form::begin('', 'post', '', 'form-w') ?>

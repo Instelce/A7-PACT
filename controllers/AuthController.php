@@ -54,12 +54,35 @@ class AuthController extends Controller
                 exit;
             }
 
-            return $this->render('auth/registerProfessionalPublic', [
+            return $this->render('auth/registerProfessional', [
                 'model' => $pro
             ]);
         }
 
-        return $this->render('auth/registerProfessionalPublic', [
+        return $this->render('auth/registerProfessional', [
+            'model' => $pro
+        ]);
+    }
+
+    public function registerProfessionalPrivate(Request $request)
+    {
+        $pro = new PrivateProfessionalRegister();
+
+        if ($request->isPost()) {
+            $pro->loadData($request->getBody());
+
+            if ($pro->validate() && $pro->register()) {
+                Application::$app->session->setFlash("success", "Your account has been created successfully");
+                Application::$app->response->redirect('/');
+                exit;
+            }
+
+            return $this->render('auth/registerProfessional', [
+                'model' => $pro
+            ]);
+        }
+
+        return $this->render('auth/registerProfessional', [
             'model' => $pro
         ]);
     }
