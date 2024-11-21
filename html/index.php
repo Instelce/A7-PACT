@@ -67,6 +67,7 @@ $app->router->get('/inscription/membre', [AuthController::class, 'registerMember
 $app->router->post('/inscription/membre', [AuthController::class, 'registerMember']);
 $app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/profile', [AuthController::class, 'profile']);
+$app->router->get('/users', [SiteController::class, 'users']);
 
 //api routes
 $app->router->get('/api/offers', [ApiController::class, 'offers']);
