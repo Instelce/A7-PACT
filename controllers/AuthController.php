@@ -88,8 +88,9 @@ class AuthController extends Controller
                 echo "form valid !!!!";
                 $form->register();
                 echo "all data is created";
-                $response->redirect('/');
                 Application::$app->session->setFlash('success', 'Votre compte à bien été crée !');
+                // $response->redirect('/');
+                exit;
             }
         }
 

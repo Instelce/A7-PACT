@@ -10,7 +10,7 @@ import { WebComponent } from './WebComponent.js';
  * @arg {string} price - Activity's price
  * @arg {string} location - Activity's location
  * @arg {string} description - Travel time between location and user
- * @arg {string} days_since_online - Date of publication
+ * @arg {string} daysSinceOnline - Date of publication
  *
  * @extends {WebComponent}
  */
@@ -140,7 +140,7 @@ export class HomeCard extends WebComponent {
             <div class="opposeLigne">
                 <div class="enLigne">
                     <p>Il y a</p>
-                    <p><slot name="days_since_online"></slot></p>
+                    <p><slot name="daysSinceOnline"></slot></p>
                     <p>j</p>
                 </div>
                 

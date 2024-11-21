@@ -54,8 +54,15 @@ class MemberRegisterForm extends Model
         $member->pseudo = $this->pseudo;
         $member->allows_notifications = false;
         $member->save();
+        
+        echo '<pre>';
+        var_dump($user);
+        echo '</pre>';
 
-        Application::$app->login($user);
+        Application::$app->user = $user;
+        Application::$app->userType = 'member';
+        Application::$app->session->set('user', $user->account_id);
+        Application::$app->session->set('userType', 'member');
     }
     public function rules(): array
     {
@@ -68,7 +75,7 @@ class MemberRegisterForm extends Model
             'streetName' => [self::RULE_REQUIRED],
             'postalCode' => [self::RULE_REQUIRED],
             'city' => [self::RULE_REQUIRED],
-            'phone' => [self::RULE_REQUIRED],
+            'phone' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => MemberUser::class]],
             'password' => [self::RULE_REQUIRED],
             'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
         ];
