@@ -40,25 +40,31 @@ class SiteController extends Controller
                 switch ($offer->category) {
                     case 'restaurant':
                         $type = "Restaurant";
-                        $offerInfo = RestaurantOffer::findOne(['offer_id' => $offer->id]);
                         $rangePrice = $offerInfo->range_price ?? null;
-                        $price = $rangePrice === 1 ? "• €" : ($rangePrice === 2 ? "• €€" : "• €€€");
+                        $price = $rangePrice === 1 ? "Dès €" : ($rangePrice === 2 ? "Dès €€" : "Dès €€€");
                         break;
 
                     case 'activity':
                         $type = "Activité";
-                        $price = ActivityOffer::findOne(['offer_id' => $offer->id])->price ?? null;
+                        $priceData = ActivityOffer::findOne(['offer_id' =>  $offer->id]);
+                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
                         break;
 
                     case 'show':
                         $type = "Spectacle";
+                        $priceData = ShowOffer::findOne(['offer_id' =>  $offer->id]);
+                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
                         break;
 
                     case 'visit':
                         $type = "Visite";
+                        $priceData = VisitOffer::findOne(['offer_id' =>  $offer->id]);
+                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
                         break;
 
                     case 'attraction_park':
+                        $priceData = AttractionParkOffer::findOne(['offer_id' =>  $offer->id]);
+                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
                         $type = "Parc d'attraction";
                         break;
                 }
@@ -66,7 +72,7 @@ class SiteController extends Controller
                 $location = Address::findOne(['id' => $offer->address_id])->city ?? null;
                 $lastOnlineDate = strtotime($offer->last_online_date ?? 'now');
                 $currentDate = strtotime(date('Y-m-d'));
-                $daysSinceOnline = floor(($currentDate - $lastOnlineDate) / (60 * 60 * 24));
+                $dateSincePublication = floor(($currentDate - $lastOnlineDate) / (60 * 60 * 24));
 
                 $offers[$offer->id] = [
                     "id" => $offer->id,
@@ -76,8 +82,8 @@ class SiteController extends Controller
                     "type" => $type,
                     "price" => $price,
                     "location" => $location,
-                    "description" => $offer->description ?? "",
-                    "days_since_online" => $daysSinceOnline,
+                    'summary' => $offer->summary,
+                    "dateSincePublication" => $dateSincePublication,
                 ];
             }
         }

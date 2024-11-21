@@ -402,10 +402,10 @@ $this->cssFile = "storybook";
                 <span slot="title">Balade familiale à vélo "Qui m’aime me suive"</span>
                 <span slot="author">Jean Bergeron</span>
                 <span slot="type">Activité</span>
-                <span slot="price">0</span>
+                <span slot="price">12</span>
                 <span slot="location">Bréhat</span>
                 <span slot="description">Explorez Bréhat à vélo sur de petites routes tranquilles et sans fortes montées, parfait pour une sortie familiale relaxante.</span>
-                <span slot="date">1</span>
+                <span slot="date">2024-11-20</span>
             </x-home-card>
 
         </div>
