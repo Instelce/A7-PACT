@@ -108,7 +108,7 @@ class PublicProfessionalRegister extends Model
             'mail' => 'example@email.com',
             'streetnumber' => '12',
             'streetname' => 'Édouard Branly',
-            'postaleCode' => '22000',
+            'postaleCode' => '22300',
             'city' => 'Lannion',
             'country' => 'France',
             'phone' => '0601020304',

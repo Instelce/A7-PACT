@@ -9,9 +9,11 @@ use app\core\Request;
 use app\core\Response;
 use app\forms\LoginForm;
 use app\forms\MemberRegisterForm;
+use app\forms\PrivateProfessionalRegister;
 use app\forms\PublicProfessionalRegister;
 use app\models\account\UserAccount;
 use app\models\User;
+use app\models\user\professional\PrivateProfessional;
 
 class AuthController extends Controller
 {
@@ -61,16 +63,27 @@ class AuthController extends Controller
         ]);
     }
 
-    public function registerProfessional(Request $request)
+    public function registerProfessional(Request $request, Response $response)
     {
-        $pro = new PublicProfessionalRegister();
+        $proPublic  = new PublicProfessionalRegister();
+        $proPrivate = new PrivateProfessionalRegister();
 
-        if ($request->isPost()) {
+        if ($request->isPost() && $request->formName()=="public") {
+            $proPublic->loadData($request->getBody());
+
+            if ($proPublic->validate() && $proPublic->register()) {
+                Application::$app->session->setFlash('success', "Bienvenue $proPublic->denomination. Votre compte à bien été crée !");
+                Application::$app->mailer->send($proPublic->mail, "Bienvenue $proPublic->denomination", 'welcome', ['denomination' => $proPublic->denomination]);
+                $response->redirect('/dashboard');
+                exit;
+            }
         }
 
-        return $this->render('auth/register-professional', [
-            'model' => $pro
-        ]);
+        if ($request->isPost() && $request->formName()=="private") {
+
+        }
+
+        return $this->render('auth/register-professional', ['proPublic' => $proPublic, 'proPrivate' => $proPrivate]);
     }
 
     public function registerMember(Request $request, Response $response)
@@ -81,8 +94,8 @@ class AuthController extends Controller
             $form->loadData($request->getBody());
 
             if ($form->validate() && $form->register()) {
-                Application::$app->session->setFlash('success', "Bienvenu $form->pseudo. Votre compte à bien été crée !");
-                Application::$app->mailer->send($form->mail, "Bienvenu $form->pseudo", 'welcome', ['pseudo' => $form->pseudo]);
+                Application::$app->session->setFlash('success', "Bienvenue $form->pseudo. Votre compte à bien été crée !");
+                Application::$app->mailer->send($form->mail, "Bienvenue $form->pseudo", 'welcome', ['pseudo' => $form->pseudo]);
                 $response->redirect('/');
                 exit;
             }

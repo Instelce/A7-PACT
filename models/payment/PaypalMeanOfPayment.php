@@ -6,7 +6,7 @@ use app\core\DBModel;
 
 class PaypalMeanOfPayment extends DBModel
 {
-    public int $paypal_id = 0;
+    public int $id = 0;
     public string $paypal_url = '';
 
     public static function tableName(): string
@@ -21,7 +21,7 @@ class PaypalMeanOfPayment extends DBModel
 
     public static function pk(): string
     {
-        return 'paypal_id';
+        return 'id';
     }
 
     public function rules(): array
@@ -31,7 +31,4 @@ class PaypalMeanOfPayment extends DBModel
         ];
     }
 
-    public function mean_of_payment(): MeanOfPayment {
-        return MeanOfPayment::findOne(['payment_id' => $this->paypal_id]);
-    }
 }

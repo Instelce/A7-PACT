@@ -8,7 +8,7 @@ $this->title = 'Connexion';
 
 ?>
 
-<div class="form-page">
+<div class="form-page form-page-little">
     <div class="h-auth">
         <h1 class="heading-1">Connexion</h1>
         <div class="q-auth">
