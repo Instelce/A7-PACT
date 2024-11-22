@@ -2,6 +2,7 @@
 
 namespace app\models\user\professional;
 use app\core\DBModel;
+use app\models\payment\MeanOfPayment;
 
 class PrivateProfessional extends DBModel
 {
@@ -9,6 +10,8 @@ class PrivateProfessional extends DBModel
     public int $pro_id = 0;
 
     public string $last_veto = '';
+
+    public int $payment_id = 0;
 
 
     public static function tableName(): string
@@ -18,7 +21,7 @@ class PrivateProfessional extends DBModel
 
     public function attributes(): array
     {
-        return ['last_veto'];
+        return ['last_veto', 'payment_id'];
     }
 
     public static function pk(): string
@@ -29,11 +32,16 @@ class PrivateProfessional extends DBModel
     public function rules(): array
     {
         return [
-            'last_veto' => [self::RULE_REQUIRED]
+            'last_veto' => [self::RULE_REQUIRED],
+            'payment_id' => [self::RULE_REQUIRED]
         ];
     }
 
     public function professional(): ProfessionalUser {
         return ProfessionalUser::findOne(['pro_id' => $this->pro_id]);
+    }
+
+    public function payment(): MeanOfPayment{
+        return MeanOfPayment::findOne(['payment_id' => $this->payment_id])->specific();
     }
 }

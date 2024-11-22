@@ -7,14 +7,19 @@ use app\core\Model;
 use app\models\account\Account;
 use app\models\account\UserAccount;
 use app\models\Address;
+use app\models\payment\CbMeanOfPayment;
+use app\models\payment\MeanOfPayment;
+use app\models\payment\PaypalMeanOfPayment;
+use app\models\payment\RibMeanOfPayment;
+use app\models\user\professional\PrivateProfessional;
 use app\models\user\professional\ProfessionalUser;
 use app\core\Utils;
 use app\models\user\professional\PublicProfessional;
 
 class PrivateProfessionalRegister extends Model
 {
-    public const PAYEMENT = 1;
-    public const NOPAYEMENT = 0;
+    public const PAYMENT = 1;
+    public const NOPAYMENT = 0;
 
     public const ACCEPT_CONDITIONS = 1;
     public const REFUSE_CONDITIONS = 0;
@@ -35,7 +40,7 @@ class PrivateProfessionalRegister extends Model
     public string $phone = '';
     public string $password = '';
     public string $passwordConfirm = '';
-    public int $payement = self::NOPAYEMENT;
+    public int $payment = self::NOPAYMENT;
     public int $conditions = self::REFUSE_CONDITIONS;
     public int $notifications = self::REFUSE_NOTIFICATIONS;
     public string $titulaire = '';
@@ -44,6 +49,7 @@ class PrivateProfessionalRegister extends Model
     public string $cardnumber = '';
     public string $expirationdate = '';
     public string $cryptogram = '';
+    public string $paypallink = '';
 
 
     public function rules(): array
@@ -98,19 +104,46 @@ class PrivateProfessionalRegister extends Model
         $proUser->phone = $this->phone;
         $proUser->save();
 
-        $proPublic = new PublicProfessional();
-        $proPublic->pro_id = $account->id;
-        $proPublic->save();
+        $meanOfPayment = new MeanOfPayment();
+
+        if('iban' && 'bic' != ''){
+            $payment = new RibMeanOfPayment();
+            $payment->rib_id = $meanOfPayment->payment_id;
+            $payment->name = $this->titulaire;
+            $payment->iban = $this->iban;
+            $payment->bic = $this->bic;
+            $payment->save();
+        }
+        else if ('cardnumber' && 'cryptogram' && 'expirationdate' != '') {
+            $payment = new CbMeanOfPayment();
+            $payment->cb_id = $meanOfPayment->payment_id;
+            $payment->name = $this->titulaire;
+            $payment->card_number = $this->cardnumber;
+            $payment->expiration_date = $this->expirationdate;
+            $payment->cvv = $this->cryptogram;
+            $payment->save();
+        }
+        else {
+            $payment = new PaypalMeanOfPayment();
+            $payment->paypal_id = $meanOfPayment->payment_id;
+            $payment->paypalurl = $this->paypallink;
+            $payment->save();
+        }
+
+        $proPrivate = new PrivateProfessional();
+        $proPrivate->pro_id = $account->id;
+        $proPrivate->payment_id = $payment->id;
+        $proPrivate->save();
+
 
         Application::$app->login($userAccount);
-        //        longitude et lattitude à rajouter
     }
 
     public function labels(): array
     {
         return [
-            'siren' => 'SIREN',
             'denomination' => 'Dénomination',
+            'siren' => 'SIREN',
             'mail' => 'E-mail',
             'streetnumber' => 'Numéro de rue',
             'streetname' => 'Nom de rue',
@@ -120,7 +153,7 @@ class PrivateProfessionalRegister extends Model
             'phone' => 'Téléphone',
             'password' => 'Mot de passe',
             'passwordConfirm' => 'Confirmez votre mot de passe',
-            'payement' => 'Je choisis de rentrer mes coordonnées bancaires maintenant (possibilité de le faire plus tard)',
+            'payment' => 'Je souhaite de rentrer mes coordonnées bancaires maintenant (possibilité de le faire plus tard)',
             'conditions' => 'J\'accepte les conditions géénrales d\'utilisation',
             'notifications' => 'J\'autorise l\'envoi de notifications'
         ];
@@ -134,7 +167,7 @@ class PrivateProfessionalRegister extends Model
             'mail' => 'example@email.com',
             'streetnumber' => '12',
             'streetname' => 'Édouard Branly',
-            'postaleCode' => '22000',
+            'postaleCode' => '22300',
             'city' => 'Lannion',
             'country' => 'France',
             'phone' => '0601020304',

@@ -3,7 +3,7 @@
 $this->title = 'Register';
 ?>
 
-<div class="flex flex-col items-center justify-center form form-page gap-12">
+<div class="flex flex-col items-center justify-center form form-page form-page-little gap-12">
     <div class="h-auth">
         <h1 class="heading-1">S'inscrire</h1>
         <div class="q-auth">
@@ -14,6 +14,6 @@ $this->title = 'Register';
     <div class="form-w">
         <a class="button w-full" href="/inscription/membre">Membre</a>
 
-        <a class="button gray w-full" href="/inscription/professionnel/public">Professionnel</a>
+        <a class="button gray w-full" href="/inscription/professionnel">Professionnel</a>
     </div>
 </div>

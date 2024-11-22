@@ -6,7 +6,7 @@ use app\core\DBModel;
 
 class RibMeanOfPayment extends DBModel
 {
-    public int $rib_id = 0;
+    public int $id = 0;
     public string $name = '';
     public string $iban = '';
     public string $bic = '';
@@ -22,7 +22,7 @@ class RibMeanOfPayment extends DBModel
 
     public static function pk(): string
     {
-        return 'rib_id';
+        return 'id';
     }
 
     public function rules(): array
@@ -32,9 +32,5 @@ class RibMeanOfPayment extends DBModel
             'iban' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 34]],
             'bic' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 11]]
         ];
-    }
-
-    public function mean_of_payment(): MeanOfPayment {
-        return MeanOfPayment::findOne(['payment_id' => $this->rib_id]);
     }
 }
