@@ -1,4 +1,5 @@
 <?php
+/** @var $this \app\core\View */
 /** @var $proPublic \app\forms\PublicProfessionalRegister */
 /** @var $proPrivate \app\forms\PrivateProfessionalRegister */
 

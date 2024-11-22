@@ -82,7 +82,7 @@ $iconsNames = [
                                 </p>
                             </header>
 
-                            <p><?php echo $offer["summary"]; ?></p>
+                            <p class="summary"><?php echo $offer["summary"]; ?></p>
 
                             <div class="flex gap-2 mt-auto pt-4">
                                 <a href="" class="button gray w-full spaced">Itinéraire<i data-lucide="map"></i></a>
