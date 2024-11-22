@@ -174,10 +174,10 @@ let user = null;
 getUser().then(u => user = u);
 
 loaderButton.addEventListener('click', () => {
-    fetch(`/api/opinions/${offerId}?limit=5&offset=${offset}`)
+    fetch(`/api/opinions?offer_id=${offerId}&limit=5&offset=${offset}`)
         .then(response => response.json())
         .then(opinions => {
-            if (opinions.length <= 5) {
+            if (opinions.length < 5) {
                 loaderButton.classList.add('hidden');
             }
 
@@ -246,7 +246,9 @@ function createOpinionCard(opinion) {
 
     // Photos
     let photos = document.createElement('div');
-    photos.classList.add('opinion-card-photos');
+    if (opinion.photos.length > 0) {
+        photos.classList.add('opinion-card-photos');
+    }
 
     for (let photo of opinion.photos) {
         let photoElement = document.createElement('img');

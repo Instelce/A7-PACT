@@ -12,7 +12,7 @@ use app\core\Utils;
 use app\models\offer\Offer;
 
 $this->title = "Mes offres";
-$this->jsFile = "dashboardOffers";
+$this->jsFile = "dashboard/offers";
 $this->cssFile = "dashboard/offers";
 
 ?>
@@ -80,13 +80,13 @@ $this->cssFile = "dashboard/offers";
                     <div class="flex flex-col gap-2 mt-4">
                         <p class="text-gray-4 flex items-center gap-2"><?php echo Offer::frenchCategoryName($offer->category) ?>
                             <span class="dot"></span> <?php echo $price ?> <span
-                                class="dot"></span> <?php echo $offer->likes . ' likes' ?>
+                                class="dot"></span> <?php echo $offer->likes . ' likes' ?> <span class="dot"></span> <?php echo $offer->opinionsCount() ?> avis
                         </p>
                         <p class="text-gray-4">Mis à jour
                             le <?php echo Utils::formatDate($offer->updated_at); ?></p>
                     </div>
 
-                    <!-- Option -->
+_                    <!-- Option -->
                     <?php if ($option) { ?>
                         <div class="card-option">
                             <div>

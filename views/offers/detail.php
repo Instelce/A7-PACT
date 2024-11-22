@@ -244,7 +244,7 @@ if ($status == "Fermé") {
             <input type="hidden" id="opinion-submitted" value="<?php echo $opinionSubmitted ?>">
 
             <?php if (!Application::$app->user?->isProfessional() && !$userOpinion) { ?>
-                <button class="button gray spaced w-full" id="opinion-add">
+                <button class="button gray spaced w-full mb-8" id="opinion-add">
                     Rédiger un avis
                     <i data-lucide="pen-line"></i>
                 </button>
@@ -338,7 +338,7 @@ if ($status == "Fermé") {
                 <?php Form::end() ?>
             <?php } else { ?>
                 <!-- Sign in reminder if not connected -->
-                <div id="opinion-form" class="flex flex-col gap-4 hidden">
+                <div id="opinion-form" class="flex flex-col gap-4 hidden mb-8">
                     <p>Connectez-vous pour laisser un avis.</p>
                     <a href="/connexion" class="button sm">
                         Se connecter

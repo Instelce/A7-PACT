@@ -2,7 +2,7 @@
 
 .stars {
     display: flex;
-    gap: .5rem;
+    gap: .3rem;
 }
 
 .star {

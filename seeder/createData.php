@@ -10,6 +10,8 @@ use app\models\offer\AttractionParkOffer;
 use app\models\offer\ActivityOffer;
 use app\models\Meal;
 use app\models\offer\schedule\OfferSchedule;
+use app\models\opinion\Opinion;
+use app\models\user\MemberUser;
 
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -114,7 +116,8 @@ $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url
 $members = generateUsername(10);
 
 foreach ($members as $i => $member) {
-    $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES (" . 11 + $i . ", '" . $member['pseudo'] . "@gmail.com', '" . $password . "', '/assets/images/brehat.jpeg', 19);");
+    $avatar = "https://ui-avatars.com/api/?size=128&name=" . $member['firstname'] . "+" . $member['lastname'];
+    $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES (" . 11 + $i . ", '" . $member['pseudo'] . "@gmail.com', '" . $password . "', '". $avatar ."', 19);");
     $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (" . 11 + $i . ", '". $member["firstname"] ."', '". $member["lastname"] ."', '". generatePhoneNumber() ."', '" . $member["pseudo"] . "', TRUE);");
 }
 
@@ -191,36 +194,36 @@ $offre1->save();
 $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (" . $offre1->id . ", 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/21/f5/07/e3/cafe-des-halles.jpg?w=700&h=-1&s=1',3);");
 
 //repas
-$repas1 = new Meal();
-$repas1->name = 'Galette complète';
-$repas1->save();
-
-$repas2 = new Meal();
-$repas2->name = 'Uncle IPA';
-$repas2->save();
-
-$repas3 = new Meal();
-$repas3->name = 'Crèpe beurre sucre';
-$repas3->save();
-
-$repas4 = new Meal();
-$repas4->name = 'Andouille de Guémené accompagnée d’une purée de carrotte';
-$repas4->save();
-
-$repas5 = new Meal();
-$repas5->name = 'Breizh Tea';
-$repas5->save();
-
-$repas6 = new Meal();
-$repas6->name = 'Far breton';
-$repas6->save();
-
-RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas1->meal_id);
-RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas2->meal_id);
-RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas3->meal_id);
-RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas4->meal_id);
-RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas5->meal_id);
-RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas6->meal_id);
+//$repas1 = new Meal();
+//$repas1->name = 'Galette complète';
+//$repas1->save();
+//
+//$repas2 = new Meal();
+//$repas2->name = 'Uncle IPA';
+//$repas2->save();
+//
+//$repas3 = new Meal();
+//$repas3->name = 'Crèpe beurre sucre';
+//$repas3->save();
+//
+//$repas4 = new Meal();
+//$repas4->name = 'Andouille de Guémené accompagnée d’une purée de carrotte';
+//$repas4->save();
+//
+//$repas5 = new Meal();
+//$repas5->name = 'Breizh Tea';
+//$repas5->save();
+//
+//$repas6 = new Meal();
+//$repas6->name = 'Far breton';
+//$repas6->save();
+//
+//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas1->meal_id);
+//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas2->meal_id);
+//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas3->meal_id);
+//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas4->meal_id);
+//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas5->meal_id);
+//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas6->meal_id);
 
 //add tags
 for ($i = 0; $i < 4; $i++) {
@@ -736,6 +739,143 @@ $photoRecree5 = new OfferPhoto();
 $photoRecree5->url_photo = 'https://www.larecredes3cures.com/app/uploads/2024/03/aquatico-scaled-1600x784-c-center.jpg';
 $photoRecree5->offer_id = $offre6->id;
 $photoRecree5->save();
+
+// ---------------------------------------------------------------------- //
+// Generate opinions
+// ---------------------------------------------------------------------- //
+
+/** @var Offer[] $offers */
+$offers = Offer::all();
+/** @var MemberUser[] $members */
+$members = MemberUser::all();
+
+$contexts = ["affaires", "couple", "famille", "amis", "solo"];
+$reviews = [
+    [
+        "title" => "Un séjour inoubliable !",
+        "content" => "Le personnel était incroyablement accueillant et la chambre parfaitement propre. On reviendra, c’est sûr !",
+        "rating" => 5
+    ],
+    [
+        "title" => "Déception totale",
+        "content" => "Les photos sur le site ne reflètent pas la réalité. Très déçu par l’état des lieux.",
+        "rating" => 2
+    ],
+    [
+        "title" => "Petit coin de paradis",
+        "content" => "Un cadre magnifique, idéal pour se détendre loin de la ville. Bravo à toute l’équipe.",
+        "rating" => 5
+    ],
+    [
+        "title" => "Service à améliorer",
+        "content" => "La nourriture était correcte, mais le service était lent et peu attentif.",
+        "rating" => 3
+    ],
+    [
+        "title" => "Un rapport qualité/prix imbattable",
+        "content" => "Superbe expérience pour un budget raisonnable. Je recommande vivement !",
+        "rating" => 5
+    ],
+    [
+        "title" => "Pas comme prévu...",
+        "content" => "La chambre était bruyante et mal isolée. Heureusement, le personnel a fait de son mieux.",
+        "rating" => 3
+    ],
+    [
+        "title" => "Parfait pour les familles !",
+        "content" => "Un lieu convivial et des activités pour tous les âges. Mes enfants ont adoré.",
+        "rating" => 5
+    ],
+    [
+        "title" => "Une cuisine exceptionnelle",
+        "content" => "Les plats étaient délicieux et parfaitement présentés. Un grand merci au chef !",
+        "rating" => 5
+    ],
+    [
+        "title" => "Propreté à revoir",
+        "content" => "L'hôtel est bien situé, mais la propreté de la salle de bain laissait à désirer.",
+        "rating" => 2
+    ],
+    [
+        "title" => "Une vue à couper le souffle",
+        "content" => "Se réveiller avec une vue sur la mer, c'était magique. Merci pour ce séjour parfait.",
+        "rating" => 5
+    ],
+    [
+        "title" => "Pas adapté aux couples",
+        "content" => "Beaucoup trop de bruit et aucune intimité. Une vraie déception pour un voyage romantique.",
+        "rating" => 2
+    ],
+    [
+        "title" => "Idéal pour un week-end détente",
+        "content" => "Spa, piscine, et service impeccable. Tout ce qu’il faut pour se relaxer.",
+        "rating" => 5
+    ],
+    [
+        "title" => "Des souvenirs plein la tête",
+        "content" => "Merci pour ce séjour incroyable, on reviendra l’année prochaine avec plaisir.",
+        "rating" => 5
+    ],
+    [
+        "title" => "Trop cher pour ce que c’est",
+        "content" => "La qualité n’était pas au rendez-vous pour le prix payé. Je ne recommande pas.",
+        "rating" => 2
+    ],
+    [
+        "title" => "Ambiance chaleureuse",
+        "content" => "Le personnel est très sympathique et l’ambiance générale est conviviale. Une belle découverte !",
+        "rating" => 4
+    ],
+    [
+        "title" => "Dommage pour le bruit",
+        "content" => "Tout aurait été parfait si la chambre n’avait pas été à côté de la route principale.",
+        "rating" => 3
+    ],
+    [
+        "title" => "Un véritable havre de paix",
+        "content" => "Le calme et la sérénité de cet endroit sont incomparables. À découvrir absolument.",
+        "rating" => 5
+    ],
+    [
+        "title" => "Des activités pour tous",
+        "content" => "Nous avons adoré les excursions proposées. Une belle manière de découvrir la région.",
+        "rating" => 5
+    ],
+    [
+        "title" => "Un accueil digne de ce nom",
+        "content" => "Le personnel est aux petits soins, on se sent comme à la maison. Un grand merci !",
+        "rating" => 5
+    ],
+    [
+        "title" => "Pas convaincu",
+        "content" => "L’organisation laissait vraiment à désirer. J’ai connu bien mieux.",
+        "rating" => 2
+    ]
+];
+
+foreach ($offers as $offer) {
+    $count = rand(6, 20);
+    $account_ids = [];
+
+    for ($k = 0; $k < $count; $k++) {
+        $member_id = $members[array_rand($members)]->user_id;
+        if (in_array($member_id, $account_ids)) {
+            continue;
+        }
+
+        $review = $reviews[array_rand($reviews)];
+        $opinion = new Opinion();
+        $opinion->rating = $review['rating'];
+        $opinion->title = $review['title'];
+        $opinion->comment = $review['content'];
+        $opinion->offer_id = $offer->id;
+        $opinion->account_id = $member_id;
+        $opinion->visit_context = $contexts[array_rand($contexts)];
+        $opinion->visit_date = date('Y-m-d', strtotime('-' . rand(1, 365) . ' days'));
+        $opinion->save();
+        $account_ids[] = $opinion->account_id;
+    }
+}
 
 echo "Database seeded successfully.\n";
 

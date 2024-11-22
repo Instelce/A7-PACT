@@ -44,7 +44,7 @@ class MemberRegisterForm extends Model
         $user->account_id = $account->id;
         $user->mail = $this->mail;
         $user->password = password_hash($this->password, PASSWORD_DEFAULT);
-        $user->avatar_url = "/assets/images/avatar.png";
+        $user->avatar_url = "https://ui-avatars.com/api/?size=128&name=$this->firstname+$this->lastname";
         $user->address_id = $address->id;
         $user->save();
 
