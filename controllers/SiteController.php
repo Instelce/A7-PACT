@@ -31,6 +31,8 @@ class SiteController extends Controller
         });
 
         $offers = [];
+        $offersALaUne = [];
+
         foreach ($allOffers as $offer) {
             if ($offer->offline == Offer::STATUS_ONLINE) {
                 $image = OfferPhoto::findOne(['offer_id' => $offer->id])->url_photo ?? null;
@@ -48,24 +50,24 @@ class SiteController extends Controller
                     case 'activity':
                         $type = "Activité";
                         $priceData = ActivityOffer::findOne(['offer_id' => $offer->id]);
-                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
+                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Gratuit";
                         break;
 
                     case 'show':
                         $type = "Spectacle";
                         $priceData = ShowOffer::findOne(['offer_id' => $offer->id]);
-                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
+                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Gratuit";
                         break;
 
                     case 'visit':
                         $type = "Visite";
                         $priceData = VisitOffer::findOne(['offer_id' => $offer->id]);
-                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
+                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Gratuit";
                         break;
 
                     case 'attraction_park':
                         $priceData = AttractionParkOffer::findOne(['offer_id' => $offer->id]);
-                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Prix non renseigné";
+                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Gratuit";
                         $type = "Parc d'attraction";
                         break;
                 }
@@ -74,6 +76,20 @@ class SiteController extends Controller
                 $lastOnlineDate = strtotime($offer->last_online_date ?? 'now');
                 $currentDate = strtotime(date('Y-m-d'));
                 $dateSincePublication = floor(($currentDate - $lastOnlineDate) / (60 * 60 * 24));
+
+                if ($offer -> isALaUne()){
+                    $offersALaUne[$offer->id] = [
+                        "id" => $offer->id,
+                        "image" => $image,
+                        "title" => $offer->title,
+                        "author" => $professional,
+                        "type" => $type,
+                        "price" => $price,
+                        "location" => $location,
+                        'summary' => $offer->summary,
+                        "dateSincePublication" => $dateSincePublication,
+                    ];
+                }
 
                 $offers[$offer->id] = [
                     "id" => $offer->id,
@@ -89,7 +105,10 @@ class SiteController extends Controller
             }
         }
 
-        $params['offers'] = $offers;
+        $params = [
+            'offers' => $offers,
+            'offersALaUne' => $offersALaUne,
+        ];
 
         return $this->render("home", $params);
     }
