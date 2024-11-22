@@ -46,6 +46,14 @@
     stroke-width: 2px;
 }
 
+.research-card .summary{
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 @media (max-width: 768px) {
     .categories-container {
         overflow-x: auto;
