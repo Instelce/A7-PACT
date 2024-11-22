@@ -35,22 +35,21 @@ $this->jsFile = 'registerMember';
         <div class="flex flex-col gap-4">
             <div class="flex gap-4 items-center">
                 <div class="flex items-center">
-                    <input class="switch" type="checkbox" id="switch-period2" name="visit-guide" />
-                    <label class="switch" for="switch-period2"></label>
+                    <input class="switch" type="checkbox" id="switch-notification" name="notification" value="true" />
+                    <label class="switch" for="switch-notification"></label>
                 </div>
                 <label for="switch-period" id="switch-period-label">J’autorise l’envoi de notifications concernant
                     la mise en ligne de nouvelles offres et autre</label>
             </div>
             <div class="flex gap-4 items-center">
                 <div class="flex items-center">
-                    <input class="switch" type="checkbox" id="switch-period1" name="visit-guide" />
-                    <label class="switch" for="switch-period1"></label>
+                    <input class="switch" type="checkbox" id="switch-condition-utilisation" />
+                    <label class="switch" for="switch-condition-utilisation"></label>
                 </div>
                 <label for="switch-period" id="switch-period-label">J’accepte les conditions générales
                     d’utilisation  </label>
             </div>
         </div>
-
         <button type="submit" class="button w-full ">S'inscrire</button>
     </div>
     <?php \app\core\form\Form::end() ?>

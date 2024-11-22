@@ -24,6 +24,8 @@ class MemberRegisterForm extends Model
     public string $password = '';
     public string $passwordConfirm = '';
 
+    public bool $notification = false;
+
     public function register()
     {
         $account = new Account();
@@ -52,7 +54,7 @@ class MemberRegisterForm extends Model
         $member->firstname = $this->firstname;
         $member->phone = $this->phone;
         $member->pseudo = $this->pseudo;
-        $member->allows_notifications = false;
+        $member->allows_notifications = $this->notification;
         $member->save();
 
         Application::$app->login($user);
@@ -71,7 +73,7 @@ class MemberRegisterForm extends Model
             'streetName' => [self::RULE_REQUIRED],
             'postalCode' => [self::RULE_REQUIRED, self::RULE_POSTAL],
             'city' => [self::RULE_REQUIRED],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'min' => 5], [self::RULE_MAX, 'max' => 5], [self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => MemberUser::class]],
+            'phone' => [self::RULE_REQUIRED,self::RULE_PHONE, [self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => MemberUser::class]],
             'password' => [self::RULE_REQUIRED],
             'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
         ];
@@ -85,10 +87,9 @@ class MemberRegisterForm extends Model
             'pseudo' => 'Pseudo',
             'mail' => 'Email',
             'streetNumber' => 'Numéro de rue',
-            'streetName' => 'Nom du rue',
+            'streetName' => 'Nom de rue',
             'postalCode' => 'Code postal',
             'city' => 'Ville',
-            'country' => 'Pays',
             'phone' => 'Téléphone',
             'password' => 'Mot de passe',
             'passwordConfirm' => 'Confirmation mot de passe',
@@ -99,7 +100,17 @@ class MemberRegisterForm extends Model
     public function placeholders(): array
     {
         return [
+            'lastname' => 'Martin',
+            'firstname' => 'Gabriel',
+            'pseudo' => 'GabMart',
             'mail' => 'example@email.com',
+            'streetNumber' => '12',
+            'streetName' => 'Edouard Branly',
+            'postalCode' => '22300',
+            'city' => 'Lannion',
+            'phone' => '01 23 45 67 89',
+            'passwordConfirm' => '********',
+            'notifications' => '*******',
         ];
     }
 }
