@@ -1,5 +1,6 @@
 <?php
 /** @var $model \app\models\User */
+/** @var $this \app\core\View */
 
 use app\core\form\Form;
 use app\models\User;

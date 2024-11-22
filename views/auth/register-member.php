@@ -2,6 +2,7 @@
 /** @var $model \app\forms\MemberRegisterForm */
 
 $this->title = 'Inscription membre';
+$this->jsFile = 'registerMember';
 
 ?>
 
@@ -34,19 +35,19 @@ $this->title = 'Inscription membre';
         <div class="flex flex-col gap-4">
             <div class="flex gap-4 items-center">
                 <div class="flex items-center">
-                    <input class="switch" type="checkbox" id="switch-period1" name="visit-guide" />
-                    <label class="switch" for="switch-period1"></label>
-                </div>
-                <label for="switch-period" id="switch-period-label">J’accepte les conditions générales
-                    d’utilisation  </label>
-            </div>
-            <div class="flex gap-4 items-center">
-                <div class="flex items-center">
                     <input class="switch" type="checkbox" id="switch-period2" name="visit-guide" />
                     <label class="switch" for="switch-period2"></label>
                 </div>
                 <label for="switch-period" id="switch-period-label">J’autorise l’envoi de notifications concernant
                     la mise en ligne de nouvelles offres et autre</label>
+            </div>
+            <div class="flex gap-4 items-center">
+                <div class="flex items-center">
+                    <input class="switch" type="checkbox" id="switch-period1" name="visit-guide" />
+                    <label class="switch" for="switch-period1"></label>
+                </div>
+                <label for="switch-period" id="switch-period-label">J’accepte les conditions générales
+                    d’utilisation  </label>
             </div>
         </div>
 
