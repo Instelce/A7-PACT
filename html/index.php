@@ -69,7 +69,9 @@ $app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/profile', [AuthController::class, 'profile']);
 $app->router->get('/users', [SiteController::class, 'users']);
 
-//api routes
+// Api routes
+$app->router->get('/api/auth/user', [ApiController::class, 'user']);
 $app->router->get('/api/offers', [ApiController::class, 'offers']);
+$app->router->get('/api/opinions', [ApiController::class, 'opinions']);
 
 $app->run();

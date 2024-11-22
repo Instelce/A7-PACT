@@ -16,7 +16,7 @@ class m0007_create_table_offer
 
         CREATE TABLE offer (
             id SERIAL PRIMARY KEY,
-            title VARCHAR(60) NOT NULL,
+            title VARCHAR(128) NOT NULL,
             summary VARCHAR(384) NOT NULL,
             description VARCHAR(1024) NOT NULL,
             likes INT DEFAULT 0,

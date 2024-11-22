@@ -126,7 +126,6 @@ a {
     position: relative;
     padding: 2rem 20%;
     margin: 2rem 0;
-    overflow-x: hidden;
 }
 
 @media only screen and (max-width: 728px) {

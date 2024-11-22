@@ -4,14 +4,17 @@ namespace app\core;
 
 class DBQueryBuilder
 {
-    public Model $model;
+    public DBModel $model;
 
+    public array $select = [];
     public array $filters = [];
+    public array $search = [];
+    public array $joins = [];
     public array $order_by = [];
     public ?int $limit;
     public ?int $offset;
 
-    public function __construct(Model $model)
+    public function __construct(DBModel $model)
     {
         $this->model = $model;
     }
@@ -23,10 +26,39 @@ class DBQueryBuilder
     {
         $tableName = $this->model->tableName();
 
-        $sql = "SELECT * FROM $tableName";
+        if (!empty($this->select)) {
+            $select = implode(", ", array_map(fn($attr) => $tableName . "." . $attr, $this->select));
+        } else {
+            $select = "$tableName.*";
+        }
+
+        $sql = "SELECT $select FROM $tableName";
+
+        if (!empty($this->joins)) {
+            $sql .= " " . implode(" ", $this->joins);
+        }
 
         if (!empty($this->filters)) {
-            $sql .= " WHERE " . implode(" AND ", array_map(fn($attr) => "$attr = :$attr", array_keys($this->filters)));
+            $sql .= " WHERE " . implode(" AND ", array_map(function ($attr) {
+                $tableName = $this->model->tableName();
+
+                // Check for double __ in the attribute name
+                if (strpos($attr, '__') !== false) {
+                    $attrName = str_replace('__', '.', $attr);
+                    return "$attrName = :$attr";
+                } else {
+                    return "$tableName.$attr = :$attr";
+                }
+            }, array_keys($this->filters)));
+        }
+
+        if (!empty($this->search)) {
+            if (!empty($this->filters)) {
+                $sql .= " AND ";
+            } else {
+                $sql .= " WHERE ";
+            }
+            $sql .= implode(" OR ", array_map(fn($attr) => "$tableName.$attr LIKE :$attr", array_keys($this->search)));
         }
 
         if (!empty($this->order_by)) {
@@ -37,7 +69,7 @@ class DBQueryBuilder
                     $sql .= ", ";
                 }
 
-                $sql .= str_starts_with($attr, '-') ? substr($attr, 1) : $attr;
+                $sql .= $tableName . "." . (str_starts_with($attr, '-') ? substr($attr, 1) : $attr);
             }
 
             if (str_starts_with($this->order_by[0], '-')) {
@@ -59,9 +91,24 @@ class DBQueryBuilder
             $statement->bindValue(":$key", $value);
         }
 
+        foreach ($this->search as $key => $value) {
+            $statement->bindValue(":$key", '%' . $value . '%');
+        }
+
         $statement->execute();
 
         return $statement->fetchAll(\PDO::FETCH_CLASS, $this->model::class);
+    }
+
+    /**
+     * Select the given attributes
+     *
+     * @param array $attrs `['id', 'title', 'content']`
+     */
+    public function select(array $attrs): DBQueryBuilder
+    {
+        $this->select = $attrs;
+        return $this;
     }
 
     /**
@@ -83,6 +130,30 @@ class DBQueryBuilder
     public function filters(array $where): DBQueryBuilder
     {
         $this->filters = $where;
+        return $this;
+    }
+
+    /**
+     * Search the results by the given attributes
+     *
+     * @param array $where `['title' => "the c", 'description' => "lorem"]`
+     */
+    public function search(array $where): DBQueryBuilder
+    {
+        $this->search = $where;
+        return $this;
+    }
+
+    /**
+     * Join the results with the given model
+     *
+     * @param DBModel $model The model to join with
+     */
+    public function join(DBModel $model): DBQueryBuilder
+    {
+        $table = $model->tableName();
+        $pk = $model->pk();
+        $this->joins[] = "INNER JOIN $table ON $table.$pk = " . $this->model->tableName() . "." . $table . "_" . $pk;
         return $this;
     }
 

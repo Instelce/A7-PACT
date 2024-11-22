@@ -21,6 +21,7 @@ use app\models\offer\OfferPeriod;
 use app\models\offer\VisitOffer;
 use app\models\user\professional\ProfessionalUser;
 use app\core\Utils;
+
 class ApiController extends Controller
 {
     /**
@@ -172,17 +173,42 @@ class ApiController extends Controller
      * - limit : int
      * - order_by : string (default: created_at)
      */
-    public function opinions(Request $request, Response $response, $routeParams)
+    public function opinions(Request $request, Response $response)
     {
-        $offerId = $routeParams['offer_id'];
+        $q = $request->getQueryParams('q');
+        $offerId = $request->getQueryParams('offer_id');
+        $accountId = $request->getQueryParams('account_id');
+        $offerProfessionalId = $request->getQueryParams('offer_pro_id');
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
         $orderBy = explode(',', $request->getQueryParams('order_by') ?? '-created_at');
 
         $data = [];
+        $where = [];
+
+        if ($offerId) {
+            $where['offer_id'] = $offerId;
+        }
+        if ($accountId) {
+            $where['account_id'] = $accountId;
+        }
+        if ($offerProfessionalId) {
+            $where['offer__professional_id'] = $offerProfessionalId;
+        }
+        if (is_numeric($q)) {
+            $where['rating'] = $q;
+            $q = null;
+        }
 
         /** @var Opinion[] $opinions */
-        $opinions = Opinion::query()->filters(['offer_id' => $offerId])->limit($limit)->offset($offset)->order_by($orderBy)->make();
+        $opinions = Opinion::query()
+            ->join(new Offer())
+            ->filters($where)
+            ->search(["title" => $q])
+            ->limit($limit)
+            ->offset($offset)
+            ->order_by($orderBy)
+            ->make();
 
         foreach ($opinions as $i => $opinion) {
             $data[$i] = $opinion->toJson();
@@ -197,9 +223,14 @@ class ApiController extends Controller
                 $data[$i]['user'][$key] = $value;
             }
 
+            // Add offer data
+            $offer = Offer::findOneByPk($opinion->offer_id);
+            $data[$i]['offer'] = $offer->toJson();
+
             // Add photos
             /** @var OpinionPhoto[] $photos */
             $photos = OpinionPhoto::find(['opinion_id' => $opinion->id]);
+            $data[$i]['photos'] = [];
             foreach ($photos as $photo) {
                 $data[$i]['photos'][] = $photo->toJson();
             }

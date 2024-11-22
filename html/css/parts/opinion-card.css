@@ -8,13 +8,22 @@
 .opinion-card header {
     display: flex;
     justify-content: space-between;
-    padding-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .opinion-card header div:nth-child(1) {
     display: flex;
     align-items: center;
     gap: 1rem;
+}
+
+.opinion-card header.not-read {
+    border-radius: var(--radius-medium);
+    background: rgba(var(--color-purple-primary), .1);
+}
+
+.opinion-card header.not-read .avatar .image-container {
+    box-shadow: 0 0 0 2px rgb(var(--color-purple-primary));
 }
 
 /* Stars */
