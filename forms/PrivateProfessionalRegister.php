@@ -61,14 +61,13 @@ class PrivateProfessionalRegister extends Model
             'streetname' => [self::RULE_REQUIRED],
             'postaleCode' => [[self::RULE_REQUIRED], [self::RULE_MAX, 'max' => 5]],
             'city' => [self::RULE_REQUIRED],
-            'country' => [self::RULE_REQUIRED],
-            'phone' => [[self::RULE_REQUIRED], [self::RULE_MAX, 'max' => 10]],
+            'phone' => [[self::RULE_REQUIRED], [self::RULE_MAX, 'max' => 10], [self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => ProfessionalUser::class]],
             'password' => [[self::RULE_REQUIRED], [self::RULE_PASSWORD]],
             'passwordConfirm' => [[self::RULE_REQUIRED], [self::RULE_MATCH, 'match' => 'password']],
             'titulaire' => [self::RULE_MAX, 'max' => 255],
-            'iban' => [self::RULE_MAX, 'max' => 34],
+            'iban' => [[self::RULE_MAX, 'max' => 34], [self::RULE_UNIQUE, 'attributes' => 'iban', 'class' => RibMeanOfPayment::class]],
             'bic' => [self::RULE_MAX, 'max' => 11],
-            'cardnumber' => [self::RULE_MAX, 'max' => 16],
+            'cardnumber' => [[self::RULE_MAX, 'max' => 16],[self::RULE_UNIQUE, 'attributes' => 'iban', 'class' => CbMeanOfPayment::class]],
             'expirationdate' => [self::RULE_EXP_DATE],
             'cryptogram' => [self::RULE_MAX, 'max' => 3]
         ];
@@ -92,7 +91,8 @@ class PrivateProfessionalRegister extends Model
         $userAccount = new UserAccount();
         $userAccount->account_id = $account->id;
         $userAccount->mail = $this->mail;
-        $userAccount->password = password_hash($this->password);
+        $userAccount->password = password_hash($this->password, PASSWORD_DEFAULT);
+        $userAccount->avatar_url = "https://ui-avatars.com/api/?size=128&name=$this->denomination";
         $userAccount->address_id = $address->id;
         $userAccount->save();
 
@@ -137,6 +137,7 @@ class PrivateProfessionalRegister extends Model
 
 
         Application::$app->login($userAccount);
+        return true;
     }
 
     public function labels(): array
