@@ -53,13 +53,19 @@ class ApiController extends Controller
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
         $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-created_at'];
+        $professionnal_id = $request->getQueryParams('professional_id');
 
         $data = [];
+        $where = [];
+        if ($professionnal_id){
+            $where['professional_id'] = $professionnal_id;
+        }
 
         /** @var Offer[] $offers */
         $offers = Offer::query()
             ->limit($limit)
             ->offset($offset)
+            ->filters($where)
             ->search(['title' => $q])
             ->order_by($order_by)
             ->make();
