@@ -107,6 +107,11 @@ class ApiController extends Controller
         foreach ($offers as $i => $offer) {
             $data[$i] = $offer->toJson();
 
+            // Add user account
+            $data[$i]['profesionalUser'] = ProfessionalUser::findOneByPk($offer->professional_id)->toJson();
+            unset($data[$i]['profesionalUser']['notification']);
+            unset($data[$i]['profesionalUser']['conditions']);
+
             $data[$i]["photos"] = [];
             foreach ($offer->photos() as $photo) {
                 $data[$i]["photos"][] = $photo->url_photo;
