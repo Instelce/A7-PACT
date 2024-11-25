@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\core\Application;
 use app\core\Controller;
 use app\core\exceptions\NotFoundException;
+use app\core\form\Form;
 use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
@@ -110,6 +111,8 @@ class AuthController extends Controller
     }
 
     public function updateAccount(Request $request, Response $response){
+        $form = new MemberRegisterForm();
+
         return $this->render('auth/update-account', ['model' => $form]);
     }
 
