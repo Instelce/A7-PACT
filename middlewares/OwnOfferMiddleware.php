@@ -17,7 +17,10 @@ class OwnOfferMiddleware extends BaseMiddleware
 
     public function execute()
     {
-        if (!Application::$app->user->isProfessional() || !Application::$app->router->hasParams('pk') || !Application::$app->user->specific()->hasOffer(Application::$app->router->getParams('pk'))) {
+        if (!Application::$app->user){
+            return ;
+        }
+        if (Application::$app->user && !Application::$app->user->isProfessional() || !Application::$app->router->hasParams('pk') || !Application::$app->user->specific()->hasOffer(Application::$app->router->getParams('pk'))) {
             if (empty($this->actions) || in_array(Application::$app->controller->action, $this->actions)) {
                 throw new ForbiddenException();
             }
