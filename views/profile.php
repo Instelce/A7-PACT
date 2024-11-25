@@ -38,19 +38,15 @@ $this->jsFile = "profile";
   <x-tabs>
     <x-tab class="profile-up-bandeau profile-up-bandeau-l" id="offres" role="heading" slot="tab">Offre</x-tab>
     <x-tab-panel role="region" slot="panel">
-    <p>QUOICOU</p>
-<!--    <img src="https://content.imageresizer.com/images/memes/One-Piece-Enel-Shocked-meme-9.jpg"> -->
-    <div class="flex flex-col">
-        <!-- Offer cards -->
-<!--        <img src="https://i.redd.it/au4qq9ndfwd61.jpg"> -->
-        <!-- <img src="https://pbs.twimg.com/media/E7m-L8zWUAETTfi.jpg">  -->
-        
-    </div>
-
+        <!-- All offers generated in js file -->
+        <div id="offers-container">
+            <div id="offers-loader"></div>
+        </div>
     </x-tab-panel>
+
     <x-tab class="profile-bandeau profile-up-bandeau-r" id="reponses" role="heading" slot="tab">Réponse</x-tab>
     <x-tab-panel role="region" slot="panel">
-      <p>BÉOUW</p>
+
     </x-tab-panel>
   </x-tabs>
 </div>
