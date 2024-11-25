@@ -185,12 +185,15 @@ class OfferController extends Controller
             }
 
             // TODO - validate all fields
-            // if all fields are valid redirect to the payment page
+            // if all fields are valid redirect to the payment page or on dashboard
 
-            return $response->redirect('/offres/' . $offer->id . '/payment');
+            if (Application::$app->user->isPrivateProfessional()) {
+                return $response->redirect('/offres/' . $offer->id . '/payment');
+            } else {
+                return $request->redirect('/dashboard');
+            }
         }
-
-
+        
         return $this->render('offers/create', [
             'model' => $offer,
         ]);

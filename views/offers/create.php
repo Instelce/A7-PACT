@@ -519,7 +519,7 @@ $form = new Form();
             <section>
                 <h2 class="section-header">Photos ou illustrations</h2>
 
-                <div class="flex flex-col gap-4">
+                <div class="flex flex-col">
 
                     <!-- Name for FILES -->
                     <div id="input-name" data-name="photos"></div>
@@ -557,12 +557,14 @@ $form = new Form();
 
                 <div class="px-6 py-4 border border-solid border-gray-1 rounded-3xl gap-1">
                     <div class="flex justify-between text-gray-4">
-                        <p>Cout de l’offre sans options</p>
+                        <p>Cout de l’offre</p>
                         <span id="price-without-option">4,98 €</span>
                     </div>
                     <div class="flex justify-between text-gray-4">
-                        <p>Cout de l’offre avec options</p>
-                        <span id="price-with-option">7,96 €</span>
+                        <p>+ Cout de l'option</p>
+                        <span class="flex">
+                            <span id="price-with-option">7,96 €</span>
+                        </span>
                     </div>
                     <!--                    <div class="flex justify-between text-gray-4">-->
                     <!--                        <p>Réduction</p>-->
@@ -583,7 +585,7 @@ $form = new Form();
 
                 </div>
 
-                <p class="indent-6 text-gray-3">L'offre sera facturé au mois</p>
+                <p class="indent-6 text-gray-3">L'offre sera facturé au mois et l'option à la semaine</p>
             </div>
 
             <!--            <x-input rounded>-->
