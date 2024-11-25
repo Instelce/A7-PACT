@@ -66,7 +66,7 @@ $app->router->get('/inscription/professionnel', [AuthController::class, 'registe
 $app->router->get('/inscription/membre', [AuthController::class, 'registerMember']);
 $app->router->post('/inscription/membre', [AuthController::class, 'registerMember']);
 $app->router->get('/deconnexion', [AuthController::class, 'logout']);
-$app->router->get('/profile', [AuthController::class, 'profile']);
+$app->router->get('/comptes/<pk:int>', [AuthController::class, 'profile']);
 $app->router->get('/users', [SiteController::class, 'users']);
 
 // Api routes

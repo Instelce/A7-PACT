@@ -56,7 +56,7 @@ if ($status == "Fermé") {
             <p>
                 <?php echo $offerData["category"] ?>
                 par
-                <a href="/comptes/" class="underline"><?php echo $offerData["author"] ?></a>
+                <a href="/comptes/<?php echo $offerData["professionalId"] ?>" class="underline"><?php echo $offerData["author"] ?></a>
             </p>
         </header>
 
