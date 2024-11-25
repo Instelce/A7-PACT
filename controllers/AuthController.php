@@ -109,6 +109,10 @@ class AuthController extends Controller
         return $this->render('auth/register-member', ['model' => $form]);
     }
 
+    public function updateAccount(Request $request, Response $response){
+        return $this->render('auth/update-account', ['model' => $form]);
+    }
+
     public function logout(Request $request, Response $response)
     {
         Application::$app->logout();
