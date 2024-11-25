@@ -71,7 +71,7 @@ async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
 }
 let filters = { category: "visit" };
 console.time("getOffers");
-let Data = await getOffers(filters);
+let Data = await getOffers();
 console.timeEnd("getOffers");
 
 if (Data && !Array.isArray(Data)) {
@@ -87,7 +87,7 @@ if (!offersContainer) {
 } else {
     Data.forEach((offer) => {
         const offerElement = document.createElement("a");
-        offerElement.href = `/offres/${offer.id}`;
+        offerElement.href = `/offres/${offer.specific["offer_id"]}`;
         offerElement.innerHTML = `
             <article class="research-card">
                 <div class="research-card--photo">
@@ -100,15 +100,15 @@ if (!offersContainer) {
                 <div class="research-card--body">
                     <header>
                         <h2 class="research-card--title">${offer.title}</h2>
-                        <p>${
-                            offer.type
-                        } par <a href="/comptes/${offer}" class="underline">${offer}</a></p>
+                        <p>${offer.category} par <a href="/comptes/${
+            offer.professional_id
+        }" class="underline">${offer.profesionalUser["denomination"]}</a></p>
                     </header>
                     <p class="summary">${offer.summary}</p>
-                    <div class="flex gap-2 mt-auto pt-4">
-                        <a href="" class="button gray w-full spaced">Itinéraire<i data-lucide="map"></i></a>
-                        <a href="" class="button blue w-full spaced">Voir plus<i data-lucide="chevron-right"></i></a>
-                    </div>
+                         <div class="flex gap-2 mt-auto pt-4">
+                            <a href="" class="button gray w-full spaced">Itinéraire<i data-lucide="map"></i></a>
+                            <a href="" class="button blue w-full spaced">Voir plus<i data-lucide="chevron-right"></i></a>
+                        </div>
                 </div>
             </article>
         `;
