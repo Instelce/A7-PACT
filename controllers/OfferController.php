@@ -312,7 +312,8 @@ class OfferController extends Controller
             'prestationsNonIncluses' => $prestationsNonIncluses,
             'accessibilite' => $accessibilite,
             'carteRestaurant' => $carte_restaurant,
-            'cartePark' => $carte_park
+            'cartePark' => $carte_park,
+            'professionalId' => $offer->professional_id
         ];
 
         // Opinion creation

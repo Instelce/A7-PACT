@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\core\Application;
 use app\core\Controller;
+use app\core\exceptions\NotFoundException;
 use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
@@ -115,10 +116,17 @@ class AuthController extends Controller
         $response->redirect('/');
     }
 
-    public function profile() {
-        if (Application::$app->user->isProfessional()) {
-            $this->setLayout('back-office');
+    public function profile(Request $request, Response $response, $routeParams) {
+        $pk = $routeParams['pk'];
+        $user = UserAccount::findOneByPk($pk);
+
+        if (!$user)
+        {
+            throw new NotFoundException();
         }
-        return $this->render('profile');
+
+        var_dump($user);
+
+        return $this->render('profile', ['user'=>$user]);
     }
 }

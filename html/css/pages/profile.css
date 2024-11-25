@@ -1,3 +1,5 @@
+@import url("dashboard/offers.css");
+
 .profile-up
 {
     display: flex;
@@ -32,24 +34,40 @@
     border-radius: 50%;
 }
 
-.profile-up-bandeau-r
-{
-    border: 1px solid rgb(var(--color-gray-2));
-    border-radius: 0 100rem 100rem 0;
-    background-color: var(--color-white);
-}
-
 x-tab
 {
     width: 100%;
     text-align: center;
 }
 
-x-tab[selected]
+x-tab[selected][id="offres"]
 {
     border-bottom: none;
-    border: 1px solid rgb(var(--color-purple-primary));
+    border: 1px solid rgb(var(--color-blue-primary));
+    background-color: rgb(var(--color-blue-primary));
     border-radius: 100rem 0 0 100rem;
-    background-color: rgb(var(--color-purple-primary));
     color: rgb(var(--color-white));
+}
+
+x-tab[id="offres"]
+{
+    border-bottom: none;
+    border: 1px solid rgb(var(--color-gray-1));
+    border-radius: 100rem 0 0 100rem;
+}
+
+x-tab[selected][id="reponses"]
+{
+    border-bottom: none;
+    border: 1px solid rgb(var(--color-blue-primary));
+    background-color: rgb(var(--color-blue-primary));
+    color: rgb(var(--color-white));
+    border-radius: 0 100rem 100rem 0;
+}
+
+x-tab[id="reponses"]
+{
+    border-bottom: none;
+    border: 1px solid rgb(var(--color-gray-1));
+    border-radius: 0 100rem 100rem 0;
 }
