@@ -260,6 +260,7 @@ class SiteController extends Controller
                     "type" => $type,
                     "location" => $location,
                     "summary" => $offer->summary ?? "",
+                    "minimum_price" => $offer->minimum_price,
                     "info" => $info
                 ];
             }
