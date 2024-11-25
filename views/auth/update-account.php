@@ -30,9 +30,6 @@
                             </div>
                             <?php echo $form->field($model, 'city') ?>
                         </div>
-
-                        <?php echo $form->field($model, 'password')->passwordField() ?>
-                        <?php echo $form->field($model, 'passwordConfirm')->passwordField() ?>
                     </div>
                     <div class="flex flex-col gap-4">
                         <div class="flex gap-4 items-center">
@@ -43,15 +40,15 @@
                             <label for="switch-period" id="switch-period-label">J’autorise l’envoi de notifications concernant
                                 la mise en ligne de nouvelles offres et autre</label>
                         </div>
-                        <div class="flex gap-4 items-center">
-                            <div class="flex items-center">
-                                <input class="switch" type="checkbox" id="switch-condition-utilisation" />
-                                <label class="switch" for="switch-condition-utilisation"></label>
-                            </div>
-                            <label for="switch-period" id="switch-period-label">J'accepte les <a href="" class="link">conditions générales d'utilisation</a></label>
-                        </div>
                     </div>
-                    <button type="submit" class="button w-full ">S'inscrire</button>
+                    <button type="submit" class="button w-full gray">Modifier le mot de passe</button>
+                    <button type="submit" class="button w-full danger">Supprimer mon compte</button>
+                    <div class="flex gap-4, mt-8">
+                        <div class='w-25%'>
+                            <button type="submit" class="button gray">Annuler</button>
+                        </div>
+                        <button type="submit" class="button w-full">Enregistrer les modifications</button>
+                    </div>
                 </div>
                 <?php \app\core\form\Form::end() ?>
             </x-tab-panel>

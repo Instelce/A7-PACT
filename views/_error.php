@@ -15,7 +15,7 @@ $this->title = 'Oops';
 
     <pre><?php echo $exception->getMessage() ?></pre>
 
-    <img src="/assets/images/errors/<?php echo rand(1, 69) ?>.gif" alt="Destroy"
+    <img src="/assets/images/errors/<?php echo rand(1, 80) ?>.gif" alt="Destroy"
          width="400" class="mt-10 hidden-anim">
 <?php } else { ?>
     <?php if ($exception->getCode() === 404) { ?>
