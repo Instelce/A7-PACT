@@ -54,11 +54,16 @@ class ApiController extends Controller
         $limit = $request->getQueryParams('limit');
         $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-created_at'];
         $professionnal_id = $request->getQueryParams('professional_id');
+        $category = $request->getQueryParams('category'); // Nouveau paramètre de filtre
+
 
         $data = [];
         $where = [];
         if ($professionnal_id) {
             $where['professional_id'] = $professionnal_id;
+        }
+        if ($category) {
+            $where['category'] = $category;
         }
 
         /** @var Offer[] $offers */
