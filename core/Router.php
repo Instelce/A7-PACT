@@ -9,6 +9,7 @@ class Router
     public Request $request;
     public Response $response;
     protected array $routes = [];
+    public array $params = [];
 
     public function __construct(Request $request, Response $response)
     {
@@ -89,7 +90,7 @@ class Router
 
             if (preg_match($pattern, $path, $matches)) {
                 array_shift($matches);
-                $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+                $this->params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
 
                 if (is_array($callback)) {
                     /**
@@ -107,11 +108,21 @@ class Router
                 }
 
                 // Call the callback function, and pass request and response to the method
-                return call_user_func($callback, $this->request, $this->response, $params);
+                return call_user_func($callback, $this->request, $this->response, $this->params);
             }
         }
 
         throw new NotFoundException();
+    }
+
+    public function hasParams(string $key): bool
+    {
+        return array_key_exists($key, $this->params);
+    }
+
+    public function getParams(string $key)
+    {
+        return $this->params[$key] ?? null;
     }
 
 }

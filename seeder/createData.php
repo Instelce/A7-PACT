@@ -116,7 +116,8 @@ $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url
 $members = generateUsername(10);
 
 foreach ($members as $i => $member) {
-    $avatar = "https://ui-avatars.com/api/?size=128&name=" . $member['firstname'] . "+" . $member['lastname'];
+    $avatar = "https://avatar.iran.liara.run/public/" . rand(1, 100);
+//    $avatar = "https://ui-avatars.com/api/?size=128&name=" . $member['firstname'] . "+" . $member['lastname'];
     $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES (" . 11 + $i . ", '" . $member['pseudo'] . "@gmail.com', '" . $password . "', '". $avatar ."', 19);");
     $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (" . 11 + $i . ", '". $member["firstname"] ."', '". $member["lastname"] ."', '". generatePhoneNumber() ."', '" . $member["pseudo"] . "', TRUE);");
 }
@@ -872,6 +873,7 @@ foreach ($offers as $offer) {
         $opinion->account_id = $member_id;
         $opinion->visit_context = $contexts[array_rand($contexts)];
         $opinion->visit_date = date('Y-m-d', strtotime('-' . rand(1, 365) . ' days'));
+        $opinion->created_at = date('Y-m-d H:i:s', strtotime('-' . rand(1, 365) . ' days'));
         $opinion->save();
         $account_ids[] = $opinion->account_id;
     }

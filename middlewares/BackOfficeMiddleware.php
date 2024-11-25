@@ -1,9 +1,10 @@
 <?php
 
-namespace app\core\middlewares;
+namespace app\middlewares;
 
 use app\core\Application;
 use app\core\exceptions\ForbiddenException;
+use app\core\middlewares\BaseMiddleware;
 
 class BackOfficeMiddleware extends BaseMiddleware
 {

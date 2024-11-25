@@ -6,12 +6,12 @@ use app\core\Application;
 use app\core\Controller;
 use app\core\exceptions\NotFoundException;
 use app\core\middlewares\AuthMiddleware;
-use app\core\middlewares\BackOfficeMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\core\Utils;
+use app\middlewares\BackOfficeMiddleware;
+use app\middlewares\OwnOfferMiddleware;
 use app\models\Address;
-use app\models\Meal;
 use app\models\offer\ActivityOffer;
 use app\models\offer\AttractionParkOffer;
 use app\models\offer\Offer;
@@ -35,6 +35,7 @@ class OfferController extends Controller
     {
         $this->registerMiddleware(new AuthMiddleware(['create']));
         $this->registerMiddleware(new BackOfficeMiddleware(['create']));
+        $this->registerMiddleware(new OwnOfferMiddleware(['update']));
     }
 
     public function create(Request $request, Response $response)
