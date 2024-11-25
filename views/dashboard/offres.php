@@ -120,10 +120,47 @@ $this->cssFile = "dashboard/offers";
                             <div>
                                 <p class="flex gap-1">Sans option</p>
                             </div>
-                            <button class="link pro">
+                            <button class="link pro" id="add-option-button">
                                 Ajouter une option
                             </button>
                         </div>
+
+                        <!-- Form to add an option to the offer -->
+                        <form method="post" id="add-option-form" class="flex flex-col gap-2 mt-6 hidden">
+                            <input type="hidden" name="form-name" value="add-option">
+                            <input type="hidden" name="offer_id" value="<?php echo $offer->id ?>">
+
+                            <!-- Option type -->
+                            <div class="option-choices grid grid-cols-2 gap-2">
+                                <label for="option-relief" class="button gray">
+                                    En relief
+                                    <input id="option-relief" type="radio" name="type" value="en_relief" checked>
+                                </label>
+                                <label for="option-a-la-une" class="button gray">
+                                    A la une
+                                    <input id="option-a-la-une" type="radio" name="type" value="a_la_une">
+                                </label>
+                            </div>
+
+                            <!-- Other fields, launch date and week number -->
+                            <div id="option-dates" class="flex gap-4 mt-2 w-full">
+                                <x-input>
+                                    <p slot="label">Date de lancement</p>
+                                    <input slot="input" type="date" step="7" name="launch_date" value="<?php echo date('Y-m-d', strtotime("last Monday")) ?>">
+                                </x-input>
+                                <x-input>
+                                    <p slot="label">Nombre de semaine</p>
+                                    <input slot="input" type="number" name="duration" max="4"
+                                           min="1" value="1">
+                                </x-input>
+                            </div>
+
+                            <!-- Form buttons -->
+                            <div class="flex gap-2 mt-2">
+                                <button class="button purple w-full">Ajouter</button>
+                                <button type="button" class="button gray" id="close-option-form">Annuler</button>
+                            </div>
+                        </form>
                     <?php } ?>
 
                 </div>

@@ -2,6 +2,8 @@
 
 use app\controllers\AuthController;
 use app\controllers\ApiController;
+use app\controllers\DashboardController;
+use app\controllers\OfferController;
 use app\core\Application;
 use app\controllers\SiteController;
 use app\models\account\UserAccount;
@@ -36,13 +38,13 @@ $app->router->get('/storybook', [SiteController::class, 'storybook']);
 $app->router->get('/recherche', [SiteController::class, 'research']);
 
 // Offer routes
-$app->router->get('/offres/creation', [\app\controllers\OfferController::class, 'create']);
-$app->router->post('/offres/creation', [\app\controllers\OfferController::class, 'create']);
-$app->router->get('/offres/<pk:int>', [\app\controllers\OfferController::class, 'detail']);
-$app->router->post('/offres/<pk:int>', [\app\controllers\OfferController::class, 'detail']);
-$app->router->get('/offres/<pk:int>/modification', [\app\controllers\OfferController::class, 'update']);
-$app->router->post('/offres/<pk:int>/modification', [\app\controllers\OfferController::class, 'update']);
-$app->router->get('/offres/<pk:int>/payment', [\app\controllers\OfferController::class, 'payment']);
+$app->router->get('/offres/creation', [OfferController::class, 'create']);
+$app->router->post('/offres/creation', [OfferController::class, 'create']);
+$app->router->get('/offres/<pk:int>', [OfferController::class, 'detail']);
+$app->router->post('/offres/<pk:int>', [OfferController::class, 'detail']);
+$app->router->get('/offres/<pk:int>/modification', [OfferController::class, 'update']);
+$app->router->post('/offres/<pk:int>/modification', [OfferController::class, 'update']);
+$app->router->get('/offres/<pk:int>/payment', [OfferController::class, 'payment']);
 
 // dashboard pro
 $app->router->get('/dashboard', function () {
@@ -52,9 +54,10 @@ $app->router->get('/dashboard', function () {
         Application::$app->response->redirect('/');
     }
 });
-$app->router->get('/dashboard/offres', [\app\controllers\DashboardController::class, 'offers']);
-$app->router->get('/dashboard/avis', [\app\controllers\DashboardController::class, 'avis']);
-$app->router->get('/dashboard/factures', [\app\controllers\DashboardController::class, 'factures']);
+$app->router->get('/dashboard/offres', [DashboardController::class, 'offers']);
+$app->router->post('/dashboard/offres', [DashboardController::class, 'offers']);
+$app->router->get('/dashboard/avis', [DashboardController::class, 'avis']);
+$app->router->get('/dashboard/factures', [DashboardController::class, 'factures']);
 
 // Auth routes
 $app->router->get('/connexion', [AuthController::class, 'login']);

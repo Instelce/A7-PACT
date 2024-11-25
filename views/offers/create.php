@@ -140,12 +140,10 @@ $form = new Form();
                         <div id="option-dates" class="flex gap-4 mt-2 w-full hidden">
                             <x-input>
                                 <p slot="label">Date de lancement</p>
-                                <!--<i slot="icon-right" data-lucide="calendar-days"></i>-->
-                                <input slot="input" type="date" name="option-launch-date">
+                                <input slot="input" type="date" name="option-launch-date" step="7" value="<?php echo date('Y-m-d', strtotime("last Monday")) ?>">
                             </x-input>
                             <x-input>
                                 <p slot="label">Nombre de semaine</p>
-                                <!--<i slot="icon-right" data-lucide="calendar-days"></i>-->
                                 <input slot="input" type="number" name="option-duration" max="4"
                                        min="1" value="1">
                             </x-input>

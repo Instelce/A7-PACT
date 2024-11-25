@@ -40,7 +40,6 @@
 }
 
 .card-option {
-    width: 100%;
     display: inline-flex;
     gap: 2rem;
     padding-top: 1rem;

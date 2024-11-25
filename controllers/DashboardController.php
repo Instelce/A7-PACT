@@ -49,6 +49,17 @@ class DashboardController extends Controller
 
         $professionalUser = ProfessionalUser::findOne(['user_id' => Application::$app->user->account_id]);
 
+        // Add option form
+        if ($request->isPost() && $request->formName() == 'add-option') {
+            $offerOption = new OfferOption();
+            $offerOption->loadData($request->getBody());
+            $offerOption->save();
+
+            Application::$app->session->setFlash('success', 'Option ajoutée avec succès');
+            $response->redirect('/dashboard/offres');
+            exit;
+        }
+
         return $this->render('/dashboard/offres', [
             'offers' => $offers,
             'photos' => $photos,
