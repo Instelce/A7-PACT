@@ -80,7 +80,7 @@ use app\core\Application;
                 </div>
 
                 <div class="avatar-options">
-                    <a href="/profile">Mon profil</a>
+                    <a href="/comptes/<?php echo Application::$app->user->account_id ?>">Mon profil</a>
                     <a href="/deconnexion">
                         Déconnexion
                         <i data-lucide="log-out" width="18"></i>

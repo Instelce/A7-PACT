@@ -6,12 +6,12 @@ use app\core\Application;
 use app\core\Controller;
 use app\core\exceptions\NotFoundException;
 use app\core\middlewares\AuthMiddleware;
-use app\core\middlewares\BackOfficeMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\core\Utils;
+use app\middlewares\BackOfficeMiddleware;
+use app\middlewares\OwnOfferMiddleware;
 use app\models\Address;
-use app\models\Meal;
 use app\models\offer\ActivityOffer;
 use app\models\offer\AttractionParkOffer;
 use app\models\offer\Offer;
@@ -35,6 +35,7 @@ class OfferController extends Controller
     {
         $this->registerMiddleware(new AuthMiddleware(['create']));
         $this->registerMiddleware(new BackOfficeMiddleware(['create']));
+        $this->registerMiddleware(new OwnOfferMiddleware(['update']));
     }
 
     public function create(Request $request, Response $response)
@@ -184,12 +185,15 @@ class OfferController extends Controller
             }
 
             // TODO - validate all fields
-            // if all fields are valid redirect to the payment page
+            // if all fields are valid redirect to the payment page or on dashboard
 
-            return $response->redirect('/offres/' . $offer->id . '/payment');
+            if (Application::$app->user->isPrivateProfessional()) {
+                return $response->redirect('/offres/' . $offer->id . '/payment');
+            } else {
+                return $request->redirect('/dashboard');
+            }
         }
-
-
+        
         return $this->render('offers/create', [
             'model' => $offer,
         ]);
@@ -312,7 +316,8 @@ class OfferController extends Controller
             'prestationsNonIncluses' => $prestationsNonIncluses,
             'accessibilite' => $accessibilite,
             'carteRestaurant' => $carte_restaurant,
-            'cartePark' => $carte_park
+            'cartePark' => $carte_park,
+            'professionalId' => $offer->professional_id
         ];
 
         // Opinion creation

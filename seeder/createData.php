@@ -116,9 +116,10 @@ $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url
 $members = generateUsername(10);
 
 foreach ($members as $i => $member) {
-    $avatar = "https://ui-avatars.com/api/?size=128&name=" . $member['firstname'] . "+" . $member['lastname'];
-    $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES (" . 11 + $i . ", '" . $member['pseudo'] . "@gmail.com', '" . $password . "', '". $avatar ."', 19);");
-    $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (" . 11 + $i . ", '". $member["firstname"] ."', '". $member["lastname"] ."', '". generatePhoneNumber() ."', '" . $member["pseudo"] . "', TRUE);");
+    $avatar = "https://avatar.iran.liara.run/public/" . rand(1, 100);
+    //    $avatar = "https://ui-avatars.com/api/?size=128&name=" . $member['firstname'] . "+" . $member['lastname'];
+    $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES (" . 11 + $i . ", '" . $member['pseudo'] . "@gmail.com', '" . $password . "', '" . $avatar . "', 19);");
+    $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (" . 11 + $i . ", '" . $member["firstname"] . "', '" . $member["lastname"] . "', '" . generatePhoneNumber() . "', '" . $member["pseudo"] . "', TRUE);");
 }
 
 // ---------------------------------------------------------------------- //
@@ -194,36 +195,36 @@ $offre1->save();
 $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (" . $offre1->id . ", 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/21/f5/07/e3/cafe-des-halles.jpg?w=700&h=-1&s=1',3);");
 
 //repas
-//$repas1 = new Meal();
-//$repas1->name = 'Galette complète';
-//$repas1->save();
-//
-//$repas2 = new Meal();
-//$repas2->name = 'Uncle IPA';
-//$repas2->save();
-//
-//$repas3 = new Meal();
-//$repas3->name = 'Crèpe beurre sucre';
-//$repas3->save();
-//
-//$repas4 = new Meal();
-//$repas4->name = 'Andouille de Guémené accompagnée d’une purée de carrotte';
-//$repas4->save();
-//
-//$repas5 = new Meal();
-//$repas5->name = 'Breizh Tea';
-//$repas5->save();
-//
-//$repas6 = new Meal();
-//$repas6->name = 'Far breton';
-//$repas6->save();
-//
-//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas1->meal_id);
-//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas2->meal_id);
-//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas3->meal_id);
-//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas4->meal_id);
-//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas5->meal_id);
-//RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas6->meal_id);
+// $repas1 = new Meal();
+// $repas1->name = 'Galette complète';
+// $repas1->save();
+
+// $repas2 = new Meal();
+// $repas2->name = 'Uncle IPA';
+// $repas2->save();
+
+// $repas3 = new Meal();
+// $repas3->name = 'Crèpe beurre sucre';
+// $repas3->save();
+
+// $repas4 = new Meal();
+// $repas4->name = 'Andouille de Guémené accompagnée d’une purée de carrotte';
+// $repas4->save();
+
+// $repas5 = new Meal();
+// $repas5->name = 'Breizh Tea';
+// $repas5->save();
+
+// $repas6 = new Meal();
+// $repas6->name = 'Far breton';
+// $repas6->save();
+
+// RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas1->meal_id);
+// RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas2->meal_id);
+// RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas3->meal_id);
+// RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas4->meal_id);
+// RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas5->meal_id);
+// RestaurantOffer::findOne(['offer_id' => $offre1->id])->addMeal($repas6->meal_id);
 
 //add tags
 for ($i = 0; $i < 4; $i++) {
@@ -296,6 +297,7 @@ $offre2->category = 'attraction_park';
 $offre2->offer_type_id = 2;
 $offre2->professional_id = 4;
 $offre2->address_id = 22;
+$offre2->minimum_price = 15;
 $offre2->save();
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
@@ -370,6 +372,7 @@ $offre3->offer_type_id = 1;
 $offre3->professional_id = 5;
 $offre3->address_id = 23;
 $offre3->category = 'visit';
+$offre3->minimum_price = 25;
 $offre3->save();
 
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre3->id . ", 1.5, true);");
@@ -401,6 +404,7 @@ $offre4->category = 'show';
 $offre4->offer_type_id = 2;
 $offre4->professional_id = 6;
 $offre4->address_id = 24;
+$offre4->minimum_price = 12;
 $offre4->save();
 
 $db->pdo->exec("INSERT INTO offer_period (id, start_date,end_date) VALUES (1,'2024-06-01', '2024-09-01');");
@@ -428,6 +432,7 @@ $offre5->category = 'activity';
 $offre5->offer_type_id = 2;
 $offre5->professional_id = 8;
 $offre5->address_id = 16;
+$offre5->minimum_price = 35;
 $offre5->save();
 
 $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES ($offre5->id, 1.0, 3);");
@@ -502,6 +507,7 @@ $offre6->category = 'attraction_park';
 $offre6->offer_type_id = 2;
 $offre6->professional_id = 9;
 $offre6->address_id = 17;
+$offre6->minimum_price = 18;
 $offre6->save();
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre6->id . ", 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
@@ -872,6 +878,7 @@ foreach ($offers as $offer) {
         $opinion->account_id = $member_id;
         $opinion->visit_context = $contexts[array_rand($contexts)];
         $opinion->visit_date = date('Y-m-d', strtotime('-' . rand(1, 365) . ' days'));
+        $opinion->created_at = date('Y-m-d H:i:s', strtotime('-' . rand(1, 365) . ' days'));
         $opinion->save();
         $account_ids[] = $opinion->account_id;
     }

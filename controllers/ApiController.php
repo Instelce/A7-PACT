@@ -38,131 +38,90 @@ class ApiController extends Controller
         return $response->json($user);
     }
 
+    /**
+     * Get all the offers
+     *
+     * Params :
+     * - q : string Research
+     * - offset : int
+     * - limit : int
+     * - order_by : string (default: -created_at)
+     */
     public function offers(Request $request, Response $response)
     {
-        $allOffers = Offer::all();//get all offer from the model
-        usort($allOffers, function ($a, $b) {//sort the offer by created_at
-            return strtotime($b->created_at) - strtotime($a->created_at);
-        });
-        $offers = [];//create final table to send into the vue
-        foreach ($allOffers as $offer) {//foreach offer
-            if ($offer->offline == Offer::STATUS_ONLINE) {//show only online offer
-                $offers[$offer->id] = [//set up the final array to send to the vue
-                    "id" => $offer->id
-                ]; //id for the link into the detail offer and the traitement of click and vue statistiques
-
-                $image = OfferPhoto::findOne(['offer_id' => $offer->id])->url_photo ?? NULL;//get the first image of the offer for the preview
-                $professional = ProfessionalUser::findOne(where: ['user_id' => $offer->professional_id])->denomination ?? NULL;//get the name of the professionnal who post the offer
-                $info = [];
-                $type = NULL;
-                switch ($offer->category) {
-                    case 'restaurant':
-                        $type = "Restaurant";
-                        $OfferInfo = RestaurantOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
-                        $tmp = $OfferInfo->range_price ?? NULL;
-                        if ($tmp && $tmp != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "range_price" => $tmp
-                            ];
-                        }
-                        break;
-                    case 'activity':
-                        $type = "Activité";
-                        $OfferInfo = ActivityOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
-                        $tmp = $OfferInfo->duration ?? NULL;
-                        $tmp2 = $OfferInfo->required_age ?? NULL;
-                        if ($tmp && $tmp != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "duration" => $tmp
-                            ];
-                        }
-                        if ($tmp2 && $tmp2 != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "required_age" => $tmp2
-                            ];
-                        }
-                        break;
-                    case 'show':
-                        $type = "Spectacle";
-                        $OfferInfo = ShowOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
-                        $PeriodInfo = OfferPeriod::findOne(['id' => $OfferInfo->period_id]) ?? NULL;
-                        $tmp = $OfferInfo->duration ?? NULL;
-                        $start_date = $PeriodInfo->start_date ?? NULL;
-                        $end_date = $PeriodInfo->end_date ?? NULL;
-                        if ($start_date && $start_date != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "start_date" => Utils::formatDate($start_date)
-                            ];
-                        }
-                        if ($end_date && $end_date != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "end_date" => Utils::formatDate($end_date)
-                            ];
-                        }
-                        if ($tmp && $tmp != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "duration" => $tmp
-                            ];
-                        }
-                        break;
-                    case 'visit':
-                        $type = "Visite";
-                        $OfferInfo = VisitOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
-                        $PeriodInfo = OfferPeriod::findOne(['id' => $OfferInfo->period_id]) ?? NULL;
-                        $tmp = $OfferInfo->duration ?? NULL;
-                        $tmp2 = $OfferInfo->guide ?? NULL;
-                        $start_date = $PeriodInfo->start_date ?? NULL;
-                        $end_date = $PeriodInfo->end_date ?? NULL;
-                        if ($start_date && $start_date != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "start_date" => Utils::formatDate($start_date)
-                            ];
-                        }
-                        if ($end_date && $end_date != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "end_date" => Utils::formatDate($end_date)
-                            ];
-                        }
-                        if ($tmp2 && $tmp2 != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "guide" => $tmp2
-                            ];
-                        }
-                        if ($tmp && $tmp != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "duration" => $tmp
-                            ];
-                        }
-                        break;
-                    case 'attraction_park':
-                        $type = "Parc d'attraction";
-                        $OfferInfo = AttractionParkOffer::findOne(['offer_id' => $offer->id]) ?? NULL;//get the type unique information
-                        $tmp = $OfferInfo->attraction_number ?? NULL;
-                        $tmp2 = $OfferInfo->required_age ?? NULL;
-                        if ($tmp && $tmp != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "attraction_number" => $tmp
-                            ];
-                        }
-                        if ($tmp2 && $tmp2 != 0) {
-                            $info += [//set up the final array to send to the vue
-                                "required_age" => $tmp2
-                            ];
-                        }
-                        break;
-                }
-                $location = Address::findOne(['id' => $offer->address_id])->city ?? NULL; // get the city of the offer
-                $offers[$offer->id] += [//set up the final array to send to the vue
-                    "image" => $image,//preview image
-                    "title" => $offer->title,
-                    "author" => $professional,
-                    "type" => $type,
-                    "location" => $location,
-                    "info" => $info
-                ];
-            }
+        $q = $request->getQueryParams('q');
+        $offset = $request->getQueryParams('offset');
+        $limit = $request->getQueryParams('limit');
+        $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-created_at'];
+        $professionnal_id = $request->getQueryParams('professional_id');
+        if ($request->getQueryParams('category')) {
+            $category = $request->getQueryParams('category');
         }
-        return $response->json($offers);
+        if ($request->getQueryParams('minimumOpinions')) {
+            $minimumOpinions = $request->getQueryParams('minimumOpinions');
+        }
+        if ($request->getQueryParams('maximumOpinions')) {
+            $maximumOpinions = $request->getQueryParams('maximumOpinions');
+        }
+        if ($request->getQueryParams('minimumPrice')) {
+            $minimumPrice = $request->getQueryParams('minimumPrice');
+        }
+        if ($request->getQueryParams('maximumPrice')) {
+            $maximumPrice = $request->getQueryParams('maximumPrice');
+        }
+        if ($request->getQueryParams('open')) {
+            $open = $request->getQueryParams('open');
+        }
+        if ($request->getQueryParams('minimumEventDate')) {
+            $minimumEventDate = $request->getQueryParams('minimumEventDate');
+        }
+        if ($request->getQueryParams('maximumEventDate')) {
+            $maximumEventDate = $request->getQueryParams('maximumEventDate');
+        }
+        if ($request->getQueryParams('location')) {
+            $location = $request->getQueryParams('location');
+        }
+
+        $data = [];
+        $where = [];
+        if ($professionnal_id) {
+            $where['professional_id'] = $professionnal_id;
+        }
+        if ($category) {
+            $where['category'] = $category;
+        }
+        if ($location) {
+            $where['city'] = $location;
+        }
+
+        /** @var Offer[] $offers */
+        $offers = Offer::query()
+            ->join(new Address())
+            ->limit($limit)
+            ->offset($offset)
+            ->filters($where)
+            ->search(['title' => $q])
+            ->order_by($order_by)
+            ->make();
+
+        foreach ($offers as $i => $offer) {
+            $data[$i] = $offer->toJson();
+
+            // Add user account
+            $data[$i]['profesionalUser'] = ProfessionalUser::findOneByPk($offer->professional_id)->toJson();
+            unset($data[$i]['profesionalUser']['notification']);
+            unset($data[$i]['profesionalUser']['conditions']);
+
+            $data[$i]["photos"] = [];
+            foreach ($offer->photos() as $photo) {
+                $data[$i]["photos"][] = $photo->url_photo;
+            }
+
+            $data[$i]["specific"] = $offer->specificData()->toJson();
+            unset($data[$i]["specific"]["offer_id"]);
+        }
+
+        return $response->json($data);
     }
 
     /**
@@ -171,7 +130,7 @@ class ApiController extends Controller
      * Params :
      * - offset : int
      * - limit : int
-     * - order_by : string (default: created_at)
+     * - order_by : string (default: -created_at)
      */
     public function opinions(Request $request, Response $response)
     {
@@ -181,7 +140,7 @@ class ApiController extends Controller
         $offerProfessionalId = $request->getQueryParams('offer_pro_id');
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
-        $orderBy = explode(',', $request->getQueryParams('order_by') ?? '-created_at');
+        $orderBy = explode(',', string: $request->getQueryParams('order_by') ?? '-created_at');
 
         $data = [];
         $where = [];

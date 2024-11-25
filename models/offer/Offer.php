@@ -188,4 +188,10 @@ class Offer extends DBModel
     public function isALaUne() {
         return count(OfferOption::find(['offer_id' => $this->id, 'type' => OfferOption::A_LA_UNE])) > 0;
     }
+
+    public function rating(): int
+    {
+        $opinions = Opinion::find(['offer_id' => $this->id]);
+        return count($opinions) > 0 ? array_sum(array_map(fn($opinion) => $opinion->rating, $opinions)) / count($opinions) : 0;
+    }
 }

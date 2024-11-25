@@ -39,17 +39,35 @@ class DBQueryBuilder
         }
 
         if (!empty($this->filters)) {
-            $sql .= " WHERE " . implode(" AND ", array_map(function ($attr) {
+            $sql .= " WHERE " . implode(" AND ", array_map(function ($sets) {
+                [$attr, $value, $op] = $sets;
+
                 $tableName = $this->model->tableName();
+                $operation = '=';
+
+                switch ($operation) {
+                    case '>':
+                    case '<':
+                    case '>=':
+                    case '<=':
+                    case '!=':
+                        $operation = $op;
+                        break;
+                    case '!':
+                        $operation = '!=';
+                        break;
+                }
 
                 // Check for double __ in the attribute name
                 if (strpos($attr, '__') !== false) {
                     $attrName = str_replace('__', '.', $attr);
+                    $modelName = implode('', array_map(fn($part) => ucfirst($part), explode('_', explode('__', $attr)[0])));
+
                     return "$attrName = :$attr";
                 } else {
-                    return "$tableName.$attr = :$attr";
+                    return "$tableName.$attr $operation :$attr";
                 }
-            }, array_keys($this->filters)));
+            }, $this->filters));
         }
 
         if (!empty($this->search)) {
@@ -87,8 +105,9 @@ class DBQueryBuilder
 
         $statement = Application::$app->db->pdo->prepare($sql);
 
-        foreach ($this->filters as $key => $value) {
-            $statement->bindValue(":$key", $value);
+        foreach ($this->filters as $sets) {
+            [$attr, $value] = $sets;
+            $statement->bindValue(":$attr", $value);
         }
 
         foreach ($this->search as $key => $value) {
@@ -125,11 +144,27 @@ class DBQueryBuilder
     /**
      * Filter the results by the given attributes
      *
-     * @param array $where `['id' => 1, 'rating' => 5]`
+     * @param array $where `['id' => 1, 'rating' => 5, ['offline', 20, '!'], ['likes', 30, '>'], ['likes', 30, '<']]`
      */
     public function filters(array $where): DBQueryBuilder
     {
-        $this->filters = $where;
+        foreach ($where as $attr => $filter) {
+            if (is_array($filter)) {
+                $this->filters[] = $filter;
+            } else {
+                $this->filters[] = [$attr, $filter, ''];
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a filter
+     */
+    public function filter(string $attr, $value, $op = ''): DBQueryBuilder
+    {
+        $this->filters[] = [$attr, $value, $op];
         return $this;
     }
 

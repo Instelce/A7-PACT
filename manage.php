@@ -35,6 +35,9 @@ if ($argc >= 2) {
     } else if ($argv[1] === "dev") {
         echo "Starting development tools" . PHP_EOL;
         exec("sh scripts/dev");
+    } else if ($argv[1] === "dev-yann") {
+        echo "Starting development tools" . PHP_EOL;
+        exec("sh scripts/dev-yann");
     } else if ($argv[1] === "db") {
         if ($argv[2] === "start") {
             exec("sudo docker compose up -d");
@@ -60,7 +63,9 @@ if ($argc >= 2) {
     echo "Usage:" . PHP_EOL;
     echo "  migration [apply|drop]" . PHP_EOL;
     echo "  dev: Start development server" . PHP_EOL;
+    echo "  dev-yann: Start development server (without the -)" . PHP_EOL;
     echo "  db [start|stop|seed]: Start/Stop development database of seed the DB" . PHP_EOL;
     echo "  tw: Start tailwind watcher" . PHP_EOL;
     echo "  sf: Synchronize your fork" . PHP_EOL;
+
 }

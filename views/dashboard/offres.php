@@ -86,7 +86,7 @@ $this->cssFile = "dashboard/offers";
                             le <?php echo Utils::formatDate($offer->updated_at); ?></p>
                     </div>
 
-_                    <!-- Option -->
+                    <!-- Option -->
                     <?php if ($option) { ?>
                         <div class="card-option">
                             <div>

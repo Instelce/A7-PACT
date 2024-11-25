@@ -1,0 +1,5 @@
+#!/bin/sh
+
+sudo docker compose up -d
+sudo docker compose -f docker-compose.smtp4dev.yaml up -d
+php -S localhost:8080 -t html/ &
