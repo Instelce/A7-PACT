@@ -57,7 +57,7 @@ class ApiController extends Controller
 
         $data = [];
         $where = [];
-        if ($professionnal_id){
+        if ($professionnal_id) {
             $where['professional_id'] = $professionnal_id;
         }
 
@@ -101,7 +101,7 @@ class ApiController extends Controller
         $offerProfessionalId = $request->getQueryParams('offer_pro_id');
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
-        $orderBy = explode(',', $request->getQueryParams('order_by') ?? '-created_at');
+        $orderBy = explode(',', string: $request->getQueryParams('order_by') ?? '-created_at');
 
         $data = [];
         $where = [];
