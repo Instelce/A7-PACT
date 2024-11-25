@@ -2,9 +2,12 @@
 // Fetch data
 // ---------------------------------------------------------------------------------------------- //
 
-async function getOffers(limit = 5, offset = 0, order = 0, filters = []) {
+async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
     const host = window.location.protocol;
     const searchParams = new URLSearchParams();
+    if (order) {
+        searchParams.set("order", order || null);
+    }
     if (filters["category"]) {
         searchParams.set("category", filters["category"] || null);
     }
@@ -38,7 +41,7 @@ async function getOffers(limit = 5, offset = 0, order = 0, filters = []) {
     if (search) {
         moreSearch = "&";
     }
-    const url = host + "/api/offers" + "?limit=" + limit + "&offset=" + offset + "&order=" + order + moreSearch + search;//url of the api for research page offers's data
+    const url = host + "/api/offers" + "?limit=" + limit + "&offset=" + offset + moreSearch + search;//url of the api for research page offers's data
     console.log("url : " + url);
     try {
         const response = await fetch(url); //fetching the data from the api
@@ -53,14 +56,15 @@ async function getOffers(limit = 5, offset = 0, order = 0, filters = []) {
         return false; //returning false if an error occurs
     }
 }
-
+let filters = { "category": "visit" };
 console.time("getOffers");
-let Data = await getOffers();
+let Data = await getOffers(filters);
 console.timeEnd("getOffers");
 
 if (Data && !Array.isArray(Data)) {
     Data = Object.values(Data);
 }
+console.log(Data);
 // console.log(Data);
 
 // ---------------------------------------------------------------------------------------------- //
