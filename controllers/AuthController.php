@@ -5,11 +5,13 @@ namespace app\controllers;
 use app\core\Application;
 use app\core\Controller;
 use app\core\exceptions\NotFoundException;
+use app\core\form\Form;
 use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\forms\LoginForm;
 use app\forms\MemberRegisterForm;
+use app\forms\MemberUpdateForm;
 use app\forms\PrivateProfessionalRegister;
 use app\forms\PublicProfessionalRegister;
 use app\models\account\UserAccount;
@@ -20,7 +22,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->registerMiddleware(new AuthMiddleware(['profile']));
+        $this->registerMiddleware(new AuthMiddleware(['profile', 'updateAccount']));
     }
 
     public function login(Request $request, Response $response)
@@ -110,6 +112,8 @@ class AuthController extends Controller
     }
 
     public function updateAccount(Request $request, Response $response){
+        $form = new MemberUpdateForm();
+
         return $this->render('auth/update-account', ['model' => $form]);
     }
 
