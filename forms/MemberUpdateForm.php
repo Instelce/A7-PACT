@@ -24,7 +24,7 @@ class MemberUpdateForm extends Model
 
     public function __construct()
     {
-        $userAccount = UserAccount::findOneByPk(Application::$app->user->account_id);
+        $userAccount = Application::$app->user;
         $this->mail = $userAccount->mail;
 
         $address = Address::findOneByPk($userAccount->address_id);
@@ -38,7 +38,7 @@ class MemberUpdateForm extends Model
         $this->firstname = $memberUser->firstname;
         $this->phone = $memberUser->phone;
         $this->pseudo = $memberUser->pseudo;
-        $this->notification = $memberUser->notification;
+        $this->notification = $memberUser->allows_notifications;
     }
 
     public function update()
