@@ -250,8 +250,9 @@ use app\core\Application;
 <script type="module" src="/js/main.js"></script>
 
 
-<?php if ($this->jsFile) ?>
+<?php if ($this->jsFile){ ?>
 <script type="module" src="/js/pages/<?php echo $this->jsFile ?>.js"></script>
+<?php } ?>
 </body>
 
 </html>
