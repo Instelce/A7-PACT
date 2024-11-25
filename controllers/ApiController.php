@@ -82,10 +82,15 @@ class ApiController extends Controller
             $location = $request->getQueryParams('location');
         }
 
+
+
         $data = [];
         $where = [];
         if ($professionnal_id) {
             $where['professional_id'] = $professionnal_id;
+        }
+        if ($category) {
+            $where['category'] = $category;
         }
         if ($category) {
             $where['category'] = $category;

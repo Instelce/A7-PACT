@@ -27,21 +27,34 @@ async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
         searchParams.set("open", filters["open"] || null);
     }
     if (filters["minimumEventDate"]) {
-        searchParams.set("minimumEventDate", filters["minimumEventDate"] || null);
+        searchParams.set(
+            "minimumEventDate",
+            filters["minimumEventDate"] || null
+        );
     }
     if (filters["maximumEventDate"]) {
-        searchParams.set("maximumEventDate", filters["maximumEventDate"] || null);
+        searchParams.set(
+            "maximumEventDate",
+            filters["maximumEventDate"] || null
+        );
     }
     if (filters["location"]) {
         searchParams.set("location", filters["location"] || null);
     }
     let search = searchParams.toString();
-    console.log(search);
     let moreSearch = "";
     if (search) {
         moreSearch = "&";
     }
-    const url = host + "/api/offers" + "?limit=" + limit + "&offset=" + offset + moreSearch + search;//url of the api for research page offers's data
+    const url =
+        host +
+        "/api/offers" +
+        "?limit=" +
+        limit +
+        "&offset=" +
+        offset +
+        moreSearch +
+        search; //url of the api for research page offers's data
     console.log("url : " + url);
     try {
         const response = await fetch(url); //fetching the data from the api
@@ -56,7 +69,7 @@ async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
         return false; //returning false if an error occurs
     }
 }
-let filters = { "category": "visit" };
+let filters = { category: "visit" };
 console.time("getOffers");
 let Data = await getOffers(filters);
 console.timeEnd("getOffers");
@@ -65,8 +78,60 @@ if (Data && !Array.isArray(Data)) {
     Data = Object.values(Data);
 }
 console.log(Data);
-// console.log(Data);
+console.log();
+const offersContainer = document.querySelector(".flex.flex-col.gap-2");
+if (!offersContainer) {
+    console.error("Offers container not found");
+} else if (!Array.isArray(Data)) {
+    console.error("Data is not an array");
+} else {
+    Data.forEach((offer) => {
+        const offerElement = document.createElement("a");
+        offerElement.href = `/offres/${offer.id}`;
+        offerElement.innerHTML = `
+            <article class="research-card">
+                <div class="research-card--photo">
+                    ${
+                        offer.photos[0]
+                            ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
+                            : ""
+                    }
+                </div>
+                <div class="research-card--body">
+                    <header>
+                        <h2 class="research-card--title">${offer.title}</h2>
+                        <p>${translateCategory(
+                            offer.category
+                        )} par <a href="/comptes/${
+            offer.professional_id
+        }" class="underline">${offer.profesionalUser["denomination"]}</a></p>
+                    </header>
+                    <p class="summary">${offer.summary}</p>
+                         <div class="flex gap-2 mt-auto pt-4">
+                            <a href="" class="button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg></a>
+                            <a href="" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></a>
+                        </div>
+                </div>
+            </article>
+        `;
+        offersContainer.appendChild(offerElement);
+    });
+}
 
+function translateCategory(category) {
+    switch (category) {
+        case "attraction_park":
+            return "parc d'attraction";
+        case "visit":
+            return "visite";
+        case "restaurant":
+            return "restaurant";
+        case "activity":
+            return "activité";
+        case "show":
+            return "spectacle";
+    }
+}
 // ---------------------------------------------------------------------------------------------- //
 // Pop up
 // ---------------------------------------------------------------------------------------------- //
@@ -75,13 +140,16 @@ let popup = document.getElementById("popup");
 let filterButton = document.getElementById("filterButton");
 const popupContent = document.querySelector(".popup-content");
 
-filterButton.addEventListener("click", () => { popup.classList.toggle("hidden"); });
+filterButton.addEventListener("click", () => {
+    popup.classList.toggle("hidden");
+});
 
 popup.addEventListener("click", (event) => {
     if (!popupContent.contains(event.target)) {
         popup.classList.add("hidden");
     }
 });
+
 // ---------------------------------------------------------------------------------------------- //
 // Category filter
 // ---------------------------------------------------------------------------------------------- //
@@ -91,6 +159,5 @@ let categories = document.querySelectorAll(".category-item");
 categories.forEach((category) => {
     category.addEventListener("click", () => {
         category.classList.toggle("active");
-    })
-})
-
+    });
+});

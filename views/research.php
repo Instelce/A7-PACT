@@ -94,33 +94,7 @@ $iconsNames = [
     <!-- Offers, generated in js file -->
     <div class="flex flex-col gap-2">
 
-        <?php foreach ($offers as $offer) { ?>
-            <a href="/offres/<?php echo $offer["id"]; ?>">
-                <article class="research-card">
-                    <div class="research-card--photo">
-                        <?php if ($offer["image"] !== NULL) {
-                            ?><img alt="photo d'article" src="<?php echo $offer["image"] ?>" /> <?php
-                        } ?>
-                    </div>
 
-                    <div class="research-card--body">
-                        <header>
-                            <h2 class="research-card--title"><?php echo $offer["title"]; ?> </h2>
-                            <p><?php echo $offer["type"]; ?> par <a href="/comptes/"
-                                    class="underline"><?php echo $offer["author"]; ?></a>
-                            </p>
-                        </header>
-
-                        <p class="summary"><?php echo $offer["summary"]; ?></p>
-
-                        <div class="flex gap-2 mt-auto pt-4">
-                            <a href="" class="button gray w-full spaced">Itinéraire<i data-lucide="map"></i></a>
-                            <a href="" class="button blue w-full spaced">Voir plus<i data-lucide="chevron-right"></i></a>
-                        </div>
-                    </div>
-                </article>
-            </a>
-        <?php } ?>
     </div>
 </main>
 <?php
