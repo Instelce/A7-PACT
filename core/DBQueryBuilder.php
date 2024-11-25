@@ -40,10 +40,15 @@ class DBQueryBuilder
 
         if (!empty($this->filters)) {
             $sql .= " WHERE " . implode(" AND ", array_map(function ($sets) {
-                [$attr, $value, $op] = $sets;
+                [$attr, $value, $op, $specialKey] = $sets;
 
                 $tableName = $this->model->tableName();
                 $operation = '=';
+                $attrBindKey = $attr;
+
+                if ($specialKey) {
+                    $attrBindKey = $specialKey;
+                }
 
                 switch ($operation) {
                     case '>':
@@ -65,7 +70,7 @@ class DBQueryBuilder
 
                     return "$attrName = :$attr";
                 } else {
-                    return "$tableName.$attr $operation :$attr";
+                    return "$tableName.$attr $operation :$attrBindKey";
                 }
             }, $this->filters));
         }
@@ -106,7 +111,10 @@ class DBQueryBuilder
         $statement = Application::$app->db->pdo->prepare($sql);
 
         foreach ($this->filters as $sets) {
-            [$attr, $value] = $sets;
+            [$attr, $value, $op, $specialKey] = $sets;
+            if ($specialKey) {
+                $attr = $specialKey;
+            }
             $statement->bindValue(":$attr", $value);
         }
 
@@ -144,12 +152,16 @@ class DBQueryBuilder
     /**
      * Filter the results by the given attributes
      *
-     * @param array $where `['id' => 1, 'rating' => 5, ['offline', 20, '!'], ['likes', 30, '>'], ['likes', 30, '<']]`
+     * @param array $where `['id' => 1, 'rating' => 5, ['offline', 20, '!'], ['likes', 30, '>', 'special_key'], ['likes', 30, '<']]`
      */
     public function filters(array $where): DBQueryBuilder
     {
         foreach ($where as $attr => $filter) {
             if (is_array($filter)) {
+                if (count($filter) == 3) {
+                    $filter[] = '';
+                }
+
                 $this->filters[] = $filter;
             } else {
                 $this->filters[] = [$attr, $filter, ''];
@@ -162,9 +174,9 @@ class DBQueryBuilder
     /**
      * Add a filter
      */
-    public function filter(string $attr, $value, $op = ''): DBQueryBuilder
+    public function filter(string $attr, $value, $op = '', $specialKey = ''): DBQueryBuilder
     {
-        $this->filters[] = [$attr, $value, $op];
+        $this->filters[] = [$attr, $value, $op, $specialKey];
         return $this;
     }
 

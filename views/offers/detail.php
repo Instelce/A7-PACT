@@ -53,13 +53,15 @@ if ($status == "Fermé") {
         <header class="page-header">
             <h2 class="heading-2 font-title"><?php echo $offerData["title"] ?></h2> <!-- title -->
 
-            <p>
-                <?php echo $offerData["category"] ?>
-                par
-                <a href="/comptes/<?php echo $offerData["professionalId"] ?>" class="underline"><?php echo $offerData["author"] ?></a>
-            </p>
-            <span class="dot"></span>
-            <div></div>
+            <div class="flex gap-3 items-center">
+                <p>
+                    <?php echo $offerData["category"] ?>
+                    par
+                    <a href="/comptes/<?php echo $offerData["professionalId"] ?>" class="underline"><?php echo $offerData["author"] ?></a>
+                </p>
+                <span class="dot"></span>
+                <div class="stars" data-number="<?php echo $offerData["rating"] ?>"></div>
+            </div>
         </header>
 
         <?php echo $opinionExit ?>

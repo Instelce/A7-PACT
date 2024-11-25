@@ -230,7 +230,6 @@ class OfferController extends Controller
         $prestationsIncluses = "";
         $prestationsNonIncluses = "";
         $accessibilite = "";
-        
 
         $languages = VisitLanguage::findOne(['offer_id' => $id])->language;
         $formattedAddress = $address->number . ' ' . $address->street . ', ' . $address->postal_code . ' ' . $address->city;
@@ -317,7 +316,8 @@ class OfferController extends Controller
             'accessibilite' => $accessibilite,
             'carteRestaurant' => $carte_restaurant,
             'cartePark' => $carte_park,
-            'professionalId' => $offer->professional_id
+            'professionalId' => $offer->professional_id,
+            'rating' => $offer->rating()
         ];
 
         // Opinion creation
