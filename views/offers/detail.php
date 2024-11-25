@@ -58,6 +58,8 @@ if ($status == "Fermé") {
                 par
                 <a href="/comptes/<?php echo $offerData["professionalId"] ?>" class="underline"><?php echo $offerData["author"] ?></a>
             </p>
+            <span class="dot"></span>
+            <div></div>
         </header>
 
         <?php echo $opinionExit ?>

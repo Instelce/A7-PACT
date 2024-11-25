@@ -201,7 +201,10 @@ abstract class DBModel extends Model
     public function toJson()
     {
         $res = [];
-        foreach ($this->attributes() as $key) {
+        $attributes = get_class_vars(get_class($this));
+        unset($attributes['errors']);
+
+        foreach (array_keys($attributes) as $key) {
             $res[$key] = $this->{$key};
         }
 

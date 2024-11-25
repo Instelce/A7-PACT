@@ -77,13 +77,18 @@ class AuthController extends Controller
             if ($proPublic->validate() && $proPublic->register()) {
                 Application::$app->session->setFlash('success', "Bienvenue $proPublic->denomination. Votre compte à bien été crée !");
                 Application::$app->mailer->send($proPublic->mail, "Bienvenue $proPublic->denomination", 'welcome', ['denomination' => $proPublic->denomination]);
-                $response->redirect('/dashboard');
+                $response->redirect('/');
                 exit;
             }
         }
 
         if ($request->isPost() && $request->formName()=="private") {
-
+            if ($proPrivate->validate() && $proPrivate->register()) {
+                Application::$app->session->setFlash('success', "Bienvenue $proPrivate->denomination. Votre compte à bien été crée !");
+                Application::$app->mailer->send($proPrivate->mail, "Bienvenue $proPrivate->denomination", 'welcome', ['denomination' => $proPrivate->denomination]);
+                $response->redirect('/');
+                exit;
+            }
         }
 
         return $this->render('auth/register-professional', ['proPublic' => $proPublic, 'proPrivate' => $proPrivate]);

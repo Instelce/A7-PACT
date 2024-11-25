@@ -36,8 +36,7 @@ class PublicProfessionalRegister extends Model
             'mail' => [[self::RULE_REQUIRED], [self::RULE_UNIQUE, 'attributes' => 'mail', 'class' => UserAccount::class], [self::RULE_MAIL]],
             'streetname' => [self::RULE_REQUIRED],
             'postaleCode' => [[self::RULE_REQUIRED], [self::RULE_MAX, 'max' => 5]],
-            'city' => [self::RULE_REQUIRED],
-            'country' => [self::RULE_REQUIRED],
+            'city' => [[self::RULE_REQUIRED],[self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => ProfessionalUser::class]],
             'phone' => [[self::RULE_REQUIRED], [self::RULE_MAX, 'max' => 10]],
             'password' => [[self::RULE_REQUIRED], [self::RULE_PASSWORD]],
             'passwordConfirm' => [[self::RULE_REQUIRED], [self::RULE_MATCH, 'match' => 'password']]
@@ -62,7 +61,7 @@ class PublicProfessionalRegister extends Model
         $userAccount = new UserAccount();
         $userAccount->account_id = $account->id;
         $userAccount->mail = $this->mail;
-        $userAccount->password = password_hash($this->password);
+        $userAccount->password = password_hash($this->password, PASSWORD_DEFAULT);
         $userAccount->address_id = $address->id;
         $userAccount->save();
 
@@ -77,9 +76,7 @@ class PublicProfessionalRegister extends Model
         $proPublic = new PublicProfessional();
         $proPublic->pro_id = $account->id;
         $proPublic->save();
-
-        Application::$app->login($userAccount);
-        //        longitude et lattitude à rajouter
+        return true;
     }
 
     public function labels(): array
