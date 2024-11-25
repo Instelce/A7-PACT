@@ -1,10 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const switch1 = document.getElementById("switch-period1");
-    const switch2 = document.getElementById("switch-period2");
+    const switchCondition = document.getElementById("switch-condition-utilisation");
     const submitButton = document.querySelector("button[type='submit']");
 
-    const ButtonState = () => {
-        if (switch1.checked) {
+    const updateButtonState = () => {
+        if (switchCondition.checked) {
             submitButton.disabled = false;
             submitButton.classList.remove("opacity-50", "cursor-not-allowed");
         } else {
@@ -13,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    switch1.addEventListener("change", ButtonState);
+    switchCondition.addEventListener("change", updateButtonState);
 
-    ButtonState();
+    updateButtonState(); // Initial check
 });
