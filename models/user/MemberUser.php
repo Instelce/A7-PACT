@@ -38,15 +38,15 @@ class MemberUser extends DBModel
         return [
             'lastname' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50]],
             'firstname' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50]],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50], [self::RULE_UNIQUE]],
-            'pseudo' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50], [self::RULE_UNIQUE]],
+            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50], self::RULE_UNIQUE],
+            'pseudo' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50], self::RULE_UNIQUE],
             'allows_notifications' => [self::RULE_REQUIRED]
         ];
     }
 
     public function user(): UserAccount
     {
-        return UserAccount::findOne(['account_id' => $this->member_id]);
+        return UserAccount::findOne(['account_id' => $this->user_id]);
     }
 
     /**

@@ -70,11 +70,12 @@ class AuthController extends Controller
     {
         $proPublic  = new PublicProfessionalRegister();
         $proPrivate = new PrivateProfessionalRegister();
-
         if ($request->isPost() && $request->formName()=="public") {
             $proPublic->loadData($request->getBody());
+            var_dump("test");
 
             if ($proPublic->validate() && $proPublic->register()) {
+                var_dump("test");
                 Application::$app->session->setFlash('success', "Bienvenue $proPublic->denomination. Votre compte à bien été crée !");
                 Application::$app->mailer->send($proPublic->mail, "Bienvenue $proPublic->denomination", 'welcome', ['denomination' => $proPublic->denomination]);
                 $response->redirect('/');

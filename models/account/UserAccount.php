@@ -35,7 +35,7 @@ class UserAccount extends DBModel
     public function rules(): array
     {
         return [
-            'mail' => [self::RULE_REQUIRED, [self::RULE_MAIL], [self::RULE_MAX, 'max' => 100], [self::RULE_UNIQUE]],
+            'mail' => [self::RULE_REQUIRED, self::RULE_MAIL, [self::RULE_MAX, 'max' => 100], self::RULE_UNIQUE],
             'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8], [self::RULE_MAX, 'max' => 100]],
             'avatar_url' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
             'address_id' => [self::RULE_REQUIRED]
