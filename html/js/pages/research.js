@@ -97,6 +97,7 @@ async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
         return false; //returning false if an error occurs
     }
 }
+
 // ---------------------------------------------------------------------------------------------- //
 // Display logic
 // ---------------------------------------------------------------------------------------------- //
