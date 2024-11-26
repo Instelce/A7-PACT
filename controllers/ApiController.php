@@ -96,11 +96,24 @@ class ApiController extends Controller
             $where['category'] = $category;
         }
         if ($location) {
-            $where['city'] = $location;
+            $where['address__city'] = $location;
         }
+        if ($minimumPrice) {
+            $where[] = ['minimum_price', $minimumPrice, '>='];
+        }
+        if ($maximumPrice) {
+            $where[] = ['minimum_price', $maximumPrice, '<=', 'maximum_price'];
+        }
+        // if ($minimumEventDate) {
+        //     $where[] = ['OfferPeriod__end_date', $minimumEventDate, '<='];
+        // }
+        // if ($maximumEventDate) {
+        //     $where[] = ['OfferPeriod__start_date', $maximumEventDate, '>=', 'maximum_event_date'];
+        // }
 
         /** @var Offer[] $offers */
         $offers = Offer::query()
+            // ->join(new OfferPeriod())
             ->join(new Address())
             ->limit($limit)
             ->offset($offset)
@@ -112,7 +125,7 @@ class ApiController extends Controller
         foreach ($offers as $i => $offer) {
             $data[$i] = $offer->toJson();
 
-            // Add user account
+            // Add professionalUser account
             $data[$i]['profesionalUser'] = ProfessionalUser::findOneByPk($offer->professional_id)->toJson();
             unset($data[$i]['profesionalUser']['notification']);
             unset($data[$i]['profesionalUser']['conditions']);
@@ -123,7 +136,6 @@ class ApiController extends Controller
             }
 
             $data[$i]["specific"] = $offer->specificData()->toJson();
-            unset($data[$i]["specific"]["offer_id"]);
         }
 
         return $response->json($data);

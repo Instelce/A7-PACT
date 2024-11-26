@@ -50,7 +50,7 @@ class DBQueryBuilder
                     $attrBindKey = $specialKey;
                 }
 
-                switch ($operation) {
+                switch ($op) {
                     case '>':
                     case '<':
                     case '>=':
@@ -109,6 +109,7 @@ class DBQueryBuilder
         }
 
         $statement = Application::$app->db->pdo->prepare($sql);
+
 
         foreach ($this->filters as $sets) {
             [$attr, $value, $op, $specialKey] = $sets;
