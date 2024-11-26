@@ -28,20 +28,6 @@ class PublicProfessionalRegister extends Model
     public string $password = '';
     public string $passwordConfirm = '';
 
-    public function rules(): array
-    {
-        return [
-            'siren' => [[self::RULE_UNIQUE, 'attributes' => 'siren', 'class' => ProfessionalUser::class], [self::RULE_MAX, 'max' => 9]],
-            'denomination' => [self::RULE_REQUIRED],
-            'mail' => [[self::RULE_REQUIRED], [self::RULE_UNIQUE, 'attributes' => 'mail', 'class' => UserAccount::class], [self::RULE_MAIL]],
-            'streetname' => [self::RULE_REQUIRED],
-            'postaleCode' => [[self::RULE_REQUIRED], [self::RULE_MAX, 'max' => 5]],
-            'city' => [[self::RULE_REQUIRED],[self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => ProfessionalUser::class]],
-            'phone' => [[self::RULE_REQUIRED], [self::RULE_MAX, 'max' => 10]],
-            'password' => [[self::RULE_REQUIRED], [self::RULE_PASSWORD]],
-            'passwordConfirm' => [[self::RULE_REQUIRED], [self::RULE_MATCH, 'match' => 'password']]
-        ];
-    }
 
     public function register()
     {
@@ -79,6 +65,24 @@ class PublicProfessionalRegister extends Model
         return true;
     }
 
+
+    public function rules(): array
+    {
+        return [
+            'siren' => [[self::RULE_UNIQUE, 'attributes' => 'siren', 'class' => ProfessionalUser::class], [self::RULE_MAX, 'max' => 9]],
+            'denomination' => [self::RULE_REQUIRED],
+            'mail' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attributes' => 'mail', 'class' => UserAccount::class], self::RULE_MAIL],
+            'streetname' => [self::RULE_REQUIRED],
+            'streetnumber' => [self::RULE_REQUIRED],
+            'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
+            'city' => [self::RULE_REQUIRED,[self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => ProfessionalUser::class]],
+            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10]],
+            'password' => [self::RULE_REQUIRED, [self::RULE_PASSWORD]],
+            'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']]
+        ];
+    }
+
+
     public function labels(): array
     {
         return [
@@ -90,12 +94,12 @@ class PublicProfessionalRegister extends Model
             'streetname' => 'Nom de rue',
             'postaleCode' => 'Code postal',
             'city' => 'Ville',
-            'country' => 'Pays',
             'phone' => 'Téléphone',
             'password' => 'Mot de passe',
-            'passwordConfirm' => 'Confirmez votre mot de passe',
+            'passwordConfirm' => 'Confirmez votre mot de passe'
         ];
     }
+
 
     public function placeholders(): array
     {
@@ -107,7 +111,6 @@ class PublicProfessionalRegister extends Model
             'streetname' => 'Édouard Branly',
             'postaleCode' => '22300',
             'city' => 'Lannion',
-            'country' => 'France',
             'phone' => '0601020304',
             'password' => '********',
             'passwordConfirm' => '********'

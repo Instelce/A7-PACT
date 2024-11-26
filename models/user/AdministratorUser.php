@@ -29,7 +29,7 @@ class AdministratorUser extends DBModel
   }
 
   public function user(): UserAccount {
-      return UserAccount::findOne(['account_id' => $this->admin_id]);
+      return UserAccount::findOne(['account_id' => $this->user_id]);
   }
 }
 

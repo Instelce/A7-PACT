@@ -39,11 +39,11 @@ class ProfessionalUser extends DBModel
     public function rules(): array
     {
         return [
-            'code' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 16], [self::RULE_UNIQUE]],
-            'denomination' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 100], [self::RULE_UNIQUE]],
-            'siren' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 14], [self::RULE_UNIQUE]],
+            'code' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 16], self::RULE_UNIQUE],
+            'denomination' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 100], self::RULE_UNIQUE],
+            'siren' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 14], self::RULE_UNIQUE],
             'conditions' => [self::RULE_REQUIRED],
-            'phone' => [self::RULE_REQUIRED]
+            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max'=> 10], self::RULE_UNIQUE],
         ];
     }
 
