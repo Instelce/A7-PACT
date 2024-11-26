@@ -91,20 +91,18 @@ if (!offersContainer) {
         offerElement.innerHTML = `
             <article class="research-card">
                 <div class="research-card--photo">
-                    ${
-                        offer.photos[0]
-                            ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
-                            : ""
-                    }
+                    ${offer.photos[0]
+                ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
+                : ""
+            }
                 </div>
                 <div class="research-card--body">
                     <header>
                         <h2 class="research-card--title">${offer.title}</h2>
                         <p>${translateCategory(
-                            offer.category
-                        )} par <a href="/comptes/${
-            offer.professional_id
-        }" class="underline">${offer.profesionalUser["denomination"]}</a></p>
+                offer.category
+            )} par <a href="/comptes/${offer.professional_id
+            }" class="underline">${offer.profesionalUser["denomination"]}</a></p>
                     </header>
                     <p class="summary">${offer.summary}</p>
                          <div class="flex gap-2 mt-auto pt-4">
