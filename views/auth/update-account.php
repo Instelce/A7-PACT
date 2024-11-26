@@ -7,9 +7,8 @@ $this->title = 'Inscription update';
 
 <div class="form-page">
     <div class="flex gap-2">
-        <x-tabs class="column">
-
-            <x-tab role="heading" slot="tab">
+        <x-tabs class="column w-[1200px]">
+            <x-tab role="heading" slot="tab" class="w-[250px]">
                 <i data-lucide="user"></i>
                 Informations personnelles
             </x-tab>

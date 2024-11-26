@@ -28,10 +28,10 @@ class MemberUpdateForm extends Model
         $this->mail = $userAccount->mail;
 
         $address = Address::findOneByPk($userAccount->address_id);
-        $this->number = $address->number;
-        $this->street = $address->street;
+        $this->streetNumber = $address->number;
+        $this->streetName = $address->street;
         $this->city = $address->city;
-        $this->postal_code = $address->postal_code;
+        $this->postalCode = $address->postal_code;
 
         $memberUser = MemberUser::findOneByPk(Application::$app->user->account_id);
         $this->lastname = $memberUser->lastname;
