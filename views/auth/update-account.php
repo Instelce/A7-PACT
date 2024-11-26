@@ -2,6 +2,7 @@
 /** @var $model \app\forms\MemberUpdateForm */
 
 $this->title = 'Inscription update';
+$this->jsFile = 'updateMemberAccount';
 
 ?>
 
