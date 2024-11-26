@@ -67,7 +67,7 @@ class OfferController extends Controller
 
             // Create the offer
             $offer->loadData($request->getBody());
-            $offer->offline_date = date('Y-m-d');
+            $offer->last_offline_date = date('Y-m-d');
             $offer->last_online_date = null;
             $offer->category = $category;
             $offer->professional_id = Application::$app->user->account_id;
