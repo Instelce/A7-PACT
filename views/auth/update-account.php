@@ -1,3 +1,10 @@
+<?php
+/** @var $model \app\forms\MemberUpdateForm */
+
+$this->title = 'Inscription update';
+
+?>
+
 <div class="form-page">
     <div class="flex gap-2">
         <x-tabs class="column">
@@ -41,10 +48,9 @@
                                 la mise en ligne de nouvelles offres et autre</label>
                         </div>
                     </div>
-                    <button type="submit" class="button w-full gray">Modifier le mot de passe</button>
-                    <button type="submit" class="button w-full danger">Supprimer mon compte</button>
+
                     <div class="flex gap-4, mt-8">
-                        <div class='w-25%'>
+                        <div class='w-25%, mr-4'>
                             <button type="submit" class="button gray">Annuler</button>
                         </div>
                         <button type="submit" class="button w-full">Enregistrer les modifications</button>
@@ -58,7 +64,8 @@
                 Sécurité
             </x-tab>
             <x-tab-panel role="region" slot="panel">
-                <p>Content 2</p>
+                <button type="submit" class="button w-full gray">Modifier le mot de passe</button>
+                <button type="submit" class="button w-full danger">Supprimer mon compte</button>
             </x-tab-panel>
 
         </x-tabs>

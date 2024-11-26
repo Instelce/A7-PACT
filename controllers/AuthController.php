@@ -119,6 +119,25 @@ class AuthController extends Controller
     public function updateAccount(Request $request, Response $response){
         $form = new MemberUpdateForm();
 
+        /*echo '<pre>';
+        var_dump();
+        echo '</pre>';*/
+        
+        if ($request->isPost()) {
+            $form->loadData($request->getBody());
+
+            echo '<pre>';
+            var_dump($request->getBody());
+            echo '</pre>';
+
+            if ($form->validate() && $form->update()) {
+                Application::$app->session->setFlash('success', "Bienvenue $form->pseudo. Votre compte à bien été modifié !");
+                Application::$app->mailer->send($form->mail, "Bienvenue $form->pseudo", 'welcome', ['pseudo' => $form->pseudo]);
+                $response->redirect('./');
+                exit;
+            }
+        }
+
         return $this->render('auth/update-account', ['model' => $form]);
     }
 
