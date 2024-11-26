@@ -69,40 +69,73 @@ async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
         return false; //returning false if an error occurs
     }
 }
-let filters = { category: "visit" };
+// ---------------------------------------------------------------------------------------------- //
+// Display logic
+// ---------------------------------------------------------------------------------------------- //
+// let filters = { category: "visit" };
 console.time("getOffers");
-let Data = await getOffers(filters);
+let Data = await getOffers();
 console.timeEnd("getOffers");
 
+displayOffers(Data);
+
+//testing
 if (Data && !Array.isArray(Data)) {
     Data = Object.values(Data);
 }
 console.log(Data);
-console.log();
-const offersContainer = document.querySelector(".flex.flex-col.gap-2");
-if (!offersContainer) {
-    console.error("Offers container not found");
-} else if (!Array.isArray(Data)) {
-    console.error("Data is not an array");
-} else {
-    Data.forEach((offer) => {
-        const offerElement = document.createElement("a");
-        offerElement.href = `/offres/${offer.id}`;
-        offerElement.innerHTML = `
+
+async function applyFilters(newFilters) {
+    const currentFilters = {
+        category: document.querySelector(".category-item.active")?.dataset.category || null,
+        minimumOpinions: document.getElementById("minimumOpinions")?.value || null,
+        maximumOpinions: document.getElementById("maximumOpinions")?.value || null,
+        minimumPrice: document.getElementById("minimumPrice")?.value || null,
+        maximumPrice: document.getElementById("maximumPrice")?.value || null,
+        open: document.getElementById("open")?.checked || null,
+        minimumEventDate: document.getElementById("minimumEventDate")?.value || null,
+        maximumEventDate: document.getElementById("maximumEventDate")?.value || null,
+        location: document.getElementById("location")?.value || null,
+    };
+    const filters = { ...currentFilters, ...newFilters };
+    Object.keys(filters).forEach(key => {
+        if (filters[key] === null || filters[key] === "" || filters[key] === false || filters[key] === undefined || filters[key] === 0) {
+            delete filters[key];
+        }
+    });
+    let Data = await getOffers(filters);
+    displayOffers(Data);
+}
+// ---------------------------------------------------------------------------------------------- //
+// Display
+// ---------------------------------------------------------------------------------------------- //
+
+function displayOffers(Data) {
+    const offersContainer = document.querySelector(".flex.flex-col.gap-2");
+    if (!offersContainer) {
+        console.error("Offers container not found");
+    } else if (!Array.isArray(Data)) {
+        console.error("Data is not an array");
+    } else {
+        offersContainer.innerHTML = "";
+        Data.forEach((offer) => {
+            const offerElement = document.createElement("a");
+            offerElement.href = `/offres/${offer.id}`;
+            offerElement.innerHTML = `
             <article class="research-card">
                 <div class="research-card--photo">
                     ${offer.photos[0]
-                ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
-                : ""
-            }
+                    ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
+                    : ""
+                }
                 </div>
                 <div class="research-card--body">
                     <header>
                         <h2 class="research-card--title">${offer.title}</h2>
                         <p>${translateCategory(
-                offer.category
-            )} par <a href="/comptes/${offer.professional_id
-            }" class="underline">${offer.profesionalUser["denomination"]}</a></p>
+                    offer.category
+                )} par <a href="/comptes/${offer.professional_id
+                }" class="underline">${offer.profesionalUser["denomination"]}</a></p>
                     </header>
                     <p class="summary">${offer.summary}</p>
                          <div class="flex gap-2 mt-auto pt-4">
@@ -112,8 +145,9 @@ if (!offersContainer) {
                 </div>
             </article>
         `;
-        offersContainer.appendChild(offerElement);
-    });
+            offersContainer.appendChild(offerElement);
+        });
+    }
 }
 
 function translateCategory(category) {
@@ -152,10 +186,48 @@ popup.addEventListener("click", (event) => {
 // Category filter
 // ---------------------------------------------------------------------------------------------- //
 
-let categories = document.querySelectorAll(".category-item");
+let categoryListenners = [
+    "spectacles",
+    "restauration",
+    "visites",
+    "activités",
+    "attractions",
+];
+let categoryValue = [
+    "show",
+    "restaurant",
+    "visit",
+    "activity",
+    "attraction_park",
+];
 
-categories.forEach((category) => {
-    category.addEventListener("click", () => {
-        category.classList.toggle("active");
-    });
+categoryListenners.forEach((listener, index) => {
+    const element = document.getElementById(listener);
+    let categories = document.querySelectorAll(".category-item");
+    if (element) {
+        element.addEventListener("click", () => {
+            if (element.classList.contains("active")) {
+                element.classList.remove("active");
+                applyFilters();
+            } else {
+                categories.forEach((cat) => cat.classList.remove("active"));
+                element.classList.add("active");
+                applyFilters({ category: categoryValue[index] });
+            }
+        });
+    } else {
+        console.warn(`Element with ID ${listener} not found`);
+    }
 });
+
+
+// ---------------------------------------------------------------------------------------------- //
+// listeners
+// ---------------------------------------------------------------------------------------------- //
+
+
+//testing
+setInterval(() => {
+    applyFilters({});
+    console.log("Filters applied");
+}, 10000);

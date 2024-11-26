@@ -105,15 +105,15 @@ class ApiController extends Controller
             $where[] = ['minimum_price', $maximumPrice, '<=', 'maximum_price'];
         }
         // if ($minimumEventDate) {
-        //     $where[] = ['event_date', $minimumEventDate, '>='];
+        //     $where[] = ['OfferPeriod__end_date', $minimumEventDate, '<='];
         // }
         // if ($maximumEventDate) {
-        //     $where[] = ['event_date', $maximumEventDate, '<=', 'maximum_event_date'];
+        //     $where[] = ['OfferPeriod__start_date', $maximumEventDate, '>=', 'maximum_event_date'];
         // }
 
         /** @var Offer[] $offers */
         $offers = Offer::query()
-            // ->join(new DatePeriod())
+            // ->join(new OfferPeriod())
             ->join(new Address())
             ->limit($limit)
             ->offset($offset)
