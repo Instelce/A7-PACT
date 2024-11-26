@@ -18,8 +18,8 @@ class Offer extends DBModel
     public string $description = '';
     public int $likes = 0;
     public int $offline = self::STATUS_OFFLINE;
-    public ?string $offline_date = '';
-    public ?string $last_online_date = '';
+    public ?string $last_offline_date = '';
+    public int $offline_days = 0;
     public int $view_counter = 0;
     public int $click_counter = 0;
     public string $website = '';
@@ -45,12 +45,12 @@ class Offer extends DBModel
 
     public function attributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'last_offline_date', 'offline_days', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price'];
     }
 
     public function updateAttributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'offline_date', 'last_online_date', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'last_offline_date', 'offline_days', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price'];
     }
 
     public function rules(): array

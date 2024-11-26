@@ -89,6 +89,21 @@ Default size is medium.
     --color-hover: var(--color-purple-primary);
 }
 
+.button.payment {
+    --background: var(--color-white);
+    --border: var(--color-gray-2);
+    --color: var(--color-black);
+    --background-hover: var(--color-white);
+    --border-hover: var(--color-gray-4);
+    --color-hover: var(--color-black);
+    border-radius: 10px;
+    padding: 30px 20px;
+}
+
+.button.payment:active{
+    --border: var(--color-blue-primary);
+}
+
 .button.sm {
     padding: .5rem 1.5rem;
 }

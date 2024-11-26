@@ -43,9 +43,10 @@ class PrivateProfessionalRegister extends Model
     public int $payment = self::NOPAYMENT;
     public int $conditions = self::REFUSE_CONDITIONS;
     public int $notifications = self::REFUSE_NOTIFICATIONS;
-    public string $titulaire = '';
+    public string $titularAccount = '';
     public string $iban = '';
     public string $bic = '';
+    public string $titularCard = '';
     public string $cardnumber = '';
     public string $expirationdate = '';
     public string $cryptogram = '';
@@ -55,19 +56,21 @@ class PrivateProfessionalRegister extends Model
     public function rules(): array
     {
         return [
-            'siren' => [[self::RULE_UNIQUE, 'attributes' => 'siren', 'class' => ProfessionalUser::class], [self::RULE_MAX, 'max' => 9]],
+            'siren' =>[self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attributes' => 'siren', 'class' => ProfessionalUser::class], self::RULE_MAX, 'max' => 9],
             'denomination' => [self::RULE_REQUIRED],
-            'mail' => [[self::RULE_REQUIRED], [self::RULE_UNIQUE, 'attributes' => 'mail', 'class' => UserAccount::class], [self::RULE_MAIL]],
+            'mail' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attributes' => 'mail', 'class' => UserAccount::class], self::RULE_MAIL],
+            'streetnumber' => [self::RULE_REQUIRED],
             'streetname' => [self::RULE_REQUIRED],
-            'postaleCode' => [[self::RULE_REQUIRED], [self::RULE_MAX, 'max' => 5]],
-            'city' => [self::RULE_REQUIRED],
-            'phone' => [[self::RULE_REQUIRED], [self::RULE_MAX, 'max' => 10], [self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => ProfessionalUser::class]],
-            'password' => [[self::RULE_REQUIRED], [self::RULE_PASSWORD]],
-            'passwordConfirm' => [[self::RULE_REQUIRED], [self::RULE_MATCH, 'match' => 'password']],
-            'titulaire' => [self::RULE_MAX, 'max' => 255],
-            'iban' => [[self::RULE_MAX, 'max' => 34], [self::RULE_UNIQUE, 'attributes' => 'iban', 'class' => RibMeanOfPayment::class]],
+            'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
+            'city' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
+            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10], [self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => ProfessionalUser::class]],
+            'password' => [self::RULE_REQUIRED, self::RULE_PASSWORD],
+            'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
+            'titular-account' => [self::RULE_MAX, 'max' => 255],
+            'iban' => [self::RULE_MAX, 'max' => 34, [self::RULE_UNIQUE, 'attributes' => 'iban', 'class' => RibMeanOfPayment::class]],
             'bic' => [self::RULE_MAX, 'max' => 11],
             'cardnumber' => [[self::RULE_MAX, 'max' => 16],[self::RULE_UNIQUE, 'attributes' => 'iban', 'class' => CbMeanOfPayment::class]],
+            'titular-card' => [self::RULE_MAX, 'max' => 255],
             'expirationdate' => [self::RULE_EXP_DATE],
             'cryptogram' => [self::RULE_MAX, 'max' => 3]
         ];
@@ -92,7 +95,6 @@ class PrivateProfessionalRegister extends Model
         $userAccount->account_id = $account->id;
         $userAccount->mail = $this->mail;
         $userAccount->password = password_hash($this->password, PASSWORD_DEFAULT);
-        $userAccount->avatar_url = "https://ui-avatars.com/api/?size=128&name=$this->denomination";
         $userAccount->address_id = $address->id;
         $userAccount->save();
 
@@ -105,19 +107,20 @@ class PrivateProfessionalRegister extends Model
         $proUser->save();
 
         $meanOfPayment = new MeanOfPayment();
+        $meanOfPayment->save();
 
         if('iban' && 'bic' != ''){
             $payment = new RibMeanOfPayment();
-            $payment->rib_id = $meanOfPayment->payment_id;
-            $payment->name = $this->titulaire;
+            $payment->id = $meanOfPayment->payment_id;
+            $payment->name = $this->titularAccount;
             $payment->iban = $this->iban;
             $payment->bic = $this->bic;
             $payment->save();
         }
         else if ('cardnumber' && 'cryptogram' && 'expirationdate' != '') {
             $payment = new CbMeanOfPayment();
-            $payment->cb_id = $meanOfPayment->payment_id;
-            $payment->name = $this->titulaire;
+            $payment->id = $meanOfPayment->payment_id;
+            $payment->name = $this->titularCard;
             $payment->card_number = $this->cardnumber;
             $payment->expiration_date = $this->expirationdate;
             $payment->cvv = $this->cryptogram;
@@ -125,7 +128,7 @@ class PrivateProfessionalRegister extends Model
         }
         else {
             $payment = new PaypalMeanOfPayment();
-            $payment->paypal_id = $meanOfPayment->payment_id;
+            $payment->id = $meanOfPayment->payment_id;
             $payment->paypalurl = $this->paypallink;
             $payment->save();
         }
@@ -150,13 +153,19 @@ class PrivateProfessionalRegister extends Model
             'streetname' => 'Nom de rue',
             'postaleCode' => 'Code postal',
             'city' => 'Ville',
-            'country' => 'Pays',
             'phone' => 'Téléphone',
             'password' => 'Mot de passe',
             'passwordConfirm' => 'Confirmez votre mot de passe',
             'payment' => 'Je souhaite de rentrer mes coordonnées bancaires maintenant (possibilité de le faire plus tard)',
             'conditions' => 'J\'accepte les conditions géénrales d\'utilisation',
-            'notifications' => 'J\'autorise l\'envoi de notifications'
+            'notifications' => 'J\'autorise l\'envoi de notifications',
+            'titular-account' => 'Titulaire du compte',
+            'iban' => 'IBAN',
+            'bic' => 'BIC',
+            'titular-card' => 'Titulaire de la carte',
+            'cardnumber' => 'Numéro de carte',
+            'expirationdate' => 'Date d\'expiration',
+            'cryptogram' => 'CVV'
         ];
     }
 
@@ -170,10 +179,16 @@ class PrivateProfessionalRegister extends Model
             'streetname' => 'Édouard Branly',
             'postaleCode' => '22300',
             'city' => 'Lannion',
-            'country' => 'France',
             'phone' => '0601020304',
             'password' => '********',
-            'passwordConfirm' => '********'
+            'passwordConfirm' => '********',
+            'titular-account' => 'Nom entreprise / Nom personne',
+            'iban' => 'votre iban',
+            'bic' => 'vore BIC (optionnel)',
+            'titular-card' => 'Nom entreprise / Nom personne',
+            'cardnumber' => 'XXXX XXXX XXXX XXXX',
+            'expirationdate' => '07/26',
+            'cryptogram' => '000'
         ];
     }
 }
