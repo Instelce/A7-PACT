@@ -72,7 +72,6 @@ async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
 // ---------------------------------------------------------------------------------------------- //
 // Display logic
 // ---------------------------------------------------------------------------------------------- //
-// let filters = { category: "visit" };
 console.time("getOffers");
 let Data = await getOffers();
 console.timeEnd("getOffers");
@@ -224,10 +223,3 @@ categoryListenners.forEach((listener, index) => {
 // ---------------------------------------------------------------------------------------------- //
 // listeners
 // ---------------------------------------------------------------------------------------------- //
-
-
-//testing
-setInterval(() => {
-    applyFilters({});
-    console.log("Filters applied");
-}, 10000);
