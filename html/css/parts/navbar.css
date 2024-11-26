@@ -75,7 +75,7 @@
 #menu {
     position: fixed;
     top: 0;
-    left: -105%;
+    left: 105%;
     width: 100vw;
     height: 100vh;
     background-color: white;
@@ -116,7 +116,7 @@
 }
 
 .navbar-left,
-.navbar-right{
+.navbar-right {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -133,7 +133,7 @@
         padding: 0 20px !important;
     }
 
-    .navbar .row > .button {
+    .navbar .row>.button {
         display: none;
     }
 }
