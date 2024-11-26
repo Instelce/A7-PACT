@@ -57,4 +57,9 @@ class MemberUser extends DBModel
         return Opinion::find(['account_id' => $this->user_id]);
     }
 
+    public function opinionsCount(): int
+    {
+        return count(Opinion::find(['account_id' => $this->user_id]));
+    }
+
 }

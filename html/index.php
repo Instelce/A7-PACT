@@ -69,7 +69,7 @@ $app->router->post('/inscription/professionnel', [AuthController::class, 'regist
 $app->router->get('/inscription/membre', [AuthController::class, 'registerMember']);
 $app->router->post('/inscription/membre', [AuthController::class, 'registerMember']);
 $app->router->get('/update', [AuthController::class, 'updateAccount']);
-$app->router->post('update', [AuthController::class, 'updateAccount']);
+$app->router->post('/update', [AuthController::class, 'updateAccount']);
 $app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/comptes/<pk:int>', [AuthController::class, 'profile']);
 $app->router->get('/users', [SiteController::class, 'users']);
@@ -78,5 +78,6 @@ $app->router->get('/users', [SiteController::class, 'users']);
 $app->router->get('/api/auth/user', [ApiController::class, 'user']);
 $app->router->get('/api/offers', [ApiController::class, 'offers']);
 $app->router->get('/api/opinions', [ApiController::class, 'opinions']);
+$app->router->post('/api/opinions/<opinion_pk:int>', [ApiController::class, 'opinionUpdate']);
 
 $app->run();

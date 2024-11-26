@@ -147,6 +147,7 @@ $this->cssFile = "dashboard/offers";
                                 <x-input>
                                     <p slot="label">Date de lancement</p>
                                     <input slot="input" type="date" step="7" name="launch_date" value="<?php echo date('Y-m-d', strtotime("last Monday")) ?>">
+                                    <p slot="helper">L'option prendra effet en début de semaine</p>
                                 </x-input>
                                 <x-input>
                                     <p slot="label">Nombre de semaine</p>

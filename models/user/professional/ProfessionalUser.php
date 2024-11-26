@@ -3,6 +3,7 @@ namespace app\models\user\professional;
 use app\core\DBModel;
 use app\models\account\UserAccount;
 use app\models\offer\Offer;
+use app\models\opinion\Opinion;
 
 class ProfessionalUser extends DBModel
 {
@@ -52,5 +53,10 @@ class ProfessionalUser extends DBModel
 
     public function hasOffer($offerId): bool {
         return Offer::findOne(['professional_id' => $this->user_id, 'id' => $offerId]) !== false;
+    }
+
+    public function opinionsReceiveCount(): int
+    {
+        return count(Opinion::query()->join(new Offer())->filter('offer__professional_id', $this->user_id)->make());
     }
 }

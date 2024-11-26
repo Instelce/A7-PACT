@@ -64,7 +64,7 @@ class UserAccount extends DBModel
 
     public function isPublicProfessional(): bool
     {
-        return $this->isProfessional() && !PublicProfessional::findOneByPk($this->account_id) !== false;
+        return $this->isProfessional() && PublicProfessional::findOneByPk($this->account_id) !== false;
     }
 
     public function isAdministrator(): bool

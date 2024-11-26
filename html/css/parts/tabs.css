@@ -7,7 +7,7 @@ x-tabs {
 }
 
 x-tabs xtab {
-    flex-basis: 100%;
+    /*flex-basis: 100%;*/
 }
 
 x-tab {
@@ -30,7 +30,9 @@ x-panel:not(:defined) {
 
 /* Vertical tabs */
 x-tabs.column {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
 }
 
 x-tabs.column x-tab,
@@ -90,3 +92,4 @@ x-tabs.column x-tab[selected]::before,
 .tab-button.pro {
     --color: var(--color-purple-primary);
 }
+

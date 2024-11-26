@@ -3,9 +3,11 @@
 .profile-up
 {
     display: flex;
+    gap: 1rem;
     flex-wrap: nowrap;
-    justify-content: space-evenly;
     align-items: center;
+    justify-content: center;
+    margin-bottom: 4rem;
 }
 
 .profile-up-bandeau
@@ -20,6 +22,18 @@
     font-weight: 500;
 }
 
+.profile-name h1 {
+    margin-bottom: 1rem;
+}
+
+.profile-stats
+{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    gap: 0.5rem;
+    font-size: var(--typescale-base);
+}
 /*
 .profile-up-bandeau-bloc
 {
@@ -70,4 +84,37 @@ x-tab[id="reponses"]
     border-bottom: none;
     border: 1px solid rgb(var(--color-gray-1));
     border-radius: 0 100rem 100rem 0;
+}
+
+.opinions-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.opinions-container .opinion-card {
+    border-bottom: 1px solid rgb(var(--color-gray-1));
+    padding-bottom: 1rem;
+}
+.opinions-container .opinion-card:last-child {
+    border-bottom: none;
+}
+
+@media only screen and (max-width: 728px) {
+    .opinions-container {
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .opinions-container {
+        width: 80%;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    .opinions-container {
+        width: 70%;
+    }
 }
