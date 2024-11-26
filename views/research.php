@@ -66,12 +66,35 @@ $iconsNames = [
                 </button>
             </x-input> -->
 
-        <div class="mb-7">
-            <div class="flex flex-col">
+        <div>
+            <!-- <div class="flex flex-col">
                 <span class="text-base font-bold text-black">Intervalle de prix</span>
                 <div class="h-px bg-zinc-400 mt-2"></div>
+            </div> -->
+            <div class="flex gap-2">
+                <x-slider color="#C933E7" label="Prix" min="0" max="200" type="double"></x-slider>
             </div>
-
+            <div class="flex gap-2">
+                <x-slider color="#C933E7" label="note" min="0" max="5" type="double"></x-slider>
+            </div>
+            <div class="flex flex-row items-center gap-2 py-4">
+                <div class="flex gap-2">
+                    <input class="switch" type="checkbox" id="switchtest" />
+                    <label class="switch" for="switchtest">Toggle</label>
+                </div>
+                <h3>Uniquement ouvert</h3>
+            </div>
+            <div class="w-full flex lg:flex-row gap-2">
+                <x-input>
+                    <input slot="input" type="date">
+                </x-input>
+                <x-input>
+                    <input slot="input" type="date">
+                </x-input>
+            </div>
+            <x-input>
+                <input slot="input" type="text" placeholder="Ville">
+            </x-input>
             <!--
                 <x-select id="category" name="category" required>
                     <label slot="label">Catégorie</label>

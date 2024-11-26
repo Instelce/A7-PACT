@@ -17,9 +17,9 @@ export class Slider extends WebComponent {
         this.renderComponent();
         this.addRangeEventListeners();
     }
-    disconnectedCallback() {}
+    disconnectedCallback() { }
 
-    attributeChangedCallback(name, oldValue, newValue) {}
+    attributeChangedCallback(name, oldValue, newValue) { }
 
     styles() {
         return `
@@ -28,7 +28,7 @@ export class Slider extends WebComponent {
                 display: flex;
                 flex-direction: column;
                 width: 150px;
-                margin: 50px auto;
+                margin: 10px auto;
                 position: relative;
             }
             .labels {
@@ -141,9 +141,8 @@ export class Slider extends WebComponent {
             rangeSliderHandleLeft.style.left = `${leftPosition}%`;
             rangeSliderHandleRight.style.left = `${rightPosition}%`;
             rangeSliderValRange.style.left = `${leftPosition}%`;
-            rangeSliderValRange.style.width = `${
-                rightPosition - leftPosition
-            }%`;
+            rangeSliderValRange.style.width = `${rightPosition - leftPosition
+                }%`;
 
             this.updateDisplayedValues(minValue, maxValue);
         } else {
@@ -255,9 +254,8 @@ export class Slider extends WebComponent {
                         100;
                     rangeSliderHandleLeft.style.left = `${leftPosition}%`;
                     rangeSliderValRange.style.left = `${leftPosition}%`;
-                    rangeSliderValRange.style.width = `${
-                        ((maxValue - scaledValue) / (this.max - this.min)) * 100
-                    }%`;
+                    rangeSliderValRange.style.width = `${((maxValue - scaledValue) / (this.max - this.min)) * 100
+                        }%`;
                     rangeSliderInputLeft.value = scaledValue;
                     this.updateDisplayedValues(scaledValue, maxValue);
                 }
@@ -267,9 +265,8 @@ export class Slider extends WebComponent {
                         ((scaledValue - this.min) / (this.max - this.min)) *
                         100;
                     rangeSliderHandleRight.style.left = `${rightPosition}%`;
-                    rangeSliderValRange.style.width = `${
-                        ((scaledValue - minValue) / (this.max - this.min)) * 100
-                    }%`;
+                    rangeSliderValRange.style.width = `${((scaledValue - minValue) / (this.max - this.min)) * 100
+                        }%`;
                     rangeSliderInputRight.value = scaledValue;
                     this.updateDisplayedValues(minValue, scaledValue);
                 }
@@ -281,9 +278,8 @@ export class Slider extends WebComponent {
             const currentMinPosition = parseFloat(
                 rangeSliderHandleLeft.style.left
             );
-            rangeSliderValRange.style.width = `${
-                currentMaxPosition - currentMinPosition
-            }%`;
+            rangeSliderValRange.style.width = `${currentMaxPosition - currentMinPosition
+                }%`;
         } else {
             const rangeSlider = this.shadow.querySelector("#RangeSlider");
             const rangeSliderValRange = rangeSlider.querySelector(
