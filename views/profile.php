@@ -13,23 +13,26 @@ $this->cssFile = "profile";
 $this->jsFile = "profile";
 ?>
 
+
 <div class="profile-up">
   <div class="profile-up">
     <img class="profile-page-pic" src="<?php echo $user->avatar_url ?>">
     <i data-lucide="pen_line"></i>
-    <div>
+    <div class="profile-name">
       <h1 class="heading-2 gap-1">Profil de <span class="underline"><?php echo $user->specific()->denomination ?></span></h1>
-      <h3 class="heading-3 gap-1"> <i data-lucide="message-circle"></i> <span class="pb-1"> Avis</h3>
-      <h3 class="flex heading-3 align-center gap-1"> <i data-lucide="heart"></i> <span class="pt-1"> Likes</h3>
-      <h3 class="heading-3"><i data-lucide="badge-check"></i> <span class="pb-1">
-        <?php if ($user->isPublicProfessional()) {?>
-            Professionnel publique
-        <?php } elseif ($user->isPrivateProfessional()) {?>
-            Professionnel Privé
-        <?php } else { ?>
-            Membre
-        <?php }?>
-   </span></h3>
+      <div class="profile-stats">
+        <h3 class="flex heading-3 align-center gap-2"> <i data-lucide="message-circle"></i> <span class="pt-1"> Avis</h3>
+        <h3 class="flex heading-3 align-center gap-2"> <i data-lucide="heart"></i> <span class="pt-1"> Likes</h3>
+        <h3 class="flex heading-3 align-center gap-2"> <i data-lucide="badge-check"></i> <span class="pt-1">
+          <?php if ($user->isPublicProfessional()) {?>
+              Professionnel publique
+          <?php } elseif ($user->isPrivateProfessional()) {?>
+              Professionnel Privé
+          <?php } else { ?>
+              Membre
+          <?php }?>
+        </span></h3>
+      </div>
     </div>
   </div>
 </div>

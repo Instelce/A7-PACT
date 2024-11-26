@@ -87,7 +87,31 @@ $iconsNames = [
                 -->
 
         </div>
+<<<<<<< Updated upstream
+=======
+    </div>
+    </div>
 
+    <!-- Offers, generated in js file -->
+    <div class="flex flex-col gap-2">
+                    <div class="research-card--body">
+                        <header>
+                            <h2 class="research-card--title"><?php echo $offer["title"]; ?> </h2>
+                            <p><?php echo $offer["type"]; ?> par <a href="/comptes/<?php echo $offer["professional_id"] ?>"
+                                    class="underline"><?php echo $offer["author"]; ?></a>
+                            </p>
+                        </header>
+
+                        <p class="summary"><?php echo $offer["summary"]; ?></p>
+>>>>>>> Stashed changes
+
+                        <div class="flex gap-2 mt-auto pt-4">
+                            <a href="" class="button gray w-full spaced">Itinéraire<i data-lucide="map"></i></a>
+                            <a href="" class="button blue w-full spaced">Voir plus<i data-lucide="chevron-right"></i></a>
+                        </div>
+                    </div>
+                </article>
+            </a>
     </div>
 </div>
 </div>
