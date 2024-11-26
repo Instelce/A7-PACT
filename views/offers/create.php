@@ -50,7 +50,7 @@ $form = new Form();
                                 </label>
                             </div>
 
-                            <span class="price-bubble">4,98 €</span>
+                            <span class="price-bubble">1,67 € <span class="text-sm">HT</span></span>
                         </div>
 
                         <!-- Premium offer -->
@@ -65,7 +65,7 @@ $form = new Form();
                                 </label>
                             </div>
 
-                            <span class="price-bubble">7,98 €</span>
+                            <span class="price-bubble">3,34 € <span class="text-sm">HT</span></span>
                         </div>
 
                     <?php } else { ?>
@@ -119,7 +119,7 @@ $form = new Form();
                                 </label>
                             </div>
 
-                            <span class="price-bubble">+ 2,98 €</span>
+                            <span class="price-bubble">+ 8,34 € <span class="text-sm">HT</span></span>
                         </div>
 
                         <!-- A la une option -->
@@ -133,7 +133,7 @@ $form = new Form();
                                         Met l’offre en avant sur la page d’accueil</small>
                                 </label>
                             </div>
-                            <span class="price-bubble">+ 4,98 €</span>
+                            <span class="price-bubble">+ 16,68 € <span class="text-sm">HT</span></span>
                         </div>
 
                         <!-- Start end end DATE of the option -->
@@ -141,6 +141,7 @@ $form = new Form();
                             <x-input>
                                 <p slot="label">Date de lancement</p>
                                 <input slot="input" type="date" name="option-launch-date" step="7" value="<?php echo date('Y-m-d', strtotime("last Monday")) ?>">
+                                <p slot="helper">L'option prendra effet en début de semaine</p>
                             </x-input>
                             <x-input>
                                 <p slot="label">Nombre de semaine</p>
@@ -366,7 +367,7 @@ $form = new Form();
                     <x-input>
                         <p slot="label">Adresse complète</p>
                         <input slot="input" id="address-field" type="text" placeholder="">
-                        <p slot="helper">Champ avec suggestions qui modifie les champs suivants</p>
+                        <p slot="helper">Ce champ avec suggestions modifiera les champs suivants</p>
                         <div slot="list" id="address-autocomplete" data-no-filter></div>
                     </x-input>
 
@@ -555,35 +556,36 @@ $form = new Form();
 
                 <div class="px-6 py-4 border border-solid border-gray-1 rounded-3xl gap-1">
                     <div class="flex justify-between text-gray-4">
-                        <p>Cout de l’offre</p>
-                        <span id="price-without-option">4,98 €</span>
-                    </div>
-                    <div class="flex justify-between text-gray-4">
-                        <p>+ Cout de l'option</p>
-                        <span class="flex">
-                            <span id="price-with-option">7,96 €</span>
-                        </span>
-                    </div>
-                    <!--                    <div class="flex justify-between text-gray-4">-->
-                    <!--                        <p>Réduction</p>-->
-                    <!--                        <span>0</span>-->
-                    <!--                    </div>-->
-                    <!--                    <div class="flex justify-between font-bold">-->
-                    <!--                        <p>Total HT</p>-->
-                    <!--                        <span id="price-subtotal">7,96 €</span>-->
-                    <!--                    </div>-->
-                    <div class="flex justify-between text-gray-4 mt-2">
                         <p>TVA</p>
                         <span>20%</span>
                     </div>
+
+                    <div class="flex justify-between text-gray-4 mt-2">
+                        <p>Coût HT de l’offre</p>
+                        <span id="price-without-option">4,98 €</span>
+                    </div>
                     <div class="flex justify-between font-bold">
-                        <p>Total TTC</p>
+                        <p>Coût TTC de l'offre</p>
                         <span id="price-total">7,96 €</span>
+                    </div>
+                    <p class="text-right" id="price-total-month"></p>
+
+                    <div class="flex justify-between text-gray-4 mt-2">
+                        <p>Coût HT de l'option</p>
+                        <span class="flex">
+                            <span id="price-option">7,96 €</span>
+                        </span>
+                    </div>
+                    <div class="flex justify-between font-bold">
+                        <p>Coût TTC de l'option</p>
+                        <span class="flex">
+                            <span id="price-total-option">7,96 €</span>
+                        </span>
                     </div>
 
                 </div>
 
-                <p class="indent-6 text-gray-3">L'offre sera facturé au mois et l'option à la semaine</p>
+                <p class="mx-6 text-gray-3">L'offre sera facturé a la <strong>journée</strong> et l'option à la <strong>semaine</strong>. Vous pourrez mettre l'offre hors ligne et ainsi arrêté la facturation.</p>
             </div>
 
             <!--            <x-input rounded>-->

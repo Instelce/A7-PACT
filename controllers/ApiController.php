@@ -158,6 +158,8 @@ class ApiController extends Controller
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
         $orderBy = explode(',', string: $request->getQueryParams('order_by') ?? '-created_at');
+        $readOnLoad = $request->getQueryParams('read_on_load');
+        $read = $request->getQueryParams('read');
 
         $data = [];
         $where = [];
@@ -174,6 +176,9 @@ class ApiController extends Controller
         if (is_numeric($q)) {
             $where['rating'] = $q;
             $q = null;
+        }
+        if ($read && $read !== 'null') {
+            $where['read'] = $read;
         }
 
         /** @var Opinion[] $opinions */
@@ -210,9 +215,36 @@ class ApiController extends Controller
             foreach ($photos as $photo) {
                 $data[$i]['photos'][] = $photo->toJson();
             }
-            
+
+            // Read on load
+            if ($readOnLoad) {
+                $opinion->read = true;
+                $opinion->update();
+            }
         }
 
         return $response->json($data);
     }
+
+    /**
+     * Update the opinion of an offer
+     */
+    public function opinionUpdate(Request $request, Response $response, $routeParams)
+    {
+        $opinionPk = $routeParams['opinion_pk'];
+
+        $opinion = Opinion::findOneByPk($opinionPk);
+
+        if (!$opinion) {
+            $response->setStatusCode(404);
+            return $response->json(['error' => 'Opinion not found']);
+        }
+
+        $opinion->loadData($request->getBody());
+
+        if ($opinion->update()) {
+            return $response->json($opinion->toJson());
+        }
+    }
+
 }

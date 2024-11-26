@@ -148,16 +148,10 @@ class AuthController extends Controller
         $pk = $routeParams['pk'];
         $user = UserAccount::findOneByPk($pk);
 
-        var_dump($user->isProfessional());
-        var_dump($user->isPublicProfessional());
-        var_dump($user->isPrivateProfessional());
-
         if (!$user)
         {
             throw new NotFoundException();
         }
-
-        var_dump($user);
 
         return $this->render('profile', ['user'=>$user]);
     }

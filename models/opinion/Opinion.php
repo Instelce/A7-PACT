@@ -14,6 +14,9 @@ class Opinion extends DBModel
     public string $visit_date = "";
     public string $visit_context = "";
 
+    public bool $read = false;
+    public bool $blacklisted = false;
+
     public int $account_id = 0;
     public int $offer_id = 0;
 
@@ -27,7 +30,7 @@ class Opinion extends DBModel
 
     public function attributes(): array
     {
-        return ['rating', 'title', 'comment', 'visit_date', 'visit_context', 'account_id', 'offer_id'];
+        return ['rating', 'title', 'comment', 'visit_date', 'visit_context', 'read', 'blacklisted', 'account_id', 'offer_id'];
     }
 
     public function rules(): array

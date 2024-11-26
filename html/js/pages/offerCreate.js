@@ -226,19 +226,21 @@ let typeStandardInput = document.querySelector('#type-standard');
 let typePremiumInput = document.querySelector('#type-premium');
 
 let priceWithoutOption = document.querySelector('#price-without-option');
-let priceWithOption = document.querySelector('#price-with-option');
+let priceWithOption = document.querySelector('#price-option');
 // let priceSubTotal = document.querySelector('#price-subtotal');
 let priceTotal = document.querySelector('#price-total');
+let priceTotalMonth = document.querySelector('#price-total-month');
+let priceTotalOption = document.querySelector('#price-total-option');
 
 let offerPrices = {
-    "standard": 4.98,
-    "premium": 7.98,
+    "standard": 1.67,
+    "premium": 3.34,
 }
 
 let optionPrices = {
     "no": 0,
-    "en-relief": 2.98,
-    "a-la-une": 4.98,
+    "en-relief": 8.34,
+    "a-la-une": 16.68,
 }
 
 updatePrices()
@@ -256,9 +258,11 @@ function updatePrices() {
     let option = noOption.checked ? "no" : enreliefOption.checked ? "en-relief" : "a-la-une";
 
     priceWithoutOption.textContent = `${offerPrices[type]} €`;
-    priceWithOption.textContent = `${(offerPrices[type] + optionPrices[option]).toFixed(2)} €`;
+    priceWithOption.textContent = `${(optionPrices[option]).toFixed(2)} €`;
     // priceSubTotal.textContent = `${(offerPrices[type] + optionPrices[option]).toFixed(2)} €`;
 
     // Total price with 20% TVA
-    priceTotal.textContent = `${((offerPrices[type] + optionPrices[option]) * 1.2).toFixed(2)} €`;
+    priceTotal.textContent = `${(offerPrices[type] * 1.2).toFixed(2)} €`;
+    priceTotalMonth.textContent = `soit ${30 * (offerPrices[type] * 1.2)} € TTC / mois`
+    priceTotalOption.textContent = `${((optionPrices[option]) * 1.2).toFixed(2)} €`;
 }

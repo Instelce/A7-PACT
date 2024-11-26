@@ -54,7 +54,11 @@ abstract class DBModel extends Model
 
         // Load the model values into the statement
         foreach ($attributes as $attribute) {
-            $statement->bindValue(":$attribute", $this->{$attribute});
+            if (is_bool($this->{$attribute})) {
+                $statement->bindValue(":$attribute", $this->{$attribute}, \PDO::PARAM_BOOL);
+            } else {
+                $statement->bindValue(":$attribute", $this->{$attribute});
+            }
         }
 
         // Bind created_at and updated_at values
@@ -95,7 +99,11 @@ abstract class DBModel extends Model
 
         // Load the model values into the statement
         foreach ($attributes as $attribute) {
-            $statement->bindValue(":$attribute", $this->{$attribute});
+            if (is_bool($this->{$attribute})) {
+                $statement->bindValue(":$attribute", $this->{$attribute}, \PDO::PARAM_BOOL);
+            } else {
+                $statement->bindValue(":$attribute", $this->{$attribute});
+            }
         }
 
         if (property_exists($this, 'updated_at')) {

@@ -1,3 +1,9 @@
+import {createOpinionCard} from "../cards.js";
+
+// -------------------------------------------------------------------------------------------------
+// Offers loading
+// -------------------------------------------------------------------------------------------------
+
 let offset = 0;
 const limit = 5;
 
@@ -5,31 +11,32 @@ const limit = 5;
 const offersContainers = document.querySelector('#offers-container');
 const offersLoader = document.querySelector('#offers-loader');
 
-const observer = new IntersectionObserver(async () => {
-    let account_id = location.href.split('/')[4];
+if (offersContainers) {
+    const offerObserver = new IntersectionObserver(async () => {
+        let account_id = location.href.split('/')[4];
 
-    // Generate params
-    let params = new URLSearchParams();
-    params.set('limit',limit);
-    params.set('offset',offset);
-    params.set('professional_id', account_id);
+        // Generate params
+        let params = new URLSearchParams();
+        params.set('limit', limit);
+        params.set('offset', offset);
+        params.set('professional_id', account_id);
 
-    // Fetch offers
-    let response = await fetch(`/api/offers?${params.toString()}`);
-    let offers = await response.json();
+        // Fetch offers
+        let response = await fetch(`/api/offers?${params.toString()}`);
+        let offers = await response.json();
 
-    for (const offer of offers) {
-        offersContainers.insertBefore(createOfferCard(offer), offersLoader);
-    }
-    offset += limit;
-}, {
-    root: null,
-    rootMargin: '0px',
-    threshold: 1.
-})
+        for (const offer of offers) {
+            offersContainers.insertBefore(createOfferCard(offer), offersLoader);
+        }
+        offset += limit;
+    }, {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1.
+    })
 
-observer.observe(offersLoader);
-
+    offerObserver.observe(offersLoader);
+}
 
 function createOfferCard(offer) {
     let card = document.createElement('a');
@@ -44,7 +51,7 @@ function createOfferCard(offer) {
                 <header>
                     <h2 class="research-card--title">${offer.title} </h2>
                     <p>${translateCategory(offer.category)} par <a href="/comptes/${offer.professional_id}"
-                                                            class="underline"> ${offer} </a>
+                                                            class="underline"> A mettre </a>
                     </p>
                 </header>
 
@@ -61,9 +68,6 @@ function createOfferCard(offer) {
     return card;
 }
 
-
-
-
 function translateCategory(category) {
     switch (category) {
         case 'attraction_park':
@@ -78,3 +82,39 @@ function translateCategory(category) {
             return 'spectacle';
     }
 }
+
+// -------------------------------------------------------------------------------------------------
+// Opinions loading
+// -------------------------------------------------------------------------------------------------
+
+const opinionsContainers = document.querySelector('#opinions-container');
+const opinionsLoader = document.querySelector('#opinions-loader');
+
+if (opinionsContainers) {
+    const opinionObserver = new IntersectionObserver(async () => {
+        let account_id = location.href.split('/')[4];
+
+        // Generate params
+        let params = new URLSearchParams();
+        params.set('limit', limit);
+        params.set('offset', offset);
+        params.set('account_id', account_id);
+
+        // Fetch opinions
+        let response = await fetch(`/api/opinions?${params.toString()}`);
+        let opinions = await response.json();
+
+        for (const opinion of opinions) {
+            opinionsContainers.insertBefore(createOpinionCard(opinion), opinionsLoader);
+        }
+        offset += limit;
+    }, {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1.
+    })
+
+    opinionObserver.observe(opinionsLoader);
+}
+
+

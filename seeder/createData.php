@@ -876,6 +876,8 @@ foreach ($offers as $offer) {
         $opinion->comment = $review['content'];
         $opinion->offer_id = $offer->id;
         $opinion->account_id = $member_id;
+        $opinion->read = false;
+        $opinion->blacklisted = false;
         $opinion->visit_context = $contexts[array_rand($contexts)];
         $opinion->visit_date = date('Y-m-d', strtotime('-' . rand(1, 365) . ' days'));
         $opinion->created_at = date('Y-m-d H:i:s', strtotime('-' . rand(1, 365) . ' days'));

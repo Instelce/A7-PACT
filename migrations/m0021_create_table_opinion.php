@@ -16,6 +16,9 @@ class m0021_create_table_opinion
             visit_date DATE NOT NULL,
             visit_context VARCHAR(60) NOT NULL,
             
+            read BOOLEAN NOT NULL DEFAULT false,
+            blacklisted BOOLEAN NOT NULL DEFAULT false,
+            
             account_id INT NOT NULL,
             offer_id INT NOT NULL,
             

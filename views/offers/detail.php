@@ -5,6 +5,7 @@
 /** @var $opinionSubmitted bool */
 /** @var $userOpinion Opinion */
 /** @var $offerTags OfferTag[] */
+/** @var $offer Offer */
 
 /** @var $this View */
 
@@ -61,6 +62,7 @@ if ($status == "Fermé") {
                 </p>
                 <span class="dot"></span>
                 <div class="stars" data-number="<?php echo $offerData["rating"] ?>"></div>
+                <p>(<?php echo $offer->opinionsCount() ?> avis)</p>
             </div>
         </header>
 
@@ -398,11 +400,14 @@ if ($status == "Fermé") {
                                 <p><?php echo $userOpinion->comment ?></p>
                             </div>
 
-                            <div class="opinion-card-photos">
-                                <?php foreach ($userOpinion->photos() as $photo) { ?>
-                                    <img src="<?php echo $photo->photo_url ?>" alt="<?php echo $userOpinion->title ?>">
-                                <?php } ?>
-                            </div>
+                            <!-- Photos -->
+                            <?php if (count($userOpinion->photos()) > 0) { ?>
+                                <div class="opinion-card-photos">
+                                    <?php foreach ($userOpinion->photos() as $photo) { ?>
+                                        <img src="<?php echo $photo->photo_url ?>" alt="<?php echo $userOpinion->title ?>">
+                                    <?php } ?>
+                                </div>
+                            <?php } ?>
                         </article>
                     </div>
                 <?php } ?>

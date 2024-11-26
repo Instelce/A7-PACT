@@ -217,7 +217,7 @@ class OfferController extends Controller
     {
         $id = $routeparams['pk'];
         $offerData = [];
-        $offer = Offer::findOne(['id' => $id]);
+        $offer = Offer::findOneByPk($id);
         $location = Address::findOne(['id' => $offer->address_id])->city;
         $address = Address::findOne(['id' => $offer->address_id]);
 
@@ -361,6 +361,7 @@ class OfferController extends Controller
 
         return $this->render('offers/detail', [
             'pk' => $routeparams['pk'],
+            'offer' => $offer,
             'offerData' => $offerData,
             'opinion' => $opinion,
             'opinionSubmitted' => $opinionSubmitted,

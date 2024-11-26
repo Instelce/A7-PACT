@@ -78,5 +78,6 @@ $app->router->get('/users', [SiteController::class, 'users']);
 $app->router->get('/api/auth/user', [ApiController::class, 'user']);
 $app->router->get('/api/offers', [ApiController::class, 'offers']);
 $app->router->get('/api/opinions', [ApiController::class, 'opinions']);
+$app->router->post('/api/opinions/<opinion_pk:int>', [ApiController::class, 'opinionUpdate']);
 
 $app->run();

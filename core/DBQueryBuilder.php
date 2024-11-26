@@ -11,8 +11,8 @@ class DBQueryBuilder
     public array $search = [];
     public array $joins = [];
     public array $order_by = [];
-    public ?int $limit;
-    public ?int $offset;
+    public ?int $limit = null;
+    public ?int $offset = null;
 
     public function __construct(DBModel $model)
     {

@@ -42,11 +42,11 @@ function extractAddressParts(address) {
 function fetchAddress(query) {
     if (query.length > 1) {
         let list = document.getElementById('address-autocomplete');
+        list.innerHTML = '';
 
         fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=5&viewbox=-5.05922,48.94041,-1.70290,48.13664&bounded=1`)
             .then(response => response.json())
             .then(data => {
-                list.innerHTML = '';
                 data.forEach(item => {
                     let option = document.createElement('div');
                     let parts = extractAddressParts(item.display_name);
