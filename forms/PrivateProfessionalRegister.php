@@ -27,8 +27,6 @@ class PrivateProfessionalRegister extends Model
     public const ACCEPT_NOTIFICATIONS = 1;
     public const REFUSE_NOTIFICATIONS = 0;
 
-
-
     public string $denomination = '';
     public string $siren = '';
 
@@ -56,23 +54,23 @@ class PrivateProfessionalRegister extends Model
     public function rules(): array
     {
         return [
-            'siren' =>[self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attributes' => 'siren', 'class' => ProfessionalUser::class], self::RULE_MAX, 'max' => 9],
+            'siren' =>[self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'siren', 'class' => ProfessionalUser::class], [self::RULE_MAX, 'max' => 9]],
             'denomination' => [self::RULE_REQUIRED],
-            'mail' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attributes' => 'mail', 'class' => UserAccount::class], self::RULE_MAIL],
+            'mail' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'mail', 'class' => UserAccount::class], self::RULE_MAIL],
             'streetnumber' => [self::RULE_REQUIRED],
             'streetname' => [self::RULE_REQUIRED],
             'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
             'city' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10], [self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => ProfessionalUser::class]],
+            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10], [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
             'password' => [self::RULE_REQUIRED, self::RULE_PASSWORD],
             'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
-            'titular-account' => [self::RULE_MAX, 'max' => 255],
-            'iban' => [self::RULE_MAX, 'max' => 34, [self::RULE_UNIQUE, 'attributes' => 'iban', 'class' => RibMeanOfPayment::class]],
-            'bic' => [self::RULE_MAX, 'max' => 11],
-            'cardnumber' => [[self::RULE_MAX, 'max' => 16],[self::RULE_UNIQUE, 'attributes' => 'iban', 'class' => CbMeanOfPayment::class]],
-            'titular-card' => [self::RULE_MAX, 'max' => 255],
+            'titular-account' => [[self::RULE_MAX, 'max' => 255]],
+            'iban' => [[self::RULE_MAX, 'max' => 34], [self::RULE_UNIQUE, 'attribute' => 'iban', 'class' => RibMeanOfPayment::class]],
+            'bic' => [[self::RULE_MAX, 'max' => 11]],
+            'cardnumber' => [[self::RULE_MAX, 'max' => 16], [self::RULE_UNIQUE, 'attribute' => 'card_number', 'class' => CbMeanOfPayment::class]],
+            'titular-card' => [[self::RULE_MAX, 'max' => 255]],
             'expirationdate' => [self::RULE_EXP_DATE],
-            'cryptogram' => [self::RULE_MAX, 'max' => 3]
+            'cryptogram' => [[self::RULE_MAX, 'max' => 3]]
         ];
     }
 

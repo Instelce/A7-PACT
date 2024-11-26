@@ -10,6 +10,7 @@ class RibMeanOfPayment extends DBModel
     public string $name = '';
     public string $iban = '';
     public string $bic = '';
+
     public static function tableName(): string
     {
         return 'rib_mean_of_payment';

@@ -31,6 +31,10 @@ class PublicProfessionalRegister extends Model
 
     public function register()
     {
+        echo "<pre>";
+        var_dump("enter register");
+        echo "</pre>";
+        exit;
         /**
          * @var PublicProfessional $proPublic
          */
@@ -50,6 +54,11 @@ class PublicProfessionalRegister extends Model
         $userAccount->password = password_hash($this->password, PASSWORD_DEFAULT);
         $userAccount->address_id = $address->id;
         $userAccount->save();
+        
+        echo "<pre>";
+        var_dump(Utils::generateUUID());
+        echo "</pre>";
+        exit;
 
         $proUser = new ProfessionalUser();
         $proUser->user_id = $account->id;
@@ -69,15 +78,15 @@ class PublicProfessionalRegister extends Model
     public function rules(): array
     {
         return [
-            'siren' => [[self::RULE_UNIQUE, 'attributes' => 'siren', 'class' => ProfessionalUser::class], [self::RULE_MAX, 'max' => 9]],
+            'siren' => [[self::RULE_UNIQUE, 'attribute' => 'siren', 'class' => ProfessionalUser::class], [self::RULE_MAX, 'max' => 9]],
             'denomination' => [self::RULE_REQUIRED],
-            'mail' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attributes' => 'mail', 'class' => UserAccount::class], self::RULE_MAIL],
+            'mail' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'mail', 'class' => UserAccount::class], self::RULE_MAIL],
             'streetname' => [self::RULE_REQUIRED],
             'streetnumber' => [self::RULE_REQUIRED],
             'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
-            'city' => [self::RULE_REQUIRED,[self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => ProfessionalUser::class]],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10]],
-            'password' => [self::RULE_REQUIRED, [self::RULE_PASSWORD]],
+            'city' => [self::RULE_REQUIRED],
+            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10], [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
+            'password' => [self::RULE_REQUIRED, self::RULE_PASSWORD],
             'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']]
         ];
     }
