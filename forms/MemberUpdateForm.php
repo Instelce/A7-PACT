@@ -21,58 +21,41 @@ class MemberUpdateForm extends Model
     public string $city = '';
     public string $phone = '';
     public bool $notification = false;
+    public ?UserAccount $userAccount = null;
+    public ?Address $address = null;
+    public ?MemberUser $memberUser = null;
 
+    /**
+     * Initialize attributes this form
+     */
     public function __construct()
     {
-        $userAccount = Application::$app->user;
-        $this->mail = $userAccount->mail;
+        $this->userAccount = Application::$app->user;
+        $this->mail = $this->userAccount->mail;
 
-        $address = Address::findOneByPk($userAccount->address_id);
-        $this->streetNumber = $address->number;
-        $this->streetName = $address->street;
-        $this->city = $address->city;
-        $this->postalCode = $address->postal_code;
+        $this->address = Address::findOneByPk($this->userAccount->address_id);
+        $this->streetNumber = $this->address->number;
+        $this->streetName = $this->address->street;
+        $this->city = $this->address->city;
+        $this->postalCode = $this->address->postal_code;
 
-        $memberUser = MemberUser::findOneByPk(Application::$app->user->account_id);
-        $this->lastname = $memberUser->lastname;
-        $this->firstname = $memberUser->firstname;
-        $this->phone = $memberUser->phone;
-        $this->pseudo = $memberUser->pseudo;
-        $this->notification = $memberUser->allows_notifications;
+        $this->memberUser = MemberUser::findOneByPk(Application::$app->user->account_id);
+        $this->lastname = $this->memberUser->lastname;
+        $this->firstname = $this->memberUser->firstname;
+        $this->phone = $this->memberUser->phone;
+        $this->pseudo = $this->memberUser->pseudo;
+        $this->notification = $this->memberUser->allows_notifications;
     }
 
     public function update()
     {
-        $account = new Account();
-        $account->save();
-
-        $address = new Address();
-        $address->number = $this->streetNumber;
-        $address->street = $this->streetName;
-        $address->city = $this->city;
-        $address->postal_code = $this->postalCode;
-        $address->longitude = 0;
-        $address->latitude = 0;
-        $address->save();
-
-        $user = new UserAccount();
-        $user->account_id = $account->id;
-        $user->mail = $this->mail;
-        $user->avatar_url = "https://ui-avatars.com/api/?size=128&name=$this->firstname+$this->lastname";
-        $user->address_id = $address->id;
-        $user->save();
-
-        $member = new MemberUser();
-        $member->user_id = $account->id;
-        $member->lastname = $this->lastname;
-        $member->firstname = $this->firstname;
-        $member->phone = $this->phone;
-        $member->pseudo = $this->pseudo;
-        $member->allows_notifications = $this->notification;
-        $member->save();
-
-        Application::$app->login($user);
-
+        $request = Application::$app->request;
+        $this->userAccount->loadData($request->getBody());
+        $this->userAccount->update();
+        $this->address->loadData($request->getBody());
+        $this->address->update();
+        $this->memberUser->loadData($request->getBody());
+        $this->memberUser->update();
         return true;
     }
 
@@ -81,13 +64,13 @@ class MemberUpdateForm extends Model
         return [
             'lastname' => [self::RULE_REQUIRED],
             'firstname' => [self::RULE_REQUIRED],
-            'pseudo' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attributes' => 'pseudo', 'class' => MemberUser::class]],
-            'mail' => [self::RULE_REQUIRED, self::RULE_MAIL, [self::RULE_UNIQUE, 'attributes' => 'mail', 'class' => UserAccount::class]],
+            'pseudo' => [self::RULE_REQUIRED],
+            'mail' => [self::RULE_REQUIRED, self::RULE_MAIL],
             'streetNumber' => [self::RULE_REQUIRED, self::RULE_NUMBER],
             'streetName' => [self::RULE_REQUIRED],
             'postalCode' => [self::RULE_REQUIRED, self::RULE_POSTAL],
             'city' => [self::RULE_REQUIRED],
-            'phone' => [self::RULE_REQUIRED,self::RULE_PHONE, [self::RULE_UNIQUE, 'attributes' => 'phone', 'class' => MemberUser::class]],
+            'phone' => [self::RULE_REQUIRED,self::RULE_PHONE],
         ];
     }
 
