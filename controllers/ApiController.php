@@ -210,6 +210,7 @@ class ApiController extends Controller
             foreach ($photos as $photo) {
                 $data[$i]['photos'][] = $photo->toJson();
             }
+            
         }
 
         return $response->json($data);
