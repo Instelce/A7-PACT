@@ -193,12 +193,30 @@ export class Slider extends WebComponent {
             // Synchronisez avec les inputs externes
             this.querySelector("#slider-min").value = minValue;
             this.querySelector("#slider-max").value = maxValue;
+
+            // Dispatch slider-change event
+            this.dispatchEvent(
+                new CustomEvent("slider-change", {
+                    detail: { minValue, maxValue },
+                    bubbles: true,
+                    composed: true,
+                })
+            );
         } else {
             const minValueLabel = this.shadow.querySelector("#minValue");
             minValueLabel.innerText = minValue;
 
             // Synchronisez avec l'input externe
             this.querySelector("#slider-value").value = minValue;
+
+            // Dispatch slider-change event
+            this.dispatchEvent(
+                new CustomEvent("slider-change", {
+                    detail: { minValue },
+                    bubbles: true,
+                    composed: true,
+                })
+            );
         }
     }
 
