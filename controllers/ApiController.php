@@ -87,6 +87,14 @@ class ApiController extends Controller
         //     $where[] = ['OfferPeriod__start_date', $maximumEventDate, '>=', 'maximum_event_date'];
         // }
 
+        ///if (in_array('price_asc', $order_by)) {
+        ///    $order_by = array_diff($order_by, ['price_asc']);
+        ///    $order_by[] = 'minimum_price ASC';
+        ///} elseif (in_array('price_desc', $order_by)) {
+        ///    $order_by = array_diff($order_by, ['price_desc']);
+        ///    $order_by[] = 'minimum_price DESC';
+        ///}
+
         $query = Offer::query()
             // ->join(new OfferPeriod())
             ->join(new Address())

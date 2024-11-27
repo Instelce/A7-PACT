@@ -36,7 +36,7 @@ async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
     const host = window.location.protocol;
     const searchParams = new URLSearchParams();
     if (order) {
-        searchParams.set("order", order || null);
+        searchParams.set("order_by", order || null);
     }
     if (filters["category"]) {
         searchParams.set("category", filters["category"] || null);
@@ -276,7 +276,14 @@ categoryListenners.forEach((listener, index) => {
     }
 });
 
-
+///document.getElementById('sort-price').addEventListener('change', (event) => {
+ ///   const value = event.target.value;
+ ///   if (value === 'sortPriceAsc') {
+///        applyFilters({ order_by: 'price_asc' });
+ ///   } else if (value === 'sortPriceDesc') {
+ ///       applyFilters({ order_by: 'price_desc' });
+ ///   }
+///});
 // ---------------------------------------------------------------------------------------------- //
 // listeners
 // ---------------------------------------------------------------------------------------------- //

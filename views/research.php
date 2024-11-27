@@ -96,20 +96,13 @@ $iconsNames = [
             <x-input>
                 <input slot="input" type="text" placeholder="Ville">
             </x-input>
-            <!--
-                <x-select id="category" name="category" required>
-                    <label slot="label">Catégorie</label>
-                    <span slot="trigger">Choisir une categorie</span>
-                    <div slot="options">
-                        <div data-value="visit">Visite</div>
-                        <div data-value="activity">Activité</div>
-                        <div data-value="restaurant">Restaurant</div>
-                        <div data-value="show">Spectacle</div>
-                        <div data-value="attraction-parc">Parc d'attraction</div>
-                    </div>
-                </x-select>
-                -->
-
+            <x-select id="sort-price" name="sort-price" required>
+                <span slot="trigger">Tri par prix</span>
+                <div slot="options">
+                    <div data-value="sortPriceAsc">Prix croissant</div>
+                    <div data-value="sortPriceDesc">Prix décroissant</div>
+                </div>
+            </x-select>
         </div>
     </div>
 </div>
