@@ -34,11 +34,11 @@ $iconsNames = [
         foreach ($filtersNames as $key => $filterName) {
             $iconName = $iconsNames[$key];
             ?>
-        <button id="<?php echo strtolower($filterName); ?>" class="category-item">
-            <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
-            <span><?php echo htmlentities($filterName); ?></span>
-        </button>
-        <?php
+            <button id="<?php echo strtolower($filterName); ?>" class="category-item">
+                <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
+                <span><?php echo htmlentities($filterName); ?></span>
+            </button>
+            <?php
         }
         ?>
     </div>
@@ -66,16 +66,17 @@ $iconsNames = [
             </x-input> -->
 
         <div>
-            <!-- <div class="flex flex-col">
+            <div class="hidden lg:flex flex-col">
                 <span class="text-base font-bold text-black">Intervalle de prix</span>
                 <div class="h-px bg-zinc-400 mt-2"></div>
-            </div> -->
+            </div>
 
             <div class="flex gap-2 pl-4">
                 <x-slider color="#0057FF" label="Prix" min="0" max="200" type="double"></x-slider>
             </div>
+
             <div class="flex gap-2 pl-4">
-                <x-slider color="#0057FF" label="note" min="0" max="5" type="double"></x-slider>
+                <x-slider color="#0057FF" label="Note" min="0" max="5" type=""></x-slider>
             </div>
             <div class="flex flex-row items-center gap-2 py-4">
                 <div class="flex gap-2">
