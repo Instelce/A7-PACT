@@ -55,4 +55,10 @@ class ProfessionalUser extends DBModel
     {
         return count(Opinion::query()->join(new Offer())->filter('offer__professional_id', $this->user_id)->make());
     }
+
+    public function offerLikes(): int
+    {
+        return array_sum(array_map(fn($offer) => $offer->likes, Offer::find(['professional_id' => $this->user_id])));
+    }
+
 }
