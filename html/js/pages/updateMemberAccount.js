@@ -17,16 +17,28 @@ toggleSwitch.addEventListener("change", () => {
 // Pop up
 // ---------------------------------------------------------------------------------------------- //
 
-let popup = document.getElementById("popup");
-let updateAvatar = document.getElementById("updateAvatar");
+let popupAvatarUpdate = document.getElementById("popupAvatarUpdate");
+let popupSaveUpdate = document.getElementById("popupSaveUpdate");
+let avatarUpdate = document.getElementById("avatarUpdate");
+let saveUpdate = document.getElementById("saveUpdate");
 const popupContent = document.querySelector(".popup-content");
 
-updateAvatar.addEventListener("click", () => {
-    popup.classList.toggle("hidden");
+avatarUpdate.addEventListener("click", () => {
+    popupAvatarUpdate.classList.toggle("hidden");
 });
 
-popup.addEventListener("click", (event) => {
+saveUpdate.addEventListener("click", () => {
+    popupSaveUpdate.classList.toggle("hidden");
+});
+
+popupAvatarUpdate.addEventListener("click", (event) => {
     if (!popupContent.contains(event.target)) {
-        popup.classList.add("hidden");
+        popupAvatarUpdate.classList.add("hidden");
+    }
+});
+
+saveUpdate.addEventListener("click", (event) => {
+    if (!popupContent.contains(event.target)) {
+        popupSaveUpdate.classList.add("hidden");
     }
 });
