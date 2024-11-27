@@ -38,7 +38,7 @@ $this->jsFile = "profile";
             </h3>
             <h3 class="flex heading-3 align-center gap-2">
                 <i data-lucide="heart"></i>
-                <span class="pt-1">Likes</span>
+                <span class="pt-1"><?php echo $user->specific()->offerLikes() ?> likes</span>
             </h3>
             <h3 class="flex heading-3 align-center gap-2">
                 <i data-lucide="badge-check"></i>

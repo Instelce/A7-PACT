@@ -134,8 +134,6 @@ $iconsNames = [
     </article>
     </a>
 </div>
-</div>
-</div>
 
 <!-- Offers, generated in js file -->
 <div class="flex flex-col gap-2">
