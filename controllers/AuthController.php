@@ -118,14 +118,10 @@ class AuthController extends Controller
         if ($request->isPost()) {
             $form->loadData($request->getBody());
 
-            echo '<pre>';
-            var_dump($request->getBody());
-            echo '</pre>';
-
             if ($form->validate() && $form->update()) {
                 Application::$app->session->setFlash('success', "Votre compte à bien été modifié !");
-                //$response->redirect('/update');
-                //exit;
+                $response->redirect('/comptes/modification');
+                exit;
             }
         }
 
