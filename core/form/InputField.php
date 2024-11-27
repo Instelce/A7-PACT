@@ -11,6 +11,7 @@ class InputField extends BaseField
     public const EMAIL_TYPE = 'email';
     public const PASSWORD_TYPE = 'password';
     public const DATE_TYPE = 'date';
+    public const PHONE_TYPE = 'tel';
 
     public string $type;
 
@@ -35,6 +36,12 @@ class InputField extends BaseField
     public function dateField()
     {
         $this->type = self::DATE_TYPE;
+        return $this;
+    }
+
+    public function phoneField()
+    {
+        $this->type = self::PHONE_TYPE;
         return $this;
     }
 

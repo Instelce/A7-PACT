@@ -145,7 +145,7 @@ class PrivateProfessionalRegister extends Model
     {
         return [
             'denomination' => 'Dénomination',
-            'siren' => 'SIREN',
+            'siren' => 'Siren',
             'mail' => 'E-mail',
             'streetnumber' => 'Numéro de rue',
             'streetname' => 'Nom de rue',
@@ -171,13 +171,13 @@ class PrivateProfessionalRegister extends Model
     {
         return [
             'denomination' => 'Votre association / entreprise',
-            'siren'=> '362 521 879',
+            'siren'=> '362521879',
             'mail' => 'example@email.com',
             'streetnumber' => '12',
             'streetname' => 'Édouard Branly',
             'postaleCode' => '22300',
             'city' => 'Lannion',
-            'phone' => '0601020304',
+            'phone' => '06 01 02 03 04',
             'password' => '********',
             'passwordConfirm' => '********',
             'titular-account' => 'Nom entreprise / Nom personne',
