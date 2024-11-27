@@ -24,7 +24,7 @@ $iconsNames = [
 <!-- Search bar, sort and filter -->
 <div class="flex flex-col mb-4">
     <x-input rounded>
-        <input class="search-input" slot="input" type="text" placeholder="Rechercher">
+        <input slot="input" type="text" placeholder="Rechercher">
         <button slot="button" class="button only-icon sm">
             <i data-lucide="search" stroke-width="2"></i>
         </button>
@@ -54,9 +54,10 @@ $iconsNames = [
     </div>
 </div>
 <!-- more filters-->
-<div id="popup" class="hidden lg:fixed lg:inset-0 lg:bg-black/50 z-50">
+<div id="popup"
+    class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex lg:justify-start justify-between items-start z-50">
     <div
-        class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[400px] w-full h-full mb-1 lg:mb-0 p-2 lg:p-6 lg:pt-[84px] flex flex-row justify-start justify-between items-start">
+        class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[400px] w-full h-full mb-1 lg:mb-0 p-2 lg:p-6 lg:pt-[84px]">
         <!-- Contenu de la popup -->
         <!-- <x-input rounded>
                 <input slot="input" type="text" placeholder="Rechercher" class="w-full">
@@ -66,11 +67,10 @@ $iconsNames = [
             </x-input> -->
 
         <div>
-            <div class="hidden lg:flex flex-col">
+            <!-- <div class="flex flex-col">
                 <span class="text-base font-bold text-black">Intervalle de prix</span>
                 <div class="h-px bg-zinc-400 mt-2"></div>
-            </div>
-
+            </div> -->
             <div class="flex gap-2 pl-4">
                 <x-slider id="slider-price" color="#0057FF" label="Prix" min="0" max="200" type="double"></x-slider>
             </div>

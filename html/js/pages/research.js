@@ -1,5 +1,5 @@
 //initialize the filters and save them permanently
-var filters = {};
+let filters = {};
 /**
  * Displays the fetched offers data in the offers container.
  *
@@ -273,7 +273,7 @@ categoryListenners.forEach((listener, index) => {
         element.addEventListener("click", () => {
             if (element.classList.contains("active")) {
                 element.classList.remove("active");
-                applyFilters();
+                applyFilters({ category: null });
             } else {
                 categories.forEach((cat) => cat.classList.remove("active"));
                 element.classList.add("active");
