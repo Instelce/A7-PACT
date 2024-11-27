@@ -5,6 +5,7 @@ namespace app\models\offer;
 use app\core\DBModel;
 use app\models\Address;
 use app\models\opinion\Opinion;
+use app\models\payment\Invoice;
 use app\models\user\professional\ProfessionalUser;
 
 class Offer extends DBModel
@@ -51,6 +52,22 @@ class Offer extends DBModel
     public function updateAttributes(): array
     {
         return ['title', 'summary', 'description', 'likes', 'offline', 'last_offline_date', 'offline_days', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price'];
+    }
+
+    public function save(): bool
+    {
+        // Save the offer
+        parent::save();
+
+        // Create an invoice
+        $invoice = new Invoice();
+        $invoice->issue_date = date('Y-m-d');
+        $invoice->service_date = date('m');
+        $invoice->due_date = date('Y-m-d', strtotime('+30 days'));
+        $invoice->offer_id = $this->id;
+        $invoice->save();
+
+        return true;
     }
 
     public function rules(): array

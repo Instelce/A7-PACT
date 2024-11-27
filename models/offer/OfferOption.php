@@ -9,6 +9,9 @@ class OfferOption extends DBModel
     public const EN_RELIEF = 'en_relief';
     public const A_LA_UNE = 'a_la_une';
 
+    public const EN_RELIEF_PRICE = 8.34;
+    public const A_LA_UNE_PRICE = 16.68;
+
     public int $id = 0;
     public string $type = '';
     public string $launch_date = '';

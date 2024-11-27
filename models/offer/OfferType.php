@@ -6,6 +6,9 @@ use app\core\DBModel;
 
 class OfferType extends DBModel
 {
+    public const STANDARD_PRICE = 1.67;
+    public const PREMIUM_PRICE = 3.33;
+
     public int $id = 0;
     public string $type = '';
     public float $price = 0.0;

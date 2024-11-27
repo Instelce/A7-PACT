@@ -234,7 +234,7 @@ $this->cssFile = "storybook";
 
         <div class="flex flex-col gap-4">
             <div class="flex gap-2">
-                <x-select>
+                <x-select id="">
                     <span slot="trigger">Select</span>
                     <div slot="options">
                         <div data-value="value 1">Option 1</div>
