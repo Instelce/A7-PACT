@@ -5,6 +5,7 @@
 
 use app\core\Application;
 use app\core\Utils;
+use app\models\account\UserAccount;
 use app\models\offer\Offer;
 
 
@@ -57,6 +58,15 @@ $this->jsFile = "profile";
             </h3>
         </div>
     </div>
+    <?php if ($user->account() == 2) { ?>
+        <!--
+            <div class="gap-1">
+                <a href="modification">
+                    <button class="button gray">Modifier mon profil<i data-lucide="pen-line"></i></button>
+                </a>
+            </div>
+        ?>
+    <?php } ?>
 </header>
 
 

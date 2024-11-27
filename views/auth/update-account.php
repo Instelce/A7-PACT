@@ -1,6 +1,5 @@
 <?php
 /** @var $model \app\forms\MemberUpdateForm */
-use app\core\Application;
 
 $this->title = 'Inscription update';
 $this->jsFile = 'updateMemberAccount';
@@ -13,6 +12,7 @@ $this->jsFile = 'updateMemberAccount';
             <i data-lucide="user"></i>
             Informations personnelles
         </x-tab>
+
         <x-tab-panel role="region" slot="panel">
             <div class="flex flex-row mb-8 items-center">
                 <img class="w-[125px] h-[125px] rounded-full mr-10" src="<?php echo Application::$app->user->avatar_url ?>">
@@ -65,9 +65,17 @@ $this->jsFile = 'updateMemberAccount';
         </x-tab-panel>
 
         <x-tab role="heading" slot="tab">
+            <i data-lucide="euro"></i>
+            Paiement
+        </x-tab>
+
+        <x-tab role="heading" slot="tab">
             <i data-lucide="key"></i>
             Sécurité
         </x-tab>
+        <x-tab-panel role="region" slot="panel">
+            <button id="modify-password" type="submit" class="button w-full gray">Modifier le mot de passe</button>
+            <button id="delete-account" type="submit" class="button w-full danger">Supprimer mon compte</button>
         <x-tab-panel class="flex flex-col
          gap-4" role="region" slot="panel">
             <button type="submit" class="button w-full gray">Modifier le mot de passe</button>
@@ -112,6 +120,5 @@ $this->jsFile = 'updateMemberAccount';
         </div>
     </div>
 </div>
-
 
 
