@@ -302,20 +302,5 @@ let priceMin = document.getElementById("slider-min");
 let priceMax = document.getElementById("slider-max");
 let rating = document.getElementById("slider-value");
 
-priceMin.addEventListener("input", debounce(() => {
-    let minValue = parseInt(priceMin.value, 10);
-    console.log(minValue);
-    applyFilters({ minimumPrice: minValue });
-}, 300));
+console.log(priceMin, priceMax, rating);
 
-priceMax.addEventListener("input", debounce(() => {
-    let maxValue = parseInt(priceMax.value, 10);
-    console.log(maxValue);
-    applyFilters({ maximumPrice: maxValue });
-}, 300));
-
-rating.addEventListener("input", debounce(() => {
-    let ratingValue = parseInt(rating.value, 10);
-    console.log(ratingValue);
-    applyFilters({ rating: ratingValue });
-}, 300));
