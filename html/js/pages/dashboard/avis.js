@@ -40,6 +40,7 @@ for (let button of filterButtons) {
 
 let offset = 0;
 let read = null;
+let searchValue = "";
 let opinionsContainer = document.querySelector('.opinions-container');
 let loaderSection = document.querySelector('#loader-section');
 let user = null; // Represents the current authenticated user
@@ -61,7 +62,7 @@ getUser().then(u => {
 });
 
 function loadCards() {
-    fetch(`/api/opinions?offer_pro_id=${user.account_id}&limit=3&offset=${offset}&read_on_load=true&read=${read}`)
+    fetch(`/api/opinions?offer_pro_id=${user.account_id}&limit=3&offset=${offset}&read_on_load=true&read=${read}&q=${searchValue}`)
         .then(response => response.json())
         .then(opinions => {
             if (opinions.length < 3) {
@@ -104,11 +105,22 @@ function resetCards() {
 let searchInput = document.querySelector('#search-input');
 
 searchInput.addEventListener('input', debounce(() => {
-    resetCards();
+    offset = 0;
 
-    let value = searchInput.value.trim();
+    // Remove all opinion cards
+    let cards = document.querySelectorAll('.opinion-card');
 
-    fetch(`/api/opinions?offer_pro_id=${user.account_id}&limit=3&offset=${offset}&q=${value}&read_on_load=true&read=${read}`)
+    for (let card of cards) {
+        card.remove();
+    }
+
+    searchValue = searchInput.value.trim();
+
+    if (searchValue.length === 0) {
+        loaderSection.classList.remove('hidden');
+    }
+
+    fetch(`/api/opinions?offer_pro_id=${user.account_id}&limit=3&offset=${offset}&q=${searchValue}&read_on_load=true&read=${read}`)
         .then(response => response.json())
         .then(opinions => {
             if (opinions.length < 3) {
