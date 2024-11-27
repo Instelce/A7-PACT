@@ -30,7 +30,7 @@ export class Input extends WebComponent {
         let field = this.shadow.querySelector('.input-field');
         let required = input.hasAttribute('required') || this.hasAttribute('required');
 
-        if (input.id) {
+        if (input.id && label) {
             label.setAttribute('for', input.id);
         }
         if (required) {

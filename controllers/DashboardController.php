@@ -76,9 +76,10 @@ class DashboardController extends Controller
         return $this->render('/dashboard/avis');
     }
 
-    public function factures(Request $request, Response $response)
+    public function invoices(Request $request, Response $response)
     {
         $this->setLayout('back-office');
         return $this->render('/dashboard/factures');
     }
+
 }

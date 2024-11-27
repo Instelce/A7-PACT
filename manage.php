@@ -1,25 +1,30 @@
 <?php
+// -------------------------------------------------------------------------------------------------
+// This file is used to manage the application from the command line
+// -------------------------------------------------------------------------------------------------
+
 
 use app\core\Application;
 use app\core\TaskManager;
-use app\models\account\Account;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-// setup env variables
+// Setup env variables
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 // Setup app
-$app = new Application(__DIR__, [
-    'db' => [
-        'dsn' => $_ENV['DB_DSN'],
-        'user' => $_ENV['DB_USER'],
-        'password' => $_ENV['DB_PASSWORD']
-    ]
-]);
+try {
+    $app = new Application(__DIR__, [
+        'db' => [
+            'dsn' => $_ENV['DB_DSN'],
+            'user' => $_ENV['DB_USER'],
+            'password' => $_ENV['DB_PASSWORD']
+        ]
+    ]);
+} catch (\PDOException $e) {}
 
-// parse command line arguments
+// Parse command line arguments
 if ($argc >= 2) {
     if ($argv[1] === "migration") {
         if ($argv[2] === "apply") {

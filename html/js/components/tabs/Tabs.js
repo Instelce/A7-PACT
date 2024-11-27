@@ -29,6 +29,8 @@ export class Tabs extends WebComponent {
         // Add on slot change event listener
         this.tabSlot.addEventListener('slotchange', this.onSlotChange);
         this.panelSlot.addEventListener('slotchange', this.onSlotChange);
+
+        this.saveInGet = this.hasAttribute('save');
     }
 
     connectedCallback() {
@@ -103,7 +105,15 @@ export class Tabs extends WebComponent {
             panel.setAttribute('aria-labelledby', tab.id);
         })
 
-        const selectedTab = tabs.find(tab => tab.selected) || tabs[0];
+        let selectedTab = tabs.find(tab => tab.selected) || tabs[0];
+
+        if (this.saveInGet) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabId = urlParams.get('tab');
+            if (tabId) {
+                selectedTab = tabs.find(tab => tab.id === tabId) || selectedTab;
+            }
+        }
 
         this.selectTab(selectedTab);
     }
@@ -205,5 +215,11 @@ export class Tabs extends WebComponent {
         }
 
         this.selectTab(event.target);
+
+        if (this.saveInGet) {
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.set('tab', event.target.id);
+            history.replaceState(null, '', newUrl);
+        }
     }
 }

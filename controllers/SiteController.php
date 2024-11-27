@@ -277,4 +277,9 @@ class SiteController extends Controller
         Application::$app->mailer->send("test@example.com", "Test", "welcome", ["pseudo" => "Célestin"]);
         return $this->render("auth/users", ["users" => $users]);
     }
+
+    public function testPdf()
+    {
+        $this->pdf('super-pdf', 'test');
+    }
 }

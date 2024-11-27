@@ -143,7 +143,7 @@ $db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id)
 // create offer types
 // ---------------------------------------------------------------------- //
 
-$db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 4.99), (2, 'premium', 7.99), (3, 'gratuite', 0.00);");
+$db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 1.67), (2, 'premium', 3.34), (3, 'gratuite', 0.00);");
 
 
 // ---------------------------------------------------------------------- //
@@ -180,7 +180,7 @@ $offre1->description = 'le Café des Halles se distingue par son ambiance authen
 $offre1->likes = 57;
 $offre1->offline = 0;
 $offre1->last_offline_date = null;
-$offre1->last_online_date = "2024-11-01";
+$offre1->offline_days = 0;
 $offre1->view_counter = 120;
 $offre1->click_counter = 180;
 $offre1->website = 'https://www.facebook.com/people/Caf%C3%A9-Des-Halles/100064099743039/';
@@ -288,7 +288,7 @@ Ce village n’est pas celui du célèbre petit Gaulois... C’est un lieu de d�
 $offre2->likes = 420;
 $offre2->offline = 0;
 $offre2->last_offline_date = null;
-$offre2->last_online_date = "2024-11-01";
+$offre2->offline_days = 0;
 $offre2->view_counter = 8714;
 $offre2->click_counter = 1234;
 $offre2->website = 'https://www.levillagegaulois.org/php/home.php';
@@ -363,7 +363,7 @@ Nous nous rendrons jusqu\'au Port de Dinan (pas d\'arrêt, pas de débarquement)
 $offre3->likes = 8;
 $offre3->offline = 0;
 $offre3->last_offline_date = null;
-$offre3->last_online_date = "2024-11-01";
+$offre3->offline_days = 0;
 $offre3->view_counter = 321;
 $offre3->click_counter = 180;
 $offre3->website = 'https://www.rance-evasion.fr/';
@@ -395,7 +395,7 @@ $offre4->description = 'La légende raconte que Merlin, banni du Royaume de Came
 $offre4->likes = 600;
 $offre4->offline = 0;
 $offre4->last_offline_date = null;
-$offre4->last_online_date = "2024-11-02";
+$offre4->offline_days = 0;
 $offre4->view_counter = 8714;
 $offre4->click_counter = 8001;
 $offre4->website = 'https://www.lacachettedemerlin.fr/';
@@ -423,7 +423,7 @@ A l’issue, vous débarquerez sur l’île de Bréhat pour une visite libre. Le
 $offre5->likes = 4012;
 $offre5->offline = 0;
 $offre5->last_offline_date = null;
-$offre5->last_online_date = "2024-10-01";
+$offre5->offline_days = 0;
 $offre5->view_counter = 20986;
 $offre5->click_counter = 7863;
 $offre5->website = 'https://surmerbrehat.com/';
@@ -498,7 +498,7 @@ $offre6->description = 'Plongez dans l’aventure au Parc d’attractions La Ré
 $offre6->likes = 100841;
 $offre6->offline = 0;
 $offre6->last_offline_date = null;
-$offre6->last_online_date = "2024-09-01";
+$offre6->offline_days = 0;
 $offre6->view_counter = 542321;
 $offre6->click_counter = 35874;
 $offre6->website = 'https://www.larecredes3cures.com/';
@@ -757,106 +757,352 @@ $members = MemberUser::all();
 
 $contexts = ["affaires", "couple", "famille", "amis", "solo"];
 $reviews = [
-    [
-        "title" => "Un séjour inoubliable !",
-        "content" => "Le personnel était incroyablement accueillant et la chambre parfaitement propre. On reviendra, c’est sûr !",
-        "rating" => 5
+    // Restaurants
+    "restaurant" => [
+        [
+            "title" => "Un dîner inoubliable",
+            "content" => "Une cuisine raffinée et un service impeccable. Mention spéciale pour le chef qui est venu nous saluer à la fin du repas.",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Correct mais sans plus",
+            "content" => "Les plats étaient bons mais manquaient un peu de saveur. Le service était rapide mais pas très chaleureux.",
+            "rating" => 3,
+        ],
+        [
+            "title" => "Un cadre charmant",
+            "content" => "Ce restaurant offre une vue magnifique et une atmosphère paisible. La nourriture était correcte, mais les prix un peu élevés.",
+            "rating" => 4,
+        ],
+        [
+            "title" => "Mauvaise expérience",
+            "content" => "Service très lent et plats froids à l'arrivée. Une grosse déception pour ce restaurant pourtant bien noté.",
+            "rating" => 2,
+        ],
+        [
+            "title" => "Le paradis des gourmets",
+            "content" => "Une explosion de saveurs dans chaque bouchée. Le personnel est aux petits soins. Je recommande vivement !",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Brunch très réussi",
+            "content" => "Les viennoiseries étaient excellentes et les jus fraîchement pressés. Parfait pour un début de journée gourmand.",
+            "rating" => 4,
+        ],
+        [
+            "title" => "Service moyen mais bonne cuisine",
+            "content" => "Les plats étaient délicieux, mais le personnel semblait débordé et peu réactif. Dommage.",
+            "rating" => 3,
+        ],
+        [
+            "title" => "Un vrai délice pour les papilles",
+            "content" => "Des plats créatifs et savoureux, servis avec le sourire. Une adresse à ne pas manquer.",
+            "rating" => 5,
+        ],
+
+        [
+            "title" => "Service déplorable",
+            "content" => "Le serveur était impoli et nous avons attendu plus d'une heure pour des plats froids et mal assaisonnés. Une véritable déception.",
+            "rating" => 1,
+            "activity" => "restaurant"
+        ],
+        [
+            "title" => "Une mauvaise surprise",
+            "content" => "Les photos en ligne semblaient prometteuses, mais la réalité était bien différente. Plats insipides et ambiance désagréable.",
+            "rating" => 2,
+            "activity" => "restaurant"
+        ],
+        [
+            "title" => "Trop cher pour ce que c'est",
+            "content" => "Les portions étaient minuscules, et la qualité ne justifiait pas du tout les prix exorbitants. Je ne recommande pas.",
+            "rating" => 1,
+            "activity" => "restaurant"
+        ],
+        [
+            "title" => "Évitez à tout prix",
+            "content" => "La nourriture était immangeable, et il y avait une forte odeur de renfermé dans la salle. Horrible expérience.",
+            "rating" => 1,
+            "activity" => "restaurant"
+        ],
     ],
-    [
-        "title" => "Déception totale",
-        "content" => "Les photos sur le site ne reflètent pas la réalité. Très déçu par l’état des lieux.",
-        "rating" => 2
+
+    // Visits
+    "visit" => [
+        [
+            "title" => "Une visite fascinante",
+            "content" => "Le guide était passionné et les anecdotes étaient captivantes. Une excellente activité culturelle.",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Pas à la hauteur des attentes",
+            "content" => "Le site est intéressant, mais la visite était trop courte et manquait de détails.",
+            "rating" => 3,
+        ],
+        [
+            "title" => "Un lieu à voir absolument",
+            "content" => "Magnifique et chargé d'histoire. Je recommande de prendre le temps d'explorer chaque recoin.",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Un endroit bien préservé",
+            "content" => "Le site est bien conservé et l'expérience était immersive. Prévoir des chaussures confortables pour la marche.",
+            "rating" => 4,
+        ],
+        [
+            "title" => "Trop de monde",
+            "content" => "Difficile de profiter pleinement de la visite avec autant de monde. Dommage, car le lieu est superbe.",
+            "rating" => 3,
+        ],
+        [
+            "title" => "Un joyau caché",
+            "content" => "Un endroit peu connu mais absolument magnifique. Calme et sérénité garanties.",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Très instructif",
+            "content" => "Nous avons beaucoup appris lors de cette visite. Les enfants ont aussi adoré les activités proposées.",
+            "rating" => 4,
+        ],
+        [
+            "title" => "Décevant",
+            "content" => "Le site semblait intéressant, mais la visite guidée était monotone et peu engageante.",
+            "rating" => 2,
+        ],
+
+        [
+            "title" => "Un lieu surcoté",
+            "content" => "Mal indiqué, mal entretenu, et rien de spécial à voir. Nous avons regretté d’avoir perdu notre temps ici.",
+            "rating" => 2,
+            "activity" => "visit"
+        ],
+        [
+            "title" => "Très décevant",
+            "content" => "Le site est petit et sans intérêt. La visite guidée manquait d'informations et le guide semblait pressé d'en finir.",
+            "rating" => 1,
+            "activity" => "visit"
+        ],
+        [
+            "title" => "Ne vaut pas le détour",
+            "content" => "Rien de fascinant ici. Les bâtiments sont en mauvais état, et il n’y a aucune ambiance. Très ennuyant.",
+            "rating" => 2,
+            "activity" => "visit"
+        ],
+        [
+            "title" => "Grosse déception",
+            "content" => "Le site n’a rien d’extraordinaire, et les panneaux explicatifs sont usés ou illisibles. Une vraie arnaque.",
+            "rating" => 1,
+            "activity" => "visit"
+        ],
     ],
-    [
-        "title" => "Petit coin de paradis",
-        "content" => "Un cadre magnifique, idéal pour se détendre loin de la ville. Bravo à toute l’équipe.",
-        "rating" => 5
+
+    // Attraction Parks
+    "attraction_park" => [
+        [
+            "title" => "Une journée riche en émotions",
+            "content" => "Les attractions sont variées et adaptées à tous les âges. Une excellente journée en famille !",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Trop d'attente",
+            "content" => "Les attractions étaient bien, mais les files d'attente interminables ont gâché notre journée.",
+            "rating" => 3,
+        ],
+        [
+            "title" => "Un parc exceptionnel",
+            "content" => "Les décors sont magnifiques et les sensations fortes au rendez-vous. Nous avons adoré !",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Une expérience moyenne",
+            "content" => "Les attractions sont bien, mais les prix sont beaucoup trop élevés, surtout pour la nourriture.",
+            "rating" => 3,
+        ],
+        [
+            "title" => "Parfait pour les enfants",
+            "content" => "Un parc adapté aux plus petits avec beaucoup de jeux et des espaces sécurisés. Les enfants étaient ravis.",
+            "rating" => 4,
+        ],
+        [
+            "title" => "Une ambiance féérique",
+            "content" => "Tout était parfait, des attractions aux spectacles en passant par les décors. Un vrai moment de magie.",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Bien mais cher",
+            "content" => "Le parc est magnifique, mais le prix d'entrée et des extras est exorbitant. Préparez votre budget.",
+            "rating" => 3,
+        ],
+        [
+            "title" => "Une journée mouvementée",
+            "content" => "Les attractions sont géniales, mais l'organisation pour gérer les flux de visiteurs pourrait être améliorée.",
+            "rating" => 4,
+        ],
+
+        [
+            "title" => "Une expérience catastrophique",
+            "content" => "Les manèges étaient souvent en panne, et le personnel était désagréable. À éviter absolument.",
+            "rating" => 1,
+            "activity" => "attraction_park"
+        ],
+        [
+            "title" => "Trop cher et trop de monde",
+            "content" => "Impossible de profiter des attractions avec des heures d’attente. Une journée gâchée.",
+            "rating" => 2,
+            "activity" => "attraction_park"
+        ],
+        [
+            "title" => "Manque de sécurité",
+            "content" => "Certains manèges semblaient vieux et mal entretenus. Cela ne m’a pas rassuré, surtout pour les enfants.",
+            "rating" => 1,
+            "activity" => "attraction_park"
+        ],
+        [
+            "title" => "Déception totale",
+            "content" => "Le parc était sale, mal organisé et rien ne fonctionnait correctement. Nous n’y retournerons jamais.",
+            "rating" => 1,
+            "activity" => "attraction_park"
+        ],
     ],
-    [
-        "title" => "Service à améliorer",
-        "content" => "La nourriture était correcte, mais le service était lent et peu attentif.",
-        "rating" => 3
+
+    // Shows ---------------------------------------------------------------------------------------
+    "show" => [
+        [
+            "title" => "Un spectacle époustouflant",
+            "content" => "Les artistes étaient incroyables, et les effets visuels magnifiques. Une soirée mémorable.",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Pas mal mais trop court",
+            "content" => "Le spectacle était bien, mais la durée était vraiment trop courte pour le prix payé.",
+            "rating" => 3,
+        ],
+        [
+            "title" => "Une ambiance magique",
+            "content" => "Un show captivant du début à la fin. L'éclairage et la musique étaient particulièrement réussis.",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Des longueurs",
+            "content" => "Certains passages du spectacle étaient très bien, mais d'autres traînaient en longueur. Moyen dans l'ensemble.",
+            "rating" => 3,
+        ],
+        [
+            "title" => "Un moment d'émotion",
+            "content" => "Un spectacle qui nous a fait vibrer et même pleurer. Bravo aux artistes pour leur talent !",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Manque d'énergie",
+            "content" => "Le spectacle aurait pu être plus dynamique. Les performances étaient correctes, mais rien d'extraordinaire.",
+            "rating" => 3,
+        ],
+        [
+            "title" => "Une soirée réussie",
+            "content" => "Un excellent spectacle avec des performances impressionnantes. Nous avons passé un très bon moment.",
+            "rating" => 4,
+        ],
+        [
+            "title" => "Des artistes talentueux",
+            "content" => "Le spectacle était magnifique, et la qualité des prestations était exceptionnelle. Je recommande sans hésiter.",
+            "rating" => 5,
+        ],
+
+
+        [
+            "title" => "Spectacle ennuyant",
+            "content" => "Le rythme était beaucoup trop lent, et les performances étaient loin d’être impressionnantes. Je me suis presque endormi.",
+            "rating" => 2,
+            "activity" => "show"
+        ],
+        [
+            "title" => "Une grosse perte de temps",
+            "content" => "Le show manquait de cohérence et de professionnalisme. Les acteurs semblaient peu préparés.",
+            "rating" => 1,
+            "activity" => "show"
+        ],
+        [
+            "title" => "Pas à la hauteur",
+            "content" => "Les critiques étaient positives, mais ce spectacle était une vraie déception. Décors pauvres et musique assourdissante.",
+            "rating" => 2,
+            "activity" => "show"
+        ],
+        [
+            "title" => "A éviter absolument",
+            "content" => "Les sièges étaient inconfortables, et le spectacle n'avait aucun intérêt. Une soirée gâchée.",
+            "rating" => 1,
+            "activity" => "show"
+        ],
     ],
-    [
-        "title" => "Un rapport qualité/prix imbattable",
-        "content" => "Superbe expérience pour un budget raisonnable. Je recommande vivement !",
-        "rating" => 5
+
+    // Activities
+    "activity" => [
+
+        [
+            "title" => "Une expérience unique",
+            "content" => "Une activité originale et bien organisée. Parfait pour découvrir quelque chose de nouveau.",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Pas à la hauteur",
+            "content" => "L'organisation était décevante, et l'activité n'était pas aussi intéressante que prévu.",
+            "rating" => 2,
+        ],
+        [
+            "title" => "Un moment de détente",
+            "content" => "Une activité très relaxante dans un cadre agréable. Idéal pour déconnecter un moment.",
+            "rating" => 4,
+        ],
+        [
+            "title" => "Super pour les groupes",
+            "content" => "Une activité qui nous a permis de passer un excellent moment entre amis. Nous avons bien rigolé !",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Activité basique",
+            "content" => "C'était correct, mais sans grande originalité. Je m'attendais à mieux pour le prix.",
+            "rating" => 3,
+        ],
+        [
+            "title" => "Très amusant",
+            "content" => "Une activité dynamique et ludique. Les enfants ont adoré et nous aussi !",
+            "rating" => 5,
+        ],
+        [
+            "title" => "Manque de professionnalisme",
+            "content" => "L'activité aurait pu être agréable, mais l'organisation laissait à désirer. Un peu décevant.",
+            "rating" => 2,
+        ],
+        [
+            "title" => "Génial du début à la fin",
+            "content" => "Tout était parfait : l'organisation, l'ambiance, et le plaisir partagé. Un vrai coup de cœur !",
+            "rating" => 5,
+        ],
+
+        [
+            "title" => "Une activité mal organisée",
+            "content" => "Le personnel n’était pas compétent, et l’équipement fourni était en mauvais état. Une très mauvaise expérience.",
+            "rating" => 1,
+            "activity" => "activity"
+        ],
+        [
+            "title" => "Très ennuyeux",
+            "content" => "L’activité manquait d’originalité et était beaucoup trop chère pour ce que c’est. Je ne recommande pas.",
+            "rating" => 2,
+            "activity" => "activity"
+        ],
+        [
+            "title" => "Une arnaque",
+            "content" => "La description promettait une expérience inoubliable, mais c'était loin d'être le cas. Rien n’était à la hauteur.",
+            "rating" => 1,
+            "activity" => "activity"
+        ],
+        [
+            "title" => "Un désastre",
+            "content" => "Tout était mal organisé, et les conditions étaient déplorables. Nous avons quitté avant la fin.",
+            "rating" => 1,
+            "activity" => "activity"
+        ]
     ],
-    [
-        "title" => "Pas comme prévu...",
-        "content" => "La chambre était bruyante et mal isolée. Heureusement, le personnel a fait de son mieux.",
-        "rating" => 3
-    ],
-    [
-        "title" => "Parfait pour les familles !",
-        "content" => "Un lieu convivial et des activités pour tous les âges. Mes enfants ont adoré.",
-        "rating" => 5
-    ],
-    [
-        "title" => "Une cuisine exceptionnelle",
-        "content" => "Les plats étaient délicieux et parfaitement présentés. Un grand merci au chef !",
-        "rating" => 5
-    ],
-    [
-        "title" => "Propreté à revoir",
-        "content" => "L'hôtel est bien situé, mais la propreté de la salle de bain laissait à désirer.",
-        "rating" => 2
-    ],
-    [
-        "title" => "Une vue à couper le souffle",
-        "content" => "Se réveiller avec une vue sur la mer, c'était magique. Merci pour ce séjour parfait.",
-        "rating" => 5
-    ],
-    [
-        "title" => "Pas adapté aux couples",
-        "content" => "Beaucoup trop de bruit et aucune intimité. Une vraie déception pour un voyage romantique.",
-        "rating" => 2
-    ],
-    [
-        "title" => "Idéal pour un week-end détente",
-        "content" => "Spa, piscine, et service impeccable. Tout ce qu’il faut pour se relaxer.",
-        "rating" => 5
-    ],
-    [
-        "title" => "Des souvenirs plein la tête",
-        "content" => "Merci pour ce séjour incroyable, on reviendra l’année prochaine avec plaisir.",
-        "rating" => 5
-    ],
-    [
-        "title" => "Trop cher pour ce que c’est",
-        "content" => "La qualité n’était pas au rendez-vous pour le prix payé. Je ne recommande pas.",
-        "rating" => 2
-    ],
-    [
-        "title" => "Ambiance chaleureuse",
-        "content" => "Le personnel est très sympathique et l’ambiance générale est conviviale. Une belle découverte !",
-        "rating" => 4
-    ],
-    [
-        "title" => "Dommage pour le bruit",
-        "content" => "Tout aurait été parfait si la chambre n’avait pas été à côté de la route principale.",
-        "rating" => 3
-    ],
-    [
-        "title" => "Un véritable havre de paix",
-        "content" => "Le calme et la sérénité de cet endroit sont incomparables. À découvrir absolument.",
-        "rating" => 5
-    ],
-    [
-        "title" => "Des activités pour tous",
-        "content" => "Nous avons adoré les excursions proposées. Une belle manière de découvrir la région.",
-        "rating" => 5
-    ],
-    [
-        "title" => "Un accueil digne de ce nom",
-        "content" => "Le personnel est aux petits soins, on se sent comme à la maison. Un grand merci !",
-        "rating" => 5
-    ],
-    [
-        "title" => "Pas convaincu",
-        "content" => "L’organisation laissait vraiment à désirer. J’ai connu bien mieux.",
-        "rating" => 2
-    ]
 ];
 
 foreach ($offers as $offer) {
@@ -869,7 +1115,7 @@ foreach ($offers as $offer) {
             continue;
         }
 
-        $review = $reviews[array_rand($reviews)];
+        $review = $reviews[$offer->category][array_rand($reviews[$offer->category])];
         $opinion = new Opinion();
         $opinion->rating = $review['rating'];
         $opinion->title = $review['title'];

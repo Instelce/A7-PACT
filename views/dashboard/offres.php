@@ -175,17 +175,17 @@ $this->cssFile = "dashboard/offers";
                     <a href="/dashboard/avis" class="button purple fit"
                             title="Avis non lu">
                         <i data-lucide="message-square-dot"></i>
-                        <?php echo rand(3, 10) ?>
+                        <?php echo $offer->noReadOpinions() ?>
                     </a>
                     <a href="/dashboard/avis" class="button gray fit"
                        title="Avis non répondu">
                         <i data-lucide="message-square-more"></i>
-                        <?php echo rand(2, 5) ?>
+                        <?php echo $offer->opinionsCount() ?>
                     </a>
                     <a href="/dashboard/avis" class="button gray fit"
                        title="Avis blacklisté">
                         <i data-lucide="ban"></i>
-                        <?php echo rand(1, 3) ?>
+                        <?php echo 0 ?>
                     </a>
                 </div>
             </article>

@@ -21,7 +21,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
+    gap: 1rem;
 
     cursor: pointer;
     transition: color .2s, background .1s, border .2s, box-shadow .2s;
@@ -32,7 +32,7 @@
     border: 1px solid rgb(var(--border-hover));
 }
 
-.clickable {
+.bt-payment .clickable {
     display : flex;
     flex-direction : row;
     justify-content: start;
@@ -41,4 +41,8 @@
     gap : 1rem;
     height: 50px;
     padding: .8rem;
+}
+
+.bt-payment .clickable img {
+    height: 30px;
 }

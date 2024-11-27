@@ -24,6 +24,19 @@ class Controller
         return Application::$app->view->renderView($view, $params);
     }
 
+    /**
+     * @param $model DBModel | DBModel[]
+     */
+    public function json($model)
+    {
+        return Application::$app->view->json($model);
+    }
+
+    public function pdf($name, $view, $params = [])
+    {
+        return Application::$app->view->pdf($name, $view, $params);
+    }
+
     public function registerMiddleware(BaseMiddleware $middleware)
     {
         $this->middlewares[] = $middleware;
@@ -32,13 +45,5 @@ class Controller
     public function getMiddlewares(): array
     {
         return $this->middlewares;
-    }
-
-    /**
-     * @param $model DBModel | DBModel[]
-     */
-    public function json($model)
-    {
-        return Application::$app->view->json($model);
     }
 }

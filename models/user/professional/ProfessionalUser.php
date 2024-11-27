@@ -47,6 +47,25 @@ class ProfessionalUser extends DBModel
         return UserAccount::findOne(['account_id' => $this->user_id]);
     }
 
+    public function isPublic(): bool
+    {
+        return PublicProfessional::findOneByPk($this->user_id) !== false;
+    }
+
+    public function isPrivate(): bool
+    {
+        return PrivateProfessional::findOneByPk($this->user_id) !== false;
+    }
+
+    public function specific()
+    {
+        if ($this->isPublic()) {
+            return PublicProfessional::findOneByPk($this->user_id);
+        } else {
+            return PrivateProfessional::findOneByPk($this->user_id);
+        }
+    }
+
     public function hasOffer($offerId): bool {
         return Offer::findOne(['professional_id' => $this->user_id, 'id' => $offerId]) !== false;
     }
