@@ -24,7 +24,7 @@ $iconsNames = [
 <!-- Search bar, sort and filter -->
 <div class="flex flex-col mb-4">
     <x-input rounded>
-        <input slot="input" type="text" placeholder="Rechercher">
+        <input class="search-input" slot="input" type="text" placeholder="Rechercher">
         <button slot="button" class="button only-icon sm">
             <i data-lucide="search" stroke-width="2"></i>
         </button>
