@@ -23,8 +23,7 @@ $form = new Form();
 <div class="grid grid-cols-5 gap-8">
     <div class="w-full flex flex-col col-span-3">
 
-        <form action="" method="post" id="create-offer" class="flex flex-col gap-12"
-              enctype="multipart/form-data">
+        <form action="" method="post" id="create-offer" class="flex flex-col gap-12" enctype="multipart/form-data">
 
             <!-- ------------------------------------------------------------------- -->
             <!-- Type of the offer (type: 'standard' | 'premium')                    -->
@@ -42,8 +41,7 @@ $form = new Form();
                         <!-- Standard offer -->
                         <div class="flex justify-between">
                             <div class="flex gap-2">
-                                <input type="radio" id="type-standard" name="type" value="standard"
-                                       checked>
+                                <input type="radio" id="type-standard" name="type" value="standard" checked>
                                 <label for="type-standard" class="flex flex-col gap-1">
                                     Offre standard
                                     <small class="helper">Permet de prendre une option</small>
@@ -110,8 +108,7 @@ $form = new Form();
                         <!-- En relief option -->
                         <div class="flex justify-between items-center">
                             <div class="flex gap-2 items-center">
-                                <input type="radio" id="type-in-relief" name="option"
-                                       value="en_relief">
+                                <input type="radio" id="type-in-relief" name="option" value="en_relief">
                                 <label for="type-in-relief" class="flex flex-col gap-1">
                                     Option “En Relief”
                                     <small class="helper">Met l’offre en exergue lors de son
@@ -125,8 +122,7 @@ $form = new Form();
                         <!-- A la une option -->
                         <div class="flex justify-between items-center">
                             <div class="flex gap-2 items-center">
-                                <input type="radio" id="type-a-la-une" name="option"
-                                       value="a_la_une">
+                                <input type="radio" id="type-a-la-une" name="option" value="a_la_une">
                                 <label for="type-a-la-une" class="flex flex-col gap-1">
                                     Option “A la Une”
                                     <small class="helper">Avantage de “En relief” <br>
@@ -140,13 +136,13 @@ $form = new Form();
                         <div id="option-dates" class="flex gap-4 mt-2 w-full hidden">
                             <x-input>
                                 <p slot="label">Date de lancement</p>
-                                <input slot="input" type="date" name="option-launch-date" step="7" value="<?php echo date('Y-m-d', strtotime("last Monday")) ?>">
+                                <input slot="input" type="date" name="option-launch-date" step="7"
+                                    value="<?php echo date('Y-m-d', strtotime("last Monday")) ?>">
                                 <p slot="helper">L'option prendra effet en début de semaine</p>
                             </x-input>
                             <x-input>
                                 <p slot="label">Nombre de semaine</p>
-                                <input slot="input" type="number" name="option-duration" max="4"
-                                       min="1" value="1">
+                                <input slot="input" type="number" name="option-duration" max="4" min="1" value="1">
                             </x-input>
                         </div>
                     </div>
@@ -206,21 +202,19 @@ $form = new Form();
 
                     <x-input>
                         <p slot="label">Durée de la visite (h)</p>
-                        <input slot="input" type="text" name="visit-duration" placeholder="2h15"
-                               required>
+                        <input slot="input" type="text" name="visit-duration" placeholder="2h15" required>
                     </x-input>
 
                     <x-input>
                         <p slot="label">Langues disponibles pour la visite</p>
-                        <input slot="input" type="text" name="visit-languages"
-                               placeholder="anglais,français..." required>
+                        <input slot="input" type="text" name="visit-languages" placeholder="anglais,français..."
+                            required>
                         <p slot="helper">Séparez les langues par une ,</p>
                     </x-input>
 
                     <div class="flex gap-4 items-center">
                         <div class="flex items-center">
-                            <input class="switch" type="checkbox" id="switch-guide"
-                                   name="visit-guide"/>
+                            <input class="switch" type="checkbox" id="switch-guide" name="visit-guide" />
                             <label class="switch" for="switch-guide"></label>
                         </div>
                         <label for="switch-guide">Avec guide de visite</label>
@@ -232,49 +226,42 @@ $form = new Form();
                 <div class="complementary-section flex flex-col gap-4 hidden" data-category="show">
                     <x-input>
                         <p slot="label">Durée du spectacle (h)</p>
-                        <input slot="input" type="text" name="show-duration" placeholder="1h30"
-                               required>
+                        <input slot="input" type="text" name="show-duration" placeholder="1h30" required>
                     </x-input>
 
                     <x-input>
                         <p slot="label">Capacité d'accueil spectacle</p>
-                        <input slot="input" type="number" name="show-capacity" placeholder="100"
-                               required>
+                        <input slot="input" type="number" name="show-capacity" placeholder="100" required>
                     </x-input>
 
                 </div>
 
                 <!-- Activity -->
-                <div class="complementary-section flex flex-col gap-4 hidden"
-                     data-category="activity">
+                <div class="complementary-section flex flex-col gap-4 hidden" data-category="activity">
                     <x-input>
                         <p slot="label">Durée de l'activité (h)</p>
-                        <input slot="input" type="text" name="activity-duration" placeholder="1h30"
-                               required>
+                        <input slot="input" type="text" name="activity-duration" placeholder="1h30" required>
                     </x-input>
 
                     <x-input>
                         <p slot="label">Age minimum pour l'activité</p>
-                        <input slot="input" type="number" name="activity-age" placeholder="3"
-                               required>
+                        <input slot="input" type="number" name="activity-age" placeholder="3" required>
                     </x-input>
                 </div>
 
                 <!-- Restaurant -->
-                <div class="complementary-section flex flex-col gap-4 hidden"
-                     data-category="restaurant">
+                <div class="complementary-section flex flex-col gap-4 hidden" data-category="restaurant">
                     <div class="flex flex-col gap-2">
                         <label for="restaurant-image">Image de la carte</label>
-                        <input id="restaurant-image" type="file" accept="image/png, image/jpg"
-                               name="restaurant-image" required>
+                        <input id="restaurant-image" type="file" accept="image/png, image/jpg" name="restaurant-image"
+                            required>
                     </div>
 
 
                     <!-- Range price for the RESTAURANT -->
                     <div class="flex gap-4">
 
-                        <x-select id="price-low" name="price-range" value="1" class="w-full"
-                                  required>
+                        <x-select id="price-low" name="price-range" value="1" class="w-full" required>
                             <label slot="label">Gamme de prix</label>
                             <span slot="trigger">€</span>
                             <div slot="options">
@@ -323,12 +310,11 @@ $form = new Form();
                 </div>
 
                 <!-- Attraction parc-->
-                <div class="complementary-section flex flex-col gap-4 hidden"
-                     data-category="attraction-parc">
+                <div class="complementary-section flex flex-col gap-4 hidden" data-category="attraction-parc">
                     <div class="flex flex-col gap-2">
                         <label for="attraction-parc-map">Plan du parc</label>
                         <input id="attraction-parc-map" type="file" accept="image/png, image/jpg"
-                               name="attraction-parc-map" required>
+                            name="attraction-parc-map" required>
                     </div>
 
                     <x-input>
@@ -343,8 +329,7 @@ $form = new Form();
 
                     <div class="flex gap-4 items-center">
                         <div class="flex items-center">
-                            <input class="switch" type="checkbox" id="switch-period"
-                                   name="visit-guide"/>
+                            <input class="switch" type="checkbox" id="switch-period" name="visit-guide" />
                             <label class="switch" for="switch-period"></label>
                         </div>
                         <label for="switch-period" id="switch-period-label">A une période</label>
@@ -375,26 +360,25 @@ $form = new Form();
                         <div class="flex gap-4">
                             <x-input class="w-[200px]">
                                 <p slot="label">Numéro de rue</p>
-                                <input slot="input" id="address-number" type="number"
-                                       name="address-number" placeholder="2">
+                                <input slot="input" id="address-number" type="number" name="address-number"
+                                    placeholder="2">
                             </x-input>
                             <x-input>
                                 <p slot="label">Nom de la rue</p>
-                                <input slot="input" id="address-street" type="text"
-                                       name="address-street" placeholder="Rue Edouard Branly"
-                                       required>
+                                <input slot="input" id="address-street" type="text" name="address-street"
+                                    placeholder="Rue Edouard Branly" required>
                             </x-input>
                         </div>
                         <div class="flex gap-4">
                             <x-input class="w-[200px]">
                                 <p slot="label">Code postal</p>
-                                <input slot="input" id="address-postal-code" type="text"
-                                       name="address-postal-code" placeholder="22300" required>
+                                <input slot="input" id="address-postal-code" type="text" name="address-postal-code"
+                                    placeholder="22300" required>
                             </x-input>
                             <x-input>
                                 <p slot="label">Ville</p>
-                                <input slot="input" id="address-city" type="text"
-                                       name="address-city" placeholder="Lannion" required>
+                                <input slot="input" id="address-city" type="text" name="address-city"
+                                    placeholder="Lannion" required>
                             </x-input>
                         </div>
 
@@ -419,14 +403,14 @@ $form = new Form();
                     <!-- Schedule table -->
                     <table id="schedule-table" class="table center">
                         <thead>
-                        <tr>
-                            <th class="table-head" colspan="3">Grille des horaires</th>
-                        </tr>
-                        <tr>
-                            <th>Jour</th>
-                            <th>Ouverture</th>
-                            <th>Fermeture</th>
-                        </tr>
+                            <tr>
+                                <th class="table-head" colspan="3">Grille des horaires</th>
+                            </tr>
+                            <tr>
+                                <th>Jour</th>
+                                <th>Ouverture</th>
+                                <th>Fermeture</th>
+                            </tr>
                         </thead>
 
                         <!-- Days of the week are generated in the offerCreate.js -->
@@ -473,37 +457,37 @@ $form = new Form();
                     <!-- Price table -->
                     <table class="table center hidden">
                         <thead>
-                        <tr>
-                            <th class="table-head" colspan="2">Grille tarifaire</th>
-                        </tr>
-                        <tr>
-                            <th>Dénomination</th>
-                            <th>Prix</th>
-                        </tr>
+                            <tr>
+                                <th class="table-head" colspan="2">Grille tarifaire</th>
+                            </tr>
+                            <tr>
+                                <th>Dénomination</th>
+                                <th>Prix</th>
+                            </tr>
                         </thead>
 
                         <tbody id="prices-rows">
-                        <tr>
-                            <td>
-                                <input id="price-name" name="prices[]" type="text" placeholder="Nom"
-                                       class="table-input">
-                            </td>
-                            <td>
-                                <input id="price-value" name="prices[]" type="number"
-                                       placeholder="Prix" class="table-input">
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <input id="price-name" name="prices[]" type="text" placeholder="Nom"
+                                        class="table-input">
+                                </td>
+                                <td>
+                                    <input id="price-value" name="prices[]" type="number" placeholder="Prix"
+                                        class="table-input">
+                                </td>
+                            </tr>
                         </tbody>
 
                         <tfoot>
-                        <tr>
-                            <td colspan="2">
-                                <button id="add-price-row" class="table-button">
-                                    Ajouter un tarif
-                                    <i data-lucide="plus"></i>
-                                </button>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <button id="add-price-row" class="table-button">
+                                        Ajouter un tarif
+                                        <i data-lucide="plus"></i>
+                                    </button>
+                                </td>
+                            </tr>
                         </tfoot>
                     </table>
                 </div>
@@ -525,8 +509,8 @@ $form = new Form();
 
                     <!-- Uploader -->
                     <label for="photo-input" class="image-uploader">
-                        <input type="file" accept="image/png, image/jpeg" name="images[]"
-                               id="photo-input" multiple hidden>
+                        <input type="file" accept="image/png, image/jpeg" name="images[]" id="photo-input" multiple
+                            hidden>
 
                         <i data-lucide="upload"></i>
                         <p>Faire glisser des fichiers pour les uploader</p>
@@ -585,7 +569,8 @@ $form = new Form();
 
                 </div>
 
-                <p class="mx-6 text-gray-3">L'offre sera facturé a la <strong>journée</strong> et l'option à la <strong>semaine</strong>. Vous pourrez mettre l'offre hors ligne et ainsi arrêté la facturation.</p>
+                <p class="mx-6 text-gray-3">L'offre sera facturé a la <strong>journée</strong> et l'option à la
+                    <strong>semaine</strong>. Vous pourrez mettre l'offre hors ligne et ainsi arrêté la facturation.</p>
             </div>
 
             <!--            <x-input rounded>-->

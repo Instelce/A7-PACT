@@ -1,3 +1,5 @@
+//initialize the filters and save them permanently
+let filters = {};
 /**
  * Displays the fetched offers data in the offers container.
  *
@@ -16,8 +18,8 @@
  * @function getOffers
  * @param {Object} [filters={}] - An object containing various filters for the offers.
  * @param {string} [filters.category] - The category of the offers.
- * @param {number} [filters.minimumOpinions] - The minimum number of opinions for the offers.
- * @param {number} [filters.maximimOpinions] - The maximum number of opinions for the offers.
+ * @param {number} [filters.rating] - The minimum number of opinions for the offers.
+ * @param {number} [filters.q] - The search data.
  * @param {number} [filters.minimumPrice] - The minimum price of the offers.
  * @param {number} [filters.maximumPrice] - The maximum price of the offers.
  * @param {boolean} [filters.open] - Whether the offers are open.
@@ -30,20 +32,17 @@
  * @returns {Promise<Object|boolean>} The fetched offers data in JSON format, or false if an error occurs.
  * @throws {Error} If the response status is not OK.
  */
-async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
+async function getOffers(filters = [], order = null, limit = 5, offset = 0) {
     const host = window.location.protocol;
     const searchParams = new URLSearchParams();
     if (order) {
-        searchParams.set("order", order || null);
+        searchParams.set("order_by", order || null);
     }
     if (filters["category"]) {
         searchParams.set("category", filters["category"] || null);
     }
-    if (filters["minimumOpinions"] && filters["minimumOpinions"] > 0) {
-        searchParams.set("minimumOpinions", filters["minimumOpinions"] || null);
-    }
-    if (filters["maximimOpinions"] && filters["maximimOpinions"] > 0) {
-        searchParams.set("maximimOpinions", filters["maximimOpinions"] || null);
+    if (filters["rating"] && filters["rating"] > 0) {
+        searchParams.set("rating", filters["rating"] || null);
     }
     if (filters["minimumPrice"] && filters["minimumPrice"] > 0) {
         searchParams.set("minimumPrice", filters["minimumPrice"] || null);
@@ -68,6 +67,9 @@ async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
     }
     if (filters["location"]) {
         searchParams.set("location", filters["location"] || null);
+    }
+    if (filters["q"]) {
+        searchParams.set("q", filters["q"] || null);
     }
     let search = searchParams.toString();
     let moreSearch = "";
@@ -120,8 +122,8 @@ console.log(Data);
  *
  * @param {Object} newFilters - An object containing the new filters to be applied.
  * @param {string} [newFilters.category] - The category to filter by.
- * @param {number} [newFilters.minimumOpinions] - The minimum number of opinions to filter by.
- * @param {number} [newFilters.maximumOpinions] - The maximum number of opinions to filter by.
+ * @param {number} [filters.rating] - The minimum number of opinions for the offers.
+ * @param {number} [filters.q] - The search data.
  * @param {number} [newFilters.minimumPrice] - The minimum price to filter by.
  * @param {number} [newFilters.maximumPrice] - The maximum price to filter by.
  * @param {boolean} [newFilters.open] - Whether to filter by open status.
@@ -130,31 +132,26 @@ console.log(Data);
  * @param {string} [newFilters.location] - The location to filter by.
  * @returns {Promise<void>} A promise that resolves when the offers have been fetched and displayed.
  */
-async function applyFilters(newFilters) {
-    const currentFilters = {
-        // category: document.querySelector(".category-item.active")?.dataset.category || null,
-        // minimumOpinions: document.getElementById("minimumOpinions")?.value || null,
-        // maximumOpinions: document.getElementById("maximumOpinions")?.value || null,
-        // minimumPrice: document.getElementById("minimumPrice")?.value || null,
-        // maximumPrice: document.getElementById("maximumPrice")?.value || null,
-        // open: document.getElementById("open")?.checked || null,
-        // minimumEventDate: document.getElementById("minimumEventDate")?.value || null,
-        // maximumEventDate: document.getElementById("maximumEventDate")?.value || null,
-        // location: document.getElementById("location")?.value || null,
-    };
-    const filters = { ...currentFilters, ...newFilters };
-    Object.keys(filters).forEach(key => {
-        if (filters[key] === null || filters[key] === "" || filters[key] === false || filters[key] === undefined || filters[key] === 0) {
+async function applyFilters(newFilters, order = null) {
+    filters = { ...filters, ...newFilters };
+    console.log(filters);
+    Object.keys(filters).forEach((key) => {
+        if (
+            filters[key] === null ||
+            filters[key] === "" ||
+            filters[key] === false ||
+            filters[key] === undefined ||
+            filters[key] === 0
+        ) {
             delete filters[key];
         }
     });
-    let Data = await getOffers(filters);
+    let Data = await getOffers(filters, order);
     displayOffers(Data);
 }
 // ---------------------------------------------------------------------------------------------- //
 // Display
 // ---------------------------------------------------------------------------------------------- //
-
 
 /**
  * Displays a list of offers in the offers container.
@@ -183,18 +180,22 @@ function displayOffers(Data) {
             offerElement.innerHTML = `
             <article class="research-card">
                 <div class="research-card--photo">
-                    ${offer.photos[0]
-                    ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
-                    : ""
-                }
+                    ${
+                        offer.photos[0]
+                            ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
+                            : ""
+                    }
                 </div>
                 <div class="research-card--body">
                     <header>
                         <h2 class="research-card--title">${offer.title}</h2>
                         <p>${translateCategory(
-                    offer.category
-                )} par <a href="/comptes/${offer.professional_id
-                }" class="underline">${offer.profesionalUser["denomination"]}</a></p>
+                            offer.category
+                        )} par <a href="/comptes/${
+                offer.professional_id
+            }" class="underline">${
+                offer.profesionalUser["denomination"]
+            }</a></p>
                     </header>
                     <p class="summary">${offer.summary}</p>
                          <div class="flex gap-2 mt-auto pt-4">
@@ -262,7 +263,7 @@ let categoryValue = [
 
 /**
  * Selects all elements with the class "category-item" and assigns them to the variable `categories`.
- * 
+ *
  * @type {NodeListOf<Element>}
  */
 categoryListenners.forEach((listener, index) => {
@@ -272,7 +273,7 @@ categoryListenners.forEach((listener, index) => {
         element.addEventListener("click", () => {
             if (element.classList.contains("active")) {
                 element.classList.remove("active");
-                applyFilters();
+                applyFilters({ category: null });
             } else {
                 categories.forEach((cat) => cat.classList.remove("active"));
                 element.classList.add("active");
@@ -283,8 +284,60 @@ categoryListenners.forEach((listener, index) => {
         console.warn(`Element with ID ${listener} not found`);
     }
 });
+let sortPrice = document.getElementById("sortPrice");
 
+sortPrice.addEventListener("change", (event) => {
+    const inputValue = event.target.querySelector("input").value;
 
+    const selectedOption = sortPrice.querySelector(
+        `[data-value="${inputValue}"]`
+    );
+    const dataValue = selectedOption
+        ? selectedOption.getAttribute("data-value")
+        : null;
+
+    if (dataValue === "croissant") {
+        console.log("Tri par prix croissant");
+        applyFilters({}, "price_asc");
+    } else if (dataValue === "decroissant") {
+        console.log("Tri par prix décroissant");
+        applyFilters({}, "price_desc");
+    }
+});
+
+const sliderPrice = document.getElementById("slider-price");
+
+sliderPrice.addEventListener("slider-change", (event) => {
+    const { minValue, maxValue } = event.detail;
+    console.log("Slider values updated:", { minValue, maxValue });
+});
+
+const sliderRating = document.getElementById("slider-rating");
+
+sliderRating.addEventListener("slider-change", (event) => {
+    const { minValue } = event.detail;
+    console.log("Slider values updated:", { minValue });
+});
 // ---------------------------------------------------------------------------------------------- //
 // listeners
 // ---------------------------------------------------------------------------------------------- //
+function debounce(func, wait) {
+    let timeout;
+    return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
+let searchInput = document.querySelector(".search-input");
+
+searchInput.addEventListener(
+    "input",
+    debounce(() => {
+        let value = searchInput.value.trim();
+        console.log(value);
+        applyFilters({ q: value });
+    }, 300)
+);

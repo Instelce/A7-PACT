@@ -5,6 +5,7 @@
 
 use app\core\Application;
 use app\core\Utils;
+use app\models\account\UserAccount;
 use app\models\offer\Offer;
 
 
@@ -36,9 +37,12 @@ $this->jsFile = "profile";
                     <span class="pt-1"><?php echo $user->specific()->opinionsCount() ?> avis publié</span>
                 <?php } ?>
             </h3>
-            <h3 class="flex heading-3 align-center gap-2">
+            <?php if ($user->isProfessional()) { ?>
                 <i data-lucide="heart"></i>
-                <span class="pt-1">Likes</span>
+                <span class="pt-1"><?php echo $user->specific()->offerLikes() ?> likes</span>
+                <?php } ?>
+            <h3 class="flex heading-3 align-center gap-2">
+                
             </h3>
             <h3 class="flex heading-3 align-center gap-2">
                 <i data-lucide="badge-check"></i>
@@ -54,6 +58,15 @@ $this->jsFile = "profile";
             </h3>
         </div>
     </div>
+    <?php if ($user->account() == 2) { ?>
+        <!--
+            <div class="gap-1">
+                <a href="modification">
+                    <button class="button gray">Modifier mon profil<i data-lucide="pen-line"></i></button>
+                </a>
+            </div>
+        ?>
+    <?php } ?>
 </header>
 
 

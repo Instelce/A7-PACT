@@ -24,7 +24,7 @@ $iconsNames = [
 <!-- Search bar, sort and filter -->
 <div class="flex flex-col mb-4">
     <x-input rounded>
-        <input slot="input" type="text" placeholder="Rechercher">
+        <input class="search-input" slot="input" type="text" placeholder="Rechercher">
         <button slot="button" class="button only-icon sm">
             <i data-lucide="search" stroke-width="2"></i>
         </button>
@@ -54,7 +54,8 @@ $iconsNames = [
     </div>
 </div>
 <!-- more filters-->
-<div id="popup" class="hidden lg:fixed lg:inset-0 lg:bg-black/50 z-50">
+<div id="popup"
+    class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex lg:justify-start justify-between items-start z-50">
     <div
         class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[400px] w-full h-full mb-1 lg:mb-0 p-2 lg:p-6 lg:pt-[84px] flex flex-row justify-start justify-between items-start">
         <!-- Contenu de la popup -->
@@ -66,16 +67,16 @@ $iconsNames = [
             </x-input> -->
 
         <div>
-            <!-- <div class="flex flex-col">
+            <div class="hidden lg:flex flex-col">
                 <span class="text-base font-bold text-black">Intervalle de prix</span>
                 <div class="h-px bg-zinc-400 mt-2"></div>
-            </div> -->
-
-            <div class="flex gap-2 pl-4">
-                <x-slider color="#0057FF" label="Prix" min="0" max="200" type="double"></x-slider>
             </div>
             <div class="flex gap-2 pl-4">
-                <x-slider color="#0057FF" label="note" min="0" max="5" type="double"></x-slider>
+                <x-slider id="slider-price" color="#0057FF" label="Prix" min="0" max="200" type="double"></x-slider>
+            </div>
+
+            <div class="flex gap-2 pl-4">
+                <x-slider id="slider-rating" color="#0057FF" label="Note" min="0" max="5" type=""></x-slider>
             </div>
             <div class="flex flex-row items-center gap-2 py-4">
                 <div class="flex gap-2">
@@ -95,20 +96,13 @@ $iconsNames = [
             <x-input>
                 <input slot="input" type="text" placeholder="Ville">
             </x-input>
-            <!--
-                <x-select id="category" name="category" required>
-                    <label slot="label">Catégorie</label>
-                    <span slot="trigger">Choisir une categorie</span>
-                    <div slot="options">
-                        <div data-value="visit">Visite</div>
-                        <div data-value="activity">Activité</div>
-                        <div data-value="restaurant">Restaurant</div>
-                        <div data-value="show">Spectacle</div>
-                        <div data-value="attraction-parc">Parc d'attraction</div>
-                    </div>
-                </x-select>
-                -->
-
+            <x-select id="sortPrice">
+                <span slot="trigger">Tri par prix</span>
+                <div slot="options">
+                    <div data-value="croissant">Prix croissant</div>
+                    <div data-value="decroissant">Prix décroissant</div>
+                </div>
+            </x-select>
         </div>
     </div>
 </div>
@@ -124,8 +118,6 @@ $iconsNames = [
         </header>
 
         <p class="summary"><?php echo $offer["summary"]; ?></p>
-        >>>>>>> Stashed changes
-
         <div class="flex gap-2 mt-auto pt-4">
             <a href="" class="button gray w-full spaced">Itinéraire<i data-lucide="map"></i></a>
             <a href="" class="button blue w-full spaced">Voir plus<i data-lucide="chevron-right"></i></a>

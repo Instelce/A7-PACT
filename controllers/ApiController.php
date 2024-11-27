@@ -55,8 +55,6 @@ class ApiController extends Controller
         $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-created_at'];
         $professional_id = $request->getQueryParams('professional_id');
         $category = $request->getQueryParams('category');
-        $minimumOpinions = $request->getQueryParams('minimumOpinions');
-        $maximumOpinions = $request->getQueryParams('maximumOpinions');
         $minimumPrice = $request->getQueryParams('minimumPrice');
         $maximumPrice = $request->getQueryParams('maximumPrice');
         $open = $request->getQueryParams('open');
@@ -64,7 +62,7 @@ class ApiController extends Controller
         $maximumEventDate = $request->getQueryParams('maximumEventDate');
         $location = $request->getQueryParams('location');
         $rating = $request->getQueryParams('rating');
-        
+
         $data = [];
         $where = [];
         if ($professional_id) {
@@ -88,6 +86,18 @@ class ApiController extends Controller
         // if ($maximumEventDate) {
         //     $where[] = ['OfferPeriod__start_date', $maximumEventDate, '>=', 'maximum_event_date'];
         // }
+
+        if (in_array('price_asc', $order_by)) {
+            $order_by = array_diff($order_by, ['price_asc']);
+            $order_by[] = 'minimum_price ASC';
+            $where[] = ['minimum_price', '0', '>', 'minimum_priceAsc'];
+        } else if (in_array('price_desc', $order_by)) {
+
+            $order_by = array_diff($order_by, ['price_desc']);
+            $order_by[] = 'minimum_price DESC';
+            $where[] = ['minimum_price', '0', '>', 'minimum_priceDesc'];
+        }
+
 
         $query = Offer::query()
             // ->join(new OfferPeriod())

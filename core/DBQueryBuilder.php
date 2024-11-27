@@ -68,6 +68,8 @@ class DBQueryBuilder
                     case '>=':
                     case '<=':
                     case '!=':
+                    case 'is':
+                    case 'IS':
                         $operation = $op;
                         break;
                     case '!':
@@ -93,7 +95,7 @@ class DBQueryBuilder
             } else {
                 $sql .= " WHERE ";
             }
-            $sql .= implode(" OR ", array_map(fn($attr) => "$tableName.$attr LIKE :$attr", array_keys($this->search)));
+            $sql .= implode(" OR ", array_map(fn($attr) => "LOWER($tableName.$attr) LIKE :$attr", array_keys($this->search)));
         }
 
         // Add group by
@@ -132,7 +134,7 @@ class DBQueryBuilder
         }
 
         $this->statement = Application::$app->db->pdo->prepare($sql);
-        
+
         foreach ($this->filters as $sets) {
             [$attr, $value, $op, $specialKey] = $sets;
             if ($specialKey) {
@@ -142,7 +144,7 @@ class DBQueryBuilder
         }
 
         foreach ($this->search as $key => $value) {
-            $this->statement->bindValue(":$key", '%' . $value . '%');
+            $this->statement->bindValue(":$key", '%' . strtolower($value) . '%');
         }
 
         $this->statement->execute();

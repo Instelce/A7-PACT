@@ -35,6 +35,7 @@
 *::selection {
     background: rgba(var(--color-blue-primary), .2);
 }
+
 .professional-mode *::selection {
     background: rgba(var(--color-purple-primary), .2);
 }
@@ -108,6 +109,7 @@ a {
     position: relative;
     text-decoration-line: none !important;
 }
+
 .underline::after {
     content: "";
     display: block;
@@ -125,8 +127,8 @@ a {
     min-height: 70vh;
     display: block;
     position: relative;
-    padding: 2rem 20%;
-    margin: 2rem 0;
+    padding: 0.5rem 20%;
+    margin: 0.5rem 0;
 }
 
 @media only screen and (max-width: 728px) {
@@ -154,7 +156,7 @@ a {
 
 @keyframes to-hidden {
     0% {
-        opacity : 1;
+        opacity: 1;
     }
 
     80% {
@@ -189,6 +191,7 @@ a {
     left: 0;
     width: 100%;
 }
+
 .waves path {
     width: 100vw;
 }
