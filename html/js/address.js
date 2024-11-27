@@ -67,7 +67,7 @@ function fetchAddress(query) {
 
                         addressNumber.value = item.address.place ? item.address.place : '';
                         addressStreet.value = item.address.road;
-                        addressCity.value = item.address.town;
+                        addressCity.value = item.address.town ?? item.address.municipality ?? item.address.city;
                         addressPostalCode.value = item.address.postcode;
                         addressLongitude.value = item.lon;
                         addressLatitude.value = item.lat;

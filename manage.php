@@ -29,6 +29,9 @@ if ($argc >= 2) {
             $app->db->applyMigration();
         } else if ($argv[2] === "drop") {
             $app->db->dropMigrations();
+        } else if ($argv[2] === "fresh") {
+            $app->db->dropMigrations();
+            $app->db->applyMigration();
         } else {
             echo "Invalid argument" . PHP_EOL;
         }
@@ -61,7 +64,7 @@ if ($argc >= 2) {
     echo "Manage script" . PHP_EOL;
     echo PHP_EOL;
     echo "Usage:" . PHP_EOL;
-    echo "  migration [apply|drop]" . PHP_EOL;
+    echo "  migration [apply|drop|fresh]" . PHP_EOL;
     echo "  dev: Start development server" . PHP_EOL;
     echo "  dev-yann: Start development server (without the -)" . PHP_EOL;
     echo "  db [start|stop|seed]: Start/Stop development database of seed the DB" . PHP_EOL;

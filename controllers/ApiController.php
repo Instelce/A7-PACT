@@ -53,44 +53,22 @@ class ApiController extends Controller
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
         $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-created_at'];
-        $professionnal_id = $request->getQueryParams('professional_id');
-        if ($request->getQueryParams('category')) {
-            $category = $request->getQueryParams('category');
-        }
-        if ($request->getQueryParams('minimumOpinions')) {
-            $minimumOpinions = $request->getQueryParams('minimumOpinions');
-        }
-        if ($request->getQueryParams('maximumOpinions')) {
-            $maximumOpinions = $request->getQueryParams('maximumOpinions');
-        }
-        if ($request->getQueryParams('minimumPrice')) {
-            $minimumPrice = $request->getQueryParams('minimumPrice');
-        }
-        if ($request->getQueryParams('maximumPrice')) {
-            $maximumPrice = $request->getQueryParams('maximumPrice');
-        }
-        if ($request->getQueryParams('open')) {
-            $open = $request->getQueryParams('open');
-        }
-        if ($request->getQueryParams('minimumEventDate')) {
-            $minimumEventDate = $request->getQueryParams('minimumEventDate');
-        }
-        if ($request->getQueryParams('maximumEventDate')) {
-            $maximumEventDate = $request->getQueryParams('maximumEventDate');
-        }
-        if ($request->getQueryParams('location')) {
-            $location = $request->getQueryParams('location');
-        }
-
-
-
+        $professional_id = $request->getQueryParams('professional_id');
+        $category = $request->getQueryParams('category');
+        $minimumOpinions = $request->getQueryParams('minimumOpinions');
+        $maximumOpinions = $request->getQueryParams('maximumOpinions');
+        $minimumPrice = $request->getQueryParams('minimumPrice');
+        $maximumPrice = $request->getQueryParams('maximumPrice');
+        $open = $request->getQueryParams('open');
+        $minimumEventDate = $request->getQueryParams('minimumEventDate');
+        $maximumEventDate = $request->getQueryParams('maximumEventDate');
+        $location = $request->getQueryParams('location');
+        $rating = $request->getQueryParams('rating');
+        
         $data = [];
         $where = [];
-        if ($professionnal_id) {
-            $where['professional_id'] = $professionnal_id;
-        }
-        if ($category) {
-            $where['category'] = $category;
+        if ($professional_id) {
+            $where['professional_id'] = $professional_id;
         }
         if ($category) {
             $where['category'] = $category;
@@ -111,16 +89,24 @@ class ApiController extends Controller
         //     $where[] = ['OfferPeriod__start_date', $maximumEventDate, '>=', 'maximum_event_date'];
         // }
 
-        /** @var Offer[] $offers */
-        $offers = Offer::query()
+        $query = Offer::query()
             // ->join(new OfferPeriod())
             ->join(new Address())
             ->limit($limit)
             ->offset($offset)
             ->filters($where)
             ->search(['title' => $q])
-            ->order_by($order_by)
-            ->make();
+            ->order_by($order_by);
+
+        // Calculate the average rating
+        if ($rating) {
+            $query->joinString("LEFT JOIN opinion ON opinion.offer_id = offer.id")
+                ->group_by(['offer.id'])
+                ->having('AVG(opinion.rating) >= ' . $rating);
+        }
+
+        /** @var Offer[] $offers */
+        $offers = $query->make();
 
         foreach ($offers as $i => $offer) {
             $data[$i] = $offer->toJson();

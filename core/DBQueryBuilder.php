@@ -2,17 +2,23 @@
 
 namespace app\core;
 
+
 class DBQueryBuilder
 {
     public DBModel $model;
 
     public array $select = [];
+    public array $selectCalculated = [];
     public array $filters = [];
+    public array $filtersCalculated = [];
     public array $search = [];
     public array $joins = [];
     public array $order_by = [];
+    public array $group_by = [];
     public ?int $limit = null;
     public ?int $offset = null;
+
+    public ?\PDOStatement $statement;
 
     public function __construct(DBModel $model)
     {
@@ -26,10 +32,16 @@ class DBQueryBuilder
     {
         $tableName = $this->model->tableName();
 
+        // Add selected attributes or select all
         if (!empty($this->select)) {
             $select = implode(", ", array_map(fn($attr) => $tableName . "." . $attr, $this->select));
         } else {
             $select = "$tableName.*";
+        }
+
+        // Add calculated attributes
+        if (!empty($this->selectCalculated)) {
+            $select .= ", " . implode(", ", $this->selectCalculated);
         }
 
         $sql = "SELECT $select FROM $tableName";
@@ -84,6 +96,17 @@ class DBQueryBuilder
             $sql .= implode(" OR ", array_map(fn($attr) => "$tableName.$attr LIKE :$attr", array_keys($this->search)));
         }
 
+        // Add group by
+        if (!empty($this->group_by)) {
+            $sql .= " GROUP BY " . implode(", ", $this->group_by);
+
+            // Add having
+            if (!empty($this->filtersCalculated)) {
+                $sql .= " HAVING " . implode(" AND ", $this->filtersCalculated);
+            }
+        }
+
+        // Add order by
         if (!empty($this->order_by)) {
             $sql .= " ORDER BY ";
 
@@ -108,24 +131,23 @@ class DBQueryBuilder
             $sql .= " OFFSET $this->offset";
         }
 
-        $statement = Application::$app->db->pdo->prepare($sql);
-
-
+        $this->statement = Application::$app->db->pdo->prepare($sql);
+        
         foreach ($this->filters as $sets) {
             [$attr, $value, $op, $specialKey] = $sets;
             if ($specialKey) {
                 $attr = $specialKey;
             }
-            $statement->bindValue(":$attr", $value);
+            $this->statement->bindValue(":$attr", $value);
         }
 
         foreach ($this->search as $key => $value) {
-            $statement->bindValue(":$key", '%' . $value . '%');
+            $this->statement->bindValue(":$key", '%' . $value . '%');
         }
 
-        $statement->execute();
+        $this->statement->execute();
 
-        return $statement->fetchAll(\PDO::FETCH_CLASS, $this->model::class);
+        return $this->statement->fetchAll(\PDO::FETCH_CLASS, $this->model::class);
     }
 
     /**
@@ -205,6 +227,54 @@ class DBQueryBuilder
         return $this;
     }
 
+    public function joinString(string $join): DBQueryBuilder
+    {
+        $this->joins[] = $join;
+        return $this;
+    }
+
+    /**
+     * Group the results by the given attributes
+     */
+    public function group_by(array $attrs): DBQueryBuilder
+    {
+        $this->group_by = $attrs;
+        return $this;
+    }
+
+    /**
+     * Add a calculated attribute to the results
+     *
+     * Should be used with group_by method
+     *
+     * @param string $attr The name of the attribute
+     * @param string $calculation The calculation to perform
+     *
+     * @example $query->calculate('likes', 'COUNT(*)')
+     * @example $query->calculate('average_rating', 'AVG(rating)')
+     */
+    public function calculate(string $attr, string $calculation): DBQueryBuilder
+    {
+        $this->selectCalculated[] = "$calculation AS $attr";
+        return $this;
+    }
+
+    /**
+     * Add a calculated filter to the results
+     *
+     * Should be used with group_by method
+     *
+     * @example $query->having('likes > 10')
+     * @example $query->having('average_rating < 4')
+     *
+     * @param string $calculation The calculation to perform
+     */
+    public function having(string $calculation): DBQueryBuilder
+    {
+        $this->filtersCalculated[] = $calculation;
+        return $this;
+    }
+
     /**
      * Limit the number of results
      *
@@ -225,5 +295,13 @@ class DBQueryBuilder
     {
         $this->offset = $offset;
         return $this;
+    }
+
+    /**
+     * Get the query string
+     */
+    public function queryString(): string
+    {
+        return $this->statement ? $this->statement->queryString : '';
     }
 }

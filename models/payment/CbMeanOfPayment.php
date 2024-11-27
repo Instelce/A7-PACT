@@ -11,6 +11,7 @@ class CbMeanOfPayment extends DBModel
     public string $card_number = '';
     public string $expiration_date = '';
     public string $cvv = '';
+
     public static function tableName(): string
     {
         return 'cb_mean_of_payment';

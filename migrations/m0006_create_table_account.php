@@ -41,8 +41,8 @@ class m0006_create_table_account
             
             lastname VARCHAR(50) NOT NULL,
             firstname VARCHAR(50) NOT NULL,
-            phone VARCHAR(50) UNIQUE NOT NULL,
             pseudo VARCHAR(50) UNIQUE NOT NULL,
+            phone VARCHAR(10) UNIQUE NOT NULL,
             allows_notifications BOOLEAN DEFAULT FALSE NOT NULL,
             
             CONSTRAINT member_user_fk FOREIGN KEY (user_id) REFERENCES user_account(account_id) ON DELETE CASCADE
@@ -53,6 +53,8 @@ class m0006_create_table_account
             code SERIAL NOT NULL,
             denomination VARCHAR(100) UNIQUE NOT NULL,
             siren VARCHAR(14) UNIQUE NOT NULL,
+            phone VARCHAR(10) UNIQUE NOT NULL,
+            allows_notifications BOOLEAN DEFAULT FALSE NOT NULL,
             
             CONSTRAINT professional_user_fk FOREIGN KEY (user_id) REFERENCES user_account(account_id) ON DELETE CASCADE
         );
