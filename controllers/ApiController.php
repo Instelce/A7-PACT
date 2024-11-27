@@ -55,8 +55,6 @@ class ApiController extends Controller
         $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-created_at'];
         $professional_id = $request->getQueryParams('professional_id');
         $category = $request->getQueryParams('category');
-        $minimumOpinions = $request->getQueryParams('minimumOpinions');
-        $maximumOpinions = $request->getQueryParams('maximumOpinions');
         $minimumPrice = $request->getQueryParams('minimumPrice');
         $maximumPrice = $request->getQueryParams('maximumPrice');
         $open = $request->getQueryParams('open');
@@ -64,7 +62,7 @@ class ApiController extends Controller
         $maximumEventDate = $request->getQueryParams('maximumEventDate');
         $location = $request->getQueryParams('location');
         $rating = $request->getQueryParams('rating');
-        
+
         $data = [];
         $where = [];
         if ($professional_id) {

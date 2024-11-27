@@ -1,3 +1,5 @@
+//initialize the filters and save them permanently
+var filters = {};
 /**
  * Displays the fetched offers data in the offers container.
  *
@@ -16,8 +18,8 @@
  * @function getOffers
  * @param {Object} [filters={}] - An object containing various filters for the offers.
  * @param {string} [filters.category] - The category of the offers.
- * @param {number} [filters.minimumOpinions] - The minimum number of opinions for the offers.
- * @param {number} [filters.maximimOpinions] - The maximum number of opinions for the offers.
+ * @param {number} [filters.rating] - The minimum number of opinions for the offers.
+ * @param {number} [filters.q] - The search data.
  * @param {number} [filters.minimumPrice] - The minimum price of the offers.
  * @param {number} [filters.maximumPrice] - The maximum price of the offers.
  * @param {boolean} [filters.open] - Whether the offers are open.
@@ -39,11 +41,8 @@ async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
     if (filters["category"]) {
         searchParams.set("category", filters["category"] || null);
     }
-    if (filters["minimumOpinions"] && filters["minimumOpinions"] > 0) {
-        searchParams.set("minimumOpinions", filters["minimumOpinions"] || null);
-    }
-    if (filters["maximimOpinions"] && filters["maximimOpinions"] > 0) {
-        searchParams.set("maximimOpinions", filters["maximimOpinions"] || null);
+    if (filters["rating"] && filters["rating"] > 0) {
+        searchParams.set("rating", filters["rating"] || null);
     }
     if (filters["minimumPrice"] && filters["minimumPrice"] > 0) {
         searchParams.set("minimumPrice", filters["minimumPrice"] || null);
@@ -68,6 +67,9 @@ async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
     }
     if (filters["location"]) {
         searchParams.set("location", filters["location"] || null);
+    }
+    if (filters["q"]) {
+        searchParams.set("q", filters["q"] || null);
     }
     let search = searchParams.toString();
     let moreSearch = "";
@@ -120,8 +122,8 @@ console.log(Data);
  *
  * @param {Object} newFilters - An object containing the new filters to be applied.
  * @param {string} [newFilters.category] - The category to filter by.
- * @param {number} [newFilters.minimumOpinions] - The minimum number of opinions to filter by.
- * @param {number} [newFilters.maximumOpinions] - The maximum number of opinions to filter by.
+ * @param {number} [filters.rating] - The minimum number of opinions for the offers.
+ * @param {number} [filters.q] - The search data.
  * @param {number} [newFilters.minimumPrice] - The minimum price to filter by.
  * @param {number} [newFilters.maximumPrice] - The maximum price to filter by.
  * @param {boolean} [newFilters.open] - Whether to filter by open status.
@@ -131,18 +133,8 @@ console.log(Data);
  * @returns {Promise<void>} A promise that resolves when the offers have been fetched and displayed.
  */
 async function applyFilters(newFilters) {
-    const currentFilters = {
-        // category: document.querySelector(".category-item.active")?.dataset.category || null,
-        // minimumOpinions: document.getElementById("minimumOpinions")?.value || null,
-        // maximumOpinions: document.getElementById("maximumOpinions")?.value || null,
-        // minimumPrice: document.getElementById("minimumPrice")?.value || null,
-        // maximumPrice: document.getElementById("maximumPrice")?.value || null,
-        // open: document.getElementById("open")?.checked || null,
-        // minimumEventDate: document.getElementById("minimumEventDate")?.value || null,
-        // maximumEventDate: document.getElementById("maximumEventDate")?.value || null,
-        // location: document.getElementById("location")?.value || null,
-    };
-    const filters = { ...currentFilters, ...newFilters };
+    filters = { ...filters, ...newFilters };
+    console.log(filters);
     Object.keys(filters).forEach(key => {
         if (filters[key] === null || filters[key] === "" || filters[key] === false || filters[key] === undefined || filters[key] === 0) {
             delete filters[key];
@@ -288,3 +280,20 @@ categoryListenners.forEach((listener, index) => {
 // ---------------------------------------------------------------------------------------------- //
 // listeners
 // ---------------------------------------------------------------------------------------------- //
+function debounce(func, wait) {
+    let timeout;
+    return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    }
+}
+
+let searchInput = document.querySelector('.search-input');
+
+searchInput.addEventListener('input', debounce(() => {
+    let value = searchInput.value.trim();
+    console.log(value);
+    applyFilters({ q: value });
+}, 300));
