@@ -1,0 +1,44 @@
+.bt-payment {
+    --background: var(--color-white);
+    --border: var(--color-gray-2);
+    --color: var(--color-black);
+    --border-hover: var(--color-blue-primary);
+
+    min-height: 60px;
+    height: auto;
+    padding: .8rem 2rem;
+
+    background: rgb(var(--background));
+    border: 1px solid rgb(var(--border));
+    border-radius: 10px;
+    outline: none;
+
+    font-size: inherit;
+    font-weight: 500;
+    white-space: nowrap;
+    color: rgb(var(--color));
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+
+    cursor: pointer;
+    transition: color .2s, background .1s, border .2s, box-shadow .2s;
+}
+
+.bt-payment:hover {
+    background: rgb(var(--background-hover));
+    border: 1px solid rgb(var(--border-hover));
+}
+
+.clickable {
+    display : flex;
+    flex-direction : row;
+    justify-content: start;
+    align-items: center;
+    width : 100%;
+    gap : 1rem;
+    height: 50px;
+    padding: .8rem;
+}

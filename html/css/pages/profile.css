@@ -67,7 +67,7 @@ x-tab[id="offres"]
 {
     border-bottom: none;
     border: 1px solid rgb(var(--color-gray-1));
-    border-radius: 100rem 0 0 100rem;
+    border-radius:  100rem 0 0 100rem;
 }
 
 x-tab[selected][id="reponses"]
