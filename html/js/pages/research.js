@@ -1,5 +1,5 @@
 //initialize the filters and save them permanently
-var filters = {};
+let filters = {};
 /**
  * Displays the fetched offers data in the offers container.
  *
@@ -36,7 +36,7 @@ async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
     const host = window.location.protocol;
     const searchParams = new URLSearchParams();
     if (order) {
-        searchParams.set("order", order || null);
+        searchParams.set("order_by", order || null);
     }
     if (filters["category"]) {
         searchParams.set("category", filters["category"] || null);
@@ -264,7 +264,7 @@ categoryListenners.forEach((listener, index) => {
         element.addEventListener("click", () => {
             if (element.classList.contains("active")) {
                 element.classList.remove("active");
-                applyFilters();
+                applyFilters({ category: null });
             } else {
                 categories.forEach((cat) => cat.classList.remove("active"));
                 element.classList.add("active");
@@ -296,4 +296,26 @@ searchInput.addEventListener('input', debounce(() => {
     let value = searchInput.value.trim();
     console.log(value);
     applyFilters({ q: value });
+}, 300));
+
+let priceMin = document.getElementById("slider-min");
+let priceMax = document.getElementById("slider-max");
+let rating = document.getElementById("slider-value");
+
+priceMin.addEventListener("input", debounce(() => {
+    let minValue = parseInt(priceMin.value, 10);
+    console.log(minValue);
+    applyFilters({ minimumPrice: minValue });
+}, 300));
+
+priceMax.addEventListener("input", debounce(() => {
+    let maxValue = parseInt(priceMax.value, 10);
+    console.log(maxValue);
+    applyFilters({ maximumPrice: maxValue });
+}, 300));
+
+rating.addEventListener("input", debounce(() => {
+    let ratingValue = parseInt(rating.value, 10);
+    console.log(ratingValue);
+    applyFilters({ rating: ratingValue });
 }, 300));
