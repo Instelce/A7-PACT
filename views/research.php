@@ -72,11 +72,11 @@ $iconsNames = [
             </div>
 
             <div class="flex gap-2 pl-4">
-                <x-slider color="#0057FF" label="Prix" min="0" max="200" type="double"></x-slider>
+                <x-slider id="slider-price" color="#0057FF" label="Prix" min="0" max="200" type="double"></x-slider>
             </div>
 
             <div class="flex gap-2 pl-4">
-                <x-slider color="#0057FF" label="Note" min="0" max="5" type=""></x-slider>
+                <x-slider id="slider-rating" color="#0057FF" label="Note" min="0" max="5" type=""></x-slider>
             </div>
             <div class="flex flex-row items-center gap-2 py-4">
                 <div class="flex gap-2">
@@ -96,11 +96,11 @@ $iconsNames = [
             <x-input>
                 <input slot="input" type="text" placeholder="Ville">
             </x-input>
-            <x-select id="sort-price" name="sort-price" required>
+            <x-select id="sortPrice">
                 <span slot="trigger">Tri par prix</span>
                 <div slot="options">
-                    <div data-value="sortPriceAsc">Prix croissant</div>
-                    <div data-value="sortPriceDesc">Prix décroissant</div>
+                    <div data-value="croissant">Prix croissant</div>
+                    <div data-value="decroissant">Prix décroissant</div>
                 </div>
             </x-select>
         </div>
@@ -118,8 +118,6 @@ $iconsNames = [
         </header>
 
         <p class="summary"><?php echo $offer["summary"]; ?></p>
-        >>>>>>> Stashed changes
-
         <div class="flex gap-2 mt-auto pt-4">
             <a href="" class="button gray w-full spaced">Itinéraire<i data-lucide="map"></i></a>
             <a href="" class="button blue w-full spaced">Voir plus<i data-lucide="chevron-right"></i></a>

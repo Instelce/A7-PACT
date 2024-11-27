@@ -68,6 +68,8 @@ class DBQueryBuilder
                     case '>=':
                     case '<=':
                     case '!=':
+                    case 'is':
+                    case 'IS':
                         $operation = $op;
                         break;
                     case '!':
@@ -132,7 +134,7 @@ class DBQueryBuilder
         }
 
         $this->statement = Application::$app->db->pdo->prepare($sql);
-        
+
         foreach ($this->filters as $sets) {
             [$attr, $value, $op, $specialKey] = $sets;
             if ($specialKey) {

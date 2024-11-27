@@ -32,7 +32,7 @@ var filters = {};
  * @returns {Promise<Object|boolean>} The fetched offers data in JSON format, or false if an error occurs.
  * @throws {Error} If the response status is not OK.
  */
-async function getOffers(filters = [], limit = 5, offset = 0, order = null) {
+async function getOffers(filters = [], order = null, limit = 5, offset = 0) {
     const host = window.location.protocol;
     const searchParams = new URLSearchParams();
     if (order) {
@@ -132,21 +132,26 @@ console.log(Data);
  * @param {string} [newFilters.location] - The location to filter by.
  * @returns {Promise<void>} A promise that resolves when the offers have been fetched and displayed.
  */
-async function applyFilters(newFilters) {
+async function applyFilters(newFilters, order = null) {
     filters = { ...filters, ...newFilters };
     console.log(filters);
-    Object.keys(filters).forEach(key => {
-        if (filters[key] === null || filters[key] === "" || filters[key] === false || filters[key] === undefined || filters[key] === 0) {
+    Object.keys(filters).forEach((key) => {
+        if (
+            filters[key] === null ||
+            filters[key] === "" ||
+            filters[key] === false ||
+            filters[key] === undefined ||
+            filters[key] === 0
+        ) {
             delete filters[key];
         }
     });
-    let Data = await getOffers(filters);
+    let Data = await getOffers(filters, order);
     displayOffers(Data);
 }
 // ---------------------------------------------------------------------------------------------- //
 // Display
 // ---------------------------------------------------------------------------------------------- //
-
 
 /**
  * Displays a list of offers in the offers container.
@@ -175,18 +180,22 @@ function displayOffers(Data) {
             offerElement.innerHTML = `
             <article class="research-card">
                 <div class="research-card--photo">
-                    ${offer.photos[0]
-                    ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
-                    : ""
-                }
+                    ${
+                        offer.photos[0]
+                            ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
+                            : ""
+                    }
                 </div>
                 <div class="research-card--body">
                     <header>
                         <h2 class="research-card--title">${offer.title}</h2>
                         <p>${translateCategory(
-                    offer.category
-                )} par <a href="/comptes/${offer.professional_id
-                }" class="underline">${offer.profesionalUser["denomination"]}</a></p>
+                            offer.category
+                        )} par <a href="/comptes/${
+                offer.professional_id
+            }" class="underline">${
+                offer.profesionalUser["denomination"]
+            }</a></p>
                     </header>
                     <p class="summary">${offer.summary}</p>
                          <div class="flex gap-2 mt-auto pt-4">
@@ -254,7 +263,7 @@ let categoryValue = [
 
 /**
  * Selects all elements with the class "category-item" and assigns them to the variable `categories`.
- * 
+ *
  * @type {NodeListOf<Element>}
  */
 categoryListenners.forEach((listener, index) => {
@@ -275,15 +284,40 @@ categoryListenners.forEach((listener, index) => {
         console.warn(`Element with ID ${listener} not found`);
     }
 });
+let sortPrice = document.getElementById("sortPrice");
 
-///document.getElementById('sort-price').addEventListener('change', (event) => {
- ///   const value = event.target.value;
- ///   if (value === 'sortPriceAsc') {
-///        applyFilters({ order_by: 'price_asc' });
- ///   } else if (value === 'sortPriceDesc') {
- ///       applyFilters({ order_by: 'price_desc' });
- ///   }
-///});
+sortPrice.addEventListener("change", (event) => {
+    const inputValue = event.target.querySelector("input").value;
+
+    const selectedOption = sortPrice.querySelector(
+        `[data-value="${inputValue}"]`
+    );
+    const dataValue = selectedOption
+        ? selectedOption.getAttribute("data-value")
+        : null;
+
+    if (dataValue === "croissant") {
+        console.log("Tri par prix croissant");
+        applyFilters({}, "price_asc");
+    } else if (dataValue === "decroissant") {
+        console.log("Tri par prix décroissant");
+        applyFilters({}, "price_desc");
+    }
+});
+
+const sliderPrice = document.getElementById("slider-price");
+
+sliderPrice.addEventListener("slider-change", (event) => {
+    const { minValue, maxValue } = event.detail;
+    console.log("Slider values updated:", { minValue, maxValue });
+});
+
+const sliderRating = document.getElementById("slider-rating");
+
+sliderRating.addEventListener("slider-change", (event) => {
+    const { minValue } = event.detail;
+    console.log("Slider values updated:", { minValue });
+});
 // ---------------------------------------------------------------------------------------------- //
 // listeners
 // ---------------------------------------------------------------------------------------------- //
@@ -294,13 +328,16 @@ function debounce(func, wait) {
         const args = arguments;
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(context, args), wait);
-    }
+    };
 }
 
-let searchInput = document.querySelector('.search-input');
+let searchInput = document.querySelector(".search-input");
 
-searchInput.addEventListener('input', debounce(() => {
-    let value = searchInput.value.trim();
-    console.log(value);
-    applyFilters({ q: value });
-}, 300));
+searchInput.addEventListener(
+    "input",
+    debounce(() => {
+        let value = searchInput.value.trim();
+        console.log(value);
+        applyFilters({ q: value });
+    }, 300)
+);
