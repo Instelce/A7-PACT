@@ -40,11 +40,11 @@ abstract class CronTask
 
         [$minute, $hour, $day, $month, $weekday] = $parts;
 
-        $string .= $minute === '*' ? 'every minute ' : 'at minute ' . $minute . ' ';
-        $string .= $hour === '*' ? 'every hour ' : 'at hour ' . $hour . ' ';
-        $string .= $day === '*' ? 'every day ' : 'at day ' . $day . ' ';
-        $string .= $month === '*' ? 'every month ' : 'at month ' . $month . ' ';
-        $string .= $minute === '*' ? 'every weekday' : 'at weekday ' . $weekday . ' ';
+        $string .= $minute === '*' ? 'every minute, ' : 'at minute ' . $minute . ', ';
+        $string .= $hour === '*' ? 'every hour, ' : 'at hour ' . $hour . ', ';
+        $string .= $day === '*' ? 'every day, ' : 'at day ' . $day . ', ';
+        $string .= $month === '*' ? 'every month, ' : 'at month ' . $month . ', ';
+        $string .= $weekday === '*' ? 'every weekday.' : 'at weekday ' . $weekday . '.';
 
         return $string;
     }

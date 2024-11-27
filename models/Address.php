@@ -32,4 +32,14 @@ class Address extends DBModel
             'postal_code' => [self::RULE_REQUIRED],
         ];
     }
+
+    public function labels(): array
+    {
+        return [
+            'number' => 'Numéro',
+            'street' => 'Rue',
+            'city' => 'Ville',
+            'postal_code' => 'Code postal',
+        ];
+    }
 }

@@ -13,8 +13,7 @@ class m0022_create_table_invoice
              service_date INT NOT NULL,
              due_date DATE NOT NULL,
              offer_id INT NOT NULL,   
-             FOREIGN KEY (professional_id) REFERENCES account(id) ON DELETE CASCADE,
-             FOREIGN KEY (offer_id) REFERENCES offer(id) ON DELETE CASCADE   
+             FOREIGN KEY (offer_id) REFERENCES offer(id) ON DELETE CASCADE
         );";
         $db->pdo->exec($sql);
     }

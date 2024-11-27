@@ -110,9 +110,9 @@ class Offer extends DBModel
         return OfferType::findOne(['id' => $this->offer_type_id]);
     }
 
-    public function option(): OfferOption
+    public function option(): false|null|OfferOption
     {
-        return OfferOption::findOne(['offer_id' => $this->id]);
+        return OfferOption::findOneByPk($this->id);
     }
 
     public function address(): Address
@@ -200,6 +200,11 @@ class Offer extends DBModel
     public function opinionsCount(): int
     {
         return count($this->opinions());
+    }
+
+    public function noReadOpinions(): int
+    {
+        return count(Opinion::find(['offer_id' => $this->id, 'read' => 0]));
     }
 
     public function isALaUne() {

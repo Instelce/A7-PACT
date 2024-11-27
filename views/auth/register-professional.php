@@ -19,7 +19,7 @@ $this->cssFile = "registerPro";
             <a href="/connexion" class="link">Connexion</a>
         </div>
     </div>
-    <x-tabs class="flex flex-col items-center justify-center w-[600px]">
+    <x-tabs class="flex flex-col items-center justify-center w-[600px]" save>
         <!-- public -->
 
         <x-tab role="heading" slot="tab" class="w-full text-center" id="public">Public / associatif</x-tab>
