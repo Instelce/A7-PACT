@@ -80,6 +80,9 @@ class ApiController extends Controller
         if ($maximumPrice) {
             $where[] = ['minimum_price', $maximumPrice, '<=', 'maximum_price'];
         }
+        if ($open) {
+            $where[] = ['OfferPeriod__end_date', date('Y-m-d'), '>=', 'open'];
+        }
         // if ($minimumEventDate) {
         //     $where[] = ['OfferPeriod__end_date', $minimumEventDate, '<='];
         // }

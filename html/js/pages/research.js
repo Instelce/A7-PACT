@@ -341,3 +341,13 @@ searchInput.addEventListener(
         applyFilters({ q: value });
     }, 300)
 );
+
+const switchInput = document.getElementById("switchtest");
+
+switchInput.addEventListener("change", (event) => {
+    let value = event.target.value;
+    if (event.target.checked) {
+        console.log("Switch is ON");
+        applyFilters({ open: value });
+    }
+});
