@@ -1,4 +1,5 @@
-# Le seeder
+# Les seeders
 
-Contient un bot qui récupère les données et d'un script php qui remplit la DB.
-
+Deux seeders disponibles :
+- un fake avec des données aléatoires
+- un avec des données réelles
