@@ -1,5 +1,6 @@
 <?php
 /** @var $model \app\forms\MemberUpdateForm */
+use app\core\Application;
 
 $this->title = 'Inscription update';
 $this->jsFile = 'updateMemberAccount';
@@ -13,6 +14,12 @@ $this->jsFile = 'updateMemberAccount';
             Informations personnelles
         </x-tab>
         <x-tab-panel role="region" slot="panel">
+            <div class="flex flex-row mb-8 items-center">
+                <img class="w-[125px] h-[125px] rounded-full mr-10" src="<?php echo Application::$app->user->avatar_url ?>">
+                <div>
+                    <button  id="updateAvatar" type="submit" class="button w-25% gray">Modifier mon avatar</button>
+                </div>
+            </div>
             <?php $form = \app\core\form\Form::begin('', 'post', '', 'flex flex-col justify-center items-center') ?>
             <div class="flex flex-col w-full gap-6">
                 <div class="form-inputs">
@@ -61,12 +68,50 @@ $this->jsFile = 'updateMemberAccount';
             <i data-lucide="key"></i>
             Sécurité
         </x-tab>
-        <x-tab-panel role="region" slot="panel">
+        <x-tab-panel class="flex flex-col
+         gap-4" role="region" slot="panel">
             <button type="submit" class="button w-full gray">Modifier le mot de passe</button>
             <button type="submit" class="button w-full danger">Supprimer mon compte</button>
         </x-tab-panel>
 
     </x-tabs>
 </div>
+
+<div id="popup"
+     class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
+    <div
+        class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px]
+        w-full h-full mb-1 lg:mb-0 p-2 lg:p-6 lg:pt-[84px] flex flex-col justify-center items-center gap-6">
+        <div>
+            <h1  class="heading-1">Ajout de votre photo de profil</h1>
+        </div>
+        <div>
+            <img class="w-[125px] h-[125px] rounded-full" src="<?php echo Application::$app->user->avatar_url ?>">
+        </div>
+        <div class="flex flex-row gap-4">
+            <div class="w-[200px]">
+                <button type="submit" class="button w-full gray">
+                    <i data-lucide="upload"></i>
+                    Importer
+                </button>
+            </div>
+            <div class="w-[200px]">
+                <button type="submit" class="button w-full gray">
+                <i data-lucide="trash"></i>
+                    Supprimer
+                </button>
+            </div>
+        </div>
+        <div class="flex flex-row gap-4">
+            <div class="w-[400px]">
+                <button type="submit" class="button w-full gray">Annuler</button>
+            </div>
+            <div class="w-[400px]">
+                <button type="submit" class="button w-full">Enregistrer les modifications</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
