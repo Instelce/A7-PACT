@@ -4,28 +4,28 @@
 use app\core\Application;
 
 $this->title = "Home";
-$this->cssFile = "home-card";
+$this->cssFile = "home";
+$this->jsFile = "home";
 
-
+// $this->waves = true;
 ?>
 
-<?php if ($_ENV['APP_ENVIRONMENT'] === 'dev') { ?>
-    <div class="flex flex-col gap-1">
-        <a href="/offres/creation" class="link pro">Création d'une offre</a>
-        <a href="/recherche" class="link">Recherche (liste des offres)</a>
-        <a href="/dashboard/offres" class="link pro">Dashboard pro</a>
-    </div>
-<?php } else { ?>
-    <?php Application::$app->response->redirect('/recherche'); ?>
-<?php } ?>
+<main class="homeDisplay">
+    <h1 class="heading-1">Découvrez Lannion</h1>
 
-<main>
+    <x-input rounded>
+        <input slot="input" type="text" placeholder="Recherchez des activités, visites, spectacles...">
+        <button onclick="window.location.href='/recherche'" slot="button" class="button only-icon sm">
+            <i data-lucide="search" stroke-width="2"></i>
+        </button>
+    </x-input>
 
-    <?php
-    foreach ($offersALaUne as $offer) {
-        ?>
-        <a href="/offres/<?php echo $offer["id"]; ?>">
-            <div>
+    <h1 class="home-category-title">Destinations phares</h1>
+
+    <div class="carousel-gen" data-slides-visible="3" data-slides-to-scroll="1">
+
+        <?php foreach ($offers as $offer) { ?>
+            <a href="/offres/<?php echo $offer["id"]; ?>">
 
                 <div class="home-card">
                     <div class="image">
@@ -42,8 +42,11 @@ $this->cssFile = "home-card";
                         <div class="enLigneGap">
                             <p><?php echo $offer["type"]; ?></p>
                             <div class="enLigne">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin">
-                                    <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                                     class="lucide lucide-map-pin">
+                                    <path
+                                        d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
                                     <circle cx="12" cy="10" r="3"/>
                                 </svg>
                                 <p><?php echo $offer["location"]; ?></p>
@@ -76,11 +79,10 @@ $this->cssFile = "home-card";
                         </div>
                     </div>
                 </div>
-            </div>
-        </a>
-        <?php
-    }
-    ?>
+            </a>
+        <?php } ?>
+    </div>
+
 </main>
-<?php
-?>
+
+

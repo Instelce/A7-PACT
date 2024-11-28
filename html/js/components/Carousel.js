@@ -1,232 +1,227 @@
-import { WebComponent } from './WebComponent.js';
+class Carousel {
 
-/**
- * Carousel component
- *
- * @extends {WebComponent}
- */
-export class Carousel extends WebComponent {
-    constructor() {
-        super();
-        this.images = [];
-    }
+    /**
+     * @callback moveCallback
+     * @param {number} index
+     */
 
-    connectedCallback() {
-        super.connectedCallback();
-        this.renderSlides();
+    /**
+     *
+     * @param {HTMLElement} element
+     * @param {Object} options
+     * @param {Object} [options.slidesToScroll=1] Nombres d'éléments à faire défiler
+     * @param {Object} [options.slidesVisible=1] Nombres d'éléments visible dans un slide
+     * @param {boolean} [options.loop=false] Doit-on boucler en fin de carousel
+     * @param {boolean} [options.pagination=false] Doit-on afficher les petits points
+     * @param {boolean} [options.navigation=true]
+     */
 
-        const slider = this.shadowRoot.getElementById('slider');
-        const prevBtn = this.shadowRoot.getElementById('prev');
-        const nextBtn = this.shadowRoot.getElementById('next');
+    constructor (element, options = {}){
+        this.element = element
+        this.options = Object.assign({}, {
+            slidesToScroll : 1,
+            slidesVisible : 1,
+            loop : false,
+            pagination : false,
+            navigation: true
+        }, options)
+        console.log(this.options)
+        let children = [].slice.call(element.children)
+        this.isMobile = false
+        this.currentItem = 0
+        this.moveCallbacks = []
 
-        let currentIndex = 0;
+        //Modifications du DOM
+        this.root = this.createDivWithClass('carousel')
+        this.container = this.createDivWithClass('carousel__container')
+        this.root.setAttribute('tabindex', '0')
+        this.root.appendChild(this.container)
+        this.element.appendChild(this.root)
+        this.items = children.map((child) => {
+            let item = this.createDivWithClass('carousel__item')
+            item.appendChild(child)
+            this.container.appendChild(item)
+            return item
+        })
+        this.setStyle()
+        if (this.options.navigation){
+            this.createNavigation()
+        }
 
-        const updateCurrentIndex = () => {
-            const slideWidth = slider.querySelector('.slide').offsetWidth + 10;
-            currentIndex = Math.round(slider.scrollLeft / slideWidth);
-        };
+        if (this.options.pagination){
+            this.createPagination()
+        }
 
-        const scrollToSlide = (index) => {
-            const slideWidth = slider.querySelector('.slide').offsetWidth + 10;
-            slider.scrollTo({
-                left: index * slideWidth,
-                behavior: 'smooth'
-            });
-        };
-
-        nextBtn.addEventListener('click', () => {
-            if (currentIndex < slider.children.length - 1) {
-                currentIndex++;
-                scrollToSlide(currentIndex);
+        // Evenements
+        this.moveCallbacks.forEach(cb => cb(0))
+        this.onWindowResize()
+        window.addEventListener('resize', this.onWindowResize.bind(this))
+        this.root.addEventListener('keyup', e => {
+            if (e.key === 'ArrowRight' || e.key === 'Right') {
+                this.next()
+            } else if (e.key === 'ArrowLeft' || e.key === 'left'){
+                this.prev()
             }
-        });
+        })
+    }
 
-        prevBtn.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                scrollToSlide(currentIndex);
+    /**
+     * Applique les bonnes dimensions aux éléments du carousel
+     */
+
+    setStyle (){
+        let ratio = this.items.length / this.slidesVisible
+        this.container.style.width = (ratio * 100) + "%"
+        this.items.forEach(item => item.style.width = ((100 / this.slidesVisible) / ratio) + "%")
+    }
+
+    /**
+     *
+     * Créé les flèches de navigation
+     */
+    createNavigation () {
+        let nextButton = this.createDivWithClass('carousel__next')
+        let prevButton = this.createDivWithClass('carousel__prev')
+        this.root.appendChild(nextButton)
+        this.root.appendChild(prevButton)
+
+        // nextButton.addEventListener('click', () => {console.log("next click", this.currentItem); this.next.bind(this)})
+        // prevButton.addEventListener('click', () => {console.log("prev click", this.currentItem); this.prev.bind(this)})
+
+        nextButton.addEventListener('click', () => this.next())
+        prevButton.addEventListener('click', () => this.prev())
+
+        if(this.options.loop === true) {
+            return
+        }
+
+        this.onMove(index => {
+            if (index === 0) {
+                prevButton.classList.add('carousel__prev--hidden')
+            } else {
+                prevButton.classList.remove('carousel__prev--hidden')
             }
-        });
 
-        slider.addEventListener('scroll', updateCurrentIndex);
-        window.addEventListener('resize', () => {
-            scrollToSlide(currentIndex);
-        });
-    }
-
-    renderSlides() {
-        const slotImages = this.querySelectorAll('img[slot="image"]');
-        const slidesContainer = this.shadowRoot.getElementById('slider');
-
-        // Créez des divs pour chaque image et les ajoutez au conteneur
-        slotImages.forEach((img) => {
-            const slide = document.createElement('div');
-            slide.classList.add('slide');
-            slide.appendChild(img.cloneNode(true)); // Clonez l'image pour éviter les problèmes de référence
-            slidesContainer.appendChild(slide);
-        });
+            if(this.items[this.currentItem + this.slidesVisible] === undefined) {
+                nextButton.classList.add('carousel__next--hidden')
+            } else {
+                nextButton.classList.remove('carousel__next--hidden')
+            }
+        })
     }
 
-    styles() {
-        return `
-<style>
-    .slider-wrapper {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        position: relative;
-        width: 100%;
-        height: auto;
-        overflow: hidden; 
-    }
-    .slider-wrapper::after {
-        content: "";
-        width: 10%;
-        height: 100%;
-        position:absolute;
-        top: 0;
-        right: 0;
-        /*background: linear-gradient(to right, rgba(255, 255, 255, 0), white);*/
-    }
-
-    .slider-container {
-        display: flex;
-        height: 100%;
-        overflow-x: scroll;
-        scroll-snap-type: x mandatory;
-        scrollbar-width: none; 
-        position:relative;
-        border-radius: var(--radius-medium);
+    /**
+     *
+     * Créé la pagination dans le DOM
+     */
+    createPagination () {
+        let pagination = this.createDivWithClass('carousel__pagination')
+        let buttons = []
+        this.root.appendChild(pagination)
+        for (let i = 0; i < this.items.length; i = i + this.options.slidesToScroll){
+            let button = this.createDivWithClass('carousel__pagination__button')
+            button.addEventListener('click', () => this.goToItem(i))
+            pagination.appendChild(button)
+            buttons.push(button)
+        }
+        this.onMove(index => {
+            let activeButton = buttons[Math.floor(index / this.options.slidesToScroll)]
+            if (activeButton) {
+                buttons.forEach(button => button.classList.remove('carousel__pagination__button--active'))
+                activeButton.classList.add('carousel__pagination__button--active')
+            }
+        })
     }
 
-    .slider-container::-webkit-scrollbar {
-        display: none; 
+    next () {
+        this.goToItem(this.currentItem + this.slidesToScroll)
     }
 
-    .slide {
-        flex-shrink: 0;
-        scroll-snap-align: start;
-        margin-right: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .slide:last-child {
-        margin: 0;
+    prev () {
+        this.goToItem(this.currentItem - this.slidesToScroll)
     }
 
-    .slide img {
-        width: 100%; 
-        max-width: 350px; 
-        height: 250px;
-        max-height: 250px;
-        object-fit: cover;
-        border-radius: 20px;
+    /**
+     * Deplace le carousel vers l'élément ciblé
+     * @param {number} index
+     */
+
+    goToItem (index){
+
+        if (index < 0) {
+            if (this.options.loop){
+                index = this.items.length - this.slidesVisible
+            } else {
+                return
+            }
+        }
+
+        else if (index >= this.items.length || this.items[this.currentItem + this.slidesVisible] === undefined && index > this.currentItem){
+            if (this.options.loop){
+                index = 0
+            } else {
+                return
+            }
+        }
+        let translateX = index * -100 / this.items.length
+        this.container.style.transform = 'translate3d(' + translateX + '%, 0, 0)'
+        this.currentItem = index
+        this.moveCallbacks.forEach(cb => cb(index))
     }
 
-    .controls {
-        position: absolute;
-        top: 50%;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        transform: translateY(-50%);
-        pointer-events: none;
-        z-index: 2;
+    /**
+     *
+     * @param {moveCallback} cb
+     */
+    onMove (cb){
+        this.moveCallbacks.push(cb)
     }
 
-    button {
-        margin-left: 10px;
-        margin-right: 10px;
-        width: 30px;
-        height: 30px;
-        
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        pointer-events: auto;
-    }
-    
-   .button {
-        --background: var(--color-blue-primary);
-        --border: var(--color-blue-primary);
-        --color: var(--color-white);
-        --background-hover: var(--color-white);
-        --border-hover: var(--color-white);
-        --color-hover: var(--color-blue-primary);
-    
-        padding: .8rem 2rem;
-    
-        background: rgb(var(--background));
-        border: 1px solid rgb(var(--border));
-        border-radius: var(--radius-rounded);
-        outline: none;
-    
-        font-size: inherit;
-        font-weight: 500;
-        white-space: nowrap;
-        color: rgb(var(--color));
-        opacity: 0;
-    
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-    
-        cursor: pointer;
-        transition: color .2s, background .2s, border .2s, box-shadow .2s, opacity .2s;
+    onWindowResize (){
+        let mobile = window.innerWidth < 800
+        if (mobile !== this.isMobile){
+            this.isMobile = mobile
+            this.setStyle()
+            this.moveCallbacks.forEach(cb => cb(this.currentItem))
+        }
     }
 
-    .button:hover {
-        background: rgb(var(--background-hover));
-        border: 1px solid rgb(var(--border-hover));
-        color: rgb(var(--color-hover));
-    }
-    
-    .button.only-icon {
-        padding: 0;
-    }
-    
-    .button.only-icon.sm {
-        height: 2.5rem;
-        width: 2.5rem;
-    }
-    
-    .button.only-icon {
-        width: 3rem;
-        height: 3rem;
-    }
-    
-    .button.only-icon.lg {
-        width: 3.5rem;
-        height: 3.5rem;
-    }
-    
-    .button:focus {
-        box-shadow: 0 0 0 3px rgba(var(--background), .5);
-        transform: scale(1.02);
-    }
-    
-    .slider-wrapper:hover button {
-        opacity: 1;
+    /**
+     *
+     * @param {string} className
+     * @returns {HTMLElement}
+     */
+
+    createDivWithClass (className){
+        let div = document.createElement('div')
+        div.setAttribute('class', className)
+        return div
     }
 
-</style>
-        `;
+    /**
+     *
+     * @returns {number}
+     */
+    get slidesToScroll (){
+        return this.isMobile ? 1 : this.options.slidesToScroll
     }
 
-    render() {
-        return `
-<div class="slider-wrapper">
-    <div class="slider-container" id="slider">
-    </div>
 
-    <div class="controls">
-        <button id="prev" class="button sm only-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg></button>        
-        <button id="next" class="button sm only-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>  
-    </div>
-</div>
-        `;
+    /**
+     *
+     * @returns {number}
+     */
+    get slidesVisible (){
+        return this.isMobile? 1 : this.options.slidesVisible
     }
+}
+
+let carouselGen = document.querySelectorAll('.carousel-gen')
+for (let el of carouselGen) {
+    new Carousel(el,{
+        slidesVisible: parseInt(el.getAttribute('data-slides-visible')),
+        slidesToScroll: parseInt(el.getAttribute('data-slides-to-scroll')),
+        loop: el.hasAttribute('data-loop'),
+        pagination : el.hasAttribute('data-pagination')
+    })
 }

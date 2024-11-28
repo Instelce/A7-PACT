@@ -197,6 +197,7 @@ export class Input extends WebComponent {
                     border: 1px solid #ccc;
                     border-radius: ${rounded};
                     color: #838383;
+                    background-color: white;
                     
                     transition: box-shadow .2s;
                 }
