@@ -72,7 +72,7 @@ $iconsNames = [
                 <div class="h-px bg-zinc-400 mt-2"></div>
             </div>
             <div class="flex gap-2 pl-4">
-                <x-slider id="slider-price" color="#0057FF" label="Prix" min="0" max="200" type="double"></x-slider>
+                <x-slider id="slider-price" color="#0057FF" label="Prix" min="0" max="50" type="double"></x-slider>
             </div>
 
             <div class="flex gap-2 pl-4">
@@ -94,7 +94,7 @@ $iconsNames = [
                 </x-input>
             </div>
             <x-input>
-                <input slot="input" type="text" placeholder="Ville">
+                <input slot="input" type="text" placeholder="Ville" class="searchCity">
             </x-input>
             <x-select id="sortPrice">
                 <span slot="trigger">Tri par prix</span>
