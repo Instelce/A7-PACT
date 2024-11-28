@@ -344,10 +344,6 @@ searchInput.addEventListener(
 
 const switchInput = document.getElementById("switchtest");
 
-switchInput.addEventListener("change", (event) => {
-    let value = event.target.value;
-    if (event.target.checked) {
-        console.log("Switch is ON");
-        applyFilters({ open: value });
-    }
+switchInput.addEventListener("change", async (event) => {<<
+    await applyFilters({ open: openFilter });
 });

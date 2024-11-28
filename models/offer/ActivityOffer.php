@@ -3,10 +3,12 @@
 namespace app\models\offer;
 use app\core\DBModel;
 use app\models\offer\schedule\ActivitySchedule;
+use app\models\offer\schedule\LinkSchedule;
 
-class ActivityOffer extends DBModel {
+class ActivityOffer extends DBModel
+{
     public int $offer_id = 0;
-    public float $duration =0.0;
+    public float $duration = 0.0;
     public int $required_age = 0;
 
     public static function tableName(): string
@@ -43,8 +45,8 @@ class ActivityOffer extends DBModel {
 
     public function addSchedule($scheduleId)
     {
-        $activitySchedule = new ActivitySchedule();
-        $activitySchedule->activity_id = $this->offer_id;
+        $activitySchedule = new LinkSchedule();
+        $activitySchedule->offer_id = $this->offer_id;
         $activitySchedule->schedule_id = $scheduleId;
         $activitySchedule->save();
     }

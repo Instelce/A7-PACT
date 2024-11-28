@@ -41,5 +41,3 @@ class OfferSchedule extends DBModel
         ];
     }
 }
-
-?>

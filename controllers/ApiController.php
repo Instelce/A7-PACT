@@ -8,6 +8,7 @@ use app\core\Request;
 use app\core\Response;
 use app\models\account\UserAccount;
 use app\models\offer\Offer;
+use app\models\offer\schedule\OfferSchedule;
 use app\models\opinion\Opinion;
 use app\models\opinion\OpinionPhoto;
 use app\models\user\MemberUser;
@@ -80,9 +81,7 @@ class ApiController extends Controller
         if ($maximumPrice) {
             $where[] = ['minimum_price', $maximumPrice, '<=', 'maximum_price'];
         }
-        if ($open) {
-            $where[] = ['OfferPeriod__end_date', date('Y-m-d'), '>=', 'open'];
-        }
+
         // if ($minimumEventDate) {
         //     $where[] = ['OfferPeriod__end_date', $minimumEventDate, '<='];
         // }
@@ -104,6 +103,7 @@ class ApiController extends Controller
 
         $query = Offer::query()
             // ->join(new OfferPeriod())
+            //->join(new OfferSchedule())
             ->join(new Address())
             ->limit($limit)
             ->offset($offset)
@@ -116,6 +116,17 @@ class ApiController extends Controller
             $query->joinString("LEFT JOIN opinion ON opinion.offer_id = offer.id")
                 ->group_by(['offer.id'])
                 ->having('AVG(opinion.rating) >= ' . $rating);
+        }
+        if ($open) {
+            $query->joinString("INNER JOIN link_schedule ON link_schedule.offer_id = offer.id")
+                ->joinString("INNER JOIN offer_schedule ON offer_schedule.id = link_schedule.schedule_id")
+                ->filters([
+                    // ['offer_schedule__day', date('N'), '='],
+                    ['offer_schedule__opening_hours', 'fermé', '!='],
+                    ['offer_schedule__closing_hours', 'fermé', '!='],
+                    ['offer_schedule__opening_hours', date('H:i'), '<='],
+                    ['offer_schedule__closing_hours', date('H:i'), '>=']
+                ]);
         }
 
         /** @var Offer[] $offers */
