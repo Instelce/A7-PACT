@@ -4,8 +4,9 @@
 $this->title = 'Inscription update';
 $this->jsFile = 'updateMemberAccount';
 
-?>
+use app\core\Application;
 
+?>
 <div class="flex gap-2">
     <x-tabs class="column">
         <x-tab role="heading" slot="tab">

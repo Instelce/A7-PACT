@@ -85,7 +85,6 @@ class UserAccount extends DBModel
         } else if ($this->isAdministrator()) {
             return 'admin';
         }
-
         return '';
     }
 
