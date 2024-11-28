@@ -19,9 +19,18 @@ toggleSwitch.addEventListener("change", () => {
 
 let popupAvatarUpdate = document.getElementById("popupAvatarUpdate");
 let popupSaveUpdate = document.getElementById("popupSaveUpdate");
+let popupAccountDelete = document.getElementById("popupAccountDelete");
+let popupPasswordModify = document.getElementById("popupPasswordModify");
+
 let avatarUpdate = document.getElementById("avatarUpdate");
 let saveUpdate = document.getElementById("saveUpdate");
-let popupAccountDelete = document.getElementById("popupAccountDelete");
+let accountDelete = document.getElementById("accountDelete");
+let passwordModify = document.getElementById("passwordModify");
+
+
+let closeAccountDelete = document.getElementById("closeAccountDelete");
+let closePasswordModify = document.getElementById("closePasswordModify");
+
 const popupContent = document.querySelector(".popup-content");
 
 avatarUpdate.addEventListener("click", () => {
@@ -44,6 +53,23 @@ saveUpdate.addEventListener("click", (event) => {
     }
 });
 
-popupAccountDelete.addEventListener("click", () => {
+accountDelete.addEventListener("click", () => {
     popupAccountDelete.classList.toggle("hidden");
 });
+
+
+popupAccountDelete.addEventListener("click", (event) => {
+    if (!popupContent.contains(event.target)) {
+        popupAccountDelete.classList.add("hidden");
+    }
+});
+
+passwordModify.addEventListener("click", () => {
+    popupPasswordModify.classList.toggle("hidden");
+});
+
+// closeAccountDelete.addEventListener("click", (event) => {
+//     if (!popupContent.contains(event.target)) {
+//         popupAccountDelete.classList.add("hidden");
+//     }
+// });
