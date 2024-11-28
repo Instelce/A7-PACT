@@ -16,9 +16,10 @@ use app\core\Application;
 
         <x-tab-panel role="region" slot="panel">
             <div class="flex flex-row mb-8 items-center">
-                <img class="w-[125px] h-[125px] rounded-full mr-10" src="<?php echo Application::$app->user->avatar_url ?>">
+                <!-- je sais pas comment faire pour changer la forme de la souris a l'aide ! -->
+                <img id="avatarUpdate" class="w-[125px] h-[125px] rounded-full mr-10" src="<?php echo Application::$app->user->avatar_url ?>">
                 <div>
-                    <button id="avatarUpdate" type="button" class="button w-25% gray">Modifier mon avatar</button>
+                    <button id="avatarUpdate" type="button" class="button w-25% gray"><i data-lucide="pen-line"></i>Modifier mon avatar</button>
                 </div>
             </div>
             <?php $form = \app\core\form\Form::begin('', 'post', '', 'flex flex-col justify-center items-center') ?>
@@ -65,10 +66,12 @@ use app\core\Application;
             <?php \app\core\form\Form::end() ?>
         </x-tab-panel>
 
-        <x-tab role="heading" slot="tab">
-            <i data-lucide="euro"></i>
-            Paiement
-        </x-tab>
+        <?php if (Application::$app->user->isProfessional()) { ?>
+            <x-tab role="heading" slot="tab">
+                <i data-lucide="euro"></i>
+                Paiement
+            </x-tab>
+            <?php } ?>
 
         <x-tab role="heading" slot="tab">
             <i data-lucide="key"></i>
@@ -77,7 +80,7 @@ use app\core\Application;
         <x-tab-panel role="region" slot="panel">
             <div class="flex flex-col gap-4">
             <button type="submit" class="button w-full gray">Modifier le mot de passe</button>
-            <button type="submit" class="button w-full danger">Supprimer mon compte</button>
+            <button id ="popupDeleteAccount" type="submit" class="button w-full danger">Supprimer mon compte</button>
             </div>
         </x-tab-panel>
     </x-tabs>

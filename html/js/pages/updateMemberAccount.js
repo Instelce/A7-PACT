@@ -21,6 +21,7 @@ let popupAvatarUpdate = document.getElementById("popupAvatarUpdate");
 let popupSaveUpdate = document.getElementById("popupSaveUpdate");
 let avatarUpdate = document.getElementById("avatarUpdate");
 let saveUpdate = document.getElementById("saveUpdate");
+let popupAccountDelete = document.getElementById("popupAccountDelete");
 const popupContent = document.querySelector(".popup-content");
 
 avatarUpdate.addEventListener("click", () => {
@@ -41,4 +42,8 @@ saveUpdate.addEventListener("click", (event) => {
     if (!popupContent.contains(event.target)) {
         popupSaveUpdate.classList.add("hidden");
     }
+});
+
+popupAccountDelete.addEventListener("click", () => {
+    popupAccountDelete.classList.toggle("hidden");
 });
