@@ -1,12 +1,11 @@
 import {Input} from "./components/form/Input.js";
 import {Slider} from "./components/form/Slider.js";
 import {Select} from "./components/form/Select.js";
-import {Carousel} from "./components/Carousel.js";
+import {Slider as SliderCarousel} from "./components/Slider.js";
 import {Acordeon} from "./components/Acordeon.js";
 import {Tabs} from "./components/tabs/Tabs.js";
 import {Tab} from "./components/tabs/Tab.js";
 import {Panel} from "./components/tabs/Panel.js";
-import {HomeCard} from "./components/HomeCard.js";
 
 
 // Do not change
@@ -27,8 +26,7 @@ customElements.define("x-input", Input);
 customElements.define("x-slider", Slider);
 customElements.define("x-select", Select);
 customElements.define("x-acordeon", Acordeon);
-customElements.define("x-carousel", Carousel);
-customElements.define("x-home-card", HomeCard);
+customElements.define("x-carousel", SliderCarousel);
 
 
 
@@ -138,3 +136,4 @@ for (const star of stars) {
         star.appendChild(span);
     }
 }
+

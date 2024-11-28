@@ -1,0 +1,83 @@
+.carousel{
+    position: relative;
+    padding: 20px 4px;
+    overflow: hidden;
+}
+
+.carousel__container{
+    transition: transform 0.3s;
+    transform: translate3d(0, 0, 0);
+}
+
+.carousel__container::after{
+    content: '';
+    clear: both;
+    display: table;
+}
+
+.carousel__item{
+    float: left;
+}
+
+.carousel__next, .carousel__prev{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: rgb(var(--color-blue-primary)) url(/assets/icons/chevron-right.svg) center center no-repeat;
+    background-size: 20px 20px;
+    border-radius: 50%;
+    top: 50%;
+    margin-top: -20px;
+    right: 5px;
+    cursor: pointer;
+    transition: 0.3s, opacity 0.3s;
+}
+
+.carousel__next:hover, .carousel__prev:hover{
+    transform: scale(1.2);
+}
+
+.carousel__prev{
+    background-image: url(/assets/icons/chevron-left.svg);
+    right: auto;
+}
+
+
+.carousel__prev--hidden{
+    opacity: 0;
+}
+
+.carousel__next--hidden{
+    opacity: 0;
+}
+
+.carousel__pagination{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    display: none;
+}
+
+.carousel__pagination__button{
+    background-color: rgb(var(--color-blue-primary));
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 3px;
+    box-shadow: 0 2px 5px #3232321a;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.carousel__pagination__button--active, .carousel__pagination__button:hover{
+    transform: scale(1.4);
+}
+
+@media screen and (min-width: 768px) {
+    .carousel__pagination{
+        display: block;
+    }
+}
