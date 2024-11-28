@@ -9,6 +9,7 @@ use app\core\form\Form;
 use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
+use app\core\Storage;
 use app\forms\LoginForm;
 use app\forms\MemberRegisterForm;
 use app\forms\MemberUpdateForm;
@@ -115,7 +116,9 @@ class AuthController extends Controller
 
     public function updateAccount(Request $request, Response $response){
         $form = new MemberUpdateForm();
-        if ($request->isPost()) {
+
+
+        if ($request->isPost() && $request->formName() === "update-main") {
             $form->loadData($request->getBody());
 
             if ($form->validate() && $form->update()) {
@@ -125,7 +128,13 @@ class AuthController extends Controller
             }
         }
 
-        return $this->render('auth/update-account', ['model' => $form]);
+        if ($request->isPost() && $request->formName() === "update-avatar") {
+            $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
+            Application::$app->user->avatar_url=$avatarPath;
+            Application::$app->user->update();
+        }
+
+        return $this->render('auth/update-member-account', ['model' => $form]);
     }
 
     public function logout(Request $request, Response $response)

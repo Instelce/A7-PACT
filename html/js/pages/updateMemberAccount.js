@@ -14,7 +14,7 @@ toggleSwitch.addEventListener("change", () => {
 });
 
 // ---------------------------------------------------------------------------------------------- //
-// Pop up
+// Gestion des pop up
 // ---------------------------------------------------------------------------------------------- //
 
 let popupAvatarUpdate = document.getElementById("popupAvatarUpdate");
@@ -37,17 +37,17 @@ avatarUpdate.addEventListener("click", () => {
     popupAvatarUpdate.classList.toggle("hidden");
 });
 
-saveUpdate.addEventListener("click", () => {
-    popupSaveUpdate.classList.toggle("hidden");
-});
-
 popupAvatarUpdate.addEventListener("click", (event) => {
     if (!popupContent.contains(event.target)) {
         popupAvatarUpdate.classList.add("hidden");
     }
 });
 
-saveUpdate.addEventListener("click", (event) => {
+saveUpdate.addEventListener("click", () => {
+    popupSaveUpdate.classList.toggle("hidden");
+});
+
+popupSaveUpdate.addEventListener("click", (event) => {
     if (!popupContent.contains(event.target)) {
         popupSaveUpdate.classList.add("hidden");
     }
