@@ -124,8 +124,8 @@ $this->cssFile = "registerPro";
                                     Virement bancaire
                                 </div>
                                 <div id="content-payment" class="w-full hidden">
-                                    <?php echo $form->field($proPrivate, 'titular-account') ?>
-                                    <?php echo $form->field($proPrivate, 'iban') ?>
+                                    <?php echo $form->field($proPrivate, 'titular-account')?>
+                                    <?php echo $form->field($proPrivate, 'iban')?>
                                     <?php echo $form->field($proPrivate, 'bic')?>
                                 </div>
                             </div>

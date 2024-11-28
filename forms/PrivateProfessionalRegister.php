@@ -181,11 +181,11 @@ class PrivateProfessionalRegister extends Model
             'password' => '********',
             'passwordConfirm' => '********',
             'titular-account' => 'Nom entreprise / Nom personne',
-            'iban' => 'votre iban',
+            'iban' => 'FR76 XXXX XXXX XXXX XXXX XXXX XXXX XX',
             'bic' => 'vore BIC (optionnel)',
             'titular-card' => 'Nom entreprise / Nom personne',
             'cardnumber' => 'XXXX XXXX XXXX XXXX',
-            'expirationdate' => '07/26',
+            'expirationdate' => 'MM/AA',
             'cryptogram' => '000'
         ];
     }

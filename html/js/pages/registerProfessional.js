@@ -60,4 +60,3 @@ phoneInputs.forEach((input) => {
     input.addEventListener('input', formatPhoneInput);
 });
 
-
