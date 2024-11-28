@@ -34,7 +34,7 @@ class DBQueryBuilder
 
         // Add selected attributes or select all
         if (!empty($this->select)) {
-            $select = implode(", ", array_map(fn($attr) => $tableName . "." . $attr, $this->select));
+            $select = implode(", ", array_map(fn($attr) => $attr, $this->select));
         } else {
             $select = "$tableName.*";
         }

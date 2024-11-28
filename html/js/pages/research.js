@@ -180,22 +180,19 @@ function displayOffers(Data) {
             offerElement.innerHTML = `
             <article class="research-card">
                 <div class="research-card--photo">
-                    ${
-                        offer.photos[0]
-                            ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
-                            : ""
-                    }
+                    ${offer.photos[0]
+                    ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
+                    : ""
+                }
                 </div>
                 <div class="research-card--body">
                     <header>
                         <h2 class="research-card--title">${offer.title}</h2>
                         <p>${translateCategory(
-                            offer.category
-                        )} par <a href="/comptes/${
-                offer.professional_id
-            }" class="underline">${
-                offer.profesionalUser["denomination"]
-            }</a></p>
+                    offer.category
+                )} par <a href="/comptes/${offer.professional_id
+                }" class="underline">${offer.profesionalUser["denomination"]
+                }</a></p>
                     </header>
                     <p class="summary">${offer.summary}</p>
                          <div class="flex gap-2 mt-auto pt-4">
@@ -284,6 +281,39 @@ categoryListenners.forEach((listener, index) => {
         console.warn(`Element with ID ${listener} not found`);
     }
 });
+// ---------------------------------------------------------------------------------------------- //
+// listeners
+// ---------------------------------------------------------------------------------------------- //
+function debounce(func, wait) {
+    let timeout;
+    return function () {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+}
+
+let searchInput = document.querySelector(".search-input");
+
+searchInput.addEventListener(
+    "input",
+    debounce(() => {
+        let value = searchInput.value.trim();
+        applyFilters({ q: value });
+    }, 300)
+);
+
+let searchCity = document.querySelector(".searchCity");
+
+searchCity.addEventListener(
+    "input",
+    debounce(() => {
+        let value = searchCity.value.trim();
+        applyFilters({ location: value });
+    }, 300)
+);
+
 let sortPrice = document.getElementById("sortPrice");
 
 sortPrice.addEventListener("change", (event) => {
@@ -307,37 +337,14 @@ sortPrice.addEventListener("change", (event) => {
 
 const sliderPrice = document.getElementById("slider-price");
 
-sliderPrice.addEventListener("slider-change", (event) => {
+sliderPrice.addEventListener("slider-change", debounce((event) => {
     const { minValue, maxValue } = event.detail;
-    console.log("Slider values updated:", { minValue, maxValue });
-});
+    applyFilters({ minimumPrice: minValue, maximumPrice: maxValue });
+}, 300));
 
 const sliderRating = document.getElementById("slider-rating");
 
-sliderRating.addEventListener("slider-change", (event) => {
+sliderRating.addEventListener("slider-change", debounce((event) => {
     const { minValue } = event.detail;
-    console.log("Slider values updated:", { minValue });
-});
-// ---------------------------------------------------------------------------------------------- //
-// listeners
-// ---------------------------------------------------------------------------------------------- //
-function debounce(func, wait) {
-    let timeout;
-    return function () {
-        const context = this;
-        const args = arguments;
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(context, args), wait);
-    };
-}
-
-let searchInput = document.querySelector(".search-input");
-
-searchInput.addEventListener(
-    "input",
-    debounce(() => {
-        let value = searchInput.value.trim();
-        console.log(value);
-        applyFilters({ q: value });
-    }, 300)
-);
+    applyFilters({ rating: minValue });
+}, 300));
