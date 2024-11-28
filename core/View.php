@@ -2,6 +2,9 @@
 
 namespace app\core;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 class View
 {
     public string $title = '';
@@ -49,9 +52,14 @@ class View
     }
 
     /**
+     * Send a json response
+     *
+     * Take a DBModel or an array of DBModel and send it as a json response
+     * It make the conversion to json with the toJson method of the DBModel
+     *
      * @param $model DBModel | DBModel[]
      */
-    public function json($model)
+    public function json(array|DBModel $model): void
     {
         header('Content-Type: application/json');
         if (is_array($model)) {
@@ -63,5 +71,24 @@ class View
         } else {
             echo json_encode($model->toJson());
         }
+    }
+
+    /**
+     * Generate a pdf file
+     *
+     * @param string $name Name of the pdf file
+     * @param string $view Name of the view to render
+     * @param array $params Parameters to pass to the view
+     */
+    public function pdf(string $name, string $view, array $params = []): void
+    {
+//        $options = new Options();
+//        $options->setIsRemoteEnabled(true);
+
+        $pdf = new Dompdf();
+        $pdf->loadHtml($this->renderOnlyView('pdf/' . $view, $params));
+        $pdf->setPaper('A4');
+        $pdf->render();
+        $pdf->stream($name, ['Attachment' => 0]);
     }
 }

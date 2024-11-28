@@ -6,7 +6,7 @@ use app\core\DBModel;
 
 class CbMeanOfPayment extends DBModel
 {
-    public int $id = 0;
+    public int $payment_id = 0;
     public string $name = '';
     public string $card_number = '';
     public string $expiration_date = '';
@@ -24,7 +24,7 @@ class CbMeanOfPayment extends DBModel
 
     public static function pk(): string
     {
-        return 'id';
+        return 'payment_id';
     }
 
     public function rules(): array

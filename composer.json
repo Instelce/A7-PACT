@@ -9,6 +9,7 @@
     "require": {
         "vlucas/phpdotenv": "^5.6",
         "felippe-regazio/php-hot-reloader": "dev-master",
-        "phpmailer/phpmailer": "^6.9"
+        "phpmailer/phpmailer": "^6.9",
+        "dompdf/dompdf": "^2.0"
     }
 }

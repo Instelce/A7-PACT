@@ -1,0 +1,34 @@
+
+x-tab[selected][id="public"]
+{
+    border-bottom: none;
+    border: 1px solid rgb(var(--color-blue-primary));
+    background-color: rgb(var(--color-blue-primary));
+    border-radius: 100rem 0 0 100rem;
+    color: rgb(var(--color-white));
+}
+
+x-tab[id="public"]
+{
+    border-bottom: none;
+    border: 1px solid rgb(var(--color-gray-1));
+    border-radius:  100rem 0 0 100rem;
+    padding: 10px 32px;
+}
+
+x-tab[selected][id="prive"]
+{
+    border-bottom: none;
+    border: 1px solid rgb(var(--color-blue-primary));
+    background-color: rgb(var(--color-blue-primary));
+    color: rgb(var(--color-white));
+    border-radius: 0 100rem 100rem 0;
+}
+
+x-tab[id="prive"]
+{
+    border-bottom: none;
+    border: 1px solid rgb(var(--color-gray-1));
+    border-radius: 0 100rem 100rem 0;
+    padding: 10px 32px;
+}

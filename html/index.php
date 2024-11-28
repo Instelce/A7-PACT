@@ -57,7 +57,7 @@ $app->router->get('/dashboard', function () {
 $app->router->get('/dashboard/offres', [DashboardController::class, 'offers']);
 $app->router->post('/dashboard/offres', [DashboardController::class, 'offers']);
 $app->router->get('/dashboard/avis', [DashboardController::class, 'avis']);
-$app->router->get('/dashboard/factures', [DashboardController::class, 'factures']);
+$app->router->get('/dashboard/factures', [DashboardController::class, 'invoices']);
 
 // Auth routes
 $app->router->get('/connexion', [AuthController::class, 'login']);
@@ -79,5 +79,8 @@ $app->router->get('/api/auth/user', [ApiController::class, 'user']);
 $app->router->get('/api/offers', [ApiController::class, 'offers']);
 $app->router->get('/api/opinions', [ApiController::class, 'opinions']);
 $app->router->post('/api/opinions/<opinion_pk:int>', [ApiController::class, 'opinionUpdate']);
+
+$app->router->get('/test/pdf', [SiteController::class, 'testPdf']);
+
 
 $app->run();

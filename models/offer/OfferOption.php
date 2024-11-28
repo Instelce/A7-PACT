@@ -9,6 +9,9 @@ class OfferOption extends DBModel
     public const EN_RELIEF = 'en_relief';
     public const A_LA_UNE = 'a_la_une';
 
+    public const EN_RELIEF_PRICE = 8.34;
+    public const A_LA_UNE_PRICE = 16.68;
+
     public int $id = 0;
     public string $type = '';
     public string $launch_date = '';
@@ -54,18 +57,15 @@ class OfferOption extends DBModel
         return true;
     }
 
-    /**
-     * Get the price of the offer
-     *
-     * @return float
-     */
-    public function getPrice(): float
+    public function price(): float|int
     {
-        if ($this->type === self::EN_RELIEF) {
-            return 2.98;
-        } else if ($this->type === self::A_LA_UNE) {
-            return 7.98;
+        switch ($this->type) {
+            case self::EN_RELIEF:
+                return self::EN_RELIEF_PRICE;
+            case self::A_LA_UNE:
+                return self::A_LA_UNE_PRICE;
+            default:
+                return 0;
         }
-        return 0;
     }
 }

@@ -9,8 +9,10 @@ use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\core\Utils;
+use app\forms\PaymentForm;
 use app\middlewares\BackOfficeMiddleware;
 use app\middlewares\OwnOfferMiddleware;
+use app\models\account\UserAccount;
 use app\models\Address;
 use app\models\offer\ActivityOffer;
 use app\models\offer\AttractionParkOffer;
@@ -24,6 +26,7 @@ use app\models\offer\schedule\OfferSchedule;
 use app\models\offer\ShowOffer;
 use app\models\offer\VisitOffer;
 use app\models\opinion\Opinion;
+use app\models\payment\CbMeanOfPayment;
 use app\models\user\professional\ProfessionalUser;
 use app\models\VisitLanguage;
 use DateInterval;
@@ -202,14 +205,20 @@ class OfferController extends Controller
     public function payment(Request $request, Response $response, $routeParams)
     {
         $this->setLayout('back-office');
-        $offer = Offer::findOne(['id' => $routeParams['pk']]);
+        $offer = Offer::findOneByPk($routeParams['pk']);
+        $professional = UserAccount::findOneByPk($offer->professional_id);
+        $address = Address::findOneByPk($professional->address_id);
+        $payment = new PaymentForm($professional->specific()->specific()->payment_id);
 
         if (!$offer) {
             throw new NotFoundException();
         }
 
         return $this->render('offers/payment', [
-            'offer' => $offer
+            'offer' => $offer,
+            'address' => $address,
+            'professional' => $professional,
+            'payment' => $payment
         ]);
     }
 
