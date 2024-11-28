@@ -23,7 +23,7 @@ class MemberUpdateForm extends Model
     public bool $notification = false;
     public ?UserAccount $userAccount = null;
     public ?Address $address = null;
-    public ?MemberUser $memberUser = null;
+    public MemberUser|null|false $memberUser = null;
 
     /**
      * Initialize attributes this form
@@ -40,11 +40,15 @@ class MemberUpdateForm extends Model
         $this->postalCode = $this->address->postal_code;
 
         $this->memberUser = MemberUser::findOneByPk(Application::$app->user->account_id);
-        $this->lastname = $this->memberUser->lastname;
-        $this->firstname = $this->memberUser->firstname;
-        $this->phone = $this->memberUser->phone;
-        $this->pseudo = $this->memberUser->pseudo;
-        $this->notification = $this->memberUser->allows_notifications;
+
+        if ($this->memberUser) {
+            $this->lastname = $this->memberUser->lastname;
+            $this->firstname = $this->memberUser->firstname;
+            $this->phone = $this->memberUser->phone;
+            $this->pseudo = $this->memberUser->pseudo;
+            $this->notification = $this->memberUser->allows_notifications;
+        }
+
     }
 
     public function update()

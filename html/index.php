@@ -68,7 +68,7 @@ $app->router->get('/inscription/professionnel', [AuthController::class, 'registe
 $app->router->post('/inscription/professionnel', [AuthController::class, 'registerProfessional']);
 $app->router->get('/inscription/membre', [AuthController::class, 'registerMember']);
 $app->router->post('/inscription/membre', [AuthController::class, 'registerMember']);
-$app->router->get('/comptes/modification', [AuthController::class, 'updateAccount']);
+    $app->router->get('/comptes/modification', [AuthController::class, 'updateAccount']);
 $app->router->post('/comptes/modification', [AuthController::class, 'updateAccount']);
 $app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/comptes/<pk:int>', [AuthController::class, 'profile']);
