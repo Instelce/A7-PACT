@@ -26,6 +26,7 @@ class m0006_create_table_account
             mail VARCHAR(100) UNIQUE NOT NULL,
             password VARCHAR(100) NOT NULL,
             avatar_url VARCHAR(255) NOT NULL,
+            reset_password_hash VARCHAR(255) DEFAULT NULL,
             address_id INT NOT NULL,
             
             FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE,

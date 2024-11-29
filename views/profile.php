@@ -59,7 +59,7 @@ $this->jsFile = "profile";
             </h3>
         </div>
     </div>
-    <?php if (!$user->isProfessional() && $user->account_id == Application::$app->user->account_id) { ?>
+    <?php if ($user->account_id == Application::$app->user->account_id) { ?>
         <div class="gap-1">
             <a href="modification">
                 <button class="button gray">Modifier mon profil<i data-lucide="pen-line"></i></button>

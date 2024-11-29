@@ -21,7 +21,6 @@ $this->title = 'Connexion';
             <?php echo $form->field($model, 'mail') ?>
             <?php echo $form->field($model, 'password')->passwordField() ?>
         </div>
-
         <button type="submit" class="button w-full ">Connexion</button>
     <?php Form::end() ?>
 </div>
