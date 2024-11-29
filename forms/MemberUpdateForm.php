@@ -20,6 +20,7 @@ class MemberUpdateForm extends Model
     public string $postalCode = '';
     public string $city = '';
     public string $phone = '';
+    public string $password = '';
     public bool $notification = false;
     public ?UserAccount $userAccount = null;
     public ?Address $address = null;
@@ -75,6 +76,7 @@ class MemberUpdateForm extends Model
             'postalCode' => [self::RULE_REQUIRED, self::RULE_POSTAL],
             'city' => [self::RULE_REQUIRED],
             'phone' => [self::RULE_REQUIRED,self::RULE_PHONE],
+            'password' => [self::RULE_PASSWORD_CHECK],
         ];
     }
 
@@ -91,6 +93,7 @@ class MemberUpdateForm extends Model
             'city' => 'Ville',
             'phone' => 'Téléphone',
             'notifications' => 'notifications',
+            'password' => 'Entrez votre mot de passe',
         ];
     }
 

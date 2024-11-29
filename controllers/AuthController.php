@@ -4,12 +4,14 @@ namespace app\controllers;
 
 use app\core\Application;
 use app\core\Controller;
+use app\core\exceptions\ForbiddenException;
 use app\core\exceptions\NotFoundException;
 use app\core\form\Form;
 use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\core\Storage;
+use app\core\Utils;
 use app\forms\LoginForm;
 use app\forms\MemberRegisterForm;
 use app\forms\MemberUpdateForm;
@@ -179,9 +181,36 @@ class AuthController extends Controller
             Application::$app->user->update();
         }
 
+        if ($request->isPost() && $request->formName() === "reset-password") {
+            $mail = Application::$app->user->mail;
+
+            Application::$app->user->reset_password_hash = Utils::generateHash();
+            Application::$app->user->update();
+
+            Application::$app->mailer->send($mail, "Modification du mot de passe de $mail", 'reset-password', ['mail' => $mail, 'hash' => Application::$app->user->reset_password_hash]);
+            Application::$app->session->setFlash('success', "Un mail a bien été envoyé a l'adresse $mail");
+            $response->redirect('/comptes/modification');
+        }
         return $this->render('auth/update-member-account', ['model' => $form]);
     }
 
+    public function resetPassword(Request $request, Response $response) {
+        $hash = $request->getBody()['token'];
+        $user = UserAccount::findOne(['reset_password_hash' => $hash]);
+
+        if (!$user) {
+            throw new ForbiddenException();
+        }
+
+        if ($request->isPost()) {
+            $user->reset_password_hash = null;
+            $user->password = password_hash($request->getBody()['password'], PASSWORD_DEFAULT);
+            $user->update();
+            $response->redirect('/connexion');
+        }
+
+        return $this->render('auth/reset-password', ['hash' => $hash]);
+    }
 
     public function logout(Request $request, Response $response)
     {

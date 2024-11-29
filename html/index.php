@@ -68,6 +68,8 @@ $app->router->get('/inscription/professionnel', [AuthController::class, 'registe
 $app->router->post('/inscription/professionnel', [AuthController::class, 'registerProfessional']);
 $app->router->get('/inscription/membre', [AuthController::class, 'registerMember']);
 $app->router->post('/inscription/membre', [AuthController::class, 'registerMember']);
+$app->router->get('/comptes/reset-password', [AuthController::class, 'resetPassword']);
+$app->router->post('/comptes/reset-password', [AuthController::class, 'resetPassword']);
 if (Application::$app->user) {
     if (Application::$app->user->isMember()) {
         $app->router->get('/comptes/modification', [AuthController::class, 'updateAccount']);

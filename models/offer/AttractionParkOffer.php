@@ -3,11 +3,14 @@
 namespace app\models\offer;
 use app\core\DBModel;
 use app\models\offer\schedule\ActivitySchedule;
+use app\models\offer\schedule\AllOfferSchedule;
 use app\models\offer\schedule\AttractionParkSchedule;
+use app\models\offer\schedule\LinkSchedule;
 
-class AttractionParkOffer extends DBModel {
+class AttractionParkOffer extends DBModel
+{
     public int $offer_id = 0;
-    public string $url_image_park_map ='';
+    public string $url_image_park_map = '';
     public int $attraction_number = 0;
     public int $required_age = 0;
 
@@ -37,8 +40,8 @@ class AttractionParkOffer extends DBModel {
 
     public function addSchedule($scheduleId)
     {
-        $parkSchedule = new AttractionParkSchedule();
-        $parkSchedule->attraction_park_id = $this->offer_id;
+        $parkSchedule = new LinkSchedule();
+        $parkSchedule->offer_id = $this->offer_id;
         $parkSchedule->schedule_id = $scheduleId;
         $parkSchedule->save();
     }

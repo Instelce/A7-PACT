@@ -3,7 +3,7 @@
 namespace app\models\offer;
 use app\core\DBModel;
 use app\models\IsOnRestaurantMenu;
-use app\models\offer\schedule\ActivitySchedule;
+use app\models\offer\schedule\LinkSchedule;
 use app\models\offer\schedule\RestaurantSchedule;
 
 class RestaurantOffer extends DBModel
@@ -41,8 +41,8 @@ class RestaurantOffer extends DBModel
 
     public function addSchedule($scheduleId)
     {
-        $restaurantSchedule = new RestaurantSchedule();
-        $restaurantSchedule->restaurant_id = $this->offer_id;
+        $restaurantSchedule = new LinkSchedule();
+        $restaurantSchedule->offer_id = $this->offer_id;
         $restaurantSchedule->schedule_id = $scheduleId;
         $restaurantSchedule->save();
     }

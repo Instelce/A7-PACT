@@ -144,7 +144,7 @@ if ($status == "Fermé") {
             <div class="inline-offer">
                 <i data-lucide="globe"></i>
 
-                <p><a href="<?php echo $offerData["website"] ?>" target="_blank">Voir le site</a>
+                <p><a href="<?php echo $offerData["website"] ?>" class="underline" target="_blank"><?php echo $offerData["website"] ?></a>
                 </p>
                 <!-- link to the website -->
             </div>

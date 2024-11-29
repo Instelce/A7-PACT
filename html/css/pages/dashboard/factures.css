@@ -1,0 +1,18 @@
+
+/* Header */
+.card-info {
+    padding: 1rem;
+    border-radius: var(--radius-medium);
+    background: rgba(var(--color-gray-1), .1);
+    border: 1px solid rgba(var(--color-gray-1), .5);
+}
+
+.card-info p {
+    color: rgb(var(--color-gray-4));
+    margin-bottom: .3rem;
+}
+
+.card-info h2 {
+    font-size: var(--typescale-u2);
+    font-family: var(--font-title);
+}

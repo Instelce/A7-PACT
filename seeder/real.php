@@ -61,7 +61,7 @@ function generatePhoneNumber()
     return $phone;
 }
 
-$db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, offer_option, offer, offer_type, offer_period, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
+$db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, option, subscription, offer, offer_type, offer_period, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
 
 // ---------------------------------------------------------------------- //
 // user adress
@@ -133,7 +133,7 @@ $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 
 $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VeilleArbre', TRUE);");
 
-$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren, phone) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034', '". generatePhoneNumber() ."'), (4, 7421, 'Fred port', '65941542000012', '". generatePhoneNumber() ."'),(5,8452,'Rance Evasion','26915441000024', '". generatePhoneNumber() ."'), (8, 9587, 'Brehat', '79658412354789', '". generatePhoneNumber() ."'), (9, 7896, 'Récrée des 3 curés', '12548965324785', '". generatePhoneNumber() ."'), (10, 1489, 'La vallée des Saints', '25489600358897', '". generatePhoneNumber() ."'), (6, 9635, 'VoyageurGuidé', '95489433452897', '". generatePhoneNumber() ."');");
+$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren, phone) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034', '" . generatePhoneNumber() . "'), (4, 7421, 'Fred port', '65941542000012', '" . generatePhoneNumber() . "'),(5,8452,'Rance Evasion','26915441000024', '" . generatePhoneNumber() . "'), (8, 9587, 'Brehat', '79658412354789', '" . generatePhoneNumber() . "'), (9, 7896, 'Récrée des 3 curés', '12548965324785', '" . generatePhoneNumber() . "'), (10, 1489, 'La vallée des Saints', '25489600358897', '" . generatePhoneNumber() . "'), (6, 9635, 'VoyageurGuidé', '95489433452897', '" . generatePhoneNumber() . "');");
 
 $db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3), (8), (10), (6);");
 
@@ -144,6 +144,12 @@ $db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id)
 // ---------------------------------------------------------------------- //
 
 $db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 1.67), (2, 'premium', 3.34), (3, 'gratuite', 0.00);");
+
+// ---------------------------------------------------------------------- //
+// create offer option
+// ---------------------------------------------------------------------- //
+
+$db->pdo->exec("INSERT INTO option (id, type, price) VALUES (1, 'en_relief', 8.34), (2, 'a_la_une', 16.68);");
 
 
 // ---------------------------------------------------------------------- //
@@ -1006,7 +1012,6 @@ $reviews = [
             "content" => "Le spectacle était magnifique, et la qualité des prestations était exceptionnelle. Je recommande sans hésiter.",
             "rating" => 5,
         ],
-
 
         [
             "title" => "Spectacle ennuyant",

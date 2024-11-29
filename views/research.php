@@ -34,11 +34,11 @@ $iconsNames = [
         foreach ($filtersNames as $key => $filterName) {
             $iconName = $iconsNames[$key];
             ?>
-        <button id="<?php echo strtolower($filterName); ?>" class="category-item">
-            <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
-            <span><?php echo htmlentities($filterName); ?></span>
-        </button>
-        <?php
+            <button id="<?php echo strtolower($filterName); ?>" class="category-item">
+                <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
+                <span><?php echo htmlentities($filterName); ?></span>
+            </button>
+            <?php
         }
         ?>
     </div>
@@ -99,16 +99,31 @@ $iconsNames = [
             <x-select id="sortPrice">
                 <span slot="trigger">Tri par prix</span>
                 <div slot="options">
-                    <div data-value="croissant">Prix croissant</div>
-                    <div data-value="decroissant">Prix décroissant</div>
+                    <div data-value="croissant">Prix croissant <svg xmlns="http://www.w3.org/2000/svg" width="20"
+                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-narrow-wide">
+                            <path d="m3 16 4 4 4-4" />
+                            <path d="M7 20V4" />
+                            <path d="M11 4h4" />
+                            <path d="M11 8h7" />
+                            <path d="M11 12h10" />
+                        </svg></div>
+                    <div data-value="decroissant">Prix décroissant <svg xmlns="http://www.w3.org/2000/svg" width="20"
+                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-wide-narrow">
+                            <path d="m3 16 4 4 4-4" />
+                            <path d="M7 20V4" />
+                            <path d="M11 4h10" />
+                            <path d="M11 8h7" />
+                            <path d="M11 12h4" />
+                        </svg></div>
                 </div>
             </x-select>
         </div>
     </div>
 </div>
 
-<!-- Offers, generated in js file -->
-<div class="flex flex-col gap-2">
+<!-- <div class="flex flex-col gap-2">
     <div class="research-card--body">
         <header>
             <h2 class="research-card--title"><?php echo $offer["title"]; ?> </h2>
@@ -123,16 +138,16 @@ $iconsNames = [
             <a href="" class="button blue w-full spaced">Voir plus<i data-lucide="chevron-right"></i></a>
         </div>
     </div>
-    </article>
-    </a>
-</div>
-</div>
-</div>
+</div> -->
 
 <!-- Offers, generated in js file -->
 <div class="flex flex-col gap-2">
-
-
 </div>
+<div class="no-offers-message hidden">
+    <h2>Aucune offre trouvée</h2>
+    <p>Désolé, nous n'avons trouvé aucune offre correspondant à vos critères de recherche.</p>
+    <p>Veuillez essayer d'ajuster vos filtres ou revenir plus tard pour voir les nouvelles opportunités disponibles.</p>
+</div>
+<div id="loader-section"></div>
 <?php
 ?>

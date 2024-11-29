@@ -26,6 +26,7 @@ class Offer extends DBModel
     public string $website = '';
     public string $phone_number = '';
     public ?float $minimum_price = null;
+    public int $rating = 0;
 
     /**
      * @var 'activity' | 'attraction_park' | 'restaurant' | 'show' | 'visit'
@@ -46,28 +47,12 @@ class Offer extends DBModel
 
     public function attributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'last_offline_date', 'offline_days', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'last_offline_date', 'offline_days', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price', 'rating'];
     }
 
     public function updateAttributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'last_offline_date', 'offline_days', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price'];
-    }
-
-    public function save(): bool
-    {
-        // Save the offer
-        parent::save();
-
-        // Create an invoice
-        $invoice = new Invoice();
-        $invoice->issue_date = date('Y-m-d');
-        $invoice->service_date = date('m');
-        $invoice->due_date = date('Y-m-d', strtotime('+30 days'));
-        $invoice->offer_id = $this->id;
-        $invoice->save();
-
-        return true;
+        return ['title', 'summary', 'description', 'likes', 'offline', 'last_offline_date', 'offline_days', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price', 'rating'];
     }
 
     public function rules(): array
@@ -93,7 +78,7 @@ class Offer extends DBModel
         ];
     }
 
-    public static function frenchCategoryName(string $category)
+    public static function frenchCategoryName(string $category): string
     {
         return match ($category) {
             'activity' => 'Activité',
@@ -110,9 +95,9 @@ class Offer extends DBModel
         return OfferType::findOne(['id' => $this->offer_type_id]);
     }
 
-    public function option(): false|null|OfferOption
+    public function subscription(): false|null|Subscription
     {
-        return OfferOption::findOneByPk($this->id);
+        return Subscription::findOne(['offer_id' => $this->id]);
     }
 
     public function address(): Address
@@ -180,13 +165,16 @@ class Offer extends DBModel
         $isTagged->save();
     }
 
-    public function addOption(string $type, string $launchDate, int $duration) {
-        $option = new OfferOption();
-        $option->offer_id = $this->id;
-        $option->type = $type;
-        $option->launch_date = $launchDate;
-        $option->duration = $duration;
-        $option->save();
+    public function addSubscription(string $type, string $launchDate, int $duration): void
+    {
+        $option = Option::findOne(['type' => $type]);
+
+        $subscription = new Subscription();
+        $subscription->offer_id = $this->id;
+        $subscription->option_id = $option->id;
+        $subscription->launch_date = $launchDate;
+        $subscription->duration = $duration;
+        $subscription->save();
     }
 
     /**
@@ -208,7 +196,9 @@ class Offer extends DBModel
     }
 
     public function isALaUne() {
-        return count(OfferOption::find(['offer_id' => $this->id, 'type' => OfferOption::A_LA_UNE])) > 0;
+        return count(Subscription::query()
+                ->join(new Option())
+                ->filters(['offer_id' => $this->id, 'option__type' => Subscription::A_LA_UNE])->make()) > 0;
     }
 
     public function rating(): int

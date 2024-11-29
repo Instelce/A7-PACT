@@ -2,7 +2,7 @@
 /** @var $pseudo string */
 ?>
 
-<h1>Bienvenu <?php echo $pseudo ?> sur PACT !</h1>
+<h1>Bienvenu sur PACT <?php echo $pseudo ?> !</h1>
 
 <p>Vous avez reçu cet email car vous avez créé un compte sur notre site.</p>
 <p>Vous pouvez dès à présent vous connecter et profiter de nos services.</p>

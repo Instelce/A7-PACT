@@ -53,4 +53,9 @@ class Utils
             mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
         );
     }
+
+    public static function generateHash(): string
+    {
+        return hash('sha256', bin2hex(random_bytes(16)));
+    }
 }

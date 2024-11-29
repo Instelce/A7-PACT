@@ -15,6 +15,7 @@ class UserAccount extends DBModel
     public string $mail = '';
     public string $password = '';
     public string $avatar_url = '';
+    public ?string $reset_password_hash = '';
     public int $address_id = 0;
 
     public static function tableName(): string
@@ -24,7 +25,7 @@ class UserAccount extends DBModel
 
     public function attributes(): array
     {
-        return ['account_id', 'mail', 'password', 'avatar_url', 'address_id'];
+        return ['account_id', 'mail', 'password', 'avatar_url', 'address_id', 'reset_password_hash'];
     }
 
     public static function pk(): string

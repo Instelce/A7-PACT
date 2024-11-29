@@ -4,7 +4,7 @@ use app\core\Application;
 use app\models\account\Account;
 use app\models\Address;
 use app\models\offer\Offer;
-use app\models\offer\OfferOption;
+use app\models\offer\Subscription;
 use app\models\offer\OfferTag;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -64,7 +64,7 @@ echo "Creating offer types...\n";
 
 $categories = ['activity', 'attraction_park', 'restaurant', 'show', 'visit'];
 $words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore', 'magna', 'aliqua', 'ut', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud', 'exercitation', 'ullamco', 'laboris', 'nisi', 'ut', 'aliquip', 'ex', 'ea', 'commodo', 'consequat', 'duis', 'aute', 'irure', 'dolor', 'in', 'reprehenderit', 'in', 'voluptate', 'velit', 'esse', 'cillum', 'dolore', 'eu', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint', 'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'in', 'culpa', 'qui', 'officia', 'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum'];
-$options = [OfferOption::EN_RELIEF, OfferOption::A_LA_UNE];
+$options = [Subscription::EN_RELIEF, Subscription::A_LA_UNE];
 
 // Create random offers for testing
 for ($i = 0; $i < 10; $i++) {
@@ -124,7 +124,7 @@ for ($i = 0; $i < 10; $i++) {
 
     // Add option
     if (rand(1, 2) === 1) {
-        $offer->addOption($options[array_rand($options)], date('Y-m-d'), rand(1, 4));
+        $offer->addSubscription($options[array_rand($options)], date('Y-m-d'), rand(1, 4));
     }
 }
 echo "Creating random offers...\n";

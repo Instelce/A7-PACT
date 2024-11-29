@@ -95,7 +95,7 @@ class OfferController extends Controller
 
             // Save the offer option
             if (array_key_exists('option', $body) && $body['option'] !== 'no') {
-                $offer->addOption($body['option'], $body['option-launch-date'], $body['option-duration']);
+                $offer->addSubscription($body['option'], $body['option-launch-date'], $body['option-duration']);
             }
 
             // Creation of complementary informations
@@ -340,6 +340,8 @@ class OfferController extends Controller
                 $opinion->account_id = Application::$app->user->account_id;
                 $opinion->offer_id = $id;
                 $opinion->save();
+
+                // TODO - update rating column on offer
 
                 // Save opinion photos
                 $files = Application::$app->storage->saveFiles('opinion-photos', 'opinions');
