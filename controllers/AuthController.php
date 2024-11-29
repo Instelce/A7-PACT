@@ -16,7 +16,9 @@ use app\forms\LoginForm;
 use app\forms\MemberRegisterForm;
 use app\forms\MemberUpdateForm;
 use app\forms\PrivateProfessionalRegister;
+use app\forms\PrivateProfessionalUpdateForm;
 use app\forms\PublicProfessionalRegister;
+use app\forms\PublicProfessionalUpdateForm;
 use app\models\account\UserAccount;
 use app\models\User;
 use app\models\user\professional\PrivateProfessional;
@@ -96,6 +98,49 @@ class AuthController extends Controller
         }
 
         return $this->render('auth/register-professional', ['proPublic' => $proPublic, 'proPrivate' => $proPrivate]);
+    }
+
+
+    public function updatePublicProfessionalAccount(Request $request, Response $response){
+        $proPublic  = new PublicProfessionalUpdateForm();
+
+        if ($request->isPost() && $request->formName()==="update-public") {
+            $proPublic->loadData($request->getBody());
+            if ($proPublic->validate() && $proPublic->update()) {
+                Application::$app->session->setFlash('success', "Votre compte à bien été modifié !");
+                $response->redirect('/');
+                exit;
+            }
+        }
+
+        if ($request->isPost() && $request->formName() === "update-avatar") {
+            $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
+            Application::$app->user->avatar_url=$avatarPath;
+            Application::$app->user->update();
+        }
+
+        return $this->render('auth/update-public-professional-account', ['proPublic' => $proPublic]);
+    }
+
+    public function updatePrivateProfessionalAccount(Request $request, Response $response){
+        $form  = new PrivateProfessionalUpdateForm();
+        if ($request->isPost() && $request->formName()=="update-private") {
+            $form->loadData($request->getBody());
+
+            if ($form->validate() && $form->update()) {
+                Application::$app->session->setFlash('success', "Votre compte à bien été modifié !");
+                $response->redirect('/');
+                exit;
+            }
+        }
+
+        if ($request->isPost() && $request->formName() === "update-avatar") {
+            $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
+            Application::$app->user->avatar_url=$avatarPath;
+            Application::$app->user->update();
+        }
+
+        return $this->render('auth/update-private-professional-account', ['proPrivate' => $form]);
     }
 
     public function registerMember(Request $request, Response $response)

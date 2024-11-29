@@ -11,17 +11,10 @@ use app\models\user\professional\ProfessionalUser;
 use app\core\Utils;
 use app\models\user\professional\PublicProfessional;
 
-class PublicProfessionalRegister extends Model
+class PublicProfessionalUpdateForm extends Model
 {
-    public const ASSO = 1;
-    public const OTHER = 0;
-
-    public const ACCEPT_CONDITIONS = 1;
-    public const REFUSE_CONDITIONS = 0;
-
     public const ACCEPT_NOTIFICATIONS = 1;
     public const REFUSE_NOTIFICATIONS = 0;
-    public int $isAsso = self::OTHER;
     public string $siren = '';
     public string $denomination = '';
 
@@ -31,57 +24,49 @@ class PublicProfessionalRegister extends Model
     public string $postaleCode = '';
     public string $city = '';
     public string $phone = '';
-    public string $password = '';
-    public string $passwordConfirm = '';
 
-    public int $conditions = self::REFUSE_CONDITIONS;
     public int $notifications = self::REFUSE_NOTIFICATIONS;
 
+    public UserAccount $userAccount;
+    public Address $address;
+    public ProfessionalUser $professionalUser;
+    public PublicProfessional $publicProfessional;
 
-    public function register()
+    public function __construct()
     {
-        echo "<pre>";
-        var_dump("enter register");
-        echo "</pre>";
-        exit;
-        /**
-         * @var PublicProfessional $proPublic
-         */
-        $account = new Account();
-        $account->save();
+        $this->userAccount = Application::$app->user;
+        $this->mail = $this->userAccount->mail;
 
-        $address = new Address();
-        $address->number = $this->streetnumber;
-        $address->street = $this->streetname;
-        $address->postal_code = $this->postaleCode;
-        $address->city = $this->city;
-        $address->save();
+        $this->address = Address::findOneByPk($this->userAccount->address_id);
+        $this->streetnumber = $this->address->number;
+        $this->streetname = $this->address->street;
+        $this->city = $this->address->city;
+        $this->postaleCode = $this->address->postal_code;
 
-        $userAccount = new UserAccount();
-        $userAccount->account_id = $account->id;
-        $userAccount->mail = $this->mail;
-        $userAccount->password = password_hash($this->password, PASSWORD_DEFAULT);
-        $userAccount->address_id = $address->id;
-        $userAccount->avatar_url = "https://ui-avatars.com/api/?size=128&name=$this->denomination";
-        $userAccount->save();
-        
-        echo "<pre>";
-        var_dump(Utils::generateUUID());
-        echo "</pre>";
-        exit;
+        $this->professionalUser = ProfessionalUser::findOneByPk(Application::$app->user->account_id);
+        if($this->professionalUser){
+            $this->denomination = $this->professionalUser->denomination;
+            if($this->professionalUser->siren){
+                $this->siren = $this->professionalUser->siren;
+            } else{
+                $this->siren = '';
+            }
+            $this->phone = $this->professionalUser->phone;
+            $this->notifications = $this->professionalUser->allows_notifications;
+        }
+        $this->publicProfessional = PublicProfessional::findOneByPk(Application::$app->user->account_id);
+    }
 
-        $proUser = new ProfessionalUser();
-        $proUser->user_id = $account->id;
-        $proUser->siren = $this->siren;
-        $proUser->denomination = $this->denomination;
-        $proUser->code = Utils::generateUUID();
-        $proUser->phone = $this->phone;
-        $proUser->allows_notifications = $this->notifications;
-        $proUser->save();
-
-        $proPublic = new PublicProfessional();
-        $proPublic->pro_id = $account->id;
-        $proPublic->save();
+    public function update(){
+        $request = Application::$app->request;
+        $this->userAccount->loadData($request->getBody());
+        $this->userAccount->update();
+        $this->address->loadData($request->getBody());
+        $this->address->update();
+        $this->professionalUser->loadData($request->getBody());
+        $this->professionalUser->update();
+        $this->publicProfessional->loadData($request->getBody());
+        $this->publicProfessional->update();
         return true;
     }
 
