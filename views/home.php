@@ -24,7 +24,7 @@ $this->jsFile = "home";
 
     <div class="carousel-gen" data-slides-visible="3" data-slides-to-scroll="1">
 
-        <?php foreach ($offers as $offer) { ?>
+        <?php foreach ($offersALaUne as $offer) { ?>
             <a href="/offres/<?php echo $offer["id"]; ?>">
 
                 <div class="home-card">

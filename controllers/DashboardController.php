@@ -8,6 +8,8 @@ use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\middlewares\BackOfficeMiddleware;
+use app\models\account\UserAccount;
+use app\models\Address;
 use app\models\offer\Offer;
 use app\models\offer\Option;
 use app\models\offer\Subscription;
@@ -87,6 +89,35 @@ class DashboardController extends Controller
         $offers = Offer::find(['professional_id' => Application::$app->user->account_id]);
 
         return $this->render('/dashboard/factures', ['invoices' => $invoices, 'offers' => $offers]);
+    }
+
+    public function invoicesPDF(Request $request, Response $response, $routeParams){
+        $invoiceId = $routeParams['pk'];
+        $invoice = Invoice::findOneByPk($routeParams['pk']);
+        $offer = Offer::findOneByPk($invoice->offer_id);
+        $user = Application::$app->user;
+        $professional = $user->specific();
+
+        //PROFESSIONAL DATA
+        $professionalAddress = Address::findOneByPk($user->address_id);
+
+        //PAYMENT DATA (revoir tout ça )
+        //$offerType = OfferType::findOne(['id' => $offer->offer_type]);
+        //$offerOption = OfferOption::findOne(['offer_id' => $offer->offer_id]);
+        //$offerTypeDuration = NULL;
+
+        $HTPrice = NULL;
+        $TVA = 20;
+        $TTCPrice = NULL;
+        
+        return $this->pdf("Facture $invoiceId", 'invoicePreview', [
+            'pk' => $routeParams['pk'],
+            'invoice' => $invoice,
+            'offer' => $offer,
+            'user' => $user,
+            'professional' => $professional,
+            'professionalAddress' => $professionalAddress,
+        ]);
     }
 
 }

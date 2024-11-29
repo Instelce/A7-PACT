@@ -58,6 +58,7 @@ $app->router->get('/dashboard/offres', [DashboardController::class, 'offers']);
 $app->router->post('/dashboard/offres', [DashboardController::class, 'offers']);
 $app->router->get('/dashboard/avis', [DashboardController::class, 'avis']);
 $app->router->get('/dashboard/factures', [DashboardController::class, 'invoices']);
+$app->router->get('/factures/<pk:int>', [DashboardController::class, 'invoicesPDF']);
 
 // Auth routes
 $app->router->get('/connexion', [AuthController::class, 'login']);
