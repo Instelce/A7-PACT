@@ -3,8 +3,10 @@
 namespace app\models\offer;
 
 use app\core\DBModel;
+use DateInterval;
+use DateTime;
 
-class OfferOption extends DBModel
+class Subscription extends DBModel
 {
     public const EN_RELIEF = 'en_relief';
     public const A_LA_UNE = 'a_la_une';
@@ -13,19 +15,19 @@ class OfferOption extends DBModel
     public const A_LA_UNE_PRICE = 16.68;
 
     public int $id = 0;
-    public string $type = '';
     public string $launch_date = '';
     public int $duration = 0;
     public int $offer_id = 0;
+    public int $option_id = 0;
 
     public static function tableName(): string
     {
-        return 'offer_option';
+        return 'subscription';
     }
 
     public function attributes(): array
     {
-        return ['type', 'launch_date', 'duration', 'offer_id'];
+        return ['launch_date', 'duration', 'offer_id', 'option_id'];
     }
 
     public function rules(): array
@@ -57,15 +59,42 @@ class OfferOption extends DBModel
         return true;
     }
 
+    public function endDate(): string
+    {
+        $date = new DateTime($this->launch_date);
+        $interval = DateInterval::createFromDateString($this->duration * 7 . " days");
+        $date->add($interval);
+        return $date->format('Y-m-d');
+    }
+
+    public function durationInDays()
+    {
+        $launchDate = strtotime($this->launch_date);
+        $today = date("Y-m-d");
+
+        return ceil(abs(strtotime($today) - $launchDate) / 86400);
+    }
+
+    public function durationInWeek()
+    {
+        $launchDate = strtotime($this->launch_date);
+        $today = date("Y-m-d");
+
+        return ceil(abs(strtotime($today) - $launchDate) / 604800);
+    }
+
+    public function option(): Option
+    {
+        return Option::findOneByPk($this->option_id);
+    }
+
     public function price(): float|int
     {
-        switch ($this->type) {
-            case self::EN_RELIEF:
-                return self::EN_RELIEF_PRICE;
-            case self::A_LA_UNE:
-                return self::A_LA_UNE_PRICE;
-            default:
-                return 0;
-        }
+        return $this->option()->price;
+    }
+
+    public function type()
+    {
+        return $this->option()->type;
     }
 }

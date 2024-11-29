@@ -2,7 +2,7 @@
 /** @var $this \app\core\View */
 /** @var $offers Offer[] */
 /** @var $offersType \app\models\offer\OfferType[] */
-/** @var $offersOption \app\models\offer\OfferOption[] */
+/** @var $offersSubscription \app\models\offer\Subscription[] */
 /** @var $specificData \app\core\DBModel */
 
 /** @var $photos \app\models\offer\OfferPhoto[] */
@@ -53,7 +53,7 @@ $this->cssFile = "dashboard/offers";
         <!-- Offer cards -->
         <?php foreach ($offers as $i => $offer) {
             $type = $offersType[$i]->type;
-            $option = $offersOption[$i];
+            $subscription = $offersSubscription[$i];
             if ($offer->minimum_price === null || $offer->minimum_price === 0) {
                 $price = 'Gratuit';
             } elseif ($offer->category === 'restaurant') {
@@ -87,27 +87,15 @@ $this->cssFile = "dashboard/offers";
                     </div>
 
                     <!-- Option -->
-                    <?php if ($option) { ?>
+                    <?php if ($subscription) { ?>
                         <div class="card-option">
                             <div>
                                 <p class="flex gap-1">Avec l'option <span
-                                        class="underline"><?php echo Utils::formatTypeString($option->type) ?></span>
+                                        class="underline"><?php echo Utils::formatTypeString($subscription->type()) ?></span>
                                 </p>
                                 <p class="text-gray-4">
-                                    Du <?php echo Utils::formatDate($option->launch_date); ?>
-                                    au <?php
-
-                                    //Création de la première date
-                                    $date = new DateTime($option->launch_date);
-
-                                    // Création de l'intervalle à ajouter
-                                    $interval = DateInterval::createFromDateString($option->duration * 7 . " days");
-
-                                    // Addition de l'intervalle à la date
-                                    $date->add($interval);
-
-                                    echo Utils::formatDate($date->format('Y-m-d'));
-                                    ?>
+                                    Du <?php echo Utils::formatDate($subscription->launch_date); ?>
+                                    au <?php echo Utils::formatDate($subscription->endDate()); ?>
                                 </p>
                             </div>
                             <button class="button gray only-icon no-border">

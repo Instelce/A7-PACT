@@ -171,9 +171,10 @@ a {
 
 .pro-name {
     padding: 1rem 2rem;
-    border: 1px solid rgba(var(--color-purple-primary), .1);
+    border: 2px solid rgba(var(--color-purple-primary), .1);
     border-radius: var(--radius-small);
     margin-bottom: 1rem;
+    /*background: linear-gradient(135deg, rgba(var(--color-gray-1), .1), rgba(var(--color-gray-1), .0));*/
 }
 
 /* Waves */

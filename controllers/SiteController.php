@@ -77,7 +77,7 @@ class SiteController extends Controller
                 $currentDate = strtotime(date('Y-m-d'));
                 $dateSincePublication = floor(($currentDate - $lastOnlineDate) / (60 * 60 * 24));
 
-                if ($offer -> isALaUne()){
+                if ($offer->isALaUne()){
                     $offersALaUne[$offer->id] = [
                         "id" => $offer->id,
                         "image" => $image,

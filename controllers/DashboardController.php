@@ -9,15 +9,18 @@ use app\core\Request;
 use app\core\Response;
 use app\middlewares\BackOfficeMiddleware;
 use app\models\offer\Offer;
-use app\models\offer\OfferOption;
+use app\models\offer\Option;
+use app\models\offer\Subscription;
 use app\models\offer\OfferPhoto;
 use app\models\offer\OfferType;
+use app\models\payment\Invoice;
 use app\models\user\professional\ProfessionalUser;
 
 class DashboardController extends Controller
 {
     public function __construct()
     {
+        $this->setLayout('back-office');
         $this->registerMiddleware(new AuthMiddleware(['offers']));
         $this->registerMiddleware(new BackOfficeMiddleware(['offers']));
     }
@@ -37,9 +40,9 @@ class DashboardController extends Controller
             $offersType[] = OfferType::findOne(['id' => $offer->offer_type_id]);
         }
 
-        $offersOption = [];
+        $offersSubscription = [];
         foreach ($offers as $offer) {
-            $offersOption[] = OfferOption::findOne(['offer_id' => $offer->id]);
+            $offersSubscription[] = Subscription::findOne(['offer_id' => $offer->id]);
         }
 
         $specificData = [];
@@ -49,11 +52,14 @@ class DashboardController extends Controller
 
         $professionalUser = ProfessionalUser::findOne(['user_id' => Application::$app->user->account_id]);
 
-        // Add option form
+        // Add subscribe option form
         if ($request->isPost() && $request->formName() == 'add-option') {
-            $offerOption = new OfferOption();
-            $offerOption->loadData($request->getBody());
-            $offerOption->save();
+            $option = Option::findOne(['type' => $request->getBody()['type']]);
+
+            $subscription = new Subscription();
+            $subscription->loadData($request->getBody());
+            $subscription->option_id = $option->id;
+            $subscription->save();
 
             Application::$app->session->setFlash('success', 'Option ajoutée avec succès');
             $response->redirect('/dashboard/offres');
@@ -64,7 +70,7 @@ class DashboardController extends Controller
             'offers' => $offers,
             'photos' => $photos,
             'offersType' => $offersType,
-            'offersOption' => $offersOption,
+            'offersSubscription' => $offersSubscription,
             'specificData' => $specificData,
             'professionalUser' => $professionalUser
         ]);
@@ -72,14 +78,15 @@ class DashboardController extends Controller
 
     public function avis(Request $request, Response $response)
     {
-        $this->setLayout('back-office');
         return $this->render('/dashboard/avis');
     }
 
     public function invoices(Request $request, Response $response)
     {
-        $this->setLayout('back-office');
-        return $this->render('/dashboard/factures');
+        $invoices = Invoice::query()->join(new Offer())->filters(['offer__professional_id' => Application::$app->user->account_id])->make();
+        $offers = Offer::find(['professional_id' => Application::$app->user->account_id]);
+
+        return $this->render('/dashboard/factures', ['invoices' => $invoices, 'offers' => $offers]);
     }
 
 }

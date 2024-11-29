@@ -61,7 +61,7 @@ function generatePhoneNumber()
     return $phone;
 }
 
-$db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, offer_option, offer, offer_type, offer_period, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
+$db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, option, subscription, offer, offer_type, offer_period, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
 
 // ---------------------------------------------------------------------- //
 // user adress
@@ -144,6 +144,12 @@ $db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id)
 // ---------------------------------------------------------------------- //
 
 $db->pdo->exec("INSERT INTO offer_type (id, type, price) VALUES (1, 'standard', 1.67), (2, 'premium', 3.34), (3, 'gratuite', 0.00);");
+
+// ---------------------------------------------------------------------- //
+// create offer option
+// ---------------------------------------------------------------------- //
+
+$db->pdo->exec("INSERT INTO option (id, type, price) VALUES (1, 'en_relief', 8.34), (2, 'a_la_une', 16.68);");
 
 
 // ---------------------------------------------------------------------- //
@@ -1006,7 +1012,6 @@ $reviews = [
             "content" => "Le spectacle était magnifique, et la qualité des prestations était exceptionnelle. Je recommande sans hésiter.",
             "rating" => 5,
         ],
-
 
         [
             "title" => "Spectacle ennuyant",

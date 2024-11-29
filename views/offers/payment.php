@@ -18,8 +18,8 @@ $this->jsFile = "offer/payment";
 
     <p>Offre avec l'abonnement <?php echo $offer->type()->type ?>.</p>
 
-    <?php if ($offer->option()) { ?>
-        <p>Avec l'option <?php echo $offer->option()->type ?></p>
+    <?php if ($offer->subscription()) { ?>
+        <p>Avec l'option <?php echo $offer->subscription()->type() ?></p>
     <?php } ?>
 </header>
 
@@ -115,17 +115,17 @@ $this->jsFile = "offer/payment";
                 <span id="price-total"><?php echo round($offer->type()->price * 1.2, 2) ?>€</span>
             </div>
 
-            <?php if ($offer->option()) { ?>
+            <?php if ($offer->subscription()) { ?>
                 <div class="flex justify-between text-gray-4 mt-2">
                     <p>Coût HT de l'option</p>
                     <span class="flex">
-                                <span id="price-option"><?php echo $offer->option()->price() ?>€</span>
+                                <span id="price-option"><?php echo $offer->subscription()->price() ?>€</span>
                             </span>
                 </div>
                 <div class="flex justify-between font-bold">
                     <p>Coût TTC de l'option</p>
                     <span class="flex">
-                                <span id="price-total-option"><?php echo round($offer->option()->price() * 1.2, 2) ?>€</span>
+                                <span id="price-total-option"><?php echo round($offer->subscription()->price() * 1.2, 2) ?>€</span>
                             </span>
                 </div>
             <?php } ?>

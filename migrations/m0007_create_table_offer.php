@@ -29,6 +29,7 @@ class m0007_create_table_offer
             phone_number VARCHAR(10),
             category VARCHAR(20) NOT NULL,
             minimum_price FLOAT,
+            rating INT NOT NULL DEFAULT 0,
             
             professional_id INT NOT NULL,
             address_id INT NOT NULL,
@@ -42,16 +43,22 @@ class m0007_create_table_offer
             FOREIGN KEY (offer_type_id) REFERENCES offer_type(id) ON DELETE CASCADE
         );
 
-        CREATE TABLE offer_option (
+        CREATE TABLE option (
             id SERIAL PRIMARY KEY,
             type VARCHAR(20) NOT NULL,
+            price FLOAT NOT NULL
+        );
+
+        CREATE TABLE subscription (
+            id SERIAL PRIMARY KEY,
             launch_date DATE NOT NULL,
             duration INT NOT NULL,
             offer_id INT NOT NULL,
+            option_id INT NOT NULL,
 
-            FOREIGN KEY (offer_id) REFERENCES offer(id) ON DELETE CASCADE
+            FOREIGN KEY (offer_id) REFERENCES offer(id) ON DELETE CASCADE,
+            FOREIGN KEY (option_id) REFERENCES option(id) ON DELETE CASCADE
         );
-
 
         CREATE TABLE offer_photo (
             id SERIAL PRIMARY KEY,
@@ -68,7 +75,8 @@ class m0007_create_table_offer
         $db = Application::$app->db;
         $sql = "DROP TABLE offer_type CASCADE;
                 DROP TABLE offer CASCADE;
-                DROP TABLE offer_option CASCADE;
+                DROP TABLE option CASCADE;
+                DROP TABLE subscription CASCADE;
                 DROP TABLE offer_photo CASCADE;";
         $db->pdo->exec($sql);
     }
