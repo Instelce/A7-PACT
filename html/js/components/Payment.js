@@ -25,3 +25,31 @@ payment.addEventListener("click", ()=> {
     contentPayment.classList.toggle('hidden');
     contentCard.classList.add('hidden');
 });
+
+
+const ibanInputs = document.querySelectorAll('#iban');
+const cardNumberInputs = document.querySelectorAll('#cardnumber');
+
+function formatIbanInput(event) {
+    const input = event.target;
+    let rawValue = input.value.replace(/\s+/g, '').toUpperCase();
+    rawValue = rawValue.substring(0, 34);
+    const formattedValue = rawValue.replace(/(.{4})/g, '$1 ').trim();
+    input.value = formattedValue;
+}
+
+function formatCardNumberInput(event) {
+    const input = event.target;
+    let rawValue = input.value.replace(/\D/g, '');
+    rawValue = rawValue.substring(0, 16);
+    const formattedValue = rawValue.replace(/(.{4})/g, '$1 ').trim();
+    input.value = formattedValue;
+}
+
+ibanInputs.forEach((input) => {
+    input.addEventListener('input', formatIbanInput);
+});
+
+cardNumberInputs.forEach((input) => {
+    input.addEventListener('input', formatCardNumberInput);
+});

@@ -94,7 +94,6 @@ class ApiController extends Controller
             $order_by[] = 'minimum_price ASC';
             $where[] = ['minimum_price', '0', '>', 'minimum_priceAsc'];
         } else if (in_array('price_desc', $order_by)) {
-
             $order_by = array_diff($order_by, ['price_desc']);
             $order_by[] = 'minimum_price DESC';
             $where[] = ['minimum_price', '0', '>', 'minimum_priceDesc'];
@@ -145,6 +144,11 @@ class ApiController extends Controller
             }
 
             $data[$i]["specific"] = $offer->specificData()->toJson();
+
+            // Add address
+            $address = Address::findOneByPk($offer->address_id);
+            $data[$i]['address'] = $address->toJson();
+            unset($data[$i]['address']['id']);
         }
 
         return $response->json($data);

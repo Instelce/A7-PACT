@@ -72,7 +72,7 @@ $iconsNames = [
                 <div class="h-px bg-zinc-400 mt-2"></div>
             </div>
             <div class="flex gap-2 pl-4">
-                <x-slider id="slider-price" color="#0057FF" label="Prix" min="0" max="200" type="double"></x-slider>
+                <x-slider id="slider-price" color="#0057FF" label="Prix" min="0" max="50" type="double"></x-slider>
             </div>
 
             <div class="flex gap-2 pl-4">
@@ -94,7 +94,7 @@ $iconsNames = [
                 </x-input>
             </div>
             <x-input>
-                <input slot="input" type="text" placeholder="Ville">
+                <input slot="input" type="text" placeholder="Ville" class="searchCity">
             </x-input>
             <x-select id="sortPrice">
                 <span slot="trigger">Tri par prix</span>
@@ -123,8 +123,7 @@ $iconsNames = [
     </div>
 </div>
 
-<!-- Offers, generated in js file -->
-<div class="flex flex-col gap-2">
+<!-- <div class="flex flex-col gap-2">
     <div class="research-card--body">
         <header>
             <h2 class="research-card--title"><?php echo $offer["title"]; ?> </h2>
@@ -139,16 +138,16 @@ $iconsNames = [
             <a href="" class="button blue w-full spaced">Voir plus<i data-lucide="chevron-right"></i></a>
         </div>
     </div>
-    </article>
-    </a>
-</div>
-</div>
-</div>
+</div> -->
 
 <!-- Offers, generated in js file -->
 <div class="flex flex-col gap-2">
-
-
 </div>
+<div class="no-offers-message hidden">
+    <h2>Aucune offre trouvée</h2>
+    <p>Désolé, nous n'avons trouvé aucune offre correspondant à vos critères de recherche.</p>
+    <p>Veuillez essayer d'ajuster vos filtres ou revenir plus tard pour voir les nouvelles opportunités disponibles.</p>
+</div>
+<div id="loader-section"></div>
 <?php
 ?>
