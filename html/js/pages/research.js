@@ -344,6 +344,6 @@ searchInput.addEventListener(
 
 const switchInput = document.getElementById("switchtest");
 
-switchInput.addEventListener("change", async (event) => {<<
-    await applyFilters({ open: openFilter });
+switchInput.addEventListener("change", async (event) => {
+    await applyFilters({ open: "open" });
 });
