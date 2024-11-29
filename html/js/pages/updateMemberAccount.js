@@ -19,16 +19,16 @@ toggleSwitch.addEventListener("change", () => {
 
 let popupAvatarUpdate = document.getElementById("popupAvatarUpdate");
 let popupSaveUpdate = document.getElementById("popupSaveUpdate");
-let popupAccountDelete = document.getElementById("popupAccountDelete");
+//let popupAccountDelete = document.getElementById("popupAccountDelete");
 let popupPasswordModify = document.getElementById("popupPasswordModify");
 
 let avatarUpdate = document.getElementById("avatarUpdate");
 let saveUpdate = document.getElementById("saveUpdate");
-let accountDelete = document.getElementById("accountDelete");
+//let accountDelete = document.getElementById("accountDelete");
 let passwordModify = document.getElementById("passwordModify");
 
 
-let closeAccountDelete = document.getElementById("closeAccountDelete");
+//let closeAccountDelete = document.getElementById("closeAccountDelete");
 let closePasswordModify = document.getElementById("closePasswordModify");
 
 const popupContent = document.querySelector(".popup-content");
@@ -53,20 +53,36 @@ popupSaveUpdate.addEventListener("click", (event) => {
     }
 });
 
+/*
 accountDelete.addEventListener("click", () => {
     popupAccountDelete.classList.toggle("hidden");
 });
-
 
 popupAccountDelete.addEventListener("click", (event) => {
     if (!popupContent.contains(event.target)) {
         popupAccountDelete.classList.add("hidden");
     }
 });
+*/
 
 passwordModify.addEventListener("click", () => {
     popupPasswordModify.classList.toggle("hidden");
+    // Application::$app->mailer->send("test@example.com", "Test", "welcome", ["pseudo" => "Célestin"]);
 });
+
+popupPasswordModify.addEventListener("click", (event) => {
+    if (!popupContent.contains(event.target)) {
+        popupPasswordModify.classList.add("hidden");
+    }
+});
+
+/*
+closePasswordModify.addEventListener("click", (event) => {
+    if (!popupContent.contains(event.target)) {
+        popupPasswordModify.classList.add("hidden");
+    }
+});
+*/
 
 // closeAccountDelete.addEventListener("click", (event) => {
 //     if (!popupContent.contains(event.target)) {
