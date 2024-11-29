@@ -80,7 +80,7 @@ use app\core\Mailer;
             <div class="flex flex-col gap-4">
                 <form method="post">
                     <input type="hidden" name="form-name" value="reset-password">
-                                <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
+                    <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
                 </form>
 <!--            <button id ="accountDelete" type="submit" class="button w-full danger">Supprimer mon compte</button> -->
             </div>
@@ -162,7 +162,7 @@ use app\core\Mailer;
 
 <!--//////////////////////////////////////////////////////////////////////////
 // Modify Password page
-//////////////////////////////////////////////////////////////////////////:-->
+//////////////////////////////////////////////////////////////////////////:
 
 
 <div id="popupPasswordModify" class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
@@ -183,32 +183,4 @@ use app\core\Mailer;
         </div>
     </div>
 </div> 
-
-<!--//////////////////////////////////////////////////////////////////////////
-// Delete Account pop up
-//////////////////////////////////////////////////////////////////////////:-->
-
-<!--
-<div id="popupAccountDelete" class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
-    <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px] w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
-        <div>
-            <h1 class="heading-1">Suppression définitive du compte</h1>
-        </div>
-        <div>
-            <x-input>
-                <input class="search-input" slot="input" type="text" placeholder="Rechercher">
-                <button slot="button" class="button only-icon sm">
-                </button>
-            </x-input>
-        </div>
-        <div class="flex flex-row gap-4">
-            <div class="w-[400px]">
-                <button id="closeAccountDelete" type="submit" class="button w-full gray">Annuler</button>
-            </div>
-            <div class="w-[400px]">
-                <button type="submit" class="button w-full danger">Supprimer le compte</button>
-            </div>
-        </div>
-    </div>
-</div>
         -->

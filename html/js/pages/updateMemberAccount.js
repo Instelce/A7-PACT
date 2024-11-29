@@ -13,25 +13,6 @@ toggleSwitch.addEventListener("change", () => {
     localStorage.setItem(toggleKey, toggleSwitch.checked);
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    const passwordCondition = document.getElementById("password-condition-utilisation");
-    const saveButton = document.querySelector("button[type='submit']");
-
-    const updateSaveButton = () => {
-        if (passwordCondition.checked) {
-            saveButton.disabled = false;
-            saveButton.classList.remove("opacity-50", "cursor-not-allowed");
-        } else {
-            saveButton.disabled = true;
-            saveButton.classList.add("opacity-50", "cursor-not-allowed");
-        }
-    };
-
-    passwordCondition.addEventListener("change", updateSaveButton);
-
-    updateSaveButton();
-});
-
 // ---------------------------------------------------------------------------------------------- //
 // Gestion des pop up
 // ---------------------------------------------------------------------------------------------- //
@@ -88,7 +69,6 @@ popupAccountDelete.addEventListener("click", (event) => {
 
 passwordModify.addEventListener("click", () => {
     popupPasswordModify.classList.toggle("hidden");
-    // Application::$app->mailer->send("test@example.com", "Test", "welcome", ["pseudo" => "Célestin"]);
 });
 
 popupPasswordModify.addEventListener("click", (event) => {
