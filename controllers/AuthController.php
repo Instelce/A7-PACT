@@ -137,8 +137,17 @@ class AuthController extends Controller
         /*if ($request->isPost() && $request->formName() === "reset-password") {
             $form->loadData($request->getBody());
 
+<<<<<<< Updated upstream
             if
         }*/
+=======
+            if ($form->validate()){
+                Application::$app->mailer->send($form->mail, "Modification du mot de passe de $form->pseudo", 'reset-password', ['pseudo' => $form->pseudo]);
+                $response->redirect('/comptes/modification');
+                exit;
+            }
+        }
+>>>>>>> Stashed changes
 
         return $this->render('auth/update-member-account', ['model' => $form]);
     }

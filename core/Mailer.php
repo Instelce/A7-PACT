@@ -30,6 +30,7 @@ class Mailer
 
     public function send($to, $subject, $view, $params = [])
     {
+        // view c'est le nom du fichier php qui sera choisi (welcome par exemple)
         $this->mailer->setFrom($_ENV['MAIL_USERNAME'], $_ENV['MAIL_NAME']);
         $this->mailer->addAddress($to);
         $this->mailer->isHTML(true);
