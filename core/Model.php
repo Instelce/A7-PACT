@@ -14,6 +14,7 @@ abstract class Model
     public const RULE_EXP_DATE = 'exp_date';
     public const RULE_HOUR = 'hour';
     public const RULE_PASSWORD = 'password';
+    public const RULE_PASSWORD_CHECK = 'password_check';
     public const RULE_SIREN = 'siren';
     public const RULE_POSTAL = 'postaleCode';
     public const RULE_PHONE = 'phone';
@@ -182,6 +183,7 @@ abstract class Model
             self::RULE_EXP_DATE => 'Format de date d\'expiration incorrecte',
             self::RULE_HOUR => 'Format d\'heure incorrecte',
             self::RULE_PASSWORD => 'Vérifiez que votre mot de passe comporte, au moins une majuscule, au moins un chiffre, au moins un caractère spécialavec au moins 12 caractères',
+            self::RULE_PASSWORD_CHECK => 'Mot de passe incorrect',
             self::RULE_SIREN => 'Format de siren incorrect',
             self::RULE_POSTAL => 'Veuillez entrez un code postal valide',
             self::RULE_PHONE => 'Veuillez entrez un numéro de téléphone valide',
