@@ -134,6 +134,12 @@ class AuthController extends Controller
             Application::$app->user->update();
         }
 
+        if ($request->isPost() && $request->formName() === "reset-password") {
+            $form->loadData($request->getBody());
+
+            if
+        }
+
         return $this->render('auth/update-member-account', ['model' => $form]);
     }
 
