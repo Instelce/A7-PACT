@@ -333,12 +333,6 @@ searchInput.addEventListener(
     }, 300)
 );
 
-const switchInput = document.getElementById("switchtest");
-
-switchInput.addEventListener("change", async (event) => {
-    await applyFilters({ open: "open" });
-});
-
 let searchCity = document.querySelector(".searchCity");
 
 searchCity.addEventListener(
@@ -387,6 +381,11 @@ sliderRating.addEventListener(
         applyFilters({ rating: minValue });
     }, 300)
 );
+const switchInput = document.getElementById("switchtest");
+
+switchInput.addEventListener("change", async (event) => {
+    await applyFilters({ open: "open" });
+});
 
 // ---------------------------------------------------------------------------------------------- //
 // Observer
