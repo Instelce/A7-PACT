@@ -19,7 +19,7 @@ $this->cssFile = "registerPro";
             <a href="/connexion" class="link">Connexion</a>
         </div>
     </div>
-    <x-tabs class="flex flex-col items-center justify-center w-[600px]" save>
+    <x-tabs class="flex flex-col items-center justify-center lg:w-[600px]" save>
         <!-- public -->
 
         <x-tab role="heading" slot="tab" class="w-full text-center" id="public">Public / associatif</x-tab>
@@ -40,14 +40,14 @@ $this->cssFile = "registerPro";
                     <?php echo $form->field($proPublic, 'mail')?>
                     <?php echo $form->field($proPublic, 'phone')->phoneField()?>
 
-                    <div class="flex gap-4">
+                    <div class="flex gap-4 on-same-line">
                         <div class="w-25%">
                             <?php echo $form->field($proPublic, 'streetnumber')?>
                         </div>
                         <?php echo $form->field($proPublic, 'streetname')?>
                     </div>
 
-                    <div class="flex gap-4">
+                    <div class="flex gap-4 on-same-line">
                         <div class="w-25%">
                             <?php echo $form->field($proPublic, 'postaleCode')?>
                         </div>
@@ -86,22 +86,22 @@ $this->cssFile = "registerPro";
             <?php $form = \app\core\form\Form::begin('', 'post', '', 'form-w') ?>
                 <input type="hidden" name="form-name" value="private">
                 <div class="form-inputs">
-                    <div class="flex gap-4">
+                    <div class="flex gap-4 on-same-line">
                         <?php echo $form->field($proPrivate, 'denomination') ?>
                         <?php echo $form->field($proPrivate, 'siren') ?>
                     </div>
 
                     <?php echo $form->field($proPrivate, 'mail')?>
-                    <?php echo $form->field($proPublic, 'phone')->phoneField() ?>
+                    <?php echo $form->field($proPrivate, 'phone')->phoneField() ?>
 
-                    <div class="flex gap-4">
+                    <div class="flex gap-4 on-same-line">
                         <div class="w-25%">
                             <?php echo $form->field($proPrivate, 'streetnumber')?>
                         </div>
                         <?php echo $form->field($proPrivate, 'streetname')?>
                     </div>
 
-                    <div class="flex gap-4">
+                    <div class="flex gap-4 on-same-line">
                         <div class="w-25%">
                             <?php echo $form->field($proPrivate, 'postaleCode')?>
                         </div>
@@ -129,7 +129,7 @@ $this->cssFile = "registerPro";
                                     <?php echo $form->field($proPrivate, 'bic')?>
                                 </div>
                             </div>
-                            <div class="bt-payment p[.8rem] flex-col"  id="cb">
+                            <div class="bt-payment p[.8rem] flex-col" id="cb">
                                 <div id="card" class="clickable">
                                     <img src="/assets/images/payment/logoVisa.png" title="logo visa" alt="visa">
                                     <img src="/assets/images/payment/logoMS.png" title="logo visa" alt="visa">
@@ -167,7 +167,7 @@ $this->cssFile = "registerPro";
                                 <input class="switch" type="checkbox" id="switch-notifs2" name="notifs" />
                                 <label class="switch" for="switch-notifs2"></label>
                             </div>
-                            <label for="switch-period" id="switch-period-label2">J'authorise l'envoie de notifications</label>
+                            <label for="switch-period" id="switch-period-label2">J'autorise l'envoie de notifications</label>
                         </div>
                     </div>
                 </div>

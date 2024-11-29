@@ -33,7 +33,7 @@ use app\models\account\UserAccount;
     <?php endif; ?>
 </head>
 
-<body class="<?php echo Application::$app->user->isProfessional() ? 'professional-mode' : '' ?>">
+<body class="<?php echo Application::$app->user?->isProfessional() ? 'professional-mode' : '' ?>">
 
 <div class="height-top"></div>
 

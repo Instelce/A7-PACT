@@ -3,7 +3,7 @@
 $this->title = 'Register';
 ?>
 
-<div class="flex flex-col items-center justify-center form form-page form-page-little gap-12">
+<div class="form-page-little form-page">
     <div class="h-auth">
         <h1 class="heading-1">S'inscrire</h1>
         <div class="q-auth">

@@ -32,3 +32,24 @@ x-tab[id="prive"]
     border-radius: 0 100rem 100rem 0;
     padding: 10px 32px;
 }
+
+@media screen and (max-width: 992px){
+    x-tabs{
+        width: 530px;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .form-page{
+        margin: 0 2%;
+    }
+
+    x-tabs{
+        width: 400px;
+    }
+
+    .on-same-line{
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

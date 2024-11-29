@@ -4,24 +4,19 @@ namespace app\forms;
 
 use app\core\Application;
 use app\core\Model;
-use app\models\account\Account;
 use app\models\account\UserAccount;
 use app\models\Address;
 use app\models\payment\CbMeanOfPayment;
 use app\models\payment\MeanOfPayment;
-use app\models\payment\PaypalMeanOfPayment;
 use app\models\payment\RibMeanOfPayment;
 use app\models\user\professional\PrivateProfessional;
 use app\models\user\professional\ProfessionalUser;
 use app\core\Utils;
 
-class PrivateProfessionalRegister extends Model
+class PrivateProfessionalUpdateForm extends Model
 {
     public const PAYMENT = 1;
     public const NOPAYMENT = 0;
-
-    public const ACCEPT_CONDITIONS = 1;
-    public const REFUSE_CONDITIONS = 0;
 
     public const ACCEPT_NOTIFICATIONS = 1;
     public const REFUSE_NOTIFICATIONS = 0;
@@ -35,10 +30,8 @@ class PrivateProfessionalRegister extends Model
     public string $postaleCode = '';
     public string $city = '';
     public string $phone = '';
-    public string $password = '';
-    public string $passwordConfirm = '';
+
     public int $payment = self::NOPAYMENT;
-    public int $conditions = self::REFUSE_CONDITIONS;
     public int $notifications = self::REFUSE_NOTIFICATIONS;
     public string $titularAccount = '';
     public string $iban = '';
@@ -49,72 +42,66 @@ class PrivateProfessionalRegister extends Model
     public string $cryptogram = '';
     public string $paypallink = '';
 
-    public function register()
+    public ?UserAccount $userAccount = null;
+    public ?Address $address = null;
+    public ?ProfessionalUser $professional = null;
+    public PrivateProfessional|null|false $privateProfessional = null;
+    public MeanOfPayment|null|false $meanOfPayment = null;
+
+
+    public function __construct()
     {
-        /**
-         * @var PrivateProfessional $proPrivate
-         */
-        $account = new Account();
-        $account->save();
+        $this->userAccount = Application::$app->user;
+        $this->mail = $this->userAccount->mail;
 
-        $address = new Address();
-        $address->number = $this->streetnumber;
-        $address->street = $this->streetname;
-        $address->postal_code = $this->postaleCode;
-        $address->city = $this->city;
-        $address->save();
+        $this->address = Address::findOneByPk($this->userAccount->address_id);
+        $this->streetnumber = $this->address->number;
+        $this->streetname = $this->address->street;
+        $this->city = $this->address->city;
+        $this->postaleCode = $this->address->postal_code;
 
-        $userAccount = new UserAccount();
-        $userAccount->account_id = $account->id;
-        $userAccount->mail = $this->mail;
-        $userAccount->password = password_hash($this->password, PASSWORD_DEFAULT);
-        $userAccount->address_id = $address->id;
-        $userAccount->avatar_url = "https://ui-avatars.com/api/?size=128&name=$this->denomination";
-        $userAccount->save();
+        $this->professionalUser = ProfessionalUser::findOneByPk(Application::$app->user->account_id);
+        $this->denomination = $this->professionalUser->denomination;
+        $this->siren = $this->professionalUser->siren;
+        $this->phone = $this->professionalUser->phone;
+        $this->notifications = $this->professionalUser->allows_notifications;
 
-        $proUser = new ProfessionalUser();
-        $proUser->user_id = $account->id;
-        $proUser->siren = $this->siren;
-        $proUser->denomination = $this->denomination;
-        $proUser->code = Utils::generateUUID();
-        $proUser->phone = $this->phone;
-        $proUser->allows_notifications = $this->notifications;
-        $proUser->save();
+        $this->privateProfessional = PrivateProfessional::findOneByPk(Application::$app->user->account_id);
 
-        $meanOfPayment = new MeanOfPayment();
-        $meanOfPayment->save();
+        if($this->privateProfessional){
+            $this->meanOfPayment = $this->privateProfessional->payment();
 
-        if('iban' && 'bic' != ''){
-            $payment = new RibMeanOfPayment();
-            $payment->id = $meanOfPayment->payment_id;
-            $payment->name = $this->titularAccount;
-            $payment->iban = $this->iban;
-            $payment->bic = $this->bic;
-            $payment->save();
+            if($this->meanOfPayment){
+                if($this->meanOfPayment->isRibPayment()){
+                    $this->titularAccount = $this->meanOfPayment->name;
+                    $this->iban = $this->meanOfPayment->iban;
+                    $this->bic = $this->meanOfPayment->bic;
+                }
+                else if($this->meanOfPayment->isCbPayment()) {
+                    $this->titularCard = $this->meanOfPayment->name;
+                    $this->cardnumber = $this->meanOfPayment->card_number;
+                    $this->expirationdate = $this->meanOfPayment->expiration_date;
+                    $this->cryptogram = $this->meanOfPayment->cvv;
+                }
+                else if($this->meanOfPayment->isPaypalPayment()){
+                    $this->paypallink = $this->meanOfPayment->paypal_url;
+                }
+            }
         }
-        else if ('cardnumber' && 'cryptogram' && 'expirationdate' != '') {
-            $payment = new CbMeanOfPayment();
-            $payment->id = $meanOfPayment->payment_id;
-            $payment->name = $this->titularCard;
-            $payment->card_number = $this->cardnumber;
-            $payment->expiration_date = $this->expirationdate;
-            $payment->cvv = $this->cryptogram;
-            $payment->save();
-        }
-        else {
-            $payment = new PaypalMeanOfPayment();
-            $payment->id = $meanOfPayment->payment_id;
-            $payment->paypalurl = $this->paypallink;
-            $payment->save();
-        }
+    }
 
-        $proPrivate = new PrivateProfessional();
-        $proPrivate->pro_id = $account->id;
-        $proPrivate->payment_id = $payment->id;
-        $proPrivate->save();
-
-
-        Application::$app->login($userAccount);
+    public function update(){
+        $request = Application::$app->request;
+        $this->userAccount->loadData($request->getBody());
+        $this->userAccount->update();
+        $this->address->loadData($request->getBody());
+        $this->address->update();
+        $this->professionalUser->loadData($request->getBody());
+        $this->professionalUser->update();
+        $this->privateProfessional->loadData($request->getBody());
+        $this->privateProfessional->update();
+        $this->meanOfPayment->loadData($request->getBody());
+        $this->meanOfPayment->update();
         return true;
     }
 
