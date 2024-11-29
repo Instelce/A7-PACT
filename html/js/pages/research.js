@@ -1,5 +1,8 @@
-//initialize the filters and save them permanently
+//initialize the global parameters and save them permanently
 let filters = {};
+let order = null;
+let limit = 5;
+let offset = 0;
 /**
  * Displays the fetched offers data in the offers container.
  *
@@ -32,7 +35,7 @@ let filters = {};
  * @returns {Promise<Object|boolean>} The fetched offers data in JSON format, or false if an error occurs.
  * @throws {Error} If the response status is not OK.
  */
-async function getOffers(filters = [], order = null, limit = 5, offset = 0) {
+async function getOffers() {
     const host = window.location.protocol;
     const searchParams = new URLSearchParams();
     if (order) {
@@ -104,17 +107,17 @@ async function getOffers(filters = [], order = null, limit = 5, offset = 0) {
 // Display logic
 // ---------------------------------------------------------------------------------------------- //
 // firstLoad
-console.time("getOffers");
-let Data = await getOffers();
-console.timeEnd("getOffers");
+// console.time("getOffers");
+// let Data = await getOffers();
+// console.timeEnd("getOffers");
 
-displayOffers(Data);
+// displayOffers(Data);
 
-//testing
-if (Data && !Array.isArray(Data)) {
-    Data = Object.values(Data);
-}
-console.log(Data);
+// testing
+// if (Data && !Array.isArray(Data)) {
+//     Data = Object.values(Data);
+// }
+// console.log(Data);
 
 /**
  * Applies the given filters to the current set of filters, removes any invalid filters,
@@ -132,9 +135,11 @@ console.log(Data);
  * @param {string} [newFilters.location] - The location to filter by.
  * @returns {Promise<void>} A promise that resolves when the offers have been fetched and displayed.
  */
-async function applyFilters(newFilters, order = null) {
+async function applyFilters(newFilters = {}, neworder = null) {
     filters = { ...filters, ...newFilters };
-    console.log(filters);
+    if (neworder) {
+        order = neworder;
+    }
     Object.keys(filters).forEach((key) => {
         if (
             filters[key] === null ||
@@ -146,8 +151,17 @@ async function applyFilters(newFilters, order = null) {
             delete filters[key];
         }
     });
-    let Data = await getOffers(filters, order);
-    displayOffers(Data);
+    console.log("offset : " + offset);
+    if ((neworder == null || neworder != 0) && (newFilters == null || Object.keys(newFilters).length != 0)) {
+        offset = 0;
+        let Data = await getOffers();
+        displayOffers(Data);
+    }
+    else {
+        let Data = await getOffers();
+        displayOffers(Data);
+    }
+    offset += 5;
 }
 // ---------------------------------------------------------------------------------------------- //
 // Display
@@ -173,37 +187,56 @@ function displayOffers(Data) {
     } else if (!Array.isArray(Data)) {
         console.error("Data is not an array");
     } else {
-        offersContainer.innerHTML = "";
-        Data.forEach((offer) => {
-            const offerElement = document.createElement("a");
-            offerElement.href = `/offres/${offer.id}`;
-            offerElement.innerHTML = `
-            <article class="research-card">
+        if (offset === 0) {
+            offersContainer.innerHTML = "";
+        }
+        if (Data.length < 5) {
+            loaderSection.classList.add('hidden')
+        }
+        else {
+            loaderSection.classList.remove('hidden')
+        }
+        if (Data.length === 0 && offset === 0) {
+            offersContainer.innerHTML = `
+            <div class="no-offers-message"> 
+                <h2>Aucune offre trouvée</h2>
+                <p>Désolé, nous n'avons trouvé aucune offre correspondant à vos critères de recherche.</p> 
+                <p>Veuillez essayer d'ajuster vos filtres ou revenir plus tard pour voir les nouvelles opportunités disponibles.</p>
+            </div>
+            `;
+        }
+        else {
+            Data.forEach((offer) => {
+                const offerElement = document.createElement("a");
+                offerElement.href = `/offres/${offer.id}`;
+                offerElement.innerHTML = `
+                <article class="research-card">
                 <div class="research-card--photo">
-                    ${offer.photos[0]
-                    ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
-                    : ""
-                }
+                ${offer.photos[0]
+                        ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
+                        : ""
+                    }
                 </div>
                 <div class="research-card--body">
-                    <header>
-                        <h2 class="research-card--title">${offer.title}</h2>
-                        <p>${translateCategory(
-                    offer.category
-                )} par <a href="/comptes/${offer.professional_id
-                }" class="underline">${offer.profesionalUser["denomination"]
-                }</a></p>
-                    </header>
-                    <p class="summary">${offer.summary}</p>
-                         <div class="flex gap-2 mt-auto pt-4">
-                            <a href="" class="button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg></a>
-                            <a href="" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></a>
+                <header>
+                <h2 class="research-card--title">${offer.title}</h2>
+                <p>${translateCategory(
+                        offer.category
+                    )} par <a href="/comptes/${offer.professional_id
+                    }" class="underline">${offer.profesionalUser["denomination"]
+                    }</a></p>
+                        </header>
+                        <p class="summary">${offer.summary}</p>
+                        <div class="flex gap-2 mt-auto pt-4">
+                        <a href="" class="button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg></a>
+                        <a href="" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></a>
                         </div>
-                </div>
+                        </div>
             </article>
-        `;
-            offersContainer.appendChild(offerElement);
-        });
+            `;
+                offersContainer.appendChild(offerElement);
+            });
+        }
     }
 }
 
@@ -327,10 +360,8 @@ sortPrice.addEventListener("change", (event) => {
         : null;
 
     if (dataValue === "croissant") {
-        console.log("Tri par prix croissant");
         applyFilters({}, "price_asc");
     } else if (dataValue === "decroissant") {
-        console.log("Tri par prix décroissant");
         applyFilters({}, "price_desc");
     }
 });
@@ -348,3 +379,26 @@ sliderRating.addEventListener("slider-change", debounce((event) => {
     const { minValue } = event.detail;
     applyFilters({ rating: minValue });
 }, 300));
+
+// ---------------------------------------------------------------------------------------------- //
+// Observer
+// ---------------------------------------------------------------------------------------------- //
+
+let loaderSection = document.querySelector('#loader-section');
+
+async function loadOffers() {
+    await applyFilters();
+}
+
+// Create intersection observer on loader section
+const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+        loadOffers();
+    }
+}, {
+    root: null,
+    rootMargin: '0px',
+    threshold: 1.
+})
+
+observer.observe(loaderSection);

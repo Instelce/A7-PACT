@@ -131,8 +131,7 @@ $iconsNames = [
 
 <!-- Offers, generated in js file -->
 <div class="flex flex-col gap-2">
-
-
 </div>
+<div id="loader-section"></div>
 <?php
 ?>
