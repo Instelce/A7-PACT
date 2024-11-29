@@ -107,8 +107,7 @@ $iconsNames = [
     </div>
 </div>
 
-<!-- Offers, generated in js file -->
-<div class="flex flex-col gap-2">
+<!-- <div class="flex flex-col gap-2">
     <div class="research-card--body">
         <header>
             <h2 class="research-card--title"><?php echo $offer["title"]; ?> </h2>
@@ -123,14 +122,15 @@ $iconsNames = [
             <a href="" class="button blue w-full spaced">Voir plus<i data-lucide="chevron-right"></i></a>
         </div>
     </div>
-    </article>
-    </a>
-</div>
-</div>
-</div>
+</div> -->
 
 <!-- Offers, generated in js file -->
 <div class="flex flex-col gap-2">
+</div>
+<div class="no-offers-message hidden">
+    <h2>Aucune offre trouvée</h2>
+    <p>Désolé, nous n'avons trouvé aucune offre correspondant à vos critères de recherche.</p>
+    <p>Veuillez essayer d'ajuster vos filtres ou revenir plus tard pour voir les nouvelles opportunités disponibles.</p>
 </div>
 <div id="loader-section"></div>
 <?php

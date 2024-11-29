@@ -166,7 +166,7 @@ async function applyFilters(newFilters = {}, neworder = null) {
 // ---------------------------------------------------------------------------------------------- //
 // Display
 // ---------------------------------------------------------------------------------------------- //
-
+let noOffersMessage = document.querySelector(".no-offers-message");
 /**
  * Displays a list of offers in the offers container.
  *
@@ -197,15 +197,10 @@ function displayOffers(Data) {
             loaderSection.classList.remove('hidden')
         }
         if (Data.length === 0 && offset === 0) {
-            offersContainer.innerHTML = `
-            <div class="no-offers-message"> 
-                <h2>Aucune offre trouvée</h2>
-                <p>Désolé, nous n'avons trouvé aucune offre correspondant à vos critères de recherche.</p> 
-                <p>Veuillez essayer d'ajuster vos filtres ou revenir plus tard pour voir les nouvelles opportunités disponibles.</p>
-            </div>
-            `;
+            noOffersMessage.classList.remove("hidden");
         }
         else {
+            noOffersMessage.classList.add("hidden");
             Data.forEach((offer) => {
                 const offerElement = document.createElement("a");
                 offerElement.href = `/offres/${offer.id}`;
