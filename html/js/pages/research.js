@@ -152,12 +152,14 @@ async function applyFilters(newFilters = {}, neworder = null) {
         }
     });
     console.log("offset : " + offset);
-    if ((neworder == null || neworder != 0) && (newFilters == null || Object.keys(newFilters).length != 0)) {
+    if (
+        (neworder == null || neworder != 0) &&
+        (newFilters == null || Object.keys(newFilters).length != 0)
+    ) {
         offset = 0;
         let Data = await getOffers();
         displayOffers(Data);
-    }
-    else {
+    } else {
         let Data = await getOffers();
         displayOffers(Data);
     }
@@ -191,15 +193,13 @@ function displayOffers(Data) {
             offersContainer.innerHTML = "";
         }
         if (Data.length < 5) {
-            loaderSection.classList.add('hidden')
-        }
-        else {
-            loaderSection.classList.remove('hidden')
+            loaderSection.classList.add("hidden");
+        } else {
+            loaderSection.classList.remove("hidden");
         }
         if (Data.length === 0 && offset === 0) {
             noOffersMessage.classList.remove("hidden");
-        }
-        else {
+        } else {
             noOffersMessage.classList.add("hidden");
             Data.forEach((offer) => {
                 const offerElement = document.createElement("a");
@@ -207,19 +207,20 @@ function displayOffers(Data) {
                 offerElement.innerHTML = `
                 <article class="research-card">
                 <div class="research-card--photo">
-                ${offer.photos[0]
+                ${
+                    offer.photos[0]
                         ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
                         : ""
-                    }
+                }
                 </div>
                 <div class="research-card--body">
                 <header>
                 <h2 class="research-card--title">${offer.title}</h2>
-                <p>${translateCategory(
-                        offer.category
-                    )} par <a href="/comptes/${offer.professional_id
-                    }" class="underline">${offer.profesionalUser["denomination"]
-                    }</a></p>
+                <p>${translateCategory(offer.category)} par <a href="/comptes/${
+                    offer.professional_id
+                }" class="underline">${
+                    offer.profesionalUser["denomination"]
+                }</a></p>
                         </header>
                         <p class="summary">${offer.summary}</p>
                         <div class="flex gap-2 mt-auto pt-4">
@@ -363,37 +364,51 @@ sortPrice.addEventListener("change", (event) => {
 
 const sliderPrice = document.getElementById("slider-price");
 
-sliderPrice.addEventListener("slider-change", debounce((event) => {
-    const { minValue, maxValue } = event.detail;
-    applyFilters({ minimumPrice: minValue, maximumPrice: maxValue });
-}, 300));
+sliderPrice.addEventListener(
+    "slider-change",
+    debounce((event) => {
+        const { minValue, maxValue } = event.detail;
+        applyFilters({ minimumPrice: minValue, maximumPrice: maxValue });
+    }, 300)
+);
 
 const sliderRating = document.getElementById("slider-rating");
 
-sliderRating.addEventListener("slider-change", debounce((event) => {
-    const { minValue } = event.detail;
-    applyFilters({ rating: minValue });
-}, 300));
+sliderRating.addEventListener(
+    "slider-change",
+    debounce((event) => {
+        const { minValue } = event.detail;
+        applyFilters({ rating: minValue });
+    }, 300)
+);
+const switchInput = document.getElementById("switchtest");
+
+switchInput.addEventListener("change", async (event) => {
+    await applyFilters({ open: "open" });
+});
 
 // ---------------------------------------------------------------------------------------------- //
 // Observer
 // ---------------------------------------------------------------------------------------------- //
 
-let loaderSection = document.querySelector('#loader-section');
+let loaderSection = document.querySelector("#loader-section");
 
 async function loadOffers() {
     await applyFilters();
 }
 
 // Create intersection observer on loader section
-const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-        loadOffers();
+const observer = new IntersectionObserver(
+    (entries) => {
+        if (entries[0].isIntersecting) {
+            loadOffers();
+        }
+    },
+    {
+        root: null,
+        rootMargin: "0px",
+        threshold: 1,
     }
-}, {
-    root: null,
-    rootMargin: '0px',
-    threshold: 1.
-})
+);
 
 observer.observe(loaderSection);

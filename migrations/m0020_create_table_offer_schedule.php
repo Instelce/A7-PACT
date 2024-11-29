@@ -13,36 +13,14 @@ class m0020_create_table_offer_schedule
             opening_hours VARCHAR(5) NOT NULL,
             closing_hours VARCHAR(5) NOT NULL
         );
-
-
-        CREATE TABLE activity_schedule (
+/**-\"ocaca boudin\" : Raphael Corre 28/11/24 **/
+        CREATE TABLE link_schedule (
             id SERIAL PRIMARY KEY,
-            
-            activity_id INT NOT NULL,
             schedule_id INT NOT NULL,
-            
-            FOREIGN KEY (activity_id) REFERENCES activity_offer (offer_id),
-            FOREIGN KEY (schedule_id) REFERENCES offer_schedule (id)
-        );
+            offer_id INT NOT NULL,
+            FOREIGN KEY (schedule_id) REFERENCES offer_schedule (id),
+            FOREIGN KEY (offer_id) REFERENCES offer (id)
 
-        CREATE TABLE restaurant_schedule (
-            id SERIAL PRIMARY KEY,
-            
-            restaurant_id INT NOT NULL,
-            schedule_id INT NOT NULL,
-            
-            FOREIGN KEY (restaurant_id) REFERENCES restaurant_offer (offer_id),
-            FOREIGN KEY (schedule_id) REFERENCES offer_schedule (id)
-        );
-
-        CREATE TABLE park_schedule (
-            id SERIAL PRIMARY KEY,
-            
-            attraction_park_id INT NOT NULL,
-            schedule_id INT NOT NULL,
-            
-            FOREIGN KEY (attraction_park_id) REFERENCES attraction_park_offer (offer_id),
-            FOREIGN KEY (schedule_id) REFERENCES offer_schedule (id)
         );";
         $db->pdo->exec($sql);
     }
