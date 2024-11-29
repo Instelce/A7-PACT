@@ -5,14 +5,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const updateButtonState = () => {
         if (switchCondition.checked) {
             submitButton.disabled = false;
-            submitButton.classList.remove("opacity-50", "cursor-not-allowed");
+            submitButton.classList.remove("cursor-not-allowed");
         } else {
             submitButton.disabled = true;
-            submitButton.classList.add("opacity-50", "cursor-not-allowed");
+            submitButton.classList.add("cursor-not-allowed");
         }
     };
 
     switchCondition.addEventListener("change", updateButtonState);
 
-    updateButtonState(); // Initial check
+    updateButtonState();
 });

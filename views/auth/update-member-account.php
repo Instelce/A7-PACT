@@ -5,6 +5,7 @@ $this->title = 'Inscription update';
 $this->jsFile = 'updateMemberAccount';
 
 use app\core\Application;
+use app\core\Mailer;
 
 ?>
 <div class="flex gap-2">
@@ -16,15 +17,11 @@ use app\core\Application;
 
         <x-tab-panel role="region" slot="panel">
             <div class="flex flex-row mb-8 items-center">
-                <!-- je sais pas comment faire pour changer la forme de la souris a l'aide ! -->
                 <img class="w-[125px] h-[125px] rounded-full mr-10 object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
-                <div>
-                    <button id="avatarUpdate" type="button" class="button w-25% gray"><i data-lucide="pen-line"></i>Modifier mon avatar</button>
-                </div>
+                <button id="avatarUpdate" type="button" class="button w-25% gray"><i data-lucide="pen-line"></i>Modifier mon avatar</button>
             </div>
             <?php $form = \app\core\form\Form::begin('', 'post', '', 'flex flex-col justify-center items-center') ?>
             <input type="hidden" name="form-name" value="update-main">
-
             <div class="flex flex-col w-full gap-6">
                 <div class="form-inputs">
                     <div class="flex gap-4">
@@ -62,7 +59,7 @@ use app\core\Application;
                 </div>
 
                 <div class="flex gap-4, mt-8">
-                    <button id="saveUpdate" type="button" class="button w-full">Enregistrer les modifications</button>
+                    <button id="saveUpdatePopupTrigger" type="button" class="button w-full">Enregistrer les modifications</button>
                 </div>
             </div>
             <?php \app\core\form\Form::end() ?>
@@ -81,8 +78,11 @@ use app\core\Application;
         </x-tab>
         <x-tab-panel role="region" slot="panel">
             <div class="flex flex-col gap-4">
-            <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
-            <button id ="accountDelete" type="submit" class="button w-full danger">Supprimer mon compte</button>
+                <form method="post">
+                    <input type="hidden" name="form-name" value="reset-password">
+                                <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
+                </form>
+<!--            <button id ="accountDelete" type="submit" class="button w-full danger">Supprimer mon compte</button> -->
             </div>
         </x-tab-panel>
     </x-tabs>
@@ -137,38 +137,27 @@ use app\core\Application;
 
 <div id="popupSaveUpdate"
      class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
-    <div
-        class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px]
+    <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="form-name" value="update-avatar">
+        <div
+            class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px]
         w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
-        <div>
-            <h1  class="heading-1">Valider les modifications</h1>
-        </div>
-        <div>
-            <img class="w-[125px] h-[125px] rounded-full object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
-        </div>
-        <div class="flex flex-row gap-4">
-            <div class="w-[200px]">
-                <button type="submit" class="button w-full gray">
-                    <i data-lucide="upload"></i>
-                    Importer
-                </button>
+            <div>
+                <h1  class="heading-1">Valider les modifications</h1>
             </div>
-            <div class="w-[200px]">
-                <button type="submit" class="button w-full gray">
-                    <i data-lucide="trash"></i>
-                    Supprimer
-                </button>
+            <div class="w-[400px]" id="password-condition-utilisation">
+                <?php echo $form->field($model, 'password')->passwordField() ?>
+            </div>
+            <div class="flex flex-row gap-4">
+                <div class="w-[400px]">
+                    <button type="button" class="button w-full gray">Annuler</button>
+                </div>
+                <div class="w-[400px]">
+                    <button type="submit" class="button w-full">Enregistrer les modifications</button>
+                </div>
             </div>
         </div>
-        <div class="flex flex-row gap-4">
-            <div class="w-[400px]">
-                <button type="submit" class="button w-full gray">Annuler</button>
-            </div>
-            <div class="w-[400px]">
-                <button type="submit" class="button w-full">Enregistrer les modifications</button>
-            </div>
-        </div>
-    </div>
+    </form>
 </div>
 
 <!--//////////////////////////////////////////////////////////////////////////
@@ -176,10 +165,10 @@ use app\core\Application;
 //////////////////////////////////////////////////////////////////////////:-->
 
 
-<!-- <div id="popupPasswordModify" class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
+<div id="popupPasswordModify" class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
     <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px] w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
         <div>
-            <h1  class="heading-1"></h1>
+            <h1  class="heading-1">Modification du mot de passe</h1>
         </div>
         <div>
             <form type="text">test</form>
@@ -189,21 +178,21 @@ use app\core\Application;
                 <button id="closePasswordModify" type="submit" class="button w-full gray">Annuler</button>
             </div>
             <div class="w-[400px]">
-                <button type="submit" class="button w-full danger">Supprimer le compte</button>
+                <button type="submit" class="button w-full">confirmer</button>
             </div>
         </div>
     </div>
-</div> -->
+</div> 
 
 <!--//////////////////////////////////////////////////////////////////////////
 // Delete Account pop up
 //////////////////////////////////////////////////////////////////////////:-->
 
-
+<!--
 <div id="popupAccountDelete" class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
     <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px] w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
         <div>
-            <h1  class="heading-1">Suppression définitive du compte</h1>
+            <h1 class="heading-1">Suppression définitive du compte</h1>
         </div>
         <div>
             <x-input>
@@ -222,3 +211,4 @@ use app\core\Application;
         </div>
     </div>
 </div>
+        -->
