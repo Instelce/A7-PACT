@@ -33,6 +33,7 @@ class MemberUpdateForm extends Model
     {
         $this->userAccount = Application::$app->user;
         $this->mail = $this->userAccount->mail;
+        $this->password = $this->userAccount->password;
 
         $this->address = Address::findOneByPk($this->userAccount->address_id);
         $this->streetNumber = $this->address->number;
@@ -49,7 +50,6 @@ class MemberUpdateForm extends Model
             $this->pseudo = $this->memberUser->pseudo;
             $this->notification = $this->memberUser->allows_notifications;
         }
-
     }
 
     public function update()
@@ -64,6 +64,18 @@ class MemberUpdateForm extends Model
         return true;
     }
 
+    public function saveUpdate()
+    {
+        /**
+         * @var UserAccount $user
+         */
+        if (!password_verify($this->password, $user->password)) {
+            $this->addError('password', 'Mot-de-passe incorrect.');
+            return false;
+        }
+        return false;
+    }
+
     public function rules(): array
     {
         return [
@@ -76,7 +88,7 @@ class MemberUpdateForm extends Model
             'postalCode' => [self::RULE_REQUIRED, self::RULE_POSTAL],
             'city' => [self::RULE_REQUIRED],
             'phone' => [self::RULE_REQUIRED,self::RULE_PHONE],
-            'password' => [self::RULE_PASSWORD_CHECK],
+            'password' => [self::RULE_REQUIRED],
         ];
     }
 
