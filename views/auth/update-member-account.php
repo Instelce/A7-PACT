@@ -62,6 +62,29 @@ use app\core\Mailer;
                     <button id="saveUpdatePopupTrigger" type="button" class="button w-full">Enregistrer les modifications</button>
                 </div>
             </div>
+            <div id="popupSaveUpdate"
+                 class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="form-name" value="update-avatar">
+                    <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[225px]
+                        w-full h-full lg:p-10 flex flex-col items-center gap-6">
+                        <div>
+                            <h1  class="heading-1">Valider les modifications</h1>
+                        </div>
+                        <div class="w-[400px]" id="password-condition-utilisation">
+                            <?php echo $form->field($model, 'password')->passwordField() ?>
+                        </div>
+                        <div class="flex flex-row gap-4">
+                            <div>
+                                <button type="button" class="button gray w-[400px]">Annuler</button>
+                            </div>
+                            <div>
+                                <button type="submit" class="button w-[400px]">Enregistrer les modifications</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
             <?php \app\core\form\Form::end() ?>
         </x-tab-panel>
 
@@ -135,7 +158,7 @@ use app\core\Mailer;
 // save update pop up
 //////////////////////////////////////////////////////////////////////////:-->
 
-<div id="popupSaveUpdate"
+<!--<div id="popupSaveUpdate"
      class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
     <form method="POST" enctype="multipart/form-data">
         <input type="hidden" name="form-name" value="update-avatar">
@@ -158,12 +181,11 @@ use app\core\Mailer;
             </div>
         </div>
     </form>
-</div>
+</div>-->
 
 <!--//////////////////////////////////////////////////////////////////////////
 // Modify Password page
 //////////////////////////////////////////////////////////////////////////:
-
 
 <div id="popupPasswordModify" class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
     <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px] w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">

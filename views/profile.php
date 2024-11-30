@@ -17,7 +17,7 @@ $this->jsFile = "profile";
 
 
 <header class="profile-up">
-    <img class="profile-page-pic" src="<?php echo $user->avatar_url ?>">
+    <img class="profile-page-pic object-cover" src="<?php echo $user->avatar_url ?>">
     <i data-lucide="pen_line"></i>
     <div class="profile-name">
         <h1 class="heading-2 gap-1">Profil de <span class="underline">
