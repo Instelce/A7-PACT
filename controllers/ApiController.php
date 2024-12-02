@@ -9,6 +9,7 @@ use app\core\Response;
 use app\models\account\UserAccount;
 use app\models\offer\Offer;
 use app\models\offer\schedule\OfferSchedule;
+use app\models\offer\schedule\LinkSchedule;
 use app\models\opinion\Opinion;
 use app\models\opinion\OpinionPhoto;
 use app\models\user\MemberUser;
@@ -22,6 +23,9 @@ use app\models\offer\OfferPeriod;
 use app\models\offer\VisitOffer;
 use app\models\user\professional\ProfessionalUser;
 use app\core\Utils;
+use DateTime;
+use DateInterval;
+
 
 class ApiController extends Controller
 {
@@ -133,6 +137,8 @@ class ApiController extends Controller
         foreach ($offers as $i => $offer) {
             $data[$i] = $offer->toJson();
 
+            $data[$i]['rating'] = $offer->rating();
+
             // Add professionalUser account
             $data[$i]['profesionalUser'] = ProfessionalUser::findOneByPk($offer->professional_id)->toJson();
             unset($data[$i]['profesionalUser']['notification']);
@@ -149,8 +155,37 @@ class ApiController extends Controller
             $address = Address::findOneByPk($offer->address_id);
             $data[$i]['address'] = $address->toJson();
             unset($data[$i]['address']['id']);
-        }
 
+            //add status
+            $linkSchedules = LinkSchedule::find(['offer_id' => $offer->id]);
+            $dayOfWeek = strtolower((new DateTime())->format('N'));
+            foreach ($linkSchedules as $linkSchedule) {
+                $offerSchedules = OfferSchedule::find(['id' => $linkSchedule->schedule_id]);
+                foreach ($offerSchedules as $offerSchedule) {
+                    if ($offerSchedule->day == $dayOfWeek) {
+                        $closingHour = $offerSchedule->closing_hours;
+                        $openingHour = $offerSchedule->opening_hours;
+                    }
+                }
+            }
+            if ($closingHour === 'fermé') {
+                $status = "Fermé";
+            } else {
+                $closingTime = new DateTime($closingHour);
+                $openingTime = new DateTime($openingHour);
+
+                $currentTime = new DateTime();
+
+                if ($closingTime <= $currentTime && $openingTime >= $currentTime) {
+                    $status = "Fermé";
+                } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
+                    $status = "Ferme bientôt";
+                } else {
+                    $status = "Ouvert";
+                }
+            }
+            $data[$i]['status'] = $status;
+        }
         return $response->json($data);
     }
 
