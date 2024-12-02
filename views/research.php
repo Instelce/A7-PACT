@@ -67,35 +67,31 @@ $iconsNames = [
             </x-input> -->
 
         <div>
-            <div class="hidden lg:flex flex-col">
+            <div class="hidden lg:flex flex-col hidden lg:block">
                 <span class="text-base font-bold text-black">Intervalle de prix</span>
                 <div class="h-px bg-zinc-400 mt-2"></div>
             </div>
             <div class="flex gap-2 pl-4">
                 <x-slider id="slider-price" color="#0057FF" label="Prix" min="0" max="50" type="double"></x-slider>
             </div>
-
+            <div class="hidden lg:flex flex-col hidden lg:block">
+                <span class="text-base font-bold text-black">Note minimal</span>
+                <div class="h-px bg-zinc-400 mt-2"></div>
+            </div>
             <div class="flex gap-2 pl-4">
                 <x-slider id="slider-rating" color="#0057FF" label="Note" min="0" max="5" type=""></x-slider>
             </div>
-            <div class="flex flex-row items-center gap-2 py-4">
-                <div class="flex gap-2">
-                    <input class="switch" type="checkbox" id="switchtest" />
-                    <label class="switch" for="switchtest">Toggle</label>
-                </div>
-                <h3>Uniquement ouvert</h3>
-            </div>
-            <div class="w-full flex lg:flex-row gap-2">
-                <x-input>
-                    <input slot="input" type="date" class="dateBefore">
-                </x-input>
-                <x-input>
-                    <input slot="input" type="date" class="dateAfter">
-                </x-input>
+            <div class="hidden lg:flex flex-col hidden lg:block">
+                <span class="text-base font-bold text-black">Ville</span>
+                <div class="h-px bg-zinc-400 mt-2"></div>
             </div>
             <x-input>
                 <input slot="input" type="text" placeholder="Ville" class="searchCity">
             </x-input>
+            <div class="hidden lg:flex flex-col hidden lg:block">
+                <span class="text-base font-bold text-black">Tries</span>
+                <div class="h-px bg-zinc-400 mt-2"></div>
+            </div>
             <x-select id="sortPrice">
                 <span slot="trigger">Tri par prix</span>
                 <div slot="options">

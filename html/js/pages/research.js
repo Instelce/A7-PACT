@@ -382,27 +382,27 @@ sliderRating.addEventListener(
         applyFilters({ rating: minValue });
     }, 300)
 );
-const switchInput = document.getElementById("switchtest");
+// const switchInput = document.getElementById("switchtest");
 
-switchInput.addEventListener("change", async (event) => {
-    await applyFilters({ open });
-});
+// switchInput.addEventListener("change", async (event) => {
+//     await applyFilters({ open });
+// });
 
-const dateBeforeInput = document
-    .querySelector(".dateBefore")
-    .closest("x-input");
-const dateAfterInput = document.querySelector(".dateAfter").closest("x-input");
+// const dateBeforeInput = document
+//     .querySelector(".dateBefore")
+//     .closest("x-input");
+// const dateAfterInput = document.querySelector(".dateAfter").closest("x-input");
 
-dateBeforeInput.addEventListener("dateChange", (event) => {
-    console.log(event.detail.value);
-    applyFilters({ minimumEventDate: event.detail.value });
-});
+// dateBeforeInput.addEventListener("dateChange", (event) => {
+//     console.log(event.detail.value);
+//     applyFilters({ minimumEventDate: event.detail.value });
+// });
 
-dateAfterInput.addEventListener("dateChange", (event) => {
-    console.log(event.detail.value);
+// dateAfterInput.addEventListener("dateChange", (event) => {
+//     console.log(event.detail.value);
 
-    applyFilters({ maximumEventDate: event.detail.value });
-});
+//     applyFilters({ maximumEventDate: event.detail.value });
+// });
 
 // ---------------------------------------------------------------------------------------------- //
 // Observer
