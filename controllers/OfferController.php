@@ -110,9 +110,8 @@ class OfferController extends Controller
                     $period = new OfferPeriod();
                     $period->start_date = $body['period-start'];
                     $period->end_date = $body['period-end'];
+                    $period->offer_id = $offer->id;
                     $period->save();
-
-                    $visit->period_id = $period->id;
                 }
 
                 $visit->save();
@@ -129,7 +128,7 @@ class OfferController extends Controller
                 $restaurant->range_price = intval($body['restaurant-range-price']);
                 $restaurant->save();
 
-//                if(true){ // condition : il clique sur "ajouter un nouveau repas"
+                //                if(true){ // condition : il clique sur "ajouter un nouveau repas"
 //                    $meal = new Meal();
 //                    $meal->name = $body['meal-name'];
 //                    $meal->price = intval($body['meal-price']);
@@ -148,9 +147,8 @@ class OfferController extends Controller
                     $period = new OfferPeriod();
                     $period->start_date = $body['period-start'];
                     $period->end_date = $body['period-end'];
+                    $period->offer_id = $offer->id;
                     $period->save();
-
-                    $show->period_id = $period->id;
                 }
 
                 $show->save();
@@ -196,7 +194,7 @@ class OfferController extends Controller
                 return $request->redirect('/dashboard');
             }
         }
-        
+
         return $this->render('offers/create', [
             'model' => $offer,
         ]);
@@ -411,11 +409,11 @@ class OfferController extends Controller
             $offer->address_id = $address->id;
 
             if (array_key_exists("online", array: $body)) {
-//                echo "Switching to online";
+                //                echo "Switching to online";
                 $offer->offline = 0;
                 $offer->last_online_date = date('Y-m-d');
             } else {
-//                echo "Switching to offline";
+                //                echo "Switching to offline";
                 $offer->offline_date = date('Y-m-d');
                 $offer->offline = 1;
             }
@@ -449,9 +447,10 @@ class OfferController extends Controller
                     $period = OfferPeriod::findOne(['id' => $offer->id]);
                     $period->start_date = $body['period-start'];
                     $period->end_date = $body['period-end'];
+                    $period->offer_id = $offer->id;
                     $period->update();
 
-                    $visit->period_id = $period->id;
+
                 }
 
                 $visit->update();
@@ -478,9 +477,10 @@ class OfferController extends Controller
                     $period = OfferPeriod::findOne(['offer_id' => $offer->id]);
                     $period->start_date = $body['period-start'];
                     $period->end_date = $body['period-end'];
+                    $period->offer_id = $offer->id;
                     $period->update();
 
-                    $show->period_id = $period->id;
+
                 }
 
                 $show->update();

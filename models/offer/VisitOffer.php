@@ -9,7 +9,7 @@ class VisitOffer extends DBModel
     public int $offer_id = 0;
     public float $duration = 0.0;
     public int $guide = 0;
-    public ?int $period_id = null;
+
 
     public static function tableName(): string
     {
@@ -18,7 +18,7 @@ class VisitOffer extends DBModel
 
     public function attributes(): array
     {
-        return ['offer_id', 'duration', 'guide', 'period_id'];
+        return ['offer_id', 'duration', 'guide'];
     }
 
     public static function pk(): string

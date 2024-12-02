@@ -385,22 +385,23 @@ sliderRating.addEventListener(
 const switchInput = document.getElementById("switchtest");
 
 switchInput.addEventListener("change", async (event) => {
-    await applyFilters({ open: "open" });
+    await applyFilters({ open });
 });
 
-// Sélection des champs x-input
-const dateBeforeInput = document.querySelector('.dateBefore').closest('x-input');
-const dateAfterInput = document.querySelector('.dateAfter').closest('x-input');
+const dateBeforeInput = document
+    .querySelector(".dateBefore")
+    .closest("x-input");
+const dateAfterInput = document.querySelector(".dateAfter").closest("x-input");
 
-// Écoute l'événement 'dateChange' sur chaque x-input
-dateBeforeInput.addEventListener('dateChange', (event) => {
-    console.log('Date Before changed:', event.detail.value);
-    applyFilters({ maximumEventDate: event.detail.value });
-});
-
-dateAfterInput.addEventListener('dateChange', (event) => {
-    console.log('Date After changed:', event.detail.value);
+dateBeforeInput.addEventListener("dateChange", (event) => {
+    console.log(event.detail.value);
     applyFilters({ minimumEventDate: event.detail.value });
+});
+
+dateAfterInput.addEventListener("dateChange", (event) => {
+    console.log(event.detail.value);
+
+    applyFilters({ maximumEventDate: event.detail.value });
 });
 
 // ---------------------------------------------------------------------------------------------- //

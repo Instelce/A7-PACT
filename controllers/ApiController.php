@@ -111,11 +111,13 @@ class ApiController extends Controller
                 ->having('AVG(opinion.rating) >= ' . $rating);
         }
         if ($minimumEventDate && $maximumEventDate) {
-            $query->joinString("INNER JOIN offer_period ON offer_period.offer_id = offer.id")
+
+            $query->joinString("JOIN offer_period ON offer.id = offer_period.offer_id")
                 ->filters([
-                    ['offer_period__start_date', $minimumEventDate, '>='],
-                    ['offer_period__end_date', $maximumEventDate, '<='],
-                ]);
+                    ['offer_period__start_date', "TO_DATE(cast($minimumEventDate, DATE), 'YYYY-MM-DD')", '>='],
+                    ['offer_period__end_date', "TO_DATE(cast($maximumEventDate, DATE), 'YYYY-MM-DD')", '<='],
+                ])
+            ;
         }
         if ($open) {
             $query->joinString("INNER JOIN link_schedule ON link_schedule.offer_id = offer.id")

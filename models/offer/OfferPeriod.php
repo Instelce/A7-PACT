@@ -8,8 +8,8 @@ class OfferPeriod extends DBModel
     public int $id = 0;
 
     public int $offer_id = 0;
-    public string $start_date = '';
-    public string $end_date = '';
+    public string $start_date;
+    public string $end_date;
     public static function tableName(): string
     {
         return 'offer_period';

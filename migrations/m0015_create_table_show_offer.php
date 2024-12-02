@@ -12,11 +12,9 @@ class m0015_create_table_show_offer
             
             duration FLOAT NOT NULL,
             capacity INT NOT NULL,
+        
             
-            period_id INT,
-            
-            FOREIGN KEY (offer_id) REFERENCES offer(id),
-            FOREIGN KEY (period_id) REFERENCES offer_period(id)
+            FOREIGN KEY (offer_id) REFERENCES offer(id)
         );";
         $db->pdo->exec($sql);
     }
