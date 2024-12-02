@@ -208,7 +208,7 @@ function displayOffers(Data) {
                 const offerElement = document.createElement("a");
                 offerElement.href = `/offres/${offer.id}`;
                 offerElement.innerHTML = `
-                <article class="research-card">
+                <article class="research-card mb-4">
                 <div class="research-card--photo">
                 ${
                     offer.photos[0]
@@ -380,15 +380,17 @@ sortPrice.addEventListener("change", (event) => {
     const inputValue = event.target.querySelector("input").value;
 
     const selectedOption = sortPrice.querySelector(
-        `[data - value= "${inputValue}"]`
+        `[data-value="${inputValue}"]`
     );
     const dataValue = selectedOption
         ? selectedOption.getAttribute("data-value")
         : null;
 
     if (dataValue === "croissant") {
+        console.log("croissant");
         applyFilters({}, "price_asc");
     } else if (dataValue === "decroissant") {
+        console.log("decroissant");
         applyFilters({}, "price_desc");
     }
 });
@@ -436,7 +438,23 @@ sliderRating.addEventListener(
 
 //     applyFilters({ maximumEventDate: event.detail.value });
 // });
-
+const sortRating = document.getElementById("sortRating");
+sortRating.addEventListener("change", (event) => {
+    const inputValue = event.target.querySelector("input").value;
+    const selectedOption = sortRating.querySelector(
+        `[data-value="${inputValue}"]`
+    );
+    const dataValue = selectedOption
+        ? selectedOption.getAttribute("data-value")
+        : null;
+    if (dataValue === "croissant") {
+        console.log("croissant");
+        applyFilters({}, "rating_asc");
+    } else if (dataValue === "decroissant") {
+        console.log("decroissant");
+        applyFilters({}, "rating_desc");
+    }
+});
 // ---------------------------------------------------------------------------------------------- //
 // Observer
 // ---------------------------------------------------------------------------------------------- //

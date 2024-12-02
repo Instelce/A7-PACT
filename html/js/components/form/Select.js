@@ -60,10 +60,7 @@ export class Select extends WebComponent {
             option.appendChild(check);
         });
 
-        // Set the selected option when clicked
         this.optionsButton.forEach((option) => {
-            let check = option.querySelector(".check");
-
             option.addEventListener("click", () => {
                 if (!option.classList.contains("selected")) {
                     this.input.value = option.getAttribute("data-value");
@@ -79,10 +76,10 @@ export class Select extends WebComponent {
                         option.classList.remove("selected");
                     });
 
+                    let check = option.querySelector(".check");
                     check.classList.remove("opacity-0");
                     option.classList.add("selected");
 
-                    // Displatch change event when the value changes
                     this.input.dispatchEvent(new Event("change"));
                 }
             });
