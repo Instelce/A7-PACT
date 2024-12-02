@@ -62,9 +62,9 @@ class ApiController extends Controller
         $category = $request->getQueryParams('category');
         $minimumPrice = $request->getQueryParams('minimumPrice');
         $maximumPrice = $request->getQueryParams('maximumPrice');
-        $open = $request->getQueryParams('open');
-        $minimumEventDate = $request->getQueryParams('minimumEventDate');
-        $maximumEventDate = $request->getQueryParams('maximumEventDate');
+        // $open = $request->getQueryParams('open');
+        // $minimumEventDate = $request->getQueryParams('minimumEventDate');
+        // $maximumEventDate = $request->getQueryParams('maximumEventDate');
         $location = $request->getQueryParams('location');
         $rating = $request->getQueryParams('rating');
 
@@ -120,16 +120,16 @@ class ApiController extends Controller
                 ->group_by(['offer.id'])
                 ->having('AVG(opinion.rating) >= ' . $rating);
         }
-        if ($open) {
-            $query->joinString("INNER JOIN link_schedule ON link_schedule.offer_id = offer.id")
-                ->joinString("INNER JOIN offer_schedule ON offer_schedule.id = link_schedule.schedule_id")
-                ->filters([
-                    ['offer_schedule__opening_hours', 'fermé', '!='],
-                    ['offer_schedule__closing_hours', 'fermé', '!='],
-                    ['offer_schedule__opening_hours', date('H:i'), '<='],
-                    ['offer_schedule__closing_hours', date('H:i'), '>=']
-                ]);
-        }
+        // if ($open) {
+        //     $query->joinString("INNER JOIN link_schedule ON link_schedule.offer_id = offer.id")
+        //         ->joinString("INNER JOIN offer_schedule ON offer_schedule.id = link_schedule.schedule_id")
+        //         ->filters([
+        //             ['offer_schedule__opening_hours', 'fermé', '!='],
+        //             ['offer_schedule__closing_hours', 'fermé', '!='],
+        //             ['offer_schedule__opening_hours', date('H:i'), '<='],
+        //             ['offer_schedule__closing_hours', date('H:i'), '>=']
+        //         ]);
+        // }
 
         /** @var Offer[] $offers */
         $offers = $query->make();
