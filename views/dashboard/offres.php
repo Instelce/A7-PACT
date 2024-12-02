@@ -37,12 +37,16 @@ $this->cssFile = "dashboard/offers";
                 Avis reçus
             </div>
         </a>
-        <a href="/dashboard/factures">
-            <div class="tab-button pro">
-                <i data-lucide="file-text"></i>
-                Factures
-            </div>
-        </a>
+
+        <?php if (Application::$app->user->isPrivateProfessional()) { ?>
+            <a href="/dashboard/factures">
+                <div class="tab-button pro">
+                    <i data-lucide="file-text"></i>
+                    Factures
+                </div>
+            </a>
+        <?php } ?>
+
         <a href="/offres/creation" class="button gray icon-left mt-4">
             <i data-lucide="plus"></i>
             Créer une offre
@@ -75,12 +79,14 @@ $this->cssFile = "dashboard/offers";
                             class="badge <?php echo $type === 'standard' ? 'blue' : 'yellow' ?>"><?php echo ucfirst($type) ?></span>
                     </header>
 
-                    <p class="mt-2"><?php echo $offer->summary ?></p>
+                    <p class="mt-3"><?php echo $offer->summary ?></p>
 
                     <div class="flex flex-col gap-2 mt-4">
-                        <p class="text-gray-4 flex items-center gap-2"><?php echo Offer::frenchCategoryName($offer->category) ?>
-                            <span class="dot"></span> <?php echo $price ?> <span
-                                class="dot"></span> <?php echo $offer->likes . ' likes' ?> <span class="dot"></span> <?php echo $offer->opinionsCount() ?> avis
+                        <p class="text-gray-4 flex items-center gap-2">
+                            <?php echo Offer::frenchCategoryName($offer->category) ?>
+                            <span class="dot"></span> <?php echo $price ?>
+<!--                            <span class="dot"></span> --><?php //echo $offer->likes . ' likes' ?>
+                            <span class="dot"></span> <?php echo $offer->opinionsCount() ?> avis
                         </p>
                         <p class="text-gray-4">Mis à jour
                             le <?php echo Utils::formatDate($offer->updated_at); ?></p>
