@@ -96,7 +96,7 @@ class DBQueryBuilder
                 $sql .= " WHERE ";
             }
 
-            $sql .= implode(" OR ", array_map(function($attr) {
+            $sql .= implode(" OR ", array_map(function ($attr) {
                 $tableName = $this->model->tableName();
 
                 // Check for double __ in the attribute name

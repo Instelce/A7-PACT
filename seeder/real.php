@@ -421,9 +421,9 @@ $offre4->address_id = 24;
 $offre4->minimum_price = 12;
 $offre4->save();
 
-$db->pdo->exec("INSERT INTO offer_period (id, start_date,end_date) VALUES (1,'2024-06-01', '2024-09-01');");
+$db->pdo->exec("INSERT INTO offer_period (id,offer_id, start_date,end_date) VALUES (1,$offre4->id,'2024-06-01', '2024-09-01');");
 
-$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity, period_id) VALUES (" . $offre4->id . ", 1.5, 33, 1);");
+$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity) VALUES (" . $offre4->id . ", 1.5, 33);");
 
 //no tags
 

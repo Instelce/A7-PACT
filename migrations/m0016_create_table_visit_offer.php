@@ -15,10 +15,9 @@ class m0016_create_table_visit_offer
             duration NUMERIC NOT NULL,
             guide BOOLEAN NOT NULL,
             
-            period_id INT,
+
             
-            FOREIGN KEY (offer_id) REFERENCES offer(id),
-            FOREIGN KEY (period_id) REFERENCES offer_period(id)
+            FOREIGN KEY (offer_id) REFERENCES offer(id)
         );";
         $db->pdo->exec($sql);
     }

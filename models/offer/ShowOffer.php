@@ -3,11 +3,11 @@
 namespace app\models\offer;
 use app\core\DBModel;
 
-class ShowOffer extends DBModel {
+class ShowOffer extends DBModel
+{
     public int $offer_id = 0;
     public int $capacity = 0;
     public float $duration = 0;
-    public ?int $period_id = null;
 
     public static function tableName(): string
     {
@@ -16,7 +16,7 @@ class ShowOffer extends DBModel {
 
     public function attributes(): array
     {
-        return ['offer_id', 'capacity', 'duration', 'period_id'];
+        return ['offer_id', 'capacity', 'duration'];
     }
 
     public static function pk(): string
@@ -40,5 +40,5 @@ class ShowOffer extends DBModel {
         ];
     }
 
-    
+
 }

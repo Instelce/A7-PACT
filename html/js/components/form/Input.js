@@ -1,4 +1,4 @@
-import {WebComponent} from '../WebComponent.js';
+import { WebComponent } from '../WebComponent.js';
 
 /**
  * Input component
@@ -55,7 +55,19 @@ export class Input extends WebComponent {
         if (this.hasButton) {
             field.classList.add('has-button')
         }
-
+        if (input && input.type === 'date') {
+            
+            input.addEventListener('input', () => {
+                
+                this.dispatchEvent(new CustomEvent('dateChange', {
+                    detail: {
+                        value: input.value 
+                    },
+                    bubbles: true,
+                    composed: true 
+                }));
+            });
+        }
         // Add autocomplete list
         let list = this.querySelector('[slot="list"]');
 
