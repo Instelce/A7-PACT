@@ -140,6 +140,7 @@ async function applyFilters(newFilters = {}, neworder = null) {
     if (neworder) {
         order = neworder;
     }
+    console.log(filters);
     Object.keys(filters).forEach((key) => {
         if (
             filters[key] === null ||
@@ -386,6 +387,19 @@ const switchInput = document.getElementById("switchtest");
 switchInput.addEventListener("change", async (event) => {
     await applyFilters({ open: "open" });
 });
+
+    const dateBeforeInput = document.querySelector('.dateBefore').closest('x-input');
+    const dateAfterInput = document.querySelector('.dateAfter').closest('x-input');
+
+    dateBeforeInput.addEventListener('dateChange', (event) => {
+        console.log('Date Before changed:', event.detail.value);
+        applyFilters({ maximumEventDate: event.detail.value });
+    });
+
+    dateAfterInput.addEventListener('dateChange', (event) => {
+        console.log('Date After changed:', event.detail.value);
+        applyFilters({ minimumEventDate: event.detail.value });
+    });
 
 // ---------------------------------------------------------------------------------------------- //
 // Observer

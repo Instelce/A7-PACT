@@ -120,11 +120,12 @@ class ApiController extends Controller
             $query->joinString("INNER JOIN link_schedule ON link_schedule.offer_id = offer.id")
                 ->joinString("INNER JOIN offer_schedule ON offer_schedule.id = link_schedule.schedule_id")
                 ->filters([
-                    ['offer_schedule__opening_hours', 'fermé', '!='],
-                    ['offer_schedule__closing_hours', 'fermé', '!='],
-                    ['offer_schedule__opening_hours', date('H:i'), '<='],
-                    ['offer_schedule__closing_hours', date('H:i'), '>=']
-                ]);
+                    ['offer_schedule.opening_hours', 'fermé', '!='],
+                    ['offer_schedule.closing_hours', 'fermé', '!='],
+                    ['offer_schedule.opening_hours', date('H:i'), '<='],
+                    ['offer_schedule.closing_hours', date('H:i'), '>='],
+                ])
+                ->group_by(['offer.id']);
         }
 
         /** @var Offer[] $offers */

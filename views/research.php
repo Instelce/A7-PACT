@@ -87,10 +87,10 @@ $iconsNames = [
             </div>
             <div class="w-full flex lg:flex-row gap-2">
                 <x-input>
-                    <input slot="input" type="date">
+                    <input slot="input" type="date" class="dateBefore">
                 </x-input>
                 <x-input>
-                    <input slot="input" type="date">
+                    <input slot="input" type="date" class="dateAfter">
                 </x-input>
             </div>
             <x-input>

@@ -96,14 +96,14 @@ class DBQueryBuilder
                 $sql .= " WHERE ";
             }
 
-            $sql .= implode(" OR ", array_map(function($attr) {
+            $sql .= implode(" OR ", array_map(function ($attr) {
                 $tableName = $this->model->tableName();
 
                 // Check for double __ in the attribute name
                 if (strpos($attr, '__') !== false) {
                     $attrName = str_replace('__', '.', $attr);
                     $modelName = implode('', array_map(fn($part) => ucfirst($part), explode('_', explode('__', $attr)[0])));
-                    
+
                     return "LOWER($attrName) LIKE :$attr";
                 } else {
                     return "LOWER($tableName.$attr) LIKE :$attr";
