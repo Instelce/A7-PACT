@@ -111,6 +111,7 @@ Default size is medium.
 
 .button.only-icon.sm {
     height: 2.5rem;
+    width: 2.5rem;
 }
 
 .button.only-icon {

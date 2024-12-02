@@ -87,8 +87,16 @@ class DashboardController extends Controller
     {
         $invoices = Invoice::query()->join(new Offer())->filters(['offer__professional_id' => Application::$app->user->account_id])->make();
         $offers = Offer::find(['professional_id' => Application::$app->user->account_id]);
+        $subscriptions = [];
 
-        return $this->render('/dashboard/factures', ['invoices' => $invoices, 'offers' => $offers]);
+        foreach ($offers as $offer) {
+            $subscription = $offer->subscription();
+            if ($subscription) {
+                $subscriptions[] = $subscription;
+            }
+        }
+
+        return $this->render('/dashboard/factures', ['invoices' => $invoices, 'offers' => $offers, 'subscriptions' => $subscriptions]);
     }
 
     public function invoicesPDF(Request $request, Response $response, $routeParams){
@@ -101,15 +109,10 @@ class DashboardController extends Controller
         //PROFESSIONAL DATA
         $professionalAddress = Address::findOneByPk($user->address_id);
 
-        //PAYMENT DATA (revoir tout ça )
-        //$offerType = OfferType::findOne(['id' => $offer->offer_type]);
-        //$offerOption = OfferOption::findOne(['offer_id' => $offer->offer_id]);
-        //$offerTypeDuration = NULL;
+        //PAYMENT DATA
+        $subscription = $offer->subscription();
+        $type = $offer->type();
 
-        $HTPrice = NULL;
-        $TVA = 20;
-        $TTCPrice = NULL;
-        
         return $this->pdf("Facture $invoiceId", 'invoicePreview', [
             'pk' => $routeParams['pk'],
             'invoice' => $invoice,
@@ -117,6 +120,8 @@ class DashboardController extends Controller
             'user' => $user,
             'professional' => $professional,
             'professionalAddress' => $professionalAddress,
+            'subscription' => $subscription,
+            'type' => $type,
         ]);
     }
 

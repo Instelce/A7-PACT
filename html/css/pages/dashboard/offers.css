@@ -20,6 +20,7 @@
 .offer-card h3 {
     font-weight: 700;
     font-size: var(--typescale-u1);
+    font-family: var(--font-title);
 }
 
 .card-body {

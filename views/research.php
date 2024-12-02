@@ -34,11 +34,11 @@ $iconsNames = [
         foreach ($filtersNames as $key => $filterName) {
             $iconName = $iconsNames[$key];
             ?>
-            <button id="<?php echo strtolower($filterName); ?>" class="category-item">
-                <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
-                <span><?php echo htmlentities($filterName); ?></span>
-            </button>
-            <?php
+        <button id="<?php echo strtolower($filterName); ?>" class="category-item">
+            <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
+            <span><?php echo htmlentities($filterName); ?></span>
+        </button>
+        <?php
         }
         ?>
     </div>

@@ -19,8 +19,6 @@ class Offer extends DBModel
     public string $description = '';
     public int $likes = 0;
     public int $offline = self::STATUS_OFFLINE;
-    public ?string $last_offline_date = '';
-    public int $offline_days = 0;
     public int $view_counter = 0;
     public int $click_counter = 0;
     public string $website = '';
@@ -47,12 +45,12 @@ class Offer extends DBModel
 
     public function attributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'last_offline_date', 'offline_days', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price', 'rating'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price', 'rating'];
     }
 
     public function updateAttributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'last_offline_date', 'offline_days', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price', 'rating'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price', 'rating'];
     }
 
     public function rules(): array
@@ -165,6 +163,13 @@ class Offer extends DBModel
         $isTagged->save();
     }
 
+    public function hasTag(string $tagName): bool
+    {
+        $tag = OfferTag::findOne(['name' => strtolower($tagName)]);
+        $isTagged = OfferIsTagged::findOne(['tag_id' => $tag->id, 'offer_id' => $this->id]);
+        return $isTagged !== false;
+    }
+
     public function addSubscription(string $type, string $launchDate, int $duration): void
     {
         $option = Option::findOne(['type' => $type]);
@@ -205,5 +210,54 @@ class Offer extends DBModel
     {
         $opinions = Opinion::find(['offer_id' => $this->id]);
         return count($opinions) > 0 ? array_sum(array_map(fn($opinion) => $opinion->rating, $opinions)) / count($opinions) : 0;
+    }
+
+    public function addInvoice(): void
+    {
+        $invoice = new Invoice();
+        $invoice->offer_id = $this->id;
+        $invoice->service_date = date("m");
+        $invoice->issue_date = date("Y-m-d");
+        $invoice->due_date = date("Y-m-d", strtotime("+30 days"));
+        $invoice->save();
+    }
+
+    /**
+     * Count activate days in order of the history for the current month
+     */
+    public function activeDays(): int
+    {
+        $lastMonthHistories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m', strtotime("-1 month"))])->make();
+        $histories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m')])->make();
+        $lastMonthDay = date('t', strtotime(date('Y-m')));
+        $status = $lastMonthHistories[count($lastMonthHistories) - 1]->switch_to;
+        $count = 0;
+        
+//        echo "<pre>";
+//        echo "Start status : ", $status;
+//        echo "</pre>";
+//
+//        echo "<pre>";
+        for ($day = 1; $day <= $lastMonthDay; $day++) {
+            // Check if the status has change on this day
+            $dayHistories = array_filter($histories, fn($history) => date('d', strtotime($history->created_at)) == $day);
+            $dayHistories = array_values($dayHistories);
+
+
+            if (!empty($dayHistories)) {
+                $lastDayHistory = $dayHistories[count($dayHistories) - 1];
+                $status = $lastDayHistory->switch_to;
+            }
+
+//            echo $status . "($day)" . PHP_EOL;
+
+            if ($status === "online") {
+                $count ++;
+            }
+        }
+//        echo "</pre>";
+
+
+        return $count;
     }
 }

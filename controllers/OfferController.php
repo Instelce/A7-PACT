@@ -19,6 +19,7 @@ use app\models\offer\AttractionParkOffer;
 use app\models\offer\Offer;
 use app\models\offer\OfferPeriod;
 use app\models\offer\OfferPhoto;
+use app\models\offer\OfferStatusHistory;
 use app\models\offer\OfferTag;
 use app\models\offer\OfferType;
 use app\models\offer\RestaurantOffer;
@@ -70,8 +71,6 @@ class OfferController extends Controller
 
             // Create the offer
             $offer->loadData($request->getBody());
-            $offer->last_offline_date = date('Y-m-d');
-            $offer->last_online_date = null;
             $offer->category = $category;
             $offer->professional_id = Application::$app->user->account_id;
             $offer->offer_type_id = $offer_type->id;
@@ -340,6 +339,8 @@ class OfferController extends Controller
                 $opinion->save();
 
                 // TODO - update rating column on offer
+                $offer->rating = $offer->rating();
+                $offer->update();
 
                 // Save opinion photos
                 $files = Application::$app->storage->saveFiles('opinion-photos', 'opinions');
@@ -381,6 +382,8 @@ class OfferController extends Controller
     public function update(Request $request, Response $response, $routeparams)
     {
         $this->setLayout('back-office');
+
+        /** @var Offer $offer */
         $offer = Offer::findOne(['id' => $routeparams['pk']]);
         $address = Address::findOne(['id' => $offer->address_id]);
         $specificData = $offer->specificData();
@@ -408,14 +411,25 @@ class OfferController extends Controller
             $offer->professional_id = Application::$app->user->account_id;
             $offer->address_id = $address->id;
 
-            if (array_key_exists("online", array: $body)) {
-                //                echo "Switching to online";
+            // Switching to online
+            if (array_key_exists("online", array: $body) && $offer->offline === 1) {
                 $offer->offline = 0;
-                $offer->last_online_date = date('Y-m-d');
-            } else {
-                //                echo "Switching to offline";
-                $offer->offline_date = date('Y-m-d');
+
+                // Add history line
+                $history = new OfferStatusHistory();
+                $history->offer_id = $offer->id;
+                $history->switch_to = "online";
+                $history->save();
+            }
+            // Switching to offline
+            else if ($offer->offline === 0) {
                 $offer->offline = 1;
+
+                // Add history line
+                $history = new OfferStatusHistory();
+                $history->offer_id = $offer->id;
+                $history->switch_to = "offline";
+                $history->save();
             }
 
             // Offer minimum price
@@ -428,10 +442,15 @@ class OfferController extends Controller
 
             // Add tags to the offer
             if (array_key_exists('tags', $body)) {
-                foreach ($body['tags'] as $tag) {
-                    $tag = strtolower($tag);
-                    $tagModel = OfferTag::findOne(['name' => $tag]);
-                    $offer->addTag($tagModel->id);
+                foreach ($body['tags'] as $tagName) {
+
+                    $tagName = strtolower($tagName);
+                    $tagModel = OfferTag::findOne(['name' => $tagName]);
+
+                    // Check if the tag
+                    if (!$offer->hasTag($tagName)) {
+                        $offer->addTag($tagModel->id);
+                    }
                 }
             }
 

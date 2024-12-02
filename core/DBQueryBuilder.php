@@ -100,12 +100,16 @@ class DBQueryBuilder
                 $tableName = $this->model->tableName();
 
                 // Check for double __ in the attribute name
-                if (strpos($attr, '__') !== false) {
+                if (str_contains($attr, '__')) {
                     $attrName = str_replace('__', '.', $attr);
                     $modelName = implode('', array_map(fn($part) => ucfirst($part), explode('_', explode('__', $attr)[0])));
 
                     return "LOWER($attrName) LIKE :$attr";
                 } else {
+                    if (str_contains($attr, 'created_at')) {
+                        return "LOWER(cast($tableName.$attr as TEXT)) LIKE :$attr";
+                    }
+
                     return "LOWER($tableName.$attr) LIKE :$attr";
                 }
             }, array_keys($this->search)));
@@ -147,6 +151,10 @@ class DBQueryBuilder
         }
 
         $this->statement = Application::$app->db->pdo->prepare($sql);
+
+//        echo "<pre>";
+//        var_dump($this->statement->queryString);
+//        echo "</pre>";
 
         foreach ($this->filters as $sets) {
             [$attr, $value, $op, $specialKey] = $sets;

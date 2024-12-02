@@ -16,3 +16,88 @@
     font-size: var(--typescale-u2);
     font-family: var(--font-title);
 }
+
+
+/* Accordion */
+.accordion {
+    margin-bottom: 1rem;
+}
+
+.accordion-trigger {
+    width: 100%;
+    padding: .5rem 0;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-bottom-color: rgb(var(--color-gray-1));
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    transition: padding .2s;
+}
+.accordion-trigger:hover {
+    border: 1px solid rgb(var(--color-gray-1));
+    padding: .5rem 1rem;
+    border-radius: var(--radius-small);
+}
+.accordion-trigger:hover svg {
+    opacity: 1;
+}
+
+.accordion-trigger svg {
+    opacity: 0;
+    transition: opacity .2s;
+}
+
+/* Option card */
+.option-card {
+    padding: .8rem 1rem;
+    position: relative;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border: 1px solid rgb(var(--color-gray-1));
+    border-radius: var(--radius-medium);
+}
+
+.option-card:hover {
+    background: rgba(var(--color-gray-1), .1);
+}
+
+/* Offer invoice card */
+.invoice-card {
+    padding: .8rem 1rem;
+    position: relative;
+    margin-bottom: 1.5rem;
+
+    display: flex;
+    justify-content: space-between;
+    /*align-items: center;*/
+
+    border: 1px solid rgb(var(--color-gray-1));
+    border-radius: var(--radius-medium);
+}
+
+.invoice-card header {
+    display: flex;
+    flex-direction: column;
+}
+
+.invoice-card header h3 {
+    font-weight: 700;
+    font-size: var(--typescale-u1);
+    font-family: var(--font-title);
+    margin-bottom: .3rem;
+}
+
+.invoice-card .card-buttons {
+    position: absolute;
+    display: flex;
+    gap: .5rem;
+    bottom: 0;
+    transform: translateY(50%);
+}

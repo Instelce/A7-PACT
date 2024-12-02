@@ -23,16 +23,21 @@ $this->jsFile = "dashboard/avis";
                 Mes offres
             </div>
         </a>
+
         <div class="tab-button pro" selected>
             <i data-lucide="message-circle"></i>
             Avis reçus
         </div>
-        <a href="/dashboard/factures">
-            <div class="tab-button pro">
-                <i data-lucide="file-text"></i>
-                Factures
-            </div>
-        </a>
+
+        <?php if (Application::$app->user->isPrivateProfessional()) { ?>
+            <a href="/dashboard/factures">
+                <div class="tab-button pro">
+                    <i data-lucide="file-text"></i>
+                    Factures
+                </div>
+            </a>
+        <?php } ?>
+
         <a href="/offres/creation" class="button gray icon-left mt-4">
             <i data-lucide="plus"></i>
             Créer une offre

@@ -45,18 +45,12 @@ class Subscription extends DBModel
      *
      * @return boolean
      */
-    public function isOfferActive(): bool
+    public function isActive(): bool
     {
         $launchDate = strtotime($this->launch_date);
-        $duration = $this->duration;
-        $endDate = strtotime("+$duration days", $launchDate);
-        $today = strtotime(date('Y-m-d'));
+        $today = date("Y-m-d");
 
-        if ($today > $endDate) {
-            return false;
-        }
-
-        return true;
+        return $launchDate <= strtotime($today) && strtotime($today) <= strtotime($this->endDate());
     }
 
     public function endDate(): string
@@ -81,6 +75,19 @@ class Subscription extends DBModel
         $today = date("Y-m-d");
 
         return ceil(abs(strtotime($today) - $launchDate) / 604800);
+    }
+
+    public function startDurationDays()
+    {
+        $launchDate = strtotime($this->launch_date);
+        $today = date("Y-m-d");
+
+        return ceil(abs(strtotime($today) - $launchDate) / 86400);
+    }
+
+    public function offer()
+    {
+        return Offer::findOneByPk($this->offer_id);
     }
 
     public function option(): Option

@@ -158,7 +158,7 @@ abstract class DBModel extends Model
         $tableName = static::tableName();
         $pk = static::pk();
 
-        $statement = self::prepare("SELECT * FROM $tableName WHERE $pk = $pkValue");
+        $statement = self::prepare("SELECT * FROM $tableName WHERE $pk = $pkValue;");
         $statement->execute();
 
         return $statement->fetchObject(static::class);

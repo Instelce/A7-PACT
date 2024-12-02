@@ -43,8 +43,7 @@ $this->jsFile = "profile";
                     <span class="pt-1"> <?php echo $user->specific()->offerLikes() ?>  likes</span>
                 </h3>
                 <?php } ?>
-                
-            </h3>
+
             <h3 class="flex heading-3 align-center gap-2">
                 <i data-lucide="badge-check"></i>
                 <span class="pt-1">
@@ -57,15 +56,13 @@ $this->jsFile = "profile";
                     <?php } ?>
                 </span>
             </h3>
+            <?php if ($user->account_id == Application::$app->user->account_id) { ?>
+                <a href="modification" class="mt-4">
+                    <button class="button gray">Modifier mon profil<i data-lucide="pen-line"></i></button>
+                </a>
+            <?php } ?>
         </div>
     </div>
-    <?php if ($user->account_id == Application::$app->user->account_id) { ?>
-        <div class="gap-1">
-            <a href="modification">
-                <button class="button gray">Modifier mon profil<i data-lucide="pen-line"></i></button>
-            </a>
-        </div>
-    <?php } ?>
 </header>
 
 
