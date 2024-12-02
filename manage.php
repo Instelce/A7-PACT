@@ -67,7 +67,7 @@ if ($argc >= 2) {
         if ($argv[2] === "list") {
             $taskManager->listTasks();
         } else {
-            $taskManager->runTask($argv[2]);
+            $taskManager->runTaskWithoutContidion($argv[2]);
         }
     } else {
         echo "Invalid argument" . PHP_EOL;

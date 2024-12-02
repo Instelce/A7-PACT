@@ -256,6 +256,10 @@ if ($status == "Fermé") {
                 </button>
             <?php } ?>
 
+            <?php if (Application::$app->user->isProfessional()) { ?>
+                <p>En tant que proffessionnel vous ne pouvez pas rédiger d'avis.</p>
+            <?php } ?>
+
             <!-- Creation form -->
             <?php if (Application::$app->isAuthenticated()) { ?>
                 <?php $opinionForm = Form::begin('', "post", "opinion-form", "flex flex-col gap-2", 'multipart/form-data'); ?>

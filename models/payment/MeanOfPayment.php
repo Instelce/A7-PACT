@@ -6,7 +6,8 @@ use app\core\DBModel;
 
 class MeanOfPayment extends DBModel
 {
-    public int $payment_id = 0;
+    public int $id = 0;
+
     public static function tableName(): string
     {
         return 'mean_of_payment';
@@ -19,7 +20,7 @@ class MeanOfPayment extends DBModel
 
     public static function pk(): string
     {
-        return 'payment_id';
+        return 'id';
     }
 
     public function rules(): array

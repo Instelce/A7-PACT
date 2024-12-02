@@ -55,6 +55,17 @@ class TaskManager
 
     public function runTask(string $taskName): void
     {
+        $task = $this->getTask($taskName);
+        if ($task && $task->runCondition()) {
+            echo "Running task $taskName" . PHP_EOL;
+            $task->run();
+        } else {
+            echo "Task $taskName cannot be run" . PHP_EOL;
+        }
+    }
+
+    public function runTaskWithoutContidion(string $taskName)
+    {
         echo "Running task $taskName" . PHP_EOL;
         $this->getTask($taskName)?->run();
     }

@@ -7,6 +7,7 @@ use app\core\Controller;
 use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
+use app\core\Utils;
 use app\middlewares\BackOfficeMiddleware;
 use app\models\account\UserAccount;
 use app\models\Address;
@@ -100,6 +101,7 @@ class DashboardController extends Controller
     }
 
     public function invoicesPDF(Request $request, Response $response, $routeParams){
+        $pk = $routeParams['pk'];
         $invoiceId = $routeParams['pk'];
         $invoice = Invoice::findOneByPk($routeParams['pk']);
         $offer = Offer::findOneByPk($invoice->offer_id);
@@ -117,15 +119,21 @@ class DashboardController extends Controller
         $HTPrice = NULL;
         $TVA = 20;
         $TTCPrice = NULL;
-        
-        return $this->pdf("Facture $invoiceId", 'invoicePreview', [
+
+        $download = false;
+        if ($request->isGet() && $request->getQueryParams('download') == 'true') {
+            $download = true;
+        }
+
+        $month = Utils::monthConversion($invoice->service_date);
+        return $this->pdf("Facture $pk - $month - $offer->title", 'invoicePreview', [
             'pk' => $routeParams['pk'],
             'invoice' => $invoice,
             'offer' => $offer,
             'user' => $user,
             'professional' => $professional,
             'professionalAddress' => $professionalAddress,
-        ]);
+        ], $download);
     }
 
 }
