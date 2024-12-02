@@ -87,8 +87,16 @@ class DashboardController extends Controller
     {
         $invoices = Invoice::query()->join(new Offer())->filters(['offer__professional_id' => Application::$app->user->account_id])->make();
         $offers = Offer::find(['professional_id' => Application::$app->user->account_id]);
+        $subscriptions = [];
 
-        return $this->render('/dashboard/factures', ['invoices' => $invoices, 'offers' => $offers]);
+        foreach ($offers as $offer) {
+            $subscription = $offer->subscription();
+            if ($subscription) {
+                $subscriptions[] = $subscription;
+            }
+        }
+
+        return $this->render('/dashboard/factures', ['invoices' => $invoices, 'offers' => $offers, 'subscriptions' => $subscriptions]);
     }
 
     public function invoicesPDF(Request $request, Response $response, $routeParams){

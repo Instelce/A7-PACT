@@ -143,4 +143,14 @@ class Application
 
         return null;
     }
+
+    public static function assets(string $path): string
+    {
+        return Application::$ROOT_DIR . '/html/assets/' . $path;
+    }
+
+    public static function url(string $path): string
+    {
+        return $_ENV['DOMAIN'] . $path;
+    }
 }

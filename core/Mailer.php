@@ -35,7 +35,7 @@ class Mailer
         $this->mailer->addAddress($to);
         $this->mailer->isHTML(true);
         $this->mailer->Subject = $subject;
-        $this->mailer->Body = Application::$app->view->renderOnlyView("mail/" . $view, $params);
+        $this->mailer->Body = Application::$app->view->renderOnlyViewWithLayout("mail", "mail/" . $view, $params);
         $this->mailer->AltBody = strip_tags($this->mailer->Body);
         $this->mailer->send();
     }

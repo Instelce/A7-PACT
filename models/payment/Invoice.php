@@ -3,6 +3,7 @@
 namespace app\models\payment;
 
 use app\core\DBModel;
+use app\models\offer\Offer;
 
 class Invoice extends DBModel
 {
@@ -26,5 +27,10 @@ class Invoice extends DBModel
     public function attributes(): array
     {
         return ['issue_date', 'service_date', 'due_date', 'offer_id'];
+    }
+
+    public function offer()
+    {
+        return Offer::findOne(['id' => $this->offer_id]);
     }
 }

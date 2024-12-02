@@ -134,7 +134,7 @@ $this->cssFile = "dashboard/offers";
                             <div id="option-dates" class="flex gap-4 mt-2 w-full">
                                 <x-input>
                                     <p slot="label">Date de lancement</p>
-                                    <input slot="input" type="date" step="7" name="launch_date" value="<?php echo date('Y-m-d', strtotime("last Monday")) ?>">
+                                    <input slot="input" type="date" step="7" name="launch_date" value="<?php echo date('Y-m-d', strtotime("next Monday")) ?>" min="<?php echo date('Y-m-d', strtotime("next Monday")) ?>">
                                     <p slot="helper">L'option prendra effet en début de semaine</p>
                                 </x-input>
                                 <x-input>

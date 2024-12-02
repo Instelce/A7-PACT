@@ -9,8 +9,8 @@ use app\core\Mailer;
 
 ?>
 <div class="flex gap-2">
-    <x-tabs class="column">
-        <x-tab role="heading" slot="tab">
+    <x-tabs class="column" save>
+        <x-tab role="heading" slot="tab" id="info">
             <i data-lucide="user"></i>
             Informations personnelles
         </x-tab>
@@ -23,7 +23,7 @@ use app\core\Mailer;
             <?php $form = \app\core\form\Form::begin('', 'post', '', 'flex flex-col justify-center items-center') ?>
             <input type="hidden" name="form-name" value="update-main">
             <div class="flex flex-col w-full gap-6">
-                <div class="form-inputs">
+                <div class="form-inputs flex flex-col gap-1">
                     <div class="flex gap-4">
                         <?php echo $form->field($model, 'lastname') ?>
                         <?php echo $form->field($model, 'firstname') ?>
@@ -88,24 +88,18 @@ use app\core\Mailer;
             <?php \app\core\form\Form::end() ?>
         </x-tab-panel>
 
-        <?php if (Application::$app->user->isProfessional()) { ?>
-            <x-tab role="heading" slot="tab">
-                <i data-lucide="euro"></i>
-                Paiement
-            </x-tab>
-            <?php } ?>
-
-        <x-tab role="heading" slot="tab">
+        <x-tab role="heading" slot="tab" id="securite">
             <i data-lucide="key"></i>
             Sécurité
         </x-tab>
+
         <x-tab-panel role="region" slot="panel">
             <div class="flex flex-col gap-4">
-                <form method="post">
+                <form method="post" class="flex">
                     <input type="hidden" name="form-name" value="reset-password">
                     <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
                 </form>
-<!--            <button id ="accountDelete" type="submit" class="button w-full danger">Supprimer mon compte</button> -->
+                <button id ="accountDelete" type="submit" class="button danger">Supprimer mon compte</button>
             </div>
         </x-tab-panel>
     </x-tabs>
@@ -123,7 +117,7 @@ use app\core\Mailer;
             class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px]
         w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
             <div>
-                <h1  class="heading-1">Ajout de votre photo de profil</h1>
+                <h1  class="heading-1">Modification de votre photo de profil</h1>
             </div>
             <div>
                 <img class="w-[125px] h-[125px] rounded-full object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
@@ -142,11 +136,11 @@ use app\core\Mailer;
                     </button>
                 </div>
             </div>
-            <div class="flex flex-row gap-4">
-                <div class="w-[400px]">
+            <div class="flex gap-4">
+                <div class="w-[250px]">
                     <button type="button" class="button w-full gray">Annuler</button>
                 </div>
-                <div class="w-[400px]">
+                <div class="w-[250px]">
                     <button type="submit" class="button w-full">Enregistrer les modifications</button>
                 </div>
             </div>
