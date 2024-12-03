@@ -12,7 +12,17 @@ $this->waves = true;
 ?>
 
 <main class="homeDisplay">
-    <h1 class="heading-1">Découvrez Lannion</h1>
+    <h1 class="heading-1">
+        Découvrez
+        <div class="rotating-text-container">
+            <span style="--i: 0">Lannion</span>
+            <span style="--i: 1">Saint-Brieuc</span>
+            <span style="--i: 2">Plouha</span>
+            <span style="--i: 3">Lorient</span>
+            <span style="--i: 4">Brest</span>
+            <span style="--i: 4">Plouzané</span>
+        </div>
+    </h1>
 
     <x-input rounded class="w-[600px]">
         <input slot="input" type="text" placeholder="Recherchez des activités, visites, spectacles..." id="searchBar">

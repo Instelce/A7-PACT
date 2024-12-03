@@ -137,3 +137,64 @@
 .home-card .price-text{
     color: black;
 }
+
+/*Rotating Text*/
+
+.rotating-text-container {
+    display: inline-flex;
+    flex-direction: column;
+    height: 2.5rem;
+    overflow: hidden;
+}
+
+.rotating-text-container span {
+    height: 2.3rem;
+    color: rgb(var(--color-blue-light));
+    animation: moveUp 10s linear infinite;
+}
+
+@keyframes moveUp {
+    0% {
+        transform: translateY(0);
+    }
+
+    5% {
+        transform: translateY(0);
+    }
+
+    15% {
+        transform: translateY(-2.3rem);
+    }
+
+    25% {
+        transform: translateY(-2.3rem);
+    }
+
+    35% {
+        transform: translateY(-4.6rem);
+    }
+
+    45% {
+        transform: translateY(-4.6rem);
+    }
+
+    55% {
+        transform: translateY(-6.9rem);
+    }
+
+    65% {
+        transform: translateY(-6.9rem);
+    }
+
+    75% {
+        transform: translateY(-9.2rem);
+    }
+
+    95% {
+        transform: translateY(-9.2rem);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
