@@ -48,8 +48,9 @@ class MemberUpdateForm extends Model
             $this->phone = $this->memberUser->phone;
             $this->pseudo = $this->memberUser->pseudo;
             $this->notification = $this->memberUser->allows_notifications;
-        }
+        };
     }
+
 
     public function update()
     {
@@ -121,7 +122,7 @@ class MemberUpdateForm extends Model
             'postalCode' => '22300',
             'city' => 'Lannion',
             'phone' => '01 23 45 67 89',
-            'notifications' => '*******',
+            //'notifications' => '*******',
         ];
     }
 }

@@ -19,11 +19,9 @@ class MemberRegisterForm extends Model
     public string $streetName = '';
     public string $postalCode = '';
     public string $city = '';
-    public string $country = '';
     public string $phone = '';
     public string $password = '';
     public string $passwordConfirm = '';
-
     public bool $notification = false;
 
     public function register()
@@ -110,7 +108,7 @@ class MemberRegisterForm extends Model
             'city' => 'Lannion',
             'phone' => '01 23 45 67 89',
             'passwordConfirm' => '********',
-            'notifications' => '*******',
+            //'notifications' => '*******',
         ];
     }
 }

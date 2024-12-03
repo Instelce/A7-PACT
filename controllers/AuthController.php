@@ -173,6 +173,10 @@ class AuthController extends Controller
             }
         }
 
+        echo '<pre>';
+        var_dump($form);
+        echo '</pre>';
+
         if ($request->isPost() && $request->formName() == "update-avatar") {
             $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
             Application::$app->user->avatar_url=$avatarPath;
@@ -189,6 +193,7 @@ class AuthController extends Controller
             Application::$app->session->setFlash('success', "Un mail a bien été envoyé a l'adresse $mail");
             $response->redirect('/comptes/modification');
         }
+
         return $this->render('auth/update-member-account', ['model' => $form]);
     }
 
