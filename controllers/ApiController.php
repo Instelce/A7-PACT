@@ -85,6 +85,9 @@ class ApiController extends Controller
         if ($maximumPrice) {
             $where[] = ['minimum_price', $maximumPrice, '<=', 'maximum_price'];
         }
+        if ($rating) {
+            $where[] = ['rating', $rating, '>='];
+        }
 
 
         if (in_array('price_asc', $order_by)) {
@@ -95,6 +98,16 @@ class ApiController extends Controller
             $order_by = array_diff($order_by, ['price_desc']);
             $order_by[] = 'minimum_price DESC';
             $where[] = ['minimum_price', '0', '>', 'minimum_priceDesc'];
+        }
+
+        if (in_array('rating_asc', $order_by)) {
+            $order_by = array_diff($order_by, ['rating_asc']);
+            $order_by[] = 'rating ASC';
+            $where[] = ['rating', '0', '>', 'ratingAsc'];
+        } elseif (in_array('rating_desc', $order_by)) {
+            $order_by = array_diff($order_by, ['rating_desc']);
+            $order_by[] = 'rating DESC';
+            $where[] = ['rating', '0', '>', 'ratingDesc'];
         }
 
 
@@ -114,26 +127,26 @@ class ApiController extends Controller
                 ->group_by(['offer.id'])
                 ->having('AVG(opinion.rating) >= ' . $rating);
         }
-        if ($minimumEventDate && $maximumEventDate) {
+        // if ($minimumEventDate && $maximumEventDate) {
 
-            $query->joinString("JOIN offer_period ON offer.id = offer_period.offer_id")
-                ->filters([
-                    ['offer_period__start_date', "TO_DATE(cast($minimumEventDate, DATE), 'YYYY-MM-DD')", '>='],
-                    ['offer_period__end_date', "TO_DATE(cast($maximumEventDate, DATE), 'YYYY-MM-DD')", '<='],
-                ])
-            ;
-        }
-        if ($open) {
-            $query->joinString("INNER JOIN link_schedule ON link_schedule.offer_id = offer.id")
-                ->joinString("INNER JOIN offer_schedule ON offer_schedule.id = link_schedule.schedule_id")
-                ->filters([
-                    ['offer_schedule__opening_hours', 'fermé', '!='],
-                    ['offer_schedule__closing_hours', 'fermé', '!='],
-                    ['offer_schedule__opening_hours', date('H:i'), '<='],
-                    ['offer_schedule__closing_hours', date('H:i'), '>='],
-                ])
-                ->group_by(['offer.id']);
-        }
+        //     $query->joinString("JOIN offer_period ON offer.id = offer_period.offer_id")
+        //         ->filters([
+        //             ['offer_period__start_date', "TO_DATE(cast($minimumEventDate, DATE), 'YYYY-MM-DD')", '>='],
+        //             ['offer_period__end_date', "TO_DATE(cast($maximumEventDate, DATE), 'YYYY-MM-DD')", '<='],
+        //         ])
+        //     ;
+        // }
+        // if ($open) {
+        //     $query->joinString("INNER JOIN link_schedule ON link_schedule.offer_id = offer.id")
+        //         ->joinString("INNER JOIN offer_schedule ON offer_schedule.id = link_schedule.schedule_id")
+        //         ->filters([
+        //             ['offer_schedule__opening_hours', 'fermé', '!='],
+        //             ['offer_schedule__closing_hours', 'fermé', '!='],
+        //             ['offer_schedule__opening_hours', date('H:i'), '<='],
+        //             ['offer_schedule__closing_hours', date('H:i'), '>='],
+        //         ])
+        //         ->group_by(['offer.id']);
+        // }
 
         /** @var Offer[] $offers */
         $offers = $query->make();

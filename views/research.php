@@ -22,7 +22,7 @@ $iconsNames = [
 ];
 ?>
 <!-- Search bar, sort and filter -->
-<div class="flex flex-col mb-4">
+<div class="flex flex-col mb-10">
     <x-input rounded>
         <input class="search-input" slot="input" type="text" placeholder="Rechercher">
         <button slot="button" class="button only-icon sm">
@@ -34,15 +34,15 @@ $iconsNames = [
         foreach ($filtersNames as $key => $filterName) {
             $iconName = $iconsNames[$key];
             ?>
-        <button id="<?php echo strtolower($filterName); ?>" class="category-item">
-            <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
-            <span><?php echo htmlentities($filterName); ?></span>
-        </button>
-        <?php
+            <button id="<?php echo strtolower($filterName); ?>" class="category-item">
+                <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
+                <span><?php echo htmlentities($filterName); ?></span>
+            </button>
+            <?php
         }
         ?>
     </div>
-    <div class="flex gap-2 w-full">
+    <div class="flex gap-2 w-full mt-2">
         <button id="filterButton" class="button gray w-full">
             <span>Plus de filtres</span>
             <i data-lucide="sliders-horizontal" class="w-[18px] h-[18px]"> </i>
@@ -89,15 +89,16 @@ $iconsNames = [
                 <input slot="input" type="text" placeholder="Ville" class="searchCity">
             </x-input>
             <div class="hidden lg:flex flex-col hidden lg:block">
-                <span class="text-base font-bold text-black">Tries</span>
+                <span class="text-base font-bold text-black">Tris</span>
                 <div class="h-px bg-zinc-400 mt-2"></div>
             </div>
             <x-select id="sortPrice">
                 <span slot="trigger">Tri par prix</span>
                 <div slot="options">
-                    <div data-value="croissant">Prix croissant <svg xmlns="http://www.w3.org/2000/svg" width="20"
-                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-narrow-wide">
+                    <div data-value="croissant" class="selected">Prix croissant <svg xmlns="http://www.w3.org/2000/svg"
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-arrow-down-narrow-wide">
                             <path d="m3 16 4 4 4-4" />
                             <path d="M7 20V4" />
                             <path d="M11 4h4" />
@@ -105,6 +106,31 @@ $iconsNames = [
                             <path d="M11 12h10" />
                         </svg></div>
                     <div data-value="decroissant">Prix décroissant <svg xmlns="http://www.w3.org/2000/svg" width="20"
+                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-wide-narrow">
+                            <path d="m3 16 4 4 4-4" />
+                            <path d="M7 20V4" />
+                            <path d="M11 4h10" />
+                            <path d="M11 8h7" />
+                            <path d="M11 12h4" />
+                        </svg></div>
+                </div>
+            </x-select>
+
+            <x-select id="sortRating">
+                <span slot="trigger">Tri par Avis</span>
+                <div slot="options">
+                    <div data-value="croissant" class="selected">Notes croissantes <svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-arrow-down-narrow-wide">
+                            <path d="m3 16 4 4 4-4" />
+                            <path d="M7 20V4" />
+                            <path d="M11 4h4" />
+                            <path d="M11 8h7" />
+                            <path d="M11 12h10" />
+                        </svg></div>
+                    <div data-value="decroissant">Notes décroissantes <svg xmlns="http://www.w3.org/2000/svg" width="20"
                             height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                             stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-wide-narrow">
                             <path d="m3 16 4 4 4-4" />

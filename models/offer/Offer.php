@@ -56,7 +56,7 @@ class Offer extends DBModel
     public function rules(): array
     {
         return [
-//            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
+            //            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
 //            'summary' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]],
 //            'description' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 1024]],
 //            'website' => [],
@@ -141,14 +141,16 @@ class Offer extends DBModel
         };
     }
 
-    public function addPhoto(string $url) {
+    public function addPhoto(string $url)
+    {
         $photo = new OfferPhoto();
         $photo->offer_id = $this->id;
         $photo->url_photo = $url;
         $photo->save();
     }
 
-    public function removePhoto(int $photoId) {
+    public function removePhoto(int $photoId)
+    {
         $photo = OfferPhoto::findOne(['id' => $photoId, 'offer_id' => $this->id]);
         if ($photo) {
             $photo->delete();
@@ -200,10 +202,11 @@ class Offer extends DBModel
         return count(Opinion::find(['offer_id' => $this->id, 'read' => 0]));
     }
 
-    public function isALaUne() {
+    public function isALaUne()
+    {
         return count(Subscription::query()
-                ->join(new Option())
-                ->filters(['offer_id' => $this->id, 'option__type' => Subscription::A_LA_UNE])->make()) > 0;
+            ->join(new Option())
+            ->filters(['offer_id' => $this->id, 'option__type' => Subscription::A_LA_UNE])->make()) > 0;
     }
 
     public function rating(): int
@@ -232,8 +235,8 @@ class Offer extends DBModel
         $lastMonthDay = date('t', strtotime(date('Y-m')));
         $status = $lastMonthHistories[count($lastMonthHistories) - 1]->switch_to;
         $count = 0;
-        
-//        echo "<pre>";
+
+        //        echo "<pre>";
 //        echo "Start status : ", $status;
 //        echo "</pre>";
 //
@@ -249,13 +252,13 @@ class Offer extends DBModel
                 $status = $lastDayHistory->switch_to;
             }
 
-//            echo $status . "($day)" . PHP_EOL;
+            //            echo $status . "($day)" . PHP_EOL;
 
             if ($status === "online") {
-                $count ++;
+                $count++;
             }
         }
-//        echo "</pre>";
+        //        echo "</pre>";
 
 
         return $count;

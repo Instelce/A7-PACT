@@ -311,7 +311,7 @@ $offre2->professional_id = 4;
 $offre2->address_id = 22;
 $offre2->minimum_price = 15;
 $offre2->save();
-$offre2->addSubscription("a_la_une",date('Y-m-d', strtotime("next Monday")),3);
+$offre2->addSubscription("a_la_une", date('Y-m-d', strtotime("next Monday")), 3);
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
 
@@ -447,7 +447,7 @@ $offre5->professional_id = 8;
 $offre5->address_id = 16;
 $offre5->minimum_price = 35;
 $offre5->save();
-$offre5->addSubscription("a_la_une",date('Y-m-d', strtotime("next Monday")),3);
+$offre5->addSubscription("a_la_une", date('Y-m-d', strtotime("next Monday")), 3);
 
 
 $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES ($offre5->id, 1.0, 3);");
@@ -598,7 +598,7 @@ $offre7->address_id = 25;
 $offre7->category = 'visit';
 $offre7->minimum_price = 20;
 $offre7->save();
-$offre7->addSubscription("a_la_une",date('Y-m-d', strtotime("next Monday")),3);
+$offre7->addSubscription("a_la_une", date('Y-m-d', strtotime("next Monday")), 3);
 
 
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre7->id . ", 1.5, true);");
@@ -629,7 +629,7 @@ $offre8->professional_id = 3;
 $offre8->address_id = 26;
 $offre8->category = 'visit';
 $offre8->save();
-$offre8->addSubscription("en_relief",date('Y-m-d', strtotime("next Monday")),3);
+$offre8->addSubscription("en_relief", date('Y-m-d', strtotime("next Monday")), 3);
 
 
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre8->id . ", 3.0, true);");
@@ -692,7 +692,7 @@ $offre10->address_id = 28;
 $offre10->category = 'activity';
 $offre10->minimum_price = 25;
 $offre10->save();
-$offre10->addSubscription("a_la_une",date('Y-m-d', strtotime("next Monday")),3);
+$offre10->addSubscription("a_la_une", date('Y-m-d', strtotime("next Monday")), 3);
 
 
 $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES (" . $offre10->id . ", 3.0, 6);");
@@ -1354,7 +1354,11 @@ foreach ($offers as $offer) {
         $opinion->created_at = date('Y-m-d H:i:s', strtotime('-' . rand(1, 365) . ' days'));
         $opinion->save();
         $account_ids[] = $opinion->account_id;
+
+        // $offer->rating = $offer->rating();
+        //$offer->save();
     }
+
 }
 
 echo "Database seeded successfully.\n";
