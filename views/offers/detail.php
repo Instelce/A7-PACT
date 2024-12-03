@@ -35,6 +35,9 @@ if ($status == "Fermé") {
     $class = "offer-open";
 }
 
+$longitude = $offer->address()->longitude;
+$latitude = $offer->address()->latitude;
+
 ?>
 
 <input id="offer-id" type="hidden" value="<?php echo $pk ?>">
@@ -424,15 +427,19 @@ if ($status == "Fermé") {
     <!-- Sidebar -->
     <aside class="sticky col-span-2 h-fit flex flex-col gap-4 top-navbar-height">
         <div class="map-container">
+            <!-- Generated with leaflet -->
             <div id="map" class="map"></div>
+            <input type="hidden" id="map-latitude" value="<?php echo $latitude ?>">
+            <input type="hidden" id="map-longitude" value="<?php echo $longitude ?>">
+
             <!-- <button class="button gray spaced">
                 Itinéraire
                 <i data-lucide="map"></i>
-            </button>
-            <button class="button gray spaced">
+            </button> -->
+            <a class="button gray spaced" href="https://maps.google.com/?q=<?php echo $latitude . ',' . $longitude ?>" target="_blank">
                 Ouvrir dans Maps
                 <i data-lucide="arrow-up-right"></i>
-            </button> -->
+            </a>
         </div>
 
         <?php if (Application::$app->user?->isProfessional() && Application::$app->user->specific()->hasOffer($pk)) { ?>

@@ -100,7 +100,7 @@ class Offer extends DBModel
 
     public function address(): Address
     {
-        return Address::findOne(['address_id' => $this->id]);
+        return Address::findOneByPk($this->address_id);
     }
 
     public function tags(): array

@@ -367,6 +367,9 @@ class OfferController extends Controller
             $opinion = Opinion::findOneByPk($request->getBody()['opinion_id']);
             $opinion->destroy();
             $userOpinion = false;
+
+            $offer->rating = $offer->rating();
+            $offer->update();
         }
 
         return $this->render('offers/detail', [

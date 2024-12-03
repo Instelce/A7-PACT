@@ -78,10 +78,9 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 // ---------------------------------------------------------------------- //
 // create offer adress
 // ---------------------------------------------------------------------- //
-
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
                                                                     (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
-                                                                    (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, 	-3.474171, 	48.800755),
+                                                                    (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, -3.5262799946878105, 48.784432468993565),
                                                                     (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
                                                                     (24, 13, 'Rue des Ruees', 'Tréhorenteuc', 56430, 48.00799182324886, -2.2850415831640905),
                                                                     (25, 7, 'Chau. des Corsaires', 'Saint-Malo', 35400, 48.64509472389327, -2.0183476266254274),
