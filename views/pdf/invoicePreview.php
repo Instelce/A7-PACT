@@ -14,7 +14,7 @@ use app\core\Utils;
 
 $url = $_ENV['DOMAIN'] . '/offres/' . $offer->id;
 
-$offerPrice = $offer->activeDays() * $type->price;
+$offerPrice = $invoice->activeDays() * $type->price;
 
 ?>
 
@@ -255,7 +255,7 @@ $offerPrice = $offer->activeDays() * $type->price;
             <tbody>
             <tr>
                 <td>Offre "<?php echo $type->type ?>" / jour</td>
-                <td><?php echo $offer->activeDays() ?></td>
+                <td><?php echo $invoice->activeDays() ?></td>
                 <td><?php echo $type->price ?> €</td>
                 <td><?php echo $offerPrice ?> €</td>
             </tr>

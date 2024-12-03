@@ -38,6 +38,24 @@ class Offer extends DBModel
     public string $created_at = '';
     public string $updated_at = '';
 
+    public function save(): bool
+    {
+        parent::save();
+
+        // Add history line
+        $history = new OfferStatusHistory();
+        $history->offer_id = $this->id;
+        if ($this->offline) {
+            $history->switch_to = "offline";
+        } else {
+            $history->switch_to = "online";
+        }
+        $history->created_at = date("Y-m-d", strtotime($this->created_at . "-1 days"));
+        $history->save();
+
+        return true;
+    }
+
     public static function tableName(): string
     {
         return 'offer';
@@ -233,33 +251,72 @@ class Offer extends DBModel
         $lastMonthHistories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m', strtotime("-1 month"))])->make();
         $histories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m')])->make();
         $lastMonthDay = date('t', strtotime(date('Y-m')));
-        $status = $lastMonthHistories[count($lastMonthHistories) - 1]->switch_to;
         $count = 0;
 
-        //        echo "<pre>";
-//        echo "Start status : ", $status;
-//        echo "</pre>";
-//
+        // Set status
+        if (empty($lastMonthHistories)) {
+            $status = $this->offline ? "offline" : "online";
+        } else {
+            $status = $lastMonthHistories[count($lastMonthHistories) - 1]->switch_to;
+        }
+
+//        echo $status;
+
 //        echo "<pre>";
         for ($day = 1; $day <= $lastMonthDay; $day++) {
             // Check if the status has change on this day
             $dayHistories = array_filter($histories, fn($history) => date('d', strtotime($history->created_at)) == $day);
             $dayHistories = array_values($dayHistories);
 
+            if (!empty($dayHistories)) {
+                $lastDayHistory = $dayHistories[count($dayHistories) - 1];
+                $status = $lastDayHistory->switch_to;
+            }
+
+//            echo $status . "($day)" . PHP_EOL;
+
+            if ($status === "online") {
+                $count++;
+            }
+        }
+//                echo "</pre>";
+
+
+        return $count;
+    }
+
+    public function activeDaysToNow(): int
+    {
+        $lastMonthHistories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m', strtotime("-1 month"))])->make();
+        $histories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m')])->make();
+        $currentDay = date('d');
+        $count = 0;
+
+        // Set status
+        if (empty($lastMonthHistories)) {
+            $status = $this->offline ? "offline" : "online";
+        } else {
+            $status = $lastMonthHistories[count($lastMonthHistories) - 1]->switch_to;
+        }
+
+//        echo "<pre>";
+        for ($day = 1; $day <= $currentDay; $day++) {
+            // Check if the status has change on this day
+            $dayHistories = array_filter($histories, fn($history) => date('d', strtotime($history->created_at)) == $day);
+            $dayHistories = array_values($dayHistories);
 
             if (!empty($dayHistories)) {
                 $lastDayHistory = $dayHistories[count($dayHistories) - 1];
                 $status = $lastDayHistory->switch_to;
             }
 
-            //            echo $status . "($day)" . PHP_EOL;
+//            echo $status . "($day)" . PHP_EOL;
 
             if ($status === "online") {
                 $count++;
             }
         }
-        //        echo "</pre>";
-
+//        echo "</pre>";
 
         return $count;
     }

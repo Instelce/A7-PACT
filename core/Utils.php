@@ -27,6 +27,11 @@ class Utils
         return strftime('%d %B %Y', strtotime($date));
     }
 
+    public static function formatDateWithSlash(string $date): string
+    {
+        return strftime('%d/%m/%Y', strtotime($date));
+    }
+
     public static function formatTypeString(string $type)
     {
         return ucfirst(str_replace('_', ' ', $type));

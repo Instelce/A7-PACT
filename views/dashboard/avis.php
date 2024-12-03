@@ -60,6 +60,7 @@ $this->jsFile = "dashboard/avis";
                     Non lu
                     <input id="filter-non-lu" type="radio" name="filter" value="read">
                 </label>
+                <!--
                 <label for="a" class="button gray">
                     <i data-lucide="message-square-more"></i>
                     Non répondu
@@ -69,7 +70,7 @@ $this->jsFile = "dashboard/avis";
                     <i data-lucide="ban"></i>
                     Blacklisté
                     <input id="filter-blackliste" type="radio" name="filter" value="blacklisted">
-                </label>
+                </label> -->
             </div>
         </header>
 

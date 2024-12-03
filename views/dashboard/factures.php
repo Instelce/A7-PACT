@@ -21,11 +21,10 @@ foreach ($invoices as $i => $invoice) {
 
 $monthTotal = 0;
 $activeDaysTotal = 0;
-foreach ($invoices as $invoice) {
-    /** @var \app\models\offer\Offer $offer */
-    $offer = $invoice->offer();
-    $monthTotal += $offer->type()->price * $offer->activeDays();
-    $activeDaysTotal += $offer->activeDays();
+foreach ($offers as $offer) {
+    $offer->activeDaysToNow();
+    $monthTotal += $offer->type()->price * $offer->activeDaysToNow();
+    $activeDaysTotal += $offer->activeDaysToNow();
 }
 
 ?>
@@ -95,8 +94,8 @@ foreach ($invoices as $invoice) {
 
                             <div class="flex flex-col gap-0.5">
                                 <p class="flex gap-2 items-center">
-                                    Du <?php echo Utils::formatDate($subscription->launch_date) ?>
-                                    au <?php echo Utils::formatDate($subscription->endDate()) ?>
+                                    Du <?php echo Utils::formatDateWithSlash($subscription->launch_date) ?>
+                                    au <?php echo Utils::formatDateWithSlash($subscription->endDate()) ?>
                                     <span class="dot"></span> <?php echo $subscription->duration ?>
                                     semaines</p>
                                 <?php if ($subscription->isActive()) { ?>
@@ -115,7 +114,7 @@ foreach ($invoices as $invoice) {
                             <span
                                 class="heading-1 font-normal font-title"><?php echo $option->price * $subscription->duration ?> € <span
                                     class="text-sm">HT</span></span>
-                            <span>pour le <?php echo date("d/m", strtotime($subscription->endDate())) ?></span>
+                            <span class="text-gray-4">pour le <?php echo date("d/m", strtotime($subscription->endDate())) ?></span>
                         </div>
                     </article>
                 <?php } ?>
@@ -131,7 +130,7 @@ foreach ($invoices as $invoice) {
         <div class="mt-8">
             <h2 class="section-header">Vos factures</h2>
 
-            <div class="flex flex-col gap-5">
+            <div class="flex flex-col gap-2">
                 <?php foreach ($invoiceMonths as $month => $couple) { ?>
                     <div class="accordion">
                         <div class="accordion-trigger">
@@ -143,7 +142,7 @@ foreach ($invoices as $invoice) {
                                 /** @var \app\models\payment\Invoice $invoice */
                                 /** @var \app\models\offer\Offer $offer */
                                 [$invoice, $offer] = $data;
-                                $activeDays = $offer->activeDays();
+                                $activeDays = $invoice->activeDays();
                                 $badgeColor = match ($offer->type()->type) {
                                     "premium" => "yellow",
                                     "standard" => "blue",
@@ -158,12 +157,34 @@ foreach ($invoices as $invoice) {
                                                 class="badge <?php echo $badgeColor ?>"><?php echo ucfirst($offer->type()->type) ?></span>
                                         </header>
 
+                                        <div class="card-histories hidden">
+                                            <div class="week-days">
+                                                <span>Lun</span>
+                                                <span>Mar</span>
+                                                <span>Mer</span>
+                                                <span>Jeu</span>
+                                                <span>Ven</span>
+                                                <span>Sam</span>
+                                                <span>Dim</span>
+                                            </div>
+                                            <div class="calendar">
+                                                <!-- Offset of the last month day -->
+                                                <?php for ($i = 1; $i < date('N', strtotime($invoice->issue_date)); $i++) { ?>
+                                                    <span class="last-month"></span>
+                                                <?php } ?>
+                                                <!-- Day of the current month -->
+                                                <?php foreach ($invoice->histories() as $day => $status) { ?>
+                                                    <span class="<?php echo $status === "offline" ? "" : "active" ?>">
+                                                        <?php echo $day ?>
+                                                    </span>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+
                                         <div class="card-buttons">
-                                            <a href="/factures/<?php echo $invoice->id ?>"
-                                               class="button gray sm" title="Voir l'historique du status de l'offre">
-                                                Historique
-                                                <i data-lucide="history"></i>
-                                            </a>
+                                            <button id="toggle-histories" class="button gray sm" title="Voir l'historique du status de l'offre">
+                                                Voir l'historique
+                                            </button>
 
                                             <a href="/factures/<?php echo $invoice->id ?>?download=true"
                                                class="button gray sm" target="_blank" title="Télécharger la facture">

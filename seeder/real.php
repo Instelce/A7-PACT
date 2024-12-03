@@ -4,6 +4,7 @@ use app\core\Application;
 use app\models\account\Account;
 use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
+use app\models\offer\OfferStatusHistory;
 use app\models\offer\OfferTag;
 use app\models\offer\RestaurantOffer;
 use app\models\offer\AttractionParkOffer;
@@ -11,6 +12,7 @@ use app\models\offer\ActivityOffer;
 use app\models\Meal;
 use app\models\offer\schedule\OfferSchedule;
 use app\models\opinion\Opinion;
+use app\models\payment\Invoice;
 use app\models\user\MemberUser;
 
 
@@ -59,6 +61,11 @@ function generatePhoneNumber()
         $phone .= rand(0, 9);
     }
     return $phone;
+}
+
+function randomOfferDate(): string
+{
+    return date('Y-m-d', rand(strtotime("2024-10-01"), strtotime("2024-11-30")));
 }
 
 $db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, option, subscription, offer, offer_type, offer_period, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
@@ -201,6 +208,7 @@ $offre1->category = 'restaurant';
 $offre1->professional_id = 3;
 $offre1->address_id = 21;
 $offre1->offer_type_id = 1;
+$offre1->created_at = randomOfferDate();
 $offre1->save();
 
 //type offres
@@ -310,8 +318,9 @@ $offre2->offer_type_id = 2;
 $offre2->professional_id = 4;
 $offre2->address_id = 22;
 $offre2->minimum_price = 15;
+$offre2->created_at = randomOfferDate();
 $offre2->save();
-$offre2->addSubscription("a_la_une", date('Y-m-d', strtotime("next Monday")), 3);
+$offre2->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
 
@@ -386,6 +395,7 @@ $offre3->professional_id = 5;
 $offre3->address_id = 23;
 $offre3->category = 'visit';
 $offre3->minimum_price = 25;
+$offre3->created_at = randomOfferDate();
 $offre3->save();
 
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre3->id . ", 1.5, true);");
@@ -418,6 +428,7 @@ $offre4->offer_type_id = 2;
 $offre4->professional_id = 6;
 $offre4->address_id = 24;
 $offre4->minimum_price = 12;
+$offre4->created_at = randomOfferDate();
 $offre4->save();
 
 $db->pdo->exec("INSERT INTO offer_period (id,offer_id, start_date,end_date) VALUES (1,$offre4->id,'2024-06-01', '2024-09-01');");
@@ -446,8 +457,9 @@ $offre5->offer_type_id = 2;
 $offre5->professional_id = 8;
 $offre5->address_id = 16;
 $offre5->minimum_price = 35;
+$offre5->created_at = randomOfferDate();
 $offre5->save();
-$offre5->addSubscription("a_la_une", date('Y-m-d', strtotime("next Monday")), 3);
+$offre5->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
 
 
 $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES ($offre5->id, 1.0, 3);");
@@ -523,6 +535,7 @@ $offre6->offer_type_id = 2;
 $offre6->professional_id = 9;
 $offre6->address_id = 17;
 $offre6->minimum_price = 18;
+$offre6->created_at = randomOfferDate();
 $offre6->save();
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre6->id . ", 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
@@ -597,8 +610,9 @@ $offre7->professional_id = 4;
 $offre7->address_id = 25;
 $offre7->category = 'visit';
 $offre7->minimum_price = 20;
+$offre7->created_at = randomOfferDate();
 $offre7->save();
-$offre7->addSubscription("a_la_une", date('Y-m-d', strtotime("next Monday")), 3);
+$offre7->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
 
 
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre7->id . ", 1.5, true);");
@@ -628,8 +642,9 @@ $offre8->offer_type_id = 1;
 $offre8->professional_id = 3;
 $offre8->address_id = 26;
 $offre8->category = 'visit';
+$offre8->created_at = randomOfferDate();
 $offre8->save();
-$offre8->addSubscription("en_relief", date('Y-m-d', strtotime("next Monday")), 3);
+$offre8->addSubscription("en_relief", date('Y-m-d', strtotime("last Monday")), 3);
 
 
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre8->id . ", 3.0, true);");
@@ -661,6 +676,7 @@ $offre9->professional_id = 5;
 $offre9->address_id = 27;
 $offre9->category = 'visit';
 $offre9->minimum_price = 12;
+$offre9->created_at = randomOfferDate();
 $offre9->save();
 
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre9->id . ", 2.5, true);");
@@ -691,8 +707,9 @@ $offre10->professional_id = 4;
 $offre10->address_id = 28;
 $offre10->category = 'activity';
 $offre10->minimum_price = 25;
+$offre10->created_at = randomOfferDate();
 $offre10->save();
-$offre10->addSubscription("a_la_une", date('Y-m-d', strtotime("next Monday")), 3);
+$offre10->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
 
 
 $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES (" . $offre10->id . ", 3.0, 6);");
@@ -709,36 +726,12 @@ for ($i = 0; $i < 3; $i++) {
 // photos offre1
 // ---------------------------------------------------------------------- //
 
-$photosCafe1 = new OfferPhoto();
-$photosCafe1->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/e7/89/7e/cafe-des-halles.jpg?w=1000&h=-1&s=1';
-$photosCafe1->offer_id = $offre1->id;
-$photosCafe1->save();
-
-
-$photosCafe2 = new OfferPhoto();
-$photosCafe2->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/62/5d/a4/cafe-des-halles.jpg?w=800&h=-1&s=1';
-$photosCafe2->offer_id = $offre1->id;
-$photosCafe2->save();
-
-$photosCafe3 = new OfferPhoto();
-$photosCafe3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/16/c0/23/nos-plats.jpg?w=1000&h=-1&s=1';
-$photosCafe3->offer_id = $offre1->id;
-$photosCafe3->save();
-
-$photosCafe4 = new OfferPhoto();
-$photosCafe4->url_photo = 'https://media-cdn.tripadvisor.com/media/photo-s/1b/80/31/6a/cafe-des-halles.jpg';
-$photosCafe4->offer_id = $offre1->id;
-$photosCafe4->save();
-
-$photosCafe5 = new OfferPhoto();
-$photosCafe5->url_photo = 'https://img.lacarte.menu/storage/media/company_gallery/8769476/conversions/contribution_gallery.jpg';
-$photosCafe5->offer_id = $offre1->id;
-$photosCafe5->save();
-
-$photosCafe5 = new OfferPhoto();
-$photosCafe5->url_photo = 'https://menu.restaurantguru.com/m9/Cafe-Des-Halles-Lannion-menu.jpg';
-$photosCafe5->offer_id = $offre1->id;
-$photosCafe5->save();
+$offre1->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/e7/89/7e/cafe-des-halles.jpg?w=1000&h=-1&s=1');
+$offre1->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/62/5d/a4/cafe-des-halles.jpg?w=800&h=-1&s=1');
+$offre1->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/16/c0/23/nos-plats.jpg?w=1000&h=-1&s=1');
+$offre1->addPhoto('https://media-cdn.tripadvisor.com/media/photo-s/1b/80/31/6a/cafe-des-halles.jpg');
+$offre1->addPhoto('https://img.lacarte.menu/storage/media/company_gallery/8769476/conversions/contribution_gallery.jpg');
+$offre1->addPhoto('https://menu.restaurantguru.com/m9/Cafe-Des-Halles-Lannion-menu.jpg');
 
 // ---------------------------------------------------------------------- //
 // photos offre2
@@ -1360,6 +1353,60 @@ foreach ($offers as $offer) {
     }
 
 }
+
+// ---------------------------------------------------------------------------------------------- //
+// Generate offer status histories
+// ---------------------------------------------------------------------------------------------- //
+
+foreach ($offers as $offer) {
+    $date = $offer->created_at;
+    $date = new DateTime($date);
+    $date->modify('first day of this month');
+    $today = new DateTime();
+    $today->modify('first day of this month');
+
+    while ($date < $today && $date->format("m") != $today->format("m")) {
+        if (rand(0, 1) == 0) {
+            $status = new OfferStatusHistory();
+            $status->offer_id = $offer->id;
+            $status->switch_to = $offer->offline ? "offline" : "online";
+            $status->created_at = $date->format('Y-m-d');
+            $status->save();
+
+            $offer->offline = !$offer->offline;
+            $offer->update();
+        }
+
+        $date->modify('+6 days');
+    }
+}
+
+
+// ---------------------------------------------------------------------------------------------- //
+// Generate invoice for offer of the each month since the creation of the offer
+// ---------------------------------------------------------------------------------------------- //
+
+
+foreach ($offers as $offer) {
+    $date = $offer->created_at;
+    $date = new DateTime($date);
+    $date->modify('first day of this month');
+    $today = new DateTime();
+    $today->modify('first day of this month');
+
+    while ($date < $today && $date->format("m") != $today->format("m")) {
+        $invoice = new Invoice();
+        $invoice->offer_id = $offer->id;
+        $invoice->issue_date = $date->format('Y-m-d');
+        $due_date = new DateTime($date->format('Y-m-d'));
+        $invoice->due_date = $due_date->modify('+15 days')->format('Y-m-d');
+        $invoice->service_date = $date->format("m");
+        $invoice->save();
+
+        $date->modify('+1 month');
+    }
+}
+
 
 echo "Database seeded successfully.\n";
 
