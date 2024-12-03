@@ -55,9 +55,8 @@ $latitude = $offer->address()->latitude;
 
         <!-- Header -->
         <header class="page-header">
-            <div class="flex gap-3 items-center">
+            <div class="flex gap-3 items-center flex-wrap">
                 <h2 class="heading-2 font-title"><?php echo $offerData["title"] ?></h2> <!-- title -->
-                <span class="dot"></span>
                 <div class="stars" data-number="<?php echo $offerData["rating"] ?>"></div>
                 <p>(<?php echo $offer->opinionsCount() ?> avis)</p>
             </div>
