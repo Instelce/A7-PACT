@@ -79,18 +79,18 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 // create offer adress
 // ---------------------------------------------------------------------- //
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
-                                                                    (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
+                                                                    (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597, 48.7326), 
                                                                     (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, -3.5262799946878105, 48.784432468993565),
                                                                     (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
-                                                                    (24, 13, 'Rue des Ruees', 'Tréhorenteuc', 56430, 48.00799182324886, -2.2850415831640905),
-                                                                    (25, 7, 'Chau. des Corsaires', 'Saint-Malo', 35400, 48.64509472389327, -2.0183476266254274),
-                                                                    (26, 1, 'place abbé Gillard', 'Tréhorenteuc', 56430 ,48.007504883778765, -2.2872720618427955),
-                                                                    (27, 34, 'Sentier des Douaniers', 'Plogoff', 29770 ,48.03667645649522, -4.6664956672893725),
-                                                                    (28, 1, 'All. de l\`Embarcadere', 'Baden', 56870, 47.60272463103174, -2.8604925767306435),
-                                                                    (16, 1, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
-                                                                    (17, 1, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
-                                                                    (18, 1, 'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104),
-                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230,48.041895277402126, -1.6674224847189223);");
+                                                                    (24, 13, 'Rue des Ruees', 'Tréhorenteuc', 56430, -2.2850415831640905, 48.00799182324886),
+                                                                    (25, 7, 'Chau. des Corsaires', 'Saint-Malo', 35400, -2.018348791710329, 48.64509219510429),
+                                                                    (26, 1, 'place abbé Gillard', 'Tréhorenteuc', 56430 , -2.2872720618427955, 48.007504883778765),
+                                                                    (27, 34, 'Sentier des Douaniers', 'Plogoff', 29770 ,-4.6664956672893725, 48.03667645649522),
+                                                                    (28, 1, 'All. de l\`Embarcadere', 'Baden', 56870, -2.8604925767306435, 47.60272463103174),
+                                                                    (16, 1, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, -2.999732772564104, 48.84070603138791),
+                                                                    (17, 1, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, -4.526581655177133, 48.47492014209391),
+                                                                    (18, 1, 'La Vallée des Saints', 'Carnoët', 22160, -2.999732772564104, 48.84070603138791),
+                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230, -1.6674224847189223, 48.041895277402126);");
 
 
 // ---------------------------------------------------------------------- //
@@ -134,7 +134,7 @@ $db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, e
 
 $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 
-$db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VeilleArbre', TRUE);");
+$db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VieilArbre', TRUE);");
 
 $db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren, phone) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034', '" . generatePhoneNumber() . "'), (4, 7421, 'Fred port', '65941542000012', '" . generatePhoneNumber() . "'),(5,8452,'Rance Evasion','26915441000024', '" . generatePhoneNumber() . "'), (8, 9587, 'Brehat', '79658412354789', '" . generatePhoneNumber() . "'), (9, 7896, 'Récrée des 3 curés', '12548965324785', '" . generatePhoneNumber() . "'), (10, 1489, 'La vallée des Saints', '25489600358897', '" . generatePhoneNumber() . "'), (6, 9635, 'VoyageurGuidé', '95489433452897', '" . generatePhoneNumber() . "');");
 
