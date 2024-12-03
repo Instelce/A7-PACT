@@ -61,23 +61,26 @@ $latitude = $offer->address()->latitude;
                 <p>(<?php echo $offer->opinionsCount() ?> avis)</p>
             </div>
 
-            <div class="flex gap-5 items-center">
+            <div class="flex justify-between items-center">
                 <p>
                     <?php echo $offerData["category"] ?>
                     par
                     <a href="/comptes/<?php echo $offerData["professionalId"] ?>" class="underline"><?php echo $offerData["author"] ?></a>
                 </p>
-                <div class="inline-offer">
-                    <i data-lucide="clock"></i>
+                <div class="flex gap-4 items-center">
+                    <div class="inline-offer">
+                        <i data-lucide="clock"></i>
 
-                    <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+                        <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+                    </div>
+                    <div class="inline-offer">
+                        <i data-lucide="coins"></i>
+                        <p>
+                            <?php echo $offerData["price"]; ?>
+                        </p>
+                    </div>
                 </div>
-                <div class="inline-offer">
-                    <i data-lucide="coins"></i>
-                    <p>
-                        <?php echo $offerData["price"]; ?>
-                    </p>
-                </div>
+
             </div>
         </header>
 
