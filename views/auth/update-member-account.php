@@ -48,8 +48,7 @@ use app\core\Mailer;
                 <div class="flex flex-col gap-4">
                     <div class="flex gap-4 items-center">
                         <div class="flex items-center">
-                            <input class="switch" type="checkbox" id="switch-notification"
-                                   name="notification" value="true"/>
+                            <input class="switch" type="checkbox" id="switch-notification" name="notification" value="true"/>
                             <label class="switch" for="switch-notification"></label>
                         </div>
                         <label for="switch-period" id="switch-period-label">J’autorise l’envoi de
@@ -57,7 +56,7 @@ use app\core\Mailer;
                             la mise en ligne de nouvelles offres et autre</label>
                     </div>
                 </div>
-
+                
                 <div class="flex flex-col gap-4 mt-8">
                     <p><?php echo $form->error($model, 'passwordCheck') ?></p>
                     <button id="saveUpdatePopupTrigger" type="button" class="button w-full">Enregistrer les modifications</button>
@@ -65,6 +64,11 @@ use app\core\Mailer;
             </div>
             <div id="popupSaveUpdate"
                  class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
+
+                <!--//////////////////////////////////////////////////////////////////////////
+                // save update pop up
+                //////////////////////////////////////////////////////////////////////////:-->
+
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="form-name" value="update-main">
                     <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[225px]
@@ -77,7 +81,7 @@ use app\core\Mailer;
                         </div>
                         <div class="flex flex-row gap-4">
                             <div>
-                                <button type="button" class="button gray w-[400px]">Annuler</button>
+                                <button type="button" class="button gray w-[400px]" id="closePopupSave">Annuler</button>
                             </div>
                             <div>
                                 <button type="submit" class="button w-[400px]">Enregistrer les modifications</button>
@@ -116,7 +120,7 @@ use app\core\Mailer;
         <input type="hidden" name="form-name" value="update-avatar">
         <div
             class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px]
-        w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
+            w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
             <div>
                 <h1  class="heading-1">Modification de votre photo de profil</h1>
             </div>
@@ -138,20 +142,16 @@ use app\core\Mailer;
                 </div>
             </div>
             <div class="flex gap-4">
-                <div class="w-[250px]">
-                    <button type="button" class="button w-full gray">Annuler</button>
+                <div class="w-[400px]">
+                    <button type="button" class="button w-full gray" id="closePopupAvatar">Annuler</button>
                 </div>
-                <div class="w-[250px]">
+                <div class="w-[400px]">
                     <button type="submit" class="button w-full">Enregistrer les modifications</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
-
-<!--//////////////////////////////////////////////////////////////////////////
-// save update pop up
-//////////////////////////////////////////////////////////////////////////:-->
 
 <!--//////////////////////////////////////////////////////////////////////////
 // Modify Password page
