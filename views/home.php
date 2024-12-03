@@ -53,34 +53,28 @@ $this->jsFile = "home";
                         </div>
                     </div>
 
-                    <div class="summary">
-                        <p><?php echo $offer["summary"]; ?></p>
-                    </div>
-
-                    <div class="enLigneGap">
-                        <div class="enLigne">
-                            <p>232</p>
-                            <p>Avis</p>
-                        </div>
-                    </div>
-
-                    <div class="opposeLigne">
-                        <div class="enLigne">
-                            <p>Il y a</p>
-                            <p><?php echo $offer["dateSincePublication"]; ?></p>
-                            <p>j</p>
+                        <div class="enLigneGap">
+                            <div class="stars" data-number="<?php echo $offer["rating"]?>">
+                            </div>
+                            <div class="enLigne">
+                                <p><?php echo $offer["ratingsCount"] ?></p>
+                                <p>Avis</p>
+                            </div>
                         </div>
 
-                        <div class="price">
-                            <?php if (!empty($offer["price"])): ?>
+                        <div class="summary">
+                            <p><?php echo $offer["summary"]; ?></p>
+                        </div>
+
+                    </div>
+                    <div class="price">
                             <p class="price-text"><?php echo $offer["price"]; ?></p>
-                            <?php endif; ?>
-                        </div>
                     </div>
                 </div>
-            </div>
-        </a>
+            </a>
         <?php } ?>
     </div>
 
 </main>
+
+

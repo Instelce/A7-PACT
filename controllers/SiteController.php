@@ -30,7 +30,6 @@ class SiteController extends Controller
             return strtotime($b->created_at - strtotime($a->created_at));
         });
 
-        $offers = [];
         $offersALaUne = [];
 
         foreach ($allOffers as $offer) {
@@ -50,32 +49,35 @@ class SiteController extends Controller
                     case 'activity':
                         $type = "Activité";
                         $priceData = ActivityOffer::findOne(['offer_id' => $offer->id]);
-                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Gratuit";
+                        $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
                         break;
 
                     case 'show':
                         $type = "Spectacle";
                         $priceData = ShowOffer::findOne(['offer_id' => $offer->id]);
-                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Gratuit";
+                        $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
                         break;
 
                     case 'visit':
                         $type = "Visite";
                         $priceData = VisitOffer::findOne(['offer_id' => $offer->id]);
-                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Gratuit";
+                        $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
                         break;
 
                     case 'attraction_park':
                         $priceData = AttractionParkOffer::findOne(['offer_id' => $offer->id]);
-                        $price = $priceData && $priceData->price !== null ? "Dès " . $priceData->price . "/Personne" : "Gratuit";
+                        $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
                         $type = "Parc d'attraction";
                         break;
                 }
+
 
                 $location = Address::findOne(['id' => $offer->address_id])->city ?? null;
                 $lastOnlineDate = strtotime($offer->last_online_date ?? 'now');
                 $currentDate = strtotime(date('Y-m-d'));
                 $dateSincePublication = floor(($currentDate - $lastOnlineDate) / (60 * 60 * 24));
+
+                $ratingsCount = Offer::findOne(['id' => $offer->id])->opinionsCount();
 
                 if ($offer->isALaUne()){
                     $offersALaUne[$offer->id] = [
@@ -88,6 +90,8 @@ class SiteController extends Controller
                         "location" => $location,
                         'summary' => $offer->summary,
                         "dateSincePublication" => $dateSincePublication,
+                        "ratingsCount" => $ratingsCount,
+                        'rating' => $offer->rating,
                     ];
                 }
 
@@ -101,6 +105,8 @@ class SiteController extends Controller
                     "location" => $location,
                     'summary' => $offer->summary,
                     "dateSincePublication" => $dateSincePublication,
+                    "ratingsCount" => $ratingsCount,
+                    'rating' => $offer->rating,
                 ];
             }
         }
