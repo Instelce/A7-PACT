@@ -69,6 +69,7 @@ class ApiController extends Controller
         // $maximumEventDate = $request->getQueryParams('maximumEventDate');
         $location = $request->getQueryParams('location');
         $rating = $request->getQueryParams('rating');
+        $rangePrice = $request->getQueryParams('rangePrice');
 
         $data = [];
         $where = [];
@@ -123,6 +124,22 @@ class ApiController extends Controller
             ->filters($where)
             ->search(['title' => $q])
             ->order_by($order_by);
+
+        if ($rangePrice) {
+            $query->joinString("JOIN restaurant_offer ON restaurant_offer.offer_id = offer.id")
+                ->filters([
+                    ['restaurant_offer__range_price', $rangePrice]
+                ]);
+
+        }
+
+        // Calculate the average rating
+        // if ($rating) {
+        //     $query->joinString("LEFT JOIN opinion ON opinion.offer_id = offer.id")
+        //         ->group_by(['offer.id'])
+        //         ->having('AVG(opinion.rating) >= ' . $rating);
+        // }
+        // if ($minimumEventDate && $maximumEventDate) {
 
         //     $query->joinString("JOIN offer_period ON offer.id = offer_period.offer_id")
         //         ->filters([
