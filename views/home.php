@@ -6,6 +6,7 @@ use app\core\Application;
 $this->title = "Home";
 $this->cssFile = "home";
 $this->jsFile = "home";
+$this->waves = true;
 
 // $this->waves = true;
 ?>

@@ -206,13 +206,25 @@ function displayOffers(Data) {
                 const offerElement = document.createElement("a");
                 offerElement.href = `/offres/${offer.id}`;
                 offerElement.innerHTML = `
-                <article class="research-card mb-4">
+                <article                 
+                ${offer.relief
+                    ? "class='enRelief'"
+                    : "class='research-card mb-4'"
+                }
+                >
+                 
+                 
+                 
                 <div class="research-card--photo">
                 ${offer.photos[0]
                         ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
                         : ""
                     }
                 </div>
+                ${offer.relief
+                    ? "<div> <img class='enReliefIcon' src='images/reliefIcon.svg' alt=''> </div >"
+                    : "<div class='hidden'></div>"
+                }
                 <div class="research-card--body">
                 <header>
                 <div class="flex flex-row gap-2 justify-between items-center">

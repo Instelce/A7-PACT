@@ -50,12 +50,36 @@
     stroke-width: 2px;
 }
 
+.research-card{
+    position: relative;
+}
+
 .research-card .summary {
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.research-card .research-card--title{
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.enRelief{
+    border: 1px solid rgb(var(--color-orange-primary));
+}
+
+.enReliefIcon{
+    width: 15px;
+    height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 @media (max-width: 768px) {
