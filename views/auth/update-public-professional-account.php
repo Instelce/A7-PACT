@@ -50,9 +50,10 @@ use app\core\Application;
                         </div>
                         <label for="switch-period" id="switch-period-label2">J'autorise l'envoie de notifications</label>
                     </div>
-
                 </div>
-                <button id="saveUpdate" type="button" class="button w-full">Enregistrer les modifications</button>
+                <div class="flex gap-4, mt-8">
+                    <button id="saveUpdatePopupTrigger" type="button" class="button w-full">Enregistrer les modifications</button>
+                </div>
             <?php \app\core\form\Form::end() ?>
         </x-tab-panel>
 

@@ -41,7 +41,11 @@ class PrivateProfessional extends DBModel
         return ProfessionalUser::findOne(['pro_id' => $this->pro_id]);
     }
 
-    public function payment(): MeanOfPayment{
-        return MeanOfPayment::findOne(['payment_id' => $this->payment_id])->specific();
+    public function payment(){
+        $mean = MeanOfPayment::findOne(['payment_id' => $this->payment_id])->specific();
+        if($mean === null){
+            return null;
+        }
+        return $mean->specific();
     }
 }
