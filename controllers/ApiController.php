@@ -99,11 +99,12 @@ class ApiController extends Controller
             $order_by[] = 'minimum_price DESC';
             $where[] = ['minimum_price', '0', '>', 'minimum_priceDesc'];
         }
+
         if (in_array('rating_asc', $order_by)) {
             $order_by = array_diff($order_by, ['rating_asc']);
             $order_by[] = 'rating ASC';
             $where[] = ['rating', '0', '>', 'ratingAsc'];
-        } else if (in_array('rating_desc', $order_by)) {
+        } elseif (in_array('rating_desc', $order_by)) {
             $order_by = array_diff($order_by, ['rating_desc']);
             $order_by[] = 'rating DESC';
             $where[] = ['rating', '0', '>', 'ratingDesc'];

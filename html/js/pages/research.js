@@ -126,7 +126,7 @@ async function getOffers() {
 async function applyFilters(newFilters = {}, neworder = null) {
     filters = { ...filters, ...newFilters };
     if (neworder) {
-        order = neworder;
+        order = neworder; 
     }
     console.log(filters);
     Object.keys(filters).forEach((key) => {
@@ -140,10 +140,8 @@ async function applyFilters(newFilters = {}, neworder = null) {
             delete filters[key];
         }
     });
-    if (
-        (neworder == null || neworder != 0) &&
-        (newFilters == null || Object.keys(newFilters).length != 0)
-    ) {
+
+    if (neworder || (newFilters && Object.keys(newFilters).length > 0)) {
         offset = 0;
         let Data = await getOffers();
         displayOffers(Data);
@@ -374,27 +372,6 @@ searchCity.addEventListener(
     }, 300)
 );
 
-let sortPrice = document.getElementById("sortPrice");
-
-sortPrice.addEventListener("change", (event) => {
-    const inputValue = event.target.querySelector("input").value;
-
-    const selectedOption = sortPrice.querySelector(
-        `[data-value="${inputValue}"]`
-    );
-    const dataValue = selectedOption
-        ? selectedOption.getAttribute("data-value")
-        : null;
-
-    if (dataValue === "croissant") {
-        console.log("croissant");
-        applyFilters({}, "price_asc");
-    } else if (dataValue === "decroissant") {
-        console.log("decroissant");
-        applyFilters({}, "price_desc");
-    }
-});
-
 const sliderPrice = document.getElementById("slider-price");
 
 sliderPrice.addEventListener(
@@ -438,7 +415,24 @@ sliderRating.addEventListener(
 
 //     applyFilters({ maximumEventDate: event.detail.value });
 // });
-const sortRating = document.getElementById("sortRating");
+let sortPrice = document.getElementById("sortPrice");
+sortPrice.addEventListener("change", (event) => {
+    const inputValue = event.target.querySelector("input").value;
+    const selectedOption = sortPrice.querySelector(
+        `[data-value="${inputValue}"]`
+    );
+    const dataValue = selectedOption
+        ? selectedOption.getAttribute("data-value")
+        : null;
+    if (dataValue === "croissant") {
+        console.log("Tri par prix croissant");
+        applyFilters({}, "price_asc");
+    } else if (dataValue === "decroissant") {
+        console.log("Tri par prix décroissant");
+        applyFilters({}, "price_desc");
+    }
+});
+let sortRating = document.getElementById("sortRating");
 sortRating.addEventListener("change", (event) => {
     const inputValue = event.target.querySelector("input").value;
     const selectedOption = sortRating.querySelector(
@@ -448,10 +442,10 @@ sortRating.addEventListener("change", (event) => {
         ? selectedOption.getAttribute("data-value")
         : null;
     if (dataValue === "croissant") {
-        console.log("croissant");
+        console.log("Tri par note croissante");
         applyFilters({}, "rating_asc");
     } else if (dataValue === "decroissant") {
-        console.log("decroissant");
+        console.log("Tri par note décroissante");
         applyFilters({}, "rating_desc");
     }
 });

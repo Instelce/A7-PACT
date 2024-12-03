@@ -95,9 +95,10 @@ $iconsNames = [
             <x-select id="sortPrice">
                 <span slot="trigger">Tri par prix</span>
                 <div slot="options">
-                    <div data-value="croissant">Prix croissant <svg xmlns="http://www.w3.org/2000/svg" width="20"
-                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-narrow-wide">
+                    <div data-value="croissant" class="selected">Prix croissant <svg xmlns="http://www.w3.org/2000/svg"
+                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-arrow-down-narrow-wide">
                             <path d="m3 16 4 4 4-4" />
                             <path d="M7 20V4" />
                             <path d="M11 4h4" />
@@ -115,12 +116,14 @@ $iconsNames = [
                         </svg></div>
                 </div>
             </x-select>
+
             <x-select id="sortRating">
                 <span slot="trigger">Tri par Avis</span>
                 <div slot="options">
-                    <div data-value="croissant">Notes croissantes <svg xmlns="http://www.w3.org/2000/svg" width="20"
-                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-narrow-wide">
+                    <div data-value="croissant" class="selected">Notes croissantes <svg
+                            xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-arrow-down-narrow-wide">
                             <path d="m3 16 4 4 4-4" />
                             <path d="M7 20V4" />
                             <path d="M11 4h4" />
