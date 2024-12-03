@@ -81,6 +81,11 @@ use app\core\Application;
 
                 <div class="avatar-options">
                     <a href="/comptes/<?php echo Application::$app->user->account_id ?>">Mon profil</a>
+
+                    <?php if (Application::$app->user?->isProfessional()) { ?>
+                        <a href="/dashboard">Mon dashboard</a>
+                    <?php } ?>
+
                     <a href="/deconnexion">
                         Déconnexion
                         <i data-lucide="log-out" width="18"></i>

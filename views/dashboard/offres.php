@@ -166,7 +166,7 @@ $this->cssFile = "dashboard/offers";
                         <!-- <i data-lucide="pen"></i>-->
                         Modifier
                     </a>
-                    <a href="/dashboard/avis" class="button purple fit"
+                    <a href="/dashboard/avis?filter=non-lu" class="button purple fit"
                             title="Avis non lu">
                         <i data-lucide="message-square-dot"></i>
                         <?php echo $offer->noReadOpinions() ?>

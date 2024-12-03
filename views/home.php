@@ -9,6 +9,7 @@ $this->jsFile = "home";
 $this->waves = true;
 
 // $this->waves = true;
+
 ?>
 
 <main class="homeDisplay">

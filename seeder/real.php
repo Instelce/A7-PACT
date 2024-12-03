@@ -1408,6 +1408,20 @@ foreach ($offers as $offer) {
 }
 
 
+foreach ($offers as $offer) {
+    if ($offer->offline) {
+        $status = new OfferStatusHistory();
+        $status->offer_id = $offer->id;
+        $status->switch_to = "online";
+        $status->created_at = date('Y-m-d');
+        $status->save();
+
+        $offer->offline = false;
+        $offer->update();
+    }
+}
+
+
 echo "Database seeded successfully.\n";
 
 ?>

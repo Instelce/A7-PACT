@@ -93,9 +93,6 @@ class View
      */
     public function pdf(string $name, string $view, array $params = [], bool $download = false): void
     {
-//        $options = new Options();
-//        $options->setIsRemoteEnabled(true);
-
         $pdf = new Dompdf();
         $pdf->loadHtml($this->renderOnlyView('pdf/' . $view, $params));
         $pdf->setPaper('A4');

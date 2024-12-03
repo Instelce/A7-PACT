@@ -41,7 +41,7 @@ class AuthController extends Controller
                     $response->redirect("/dashboard/offres");
                     exit;
                 }
-                $response->redirect("/");
+                $response->redirect('/');
                 exit;
             }
         }

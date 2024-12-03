@@ -108,6 +108,18 @@ $latitude = $offer->address()->latitude;
                 </div>
             <?php endif; ?>
 
+            <div class="inline-offer">
+                <i data-lucide="clock"></i>
+
+                <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+            </div>
+            <div class="inline-offer">
+                <i data-lucide="coins"></i>
+                <p>
+                    <?php echo $offerData["price"]; ?>
+                </p>
+            </div>
+
 
             <div class="inline-offer">
                 <i data-lucide="map-pin"></i>
@@ -237,7 +249,7 @@ $latitude = $offer->address()->latitude;
             <?php } ?>
 
             <?php if (Application::$app->user?->isProfessional()) { ?>
-                <p>En tant que proffessionnel vous ne pouvez pas rédiger d'avis.</p>
+                <p class="mb-6 block">En tant que professionnel vous ne pouvez pas rédiger d'avis.</p>
             <?php } ?>
 
             <!-- Creation form -->
