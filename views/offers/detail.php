@@ -111,11 +111,7 @@ $latitude = $offer->address()->latitude;
                     <i data-lucide="coins"></i>
 
                     <p>
-                        <?php if ($offerData["price"] == 0): ?>
-                            Gratuit
-                        <?php else: ?>
-                            À partir de <?php echo $offerData["price"]; ?> € / personne
-                        <?php endif; ?>
+                        <?php echo $offerData["price"]; ?>
                     </p>
                 </div>
 
