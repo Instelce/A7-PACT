@@ -208,24 +208,31 @@ function displayOffers(Data) {
                 offerElement.innerHTML = `
                 <article                 
                 ${offer.relief
-                    ? "class='enRelief'"
+                    ? "class='enRelief mb-4'"
                     : "class='research-card mb-4'"
-                }
-                >
+                }>
                  
-                 
-                 
-                <div class="research-card--photo">
+                
+                <div                
+                ${offer.relief
+                    ? "class='research-card--photo--enRelief'"
+                    : "class='research-card--photo'"
+                }>
+                
                 ${offer.photos[0]
                         ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
                         : ""
                     }
                 </div>
                 ${offer.relief
-                    ? "<div> <img class='enReliefIcon' src='images/reliefIcon.svg' alt=''> </div >"
+                    ? "<div> <img class='enReliefIcon' src='images/reliefIcon.svg' alt='Icone offre en relief'> </div >"
                     : "<div class='hidden'></div>"
                 }
-                <div class="research-card--body">
+                <div                 
+                ${offer.relief
+                    ? "class='research-card--body--enRelief'"
+                    : "class='research-card--body'"
+                }">
                 <header>
                 <div class="flex flex-row gap-2 justify-between items-center">
                 <h2 class="research-card--title">${offer.title}</h2>
