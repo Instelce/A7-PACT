@@ -123,11 +123,11 @@ class ApiController extends Controller
             ->order_by($order_by);
 
         // Calculate the average rating
-        if ($rating) {
-            $query->joinString("LEFT JOIN opinion ON opinion.offer_id = offer.id")
-                ->group_by(['offer.id'])
-                ->having('AVG(opinion.rating) >= ' . $rating);
-        }
+        // if ($rating) {
+        //     $query->joinString("LEFT JOIN opinion ON opinion.offer_id = offer.id")
+        //         ->group_by(['offer.id'])
+        //         ->having('AVG(opinion.rating) >= ' . $rating);
+        // }
         // if ($minimumEventDate && $maximumEventDate) {
 
         //     $query->joinString("JOIN offer_period ON offer.id = offer_period.offer_id")
