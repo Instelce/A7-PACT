@@ -21,7 +21,7 @@ class MemberUpdateForm extends Model
     public string $city = '';
     public string $phone = '';
     public string $passwordCheck = '';
-    public bool $notification = false;
+    public int $notification = 0;
     public ?UserAccount $userAccount = null;
     public ?Address $address = null;
     public MemberUser|null|false $memberUser = null;
@@ -60,6 +60,7 @@ class MemberUpdateForm extends Model
         $this->address->loadData($request->getBody());
         $this->address->update();
         $this->memberUser->loadData($request->getBody());
+        $this->memberUser->allows_notifications = $this->notification;
         $this->memberUser->update();
         return true;
     }
@@ -86,9 +87,9 @@ class MemberUpdateForm extends Model
             'firstname' => [self::RULE_REQUIRED],
             'pseudo' => [self::RULE_REQUIRED],
             'mail' => [self::RULE_REQUIRED, self::RULE_MAIL],
-            'streetNumber' => [self::RULE_REQUIRED, self::RULE_NUMBER],
-            'streetName' => [self::RULE_REQUIRED],
-            'postalCode' => [self::RULE_REQUIRED, self::RULE_POSTAL],
+            'number' => [self::RULE_REQUIRED, self::RULE_NUMBER],
+            'street' => [self::RULE_REQUIRED],
+            'postal_code' => [self::RULE_REQUIRED, self::RULE_POSTAL],
             'city' => [self::RULE_REQUIRED],
             'phone' => [self::RULE_REQUIRED,self::RULE_PHONE],
         ];

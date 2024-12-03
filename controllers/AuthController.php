@@ -101,7 +101,8 @@ class AuthController extends Controller
     }
 
 
-    public function updatePublicProfessionalAccount(Request $request, Response $response){
+    public function updatePublicProfessionalAccount(Request $request, Response $response)
+    {
         $proPublic  = new PublicProfessionalUpdateForm();
 
         if ($request->isPost() && $request->formName()==="update-public") {
@@ -133,7 +134,8 @@ class AuthController extends Controller
         return $this->render('auth/update-public-professional-account', ['proPublic' => $proPublic]);
     }
 
-    public function updatePrivateProfessionalAccount(Request $request, Response $response){
+    public function updatePrivateProfessionalAccount(Request $request, Response $response)
+    {
         $form  = new PrivateProfessionalUpdateForm();
         if ($request->isPost() && $request->formName()=="update-private") {
             $form->loadData($request->getBody());
@@ -183,11 +185,16 @@ class AuthController extends Controller
         return $this->render('auth/register-member', ['model' => $form]);
     }
 
-    public function updateAccount(Request $request, Response $response){
+    public function updateAccount(Request $request, Response $response)
+    {
         $form = new MemberUpdateForm();
 
         if ($request->isPost() && $request->formName() == "update-main") {
             $form->loadData($request->getBody());
+
+            if (!array_key_exists('notification', $request->getBody()))  {
+                $form->notification = 0;
+            }
 
             if ($form->passwordMatch() && $form->validate() && $form->update()) {
                 Application::$app->session->setFlash('success', "Votre compte à bien été modifié !");
@@ -195,15 +202,19 @@ class AuthController extends Controller
             }
         }
 
-        echo '<pre>';
-        var_dump($form);
-        echo '</pre>';
+        //////////////////////////////////////////////
+        // Update avatar
+        //////////////////////////////////////////////
 
         if ($request->isPost() && $request->formName() == "update-avatar") {
             $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
             Application::$app->user->avatar_url=$avatarPath;
             Application::$app->user->update();
         }
+
+        //////////////////////////////////////////////
+        // Resset password
+        //////////////////////////////////////////////
 
         if ($request->isPost() && $request->formName() === "reset-password") {
             $mail = Application::$app->user->mail;
@@ -215,6 +226,17 @@ class AuthController extends Controller
             Application::$app->session->setFlash('success', "Un mail a bien été envoyé a l'adresse $mail");
             $response->redirect('/comptes/modification');
         }
+
+        //////////////////////////////////////////////
+        // Delete account
+        //////////////////////////////////////////////
+
+        /*if ($request->isPost() && $request->formName() === "delete-account") {
+            if ($form->passwordMatch() && $form->validate() && $form->update()) {
+                Application::$app->session->setFlash('success', "Votre compte à bien été modifié !");
+                $response->redirect('/comptes/modification?tab=securite');
+            }
+        }*/
 
         return $this->render('auth/update-member-account', ['model' => $form]);
     }
