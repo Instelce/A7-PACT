@@ -86,7 +86,7 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 // create offer adress
 // ---------------------------------------------------------------------- //
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
-                                                                    (21, 2, 'Rue des Halles', 'Lannion', 22300, 48.7326, -3.4597), 
+                                                                    (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597, 48.7326), 
                                                                     (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, -3.5262799946878105, 48.784432468993565),
                                                                     (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
                                                                     (24, 13, 'Rue des Ruees', 'Tréhorenteuc', 56430, -2.2850415831640905, 48.00799182324886),
@@ -734,7 +734,6 @@ $offre11->offline_days = 0;
 $offre11->view_counter = 120;
 $offre11->click_counter = 180;
 $offre11->website = 'http://fr-fr.facebook.com/lacrepedantel';
-//https://www.iroise-bretagne.bzh/restaurant/la-crepe-dantel/
 $offre11->phone_number = '0298402968';
 $offre11->category = 'restaurant';
 $offre11->professional_id = 4;
@@ -786,49 +785,49 @@ for ($i = 0; $i < 4; $i++) {
     }
 }
 
-$horaire1o1 = new OfferSchedule();
-$horaire1o1->day = 1;
-$horaire1o1->opening_hours = '12:00';
-$horaire1o1->closing_hours = '23:00';
-$horaire1o1->save();
-$horaire2o1 = new OfferSchedule();
-$horaire2o1->day = 2;
-$horaire2o1->opening_hours = '12:00';
-$horaire2o1->closing_hours = '23:00';
-$horaire2o1->save();
-$horaire3o1 = new OfferSchedule();
-$horaire3o1->day = 3;
-$horaire3o1->opening_hours = 'fermé';
-$horaire3o1->closing_hours = 'fermé';
-$horaire3o1->save();
-$horaire4o1 = new OfferSchedule();
-$horaire4o1->day = 4;
-$horaire4o1->opening_hours = '12:00';
-$horaire4o1->closing_hours = '23:00';
-$horaire4o1->save();
-$horaire5o1 = new OfferSchedule();
-$horaire5o1->day = 5;
-$horaire5o1->opening_hours = '12:00';
-$horaire5o1->closing_hours = '23:00';
-$horaire5o1->save();
-$horaire6o1 = new OfferSchedule();
-$horaire6o1->day = 6;
-$horaire6o1->opening_hours = '19:30';
-$horaire6o1->closing_hours = '23:00';
-$horaire6o1->save();
-$horaire7o1 = new OfferSchedule();
-$horaire7o1->day = 7;
-$horaire7o1->opening_hours = 'fermé';
-$horaire7o1->closing_hours = 'fermé';
-$horaire7o1->save();
+$horaire1o11 = new OfferSchedule();
+$horaire1o11->day = 1;
+$horaire1o11->opening_hours = '12:00';
+$horaire1o11->closing_hours = '23:00';
+$horaire1o11->save();
+$horaire2o11 = new OfferSchedule();
+$horaire2o11->day = 2;
+$horaire2o11->opening_hours = '12:00';
+$horaire2o11->closing_hours = '23:00';
+$horaire2o11->save();
+$horaire3o11 = new OfferSchedule();
+$horaire3o11->day = 3;
+$horaire3o11->opening_hours = 'fermé';
+$horaire3o11->closing_hours = 'fermé';
+$horaire3o11->save();
+$horaire4o11 = new OfferSchedule();
+$horaire4o11->day = 4;
+$horaire4o11->opening_hours = '12:00';
+$horaire4o11->closing_hours = '23:00';
+$horaire4o11->save();
+$horaire5o11 = new OfferSchedule();
+$horaire5o11->day = 5;
+$horaire5o11->opening_hours = '12:00';
+$horaire5o11->closing_hours = '23:00';
+$horaire5o11->save();
+$horaire6o11 = new OfferSchedule();
+$horaire6o11->day = 6;
+$horaire6o11->opening_hours = '19:30';
+$horaire6o11->closing_hours = '23:00';
+$horaire6o11->save();
+$horaire7o11 = new OfferSchedule();
+$horaire7o11->day = 7;
+$horaire7o11->opening_hours = 'fermé';
+$horaire7o11->closing_hours = 'fermé';
+$horaire7o11->save();
 
-RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire1o1->id);
-RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire2o1->id);
-RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire3o1->id);
-RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire4o1->id);
-RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire5o1->id);
-RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire6o1->id);
-RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire7o1->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire1o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire2o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire3o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire4o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire5o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire6o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire7o11->id);
 
 // ---------------------------------------------------------------------- //
 // photos offre11
@@ -840,6 +839,20 @@ $offre11->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/9
 $offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/table-9.JPG');
 $offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/la-crepe-dantel.JPG');
 $offre11->addPhoto('https://media-cdn.tripadvisor.com/media/photo-m/1280/1c/44/ac/3b/menu.jpg');
+
+
+// ---------------------------------------------------------------------- //
+// photos offre1
+// ---------------------------------------------------------------------- //
+
+$offre1->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/e7/89/7e/cafe-des-halles.jpg?w=1000&h=-1&s=1');
+$offre1->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/62/5d/a4/cafe-des-halles.jpg?w=800&h=-1&s=1');
+$offre1->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/16/c0/23/nos-plats.jpg?w=1000&h=-1&s=1');
+$offre1->addPhoto('https://media-cdn.tripadvisor.com/media/photo-s/1b/80/31/6a/cafe-des-halles.jpg');
+$offre1->addPhoto('https://img.lacarte.menu/storage/media/company_gallery/8769476/conversions/contribution_gallery.jpg');
+$offre1->addPhoto('https://menu.restaurantguru.com/m9/Cafe-Des-Halles-Lannion-menu.jpg');
+
+
 
 // ---------------------------------------------------------------------- //
 // photos offre2
