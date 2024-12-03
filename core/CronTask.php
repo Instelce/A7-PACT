@@ -29,10 +29,18 @@ abstract class CronTask
     abstract public function run(): void;
 
     /**
+     * Run the condition to check if the task should be run
+     */
+    abstract public function runCondition(): bool;
+
+    /**
      * Schedule the task
      */
     abstract public function schedule(): string;
 
+    /**
+     * Get the schedule formatted as a human readable string
+     */
     public function scheduleString(): string
     {
         $string = "";

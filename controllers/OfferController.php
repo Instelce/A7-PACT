@@ -19,6 +19,7 @@ use app\models\offer\AttractionParkOffer;
 use app\models\offer\Offer;
 use app\models\offer\OfferPeriod;
 use app\models\offer\OfferPhoto;
+use app\models\offer\OfferStatusHistory;
 use app\models\offer\OfferTag;
 use app\models\offer\OfferType;
 use app\models\offer\RestaurantOffer;
@@ -70,8 +71,6 @@ class OfferController extends Controller
 
             // Create the offer
             $offer->loadData($request->getBody());
-            $offer->last_offline_date = date('Y-m-d');
-            $offer->last_online_date = null;
             $offer->category = $category;
             $offer->professional_id = Application::$app->user->account_id;
             $offer->offer_type_id = $offer_type->id;
@@ -110,9 +109,8 @@ class OfferController extends Controller
                     $period = new OfferPeriod();
                     $period->start_date = $body['period-start'];
                     $period->end_date = $body['period-end'];
+                    $period->offer_id = $offer->id;
                     $period->save();
-
-                    $visit->period_id = $period->id;
                 }
 
                 $visit->save();
@@ -129,7 +127,7 @@ class OfferController extends Controller
                 $restaurant->range_price = intval($body['restaurant-range-price']);
                 $restaurant->save();
 
-//                if(true){ // condition : il clique sur "ajouter un nouveau repas"
+                //                if(true){ // condition : il clique sur "ajouter un nouveau repas"
 //                    $meal = new Meal();
 //                    $meal->name = $body['meal-name'];
 //                    $meal->price = intval($body['meal-price']);
@@ -148,9 +146,8 @@ class OfferController extends Controller
                     $period = new OfferPeriod();
                     $period->start_date = $body['period-start'];
                     $period->end_date = $body['period-end'];
+                    $period->offer_id = $offer->id;
                     $period->save();
-
-                    $show->period_id = $period->id;
                 }
 
                 $show->save();
@@ -196,7 +193,7 @@ class OfferController extends Controller
                 return $request->redirect('/dashboard');
             }
         }
-        
+
         return $this->render('offers/create', [
             'model' => $offer,
         ]);
@@ -279,23 +276,27 @@ class OfferController extends Controller
                 $type = "Restaurant";
                 $range_price = RestaurantOffer::findOne(['offer_id' => $id])->range_price;
                 $carte_restaurant = RestaurantOffer::findOne(['offer_id' => $id])->url_image_carte;
+                $price = $range_price === 1 ? "Dès €" : ($range_price === 2 ? "Dès €€" : "Dès €€€");
                 break;
             case 'activity':
                 $type = "Activité";
                 $duration = ActivityOffer::findOne(['offer_id' => $id])->duration ?? NULL;
                 $required_age = ActivityOffer::findOne(['offer_id' => $id])->required_age ?? NULL;
-                $price = ActivityOffer::findOne(['offer_id' => $id])->price ?? NULL;
+                $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
                 break;
             case 'show':
                 $type = "Spectacle";
                 $duration = ShowOffer::findOne(['offer_id' => $id])->duration ?? NULL;
+                $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
                 break;
             case 'visit':
                 $type = "Visite";
                 $duration = VisitOffer::findOne(['offer_id' => $id])->duration ?? NULL;
+                $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
                 break;
             case 'attraction_park':
                 $type = "Parc d'attraction";
+                $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
                 $required_age = AttractionParkOffer::findOne(['offer_id' => $id])->required_age ?? NULL;
                 $carte_park = AttractionParkOffer::findOne(['offer_id' => $id])->url_image_park_map;
                 break;
@@ -342,6 +343,8 @@ class OfferController extends Controller
                 $opinion->save();
 
                 // TODO - update rating column on offer
+                $offer->rating = $offer->rating();
+                $offer->update();
 
                 // Save opinion photos
                 $files = Application::$app->storage->saveFiles('opinion-photos', 'opinions');
@@ -368,6 +371,9 @@ class OfferController extends Controller
             $opinion = Opinion::findOneByPk($request->getBody()['opinion_id']);
             $opinion->destroy();
             $userOpinion = false;
+
+            $offer->rating = $offer->rating();
+            $offer->update();
         }
 
         return $this->render('offers/detail', [
@@ -383,6 +389,8 @@ class OfferController extends Controller
     public function update(Request $request, Response $response, $routeparams)
     {
         $this->setLayout('back-office');
+
+        /** @var Offer $offer */
         $offer = Offer::findOne(['id' => $routeparams['pk']]);
         $address = Address::findOne(['id' => $offer->address_id]);
         $specificData = $offer->specificData();
@@ -410,14 +418,25 @@ class OfferController extends Controller
             $offer->professional_id = Application::$app->user->account_id;
             $offer->address_id = $address->id;
 
-            if (array_key_exists("online", array: $body)) {
-//                echo "Switching to online";
+            // Switching to online
+            if (array_key_exists("online", array: $body) && $offer->offline === 1) {
                 $offer->offline = 0;
-                $offer->last_online_date = date('Y-m-d');
-            } else {
-//                echo "Switching to offline";
-                $offer->offline_date = date('Y-m-d');
+
+                // Add history line
+                $history = new OfferStatusHistory();
+                $history->offer_id = $offer->id;
+                $history->switch_to = "online";
+                $history->save();
+            }
+            // Switching to offline
+            else if ($offer->offline === 0) {
                 $offer->offline = 1;
+
+                // Add history line
+                $history = new OfferStatusHistory();
+                $history->offer_id = $offer->id;
+                $history->switch_to = "offline";
+                $history->save();
             }
 
             // Offer minimum price
@@ -430,10 +449,15 @@ class OfferController extends Controller
 
             // Add tags to the offer
             if (array_key_exists('tags', $body)) {
-                foreach ($body['tags'] as $tag) {
-                    $tag = strtolower($tag);
-                    $tagModel = OfferTag::findOne(['name' => $tag]);
-                    $offer->addTag($tagModel->id);
+                foreach ($body['tags'] as $tagName) {
+
+                    $tagName = strtolower($tagName);
+                    $tagModel = OfferTag::findOne(['name' => $tagName]);
+
+                    // Check if the tag
+                    if (!$offer->hasTag($tagName)) {
+                        $offer->addTag($tagModel->id);
+                    }
                 }
             }
 
@@ -449,9 +473,10 @@ class OfferController extends Controller
                     $period = OfferPeriod::findOne(['id' => $offer->id]);
                     $period->start_date = $body['period-start'];
                     $period->end_date = $body['period-end'];
+                    $period->offer_id = $offer->id;
                     $period->update();
 
-                    $visit->period_id = $period->id;
+
                 }
 
                 $visit->update();
@@ -478,9 +503,10 @@ class OfferController extends Controller
                     $period = OfferPeriod::findOne(['offer_id' => $offer->id]);
                     $period->start_date = $body['period-start'];
                     $period->end_date = $body['period-end'];
+                    $period->offer_id = $offer->id;
                     $period->update();
 
-                    $show->period_id = $period->id;
+
                 }
 
                 $show->update();

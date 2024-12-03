@@ -4,6 +4,7 @@ use app\core\Application;
 use app\models\account\Account;
 use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
+use app\models\offer\OfferStatusHistory;
 use app\models\offer\OfferTag;
 use app\models\offer\RestaurantOffer;
 use app\models\offer\AttractionParkOffer;
@@ -11,6 +12,7 @@ use app\models\offer\ActivityOffer;
 use app\models\Meal;
 use app\models\offer\schedule\OfferSchedule;
 use app\models\opinion\Opinion;
+use app\models\payment\Invoice;
 use app\models\user\MemberUser;
 
 
@@ -61,6 +63,11 @@ function generatePhoneNumber()
     return $phone;
 }
 
+function randomOfferDate(): string
+{
+    return date('Y-m-d', rand(strtotime("2024-10-01"), strtotime("2024-11-30")));
+}
+
 $db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, option, subscription, offer, offer_type, offer_period, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
 
 // ---------------------------------------------------------------------- //
@@ -78,16 +85,19 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
 // ---------------------------------------------------------------------- //
 // create offer adress
 // ---------------------------------------------------------------------- //
-
 $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
-                                                                    (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597,48.7326 ), 
-                                                                    (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, 	-3.474171, 	48.800755),
+                                                                    (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597, 48.7326), 
+                                                                    (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, -3.5262799946878105, 48.784432468993565),
                                                                     (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
-                                                                    (24, 13, 'Rue des Ruees', 'Tréhorenteuc', 56430, 48.00799182324886, -2.2850415831640905),
-                                                                    (16, 1, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, 48.84070603138791, -2.999732772564104),
-                                                                    (17, 1, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, 48.47492014209391, -4.526581655177133),
-                                                                    (18, 1, 'La Vallée des Saints', 'Carnoët', 22160, 48.84070603138791, -2.999732772564104),
-                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230,48.041895277402126, -1.6674224847189223);");
+                                                                    (24, 13, 'Rue des Ruees', 'Tréhorenteuc', 56430, -2.2850415831640905, 48.00799182324886),
+                                                                    (25, 7, 'Chau. des Corsaires', 'Saint-Malo', 35400, -2.018348791710329, 48.64509219510429),
+                                                                    (26, 1, 'place abbé Gillard', 'Tréhorenteuc', 56430 , -2.2872720618427955, 48.007504883778765),
+                                                                    (27, 34, 'Sentier des Douaniers', 'Plogoff', 29770 ,-4.6664956672893725, 48.03667645649522),
+                                                                    (28, 1, 'All. de l\`Embarcadere', 'Baden', 56870, -2.8604925767306435, 47.60272463103174),
+                                                                    (16, 1, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, -2.999732772564104, 48.84070603138791),
+                                                                    (17, 1, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, -4.526581655177133, 48.47492014209391),
+                                                                    (18, 1, 'La Vallée des Saints', 'Carnoët', 22160, -2.999732772564104, 48.84070603138791),
+                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230, -1.6674224847189223, 48.041895277402126);");
 
 
 // ---------------------------------------------------------------------- //
@@ -131,13 +141,16 @@ $db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, e
 
 $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 
-$db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VeilleArbre', TRUE);");
+$db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VieilArbre', TRUE);");
 
 $db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren, phone) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034', '" . generatePhoneNumber() . "'), (4, 7421, 'Fred port', '65941542000012', '" . generatePhoneNumber() . "'),(5,8452,'Rance Evasion','26915441000024', '" . generatePhoneNumber() . "'), (8, 9587, 'Brehat', '79658412354789', '" . generatePhoneNumber() . "'), (9, 7896, 'Récrée des 3 curés', '12548965324785', '" . generatePhoneNumber() . "'), (10, 1489, 'La vallée des Saints', '25489600358897', '" . generatePhoneNumber() . "'), (6, 9635, 'VoyageurGuidé', '95489433452897', '" . generatePhoneNumber() . "');");
 
 $db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3), (8), (10), (6);");
+//publics : sergemytho(3) ; brehat(8) ; -> valleedessaints(10) <-
+//                                           plus utilisé
 
 $db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id) VALUES (4, '2024-11-30', 1),(5,'2024-11-30',2),(9, '2024-09-20', 3);");
+//privates : fredlechat(4) ; rance_evasion(5) ; recree_des_trois_cures(9) ; 
 
 // ---------------------------------------------------------------------- //
 // create offer types
@@ -195,6 +208,7 @@ $offre1->category = 'restaurant';
 $offre1->professional_id = 3;
 $offre1->address_id = 21;
 $offre1->offer_type_id = 1;
+$offre1->created_at = randomOfferDate();
 $offre1->save();
 
 //type offres
@@ -304,7 +318,9 @@ $offre2->offer_type_id = 2;
 $offre2->professional_id = 4;
 $offre2->address_id = 22;
 $offre2->minimum_price = 15;
+$offre2->created_at = randomOfferDate();
 $offre2->save();
+$offre2->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
 
@@ -379,6 +395,7 @@ $offre3->professional_id = 5;
 $offre3->address_id = 23;
 $offre3->category = 'visit';
 $offre3->minimum_price = 25;
+$offre3->created_at = randomOfferDate();
 $offre3->save();
 
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre3->id . ", 1.5, true);");
@@ -411,11 +428,12 @@ $offre4->offer_type_id = 2;
 $offre4->professional_id = 6;
 $offre4->address_id = 24;
 $offre4->minimum_price = 12;
+$offre4->created_at = randomOfferDate();
 $offre4->save();
 
-$db->pdo->exec("INSERT INTO offer_period (id, start_date,end_date) VALUES (1,'2024-06-01', '2024-09-01');");
+$db->pdo->exec("INSERT INTO offer_period (id,offer_id, start_date,end_date) VALUES (1,$offre4->id,'2024-06-01', '2024-09-01');");
 
-$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity, period_id) VALUES (" . $offre4->id . ", 1.5, 33, 1);");
+$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, capacity) VALUES (" . $offre4->id . ", 1.5, 33);");
 
 //no tags
 
@@ -439,7 +457,10 @@ $offre5->offer_type_id = 2;
 $offre5->professional_id = 8;
 $offre5->address_id = 16;
 $offre5->minimum_price = 35;
+$offre5->created_at = randomOfferDate();
 $offre5->save();
+$offre5->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+
 
 $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES ($offre5->id, 1.0, 3);");
 
@@ -514,6 +535,7 @@ $offre6->offer_type_id = 2;
 $offre6->professional_id = 9;
 $offre6->address_id = 17;
 $offre6->minimum_price = 18;
+$offre6->created_at = randomOfferDate();
 $offre6->save();
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre6->id . ", 'https://www.parc-attraction.eu/wp-content/uploads/2023/02/la-recre-des-3-cures-plan.png', 38, 3);");
@@ -571,41 +593,145 @@ for ($i = 0; $i < 3; $i++) {
     }
 }
 
+$offre7 = new Offer();
+$offre7->title = "Visite guidée de la Cité Corsaire";
+$offre7->summary = 'Plongez au cœur de l’histoire maritime de Saint-Malo avec un guide local passionné.';
+$offre7->description = 'Explorez les remparts, les ruelles pavées et les trésors cachés de Saint-Malo. Votre guide vous racontera les histoires de corsaires, d’explorateurs et de la reconstruction de la ville après la Seconde Guerre mondiale.';
+$offre7->likes = 215;
+$offre7->offline = 0;
+$offre7->last_offline_date = null;
+$offre7->offline_days = 0;
+$offre7->view_counter = 3260;
+$offre7->click_counter = 1450;
+$offre7->website = 'https://www.saint-malo-tourisme.com/';
+$offre7->phone_number = '0299566699';
+$offre7->offer_type_id = 1;
+$offre7->professional_id = 4;
+$offre7->address_id = 25;
+$offre7->category = 'visit';
+$offre7->minimum_price = 20;
+$offre7->created_at = randomOfferDate();
+$offre7->save();
+$offre7->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+
+
+$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre7->id . ", 1.5, true);");
+$db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre7->id . ", 'français'), (" . $offre3->id . ", 'anglais')");
+
+//add tags
+for ($i = 0; $i < 3; $i++) {
+    $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
+    if (!in_array($tag, $offre6->tags())) {
+        $offre6->addTag($tag);
+    }
+}
+
+$offre8 = new Offer();
+$offre8->title = "Balade contée en Forêt de Brocéliande";
+$offre8->summary = 'Plongez dans l’univers des légendes arthuriennes lors d’une balade guidée en Forêt de Brocéliande.';
+$offre8->description = 'Suivez un guide-conteur à travers les lieux emblématiques comme le Val sans Retour, la Fontaine de Jouvence, et le Tombeau de Merlin. Parfait pour les familles et les amateurs de mythes celtiques.';
+$offre8->likes = 789;
+$offre8->offline = 0;
+$offre8->last_offline_date = null;
+$offre8->offline_days = 0;
+$offre8->view_counter = 4580;
+$offre8->click_counter = 2300;
+$offre8->website = 'https://www.broceliande-vacances.com/';
+$offre8->phone_number = '0299798554';
+$offre8->offer_type_id = 1;
+$offre8->professional_id = 3;
+$offre8->address_id = 26;
+$offre8->category = 'visit';
+$offre8->created_at = randomOfferDate();
+$offre8->save();
+$offre8->addSubscription("en_relief", date('Y-m-d', strtotime("last Monday")), 3);
+
+
+$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre8->id . ", 3.0, true);");
+$db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre8->id . ", 'français')");
+
+//add tags
+for ($i = 0; $i < 3; $i++) {
+    $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
+    if (!in_array($tag, $offre6->tags())) {
+        $offre6->addTag($tag);
+    }
+}
+//privates : fredlechat(4) ; rance_evasion(5) ; recree_des_trois_cures(9)
+
+$offre9 = new Offer();
+$offre9->title = "Excursion à la Pointe du Raz";
+$offre9->summary = 'Découvrez l’un des sites naturels les plus emblématiques de Bretagne, avec des falaises à couper le souffle et une vue imprenable sur l’Atlantique.';
+$offre9->description = 'Explorez ce site classé Grand Site de France, connu pour ses paysages sauvages et ses sentiers côtiers. Une visite guidée vous permettra de mieux comprendre l’histoire et l’écosystème de ce lieu unique.';
+$offre9->likes = 450;
+$offre9->offline = 0;
+$offre9->last_offline_date = null;
+$offre9->offline_days = 0;
+$offre9->view_counter = 3000;
+$offre9->click_counter = 1200;
+$offre9->website = 'https://www.pointe-du-raz.com/';
+$offre9->phone_number = '0298920020';
+$offre9->offer_type_id = 1;
+$offre9->professional_id = 5;
+$offre9->address_id = 27;
+$offre9->category = 'visit';
+$offre9->minimum_price = 12;
+$offre9->created_at = randomOfferDate();
+$offre9->save();
+
+$db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre9->id . ", 2.5, true);");
+$db->pdo->exec("INSERT INTO visit_language (offer_id, language) VALUES (" . $offre9->id . ", 'français'), (" . $offre9->id . ", 'anglais')");
+
+//add tags
+for ($i = 0; $i < 3; $i++) {
+    $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
+    if (!in_array($tag, $offre6->tags())) {
+        $offre6->addTag($tag);
+    }
+}
+
+$offre10 = new Offer();
+$offre10->title = "Croisière découverte du Golfe du Morbihan";
+$offre10->summary = 'Partez à la découverte du Golfe du Morbihan, l’une des plus belles baies du monde, avec ses îles et ses paysages marins exceptionnels.';
+$offre10->description = 'Embarquez pour une croisière commentée à travers les îles du Golfe du Morbihan. Vous aurez l’occasion d’admirer l’Île aux Moines, l’Île d’Arz, et bien d’autres joyaux de cette baie unique.';
+$offre10->likes = 1020;
+$offre10->offline = 0;
+$offre10->last_offline_date = null;
+$offre10->offline_days = 0;
+$offre10->view_counter = 6500;
+$offre10->click_counter = 2800;
+$offre10->website = 'https://www.golfedumorbihan.fr/';
+$offre10->phone_number = '0297636421';
+$offre10->offer_type_id = 2;
+$offre10->professional_id = 4;
+$offre10->address_id = 28;
+$offre10->category = 'activity';
+$offre10->minimum_price = 25;
+$offre10->created_at = randomOfferDate();
+$offre10->save();
+$offre10->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+
+
+$db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES (" . $offre10->id . ", 3.0, 6);");
+
+//add tags
+for ($i = 0; $i < 3; $i++) {
+    $tag = $tagsIds['others'][array_rand($tagsIds['others'])];
+    if (!in_array($tag, $offre6->tags())) {
+        $offre6->addTag($tag);
+    }
+}
 
 // ---------------------------------------------------------------------- //
 // photos offre1
 // ---------------------------------------------------------------------- //
 
-$photosCafe1 = new OfferPhoto();
-$photosCafe1->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/e7/89/7e/cafe-des-halles.jpg?w=1000&h=-1&s=1';
-$photosCafe1->offer_id = $offre1->id;
-$photosCafe1->save();
-
-
-$photosCafe2 = new OfferPhoto();
-$photosCafe2->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/62/5d/a4/cafe-des-halles.jpg?w=800&h=-1&s=1';
-$photosCafe2->offer_id = $offre1->id;
-$photosCafe2->save();
-
-$photosCafe3 = new OfferPhoto();
-$photosCafe3->url_photo = 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/16/c0/23/nos-plats.jpg?w=1000&h=-1&s=1';
-$photosCafe3->offer_id = $offre1->id;
-$photosCafe3->save();
-
-$photosCafe4 = new OfferPhoto();
-$photosCafe4->url_photo = 'https://media-cdn.tripadvisor.com/media/photo-s/1b/80/31/6a/cafe-des-halles.jpg';
-$photosCafe4->offer_id = $offre1->id;
-$photosCafe4->save();
-
-$photosCafe5 = new OfferPhoto();
-$photosCafe5->url_photo = 'https://img.lacarte.menu/storage/media/company_gallery/8769476/conversions/contribution_gallery.jpg';
-$photosCafe5->offer_id = $offre1->id;
-$photosCafe5->save();
-
-$photosCafe5 = new OfferPhoto();
-$photosCafe5->url_photo = 'https://menu.restaurantguru.com/m9/Cafe-Des-Halles-Lannion-menu.jpg';
-$photosCafe5->offer_id = $offre1->id;
-$photosCafe5->save();
+$offre1->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/e7/89/7e/cafe-des-halles.jpg?w=1000&h=-1&s=1');
+$offre1->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/62/5d/a4/cafe-des-halles.jpg?w=800&h=-1&s=1');
+$offre1->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/16/c0/23/nos-plats.jpg?w=1000&h=-1&s=1');
+$offre1->addPhoto('https://media-cdn.tripadvisor.com/media/photo-s/1b/80/31/6a/cafe-des-halles.jpg');
+$offre1->addPhoto('https://img.lacarte.menu/storage/media/company_gallery/8769476/conversions/contribution_gallery.jpg');
+$offre1->addPhoto('https://menu.restaurantguru.com/m9/Cafe-Des-Halles-Lannion-menu.jpg');
 
 // ---------------------------------------------------------------------- //
 // photos offre2
@@ -751,6 +877,93 @@ $photoRecree5 = new OfferPhoto();
 $photoRecree5->url_photo = 'https://www.larecredes3cures.com/app/uploads/2024/03/aquatico-scaled-1600x784-c-center.jpg';
 $photoRecree5->offer_id = $offre6->id;
 $photoRecree5->save();
+
+// ---------------------------------------------------------------------- //
+// photos offre7
+// ---------------------------------------------------------------------- //
+
+$photoMalo = new OfferPhoto();
+$photoMalo->url_photo = 'https://www.saint-malo-tourisme.com/app/uploads/saint-malo-tourisme/2022/06/thumbs/vue-sur-saint-malo-intra-muros-depuis-le-mole-des-noires---saint-malo-loic-lagarde-663-1200px-1920x960-crop-1654250785.jpg';
+$photoMalo->offer_id = $offre7->id;
+$photoMalo->save();
+
+$photoMalo2 = new OfferPhoto();
+$photoMalo2->url_photo = 'https://rennes.kidiklik.fr/sites/default/files/styles/crop_image/public/2024-06/visite%20guid%C3%A9e%20de%20la%20cit%C3%A9%20corsaire.jpg?itok=rQCkEYqI';
+$photoMalo2->offer_id = $offre7->id;
+$photoMalo2->save();
+
+$photoMalo3 = new OfferPhoto();
+$photoMalo3->url_photo = 'https://maville.com/photosmvi/2022/07/22/P31261938D5342611G.jpg';
+$photoMalo3->offer_id = $offre7->id;
+$photoMalo3->save();
+
+// ---------------------------------------------------------------------- //
+// photos offre8
+// ---------------------------------------------------------------------- //
+
+$photoBroce = new OfferPhoto();
+$photoBroce->url_photo = 'https://static.broceliande.guide/IMG/jpg/balade_contee_a_l_arbre_d_or.jpg';
+$photoBroce->offer_id = $offre8->id;
+$photoBroce->save();
+
+$photoBroce1 = new OfferPhoto();
+$photoBroce1->url_photo = 'https://static.broceliande.guide/IMG/jpg/balade_contee_a_l_arbre_d_or.jpgttps://static.broceliande.guide/IMG/jpg/balade_contee_a_l_arbre_d_or.jpg';
+$photoBroce1->offer_id = $offre8->id;
+$photoBroce1->save();
+
+$photoBroce2 = new OfferPhoto();
+$photoBroce2->url_photo = 'https://www.broceliande-vacances.com/app/uploads/broceliande/2020/02/thumbs/broceliande-7019e-berthier2019-1920x960.jpg';
+$photoBroce2->offer_id = $offre8->id;
+$photoBroce2->save();
+
+// ---------------------------------------------------------------------- //
+// photos offre9
+// ---------------------------------------------------------------------- //
+
+$photoRaz = new OfferPhoto();
+$photoRaz->url_photo = 'https://api.cloudly.space/resize/crop/1200/627/60/aHR0cHM6Ly9jZHQyOS5tZWRpYS50b3VyaW5zb2Z0LmV1L3VwbG9hZC9jcnRiLWFiNTQ0NEJELmpwZw==/image.jpg';
+$photoRaz->offer_id = $offre9->id;
+$photoRaz->save();
+
+$photoRaz1 = new OfferPhoto();
+$photoRaz1->url_photo = 'https://www.villagelaplage.com/wp-content/uploads/2021/02/decouverte-pointe-du-raz.jpg';
+$photoRaz1->offer_id = $offre9->id;
+$photoRaz1->save();
+
+$photoRaz2 = new OfferPhoto();
+$photoRaz2->url_photo = 'https://www.sentiersmaritimes.com/7440-thickbox_default/finistere-sauvage-de-la-presqu-ile-de-crozon-a-la-pointe-du-raz-.jpg';
+$photoRaz2->offer_id = $offre9->id;
+$photoRaz2->save();
+
+$photoRaz3 = new OfferPhoto();
+$photoRaz3->url_photo = 'https://media.ouest-france.fr/v1/pictures/MjAyMTAxZjUwOTQ4NzU0ZmVhMzBjOTljODY5NjAxN2IzOGE2N2Q?width=1260&height=708&focuspoint=50%2C25&cropresize=1&client_id=bpeditorial&sign=b6442f05df456089b237622dc21f039f9640549870cdabc808f3ffb98e145d41';
+$photoRaz3->offer_id = $offre9->id;
+$photoRaz3->save();
+
+// ---------------------------------------------------------------------- //
+// photos offre10
+// ---------------------------------------------------------------------- //
+
+$photoMorb = new OfferPhoto();
+$photoMorb->url_photo = 'https://www.golfedumorbihan.bzh/content/uploads/2022/05/Rhuys2015_MG_1021.jpg';
+$photoMorb->offer_id = $offre10->id;
+$photoMorb->save();
+
+$photoMorb2 = new OfferPhoto();
+$photoMorb2->url_photo = 'https://www.domaine-de-kervallon.com/wp-content/uploads/2021/10/croisieres-izenag-bateau-morbihan-golf.jpg';
+$photoMorb2->offer_id = $offre10->id;
+$photoMorb2->save();
+
+$photoMorb2 = new OfferPhoto();
+$photoMorb2->url_photo = 'https://www.caseneuvemaxicatamaran.com/sites/anne-caseneuve.com/files/styles/photo_contenu/public/2023-02/50264907-2CC2-487F-A8E6-C00A5D321481.jpeg?itok=Kw-53kpg';
+$photoMorb2->offer_id = $offre10->id;
+$photoMorb2->save();
+
+$photoMorb3 = new OfferPhoto();
+$photoMorb3->url_photo = 'https://www.navix.fr/wp-content/uploads/2023/03/NAVIX_Golfe-ile-aux-moines_by-zulaan.net_-scaled.jpg';
+$photoMorb3->offer_id = $offre10->id;
+$photoMorb3->save();
+
 
 // ---------------------------------------------------------------------- //
 // Generate opinions
@@ -1134,8 +1347,66 @@ foreach ($offers as $offer) {
         $opinion->created_at = date('Y-m-d H:i:s', strtotime('-' . rand(1, 365) . ' days'));
         $opinion->save();
         $account_ids[] = $opinion->account_id;
+
+        $offer->rating = $offer->rating();
+        $offer->update();
+    }
+
+}
+
+// ---------------------------------------------------------------------------------------------- //
+// Generate offer status histories
+// ---------------------------------------------------------------------------------------------- //
+
+foreach ($offers as $offer) {
+    $date = $offer->created_at;
+    $date = new DateTime($date);
+    $date->modify('first day of this month');
+    $today = new DateTime();
+    $today->modify('first day of this month');
+
+    while ($date < $today && $date->format("m") != $today->format("m")) {
+        if (rand(0, 1) == 0) {
+            $status = new OfferStatusHistory();
+            $status->offer_id = $offer->id;
+            $status->switch_to = $offer->offline ? "offline" : "online";
+            $status->created_at = $date->format('Y-m-d');
+            $status->save();
+
+            $offer->offline = !$offer->offline;
+            $offer->update();
+        }
+
+        $date->modify('+6 days');
     }
 }
+
+
+// ---------------------------------------------------------------------------------------------- //
+// Generate invoice for offer of the each month since the creation of the offer
+// ---------------------------------------------------------------------------------------------- //
+
+
+foreach ($offers as $offer) {
+    $date = $offer->created_at;
+    $date = new DateTime($date);
+    $date->modify('first day of this month');
+    $today = new DateTime();
+    $today->modify('first day of this month');
+
+    while ($date < $today && $date->format("m") != $today->format("m")) {
+        $invoice = new Invoice();
+        $invoice->offer_id = $offer->id;
+        $invoice->issue_date = $date->format('Y-m-d');
+        $due_date = new DateTime($date->format('Y-m-d'));
+        $invoice->due_date = $due_date->modify('+15 days')->format('Y-m-d');
+        $invoice->service_date = $date->format("m");
+        $invoice->save();
+
+        $date->modify('+1 month');
+    }
+}
+
 
 echo "Database seeded successfully.\n";
 

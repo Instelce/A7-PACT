@@ -7,19 +7,24 @@ let offerId = document.querySelector('#offer-id').value;
 // Map
 // ---------------------------------------------------------------------------------------------- //
 
-let lannion = [48.73218569636991, -3.4613401408248046];
+let latitude = document.querySelector('#map-latitude')
+let longitude = document.querySelector('#map-longitude')
 
-let map = L.map('map', {
-    center: lannion,
-    zoom: 10
-});
+let coords = [latitude.value, longitude.value];
 
-let tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+if (latitude.value !== '' && longitude.value !== '') {
+    let map = L.map('map', {
+        center: coords,
+        zoom: 10
+    });
 
-let marker = L.marker(lannion).addTo(map);
+    let tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    let marker = L.marker(coords).addTo(map);
+}
 
 
 // ---------------------------------------------------------------------------------------------- //
@@ -237,7 +242,7 @@ function createOpinionCard(opinion) {
     } else if (months > 0) {
         dateText = `${months}m`;
     } else if (weeks > 0) {
-        dateText = `${weeks}s`;
+        dateText = `${weeks}sem`;
     } else if (days > 0) {
         dateText = `${days}j`;
     } else if (hours > 0) {

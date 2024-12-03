@@ -3,6 +3,9 @@
     --foreground: var(--color-white);
     --background: var(--color-blue-secondary);
     padding: .2rem .4rem;
+    height: fit-content;
+    width: fit-content;
+    display: inline-block;
     font-size: var(--typescale-d1);
     background: rgb(var(--background));
     color: rgb(var(--foreground));

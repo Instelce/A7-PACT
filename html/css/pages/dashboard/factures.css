@@ -20,7 +20,6 @@
 
 /* Accordion */
 .accordion {
-    margin-bottom: 1rem;
 }
 
 .accordion-trigger {
@@ -51,8 +50,101 @@
     transition: opacity .2s;
 }
 
-.offer-card {
+.accordion-content {
+    margin-bottom: 2rem;
+}
+
+/* Option card */
+.option-card {
+    padding: .8rem 1rem;
+    position: relative;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border: 1px solid rgb(var(--color-gray-1));
+    border-radius: var(--radius-medium);
+}
+
+.option-card:hover {
+    background: rgba(var(--color-gray-1), .1);
+}
+
+/* Offer invoice card */
+.invoice-card {
+    padding: .8rem 1rem;
+    position: relative;
+    margin-bottom: 1.5rem;
+
+    display: flex;
+    justify-content: space-between;
+    /*align-items: center;*/
+
+    border: 1px solid rgb(var(--color-gray-1));
+    border-radius: var(--radius-medium);
+}
+
+.invoice-card header {
+    display: flex;
+    flex-direction: column;
+}
+
+.invoice-card header h3 {
+    font-weight: 700;
+    font-size: var(--typescale-u1);
+    font-family: var(--font-title);
+    margin-bottom: .3rem;
+}
+
+.invoice-card .card-buttons {
+    position: absolute;
+    display: flex;
+    gap: .5rem;
+    bottom: 0;
+    transform: translateY(50%);
+}
+
+.invoice-card .card-histories {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgb(var(--color-gray-1));
+}
+
+.invoice-card .card-histories .calendar {
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: .3rem;
+}
+
+/* Week days */
+.invoice-card .card-histories .week-days {
+    margin-bottom: .5rem;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    place-items: center;
+    gap: .3rem;
+}
+
+/* Calendar */
+.invoice-card .card-histories .calendar span {
+    width: 4rem;
+    height: 4rem;
+
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+
+    border: 1px solid rgb(var(--color-gray-1));
+    border-radius: var(--radius-small);
+}
+
+.invoice-card .card-histories .calendar span.active {
+    background: rgba(var(--color-purple-primary), .1);
+    border: 1px solid rgba(var(--color-purple-primary), .1);
+}
+
+.invoice-card .card-histories .calendar span.last-month {
+    opacity: .5;
 }

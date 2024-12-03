@@ -20,7 +20,7 @@ class MemberUpdateForm extends Model
     public string $postalCode = '';
     public string $city = '';
     public string $phone = '';
-    public string $password = '';
+    public string $passwordCheck = '';
     public bool $notification = false;
     public ?UserAccount $userAccount = null;
     public ?Address $address = null;
@@ -33,7 +33,6 @@ class MemberUpdateForm extends Model
     {
         $this->userAccount = Application::$app->user;
         $this->mail = $this->userAccount->mail;
-        $this->password = $this->userAccount->password;
 
         $this->address = Address::findOneByPk($this->userAccount->address_id);
         $this->streetNumber = $this->address->number;
@@ -49,8 +48,9 @@ class MemberUpdateForm extends Model
             $this->phone = $this->memberUser->phone;
             $this->pseudo = $this->memberUser->pseudo;
             $this->notification = $this->memberUser->allows_notifications;
-        }
+        };
     }
+
 
     public function update()
     {
@@ -64,16 +64,19 @@ class MemberUpdateForm extends Model
         return true;
     }
 
-    public function saveUpdate()
+    public function passwordMatch(): bool
     {
         /**
          * @var UserAccount $user
          */
-        if (!password_verify($this->password, $user->password)) {
-            $this->addError('password', 'Mot-de-passe incorrect.');
+        $user = Application::$app->user;
+
+        if (!password_verify($this->passwordCheck, $user->password)) {
+            $this->addError('passwordCheck', 'Mot-de-passe incorrect.');
             return false;
         }
-        return false;
+
+        return true;
     }
 
     public function rules(): array
@@ -88,7 +91,6 @@ class MemberUpdateForm extends Model
             'postalCode' => [self::RULE_REQUIRED, self::RULE_POSTAL],
             'city' => [self::RULE_REQUIRED],
             'phone' => [self::RULE_REQUIRED,self::RULE_PHONE],
-            'password' => [self::RULE_REQUIRED],
         ];
     }
 
@@ -105,7 +107,6 @@ class MemberUpdateForm extends Model
             'city' => 'Ville',
             'phone' => 'Téléphone',
             'notifications' => 'notifications',
-            'password' => 'Entrez votre mot de passe',
         ];
     }
 
@@ -121,7 +122,7 @@ class MemberUpdateForm extends Model
             'postalCode' => '22300',
             'city' => 'Lannion',
             'phone' => '01 23 45 67 89',
-            'notifications' => '*******',
+            //'notifications' => '*******',
         ];
     }
 }

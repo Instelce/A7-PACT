@@ -449,7 +449,7 @@ $form = new Form();
 
                         <x-input>
                             <p slot="label">Prix minimum</p>
-                            <input slot="input" type="number" name="restaurant-min-price" min="1">
+                            <input slot="input" type="number" name="offer-minimum-price" min="1">
                         </x-input>
 
                     </div>

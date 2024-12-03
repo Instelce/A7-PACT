@@ -91,7 +91,7 @@ class View
      * @param string $view Name of the view to render
      * @param array $params Parameters to pass to the view
      */
-    public function pdf(string $name, string $view, array $params = []): void
+    public function pdf(string $name, string $view, array $params = [], bool $download = false): void
     {
 //        $options = new Options();
 //        $options->setIsRemoteEnabled(true);
@@ -100,6 +100,11 @@ class View
         $pdf->loadHtml($this->renderOnlyView('pdf/' . $view, $params));
         $pdf->setPaper('A4');
         $pdf->render();
-        $pdf->stream($name, ['Attachment' => 0]);
+
+        if ($download) {
+            $pdf->stream($name);
+        } else {
+            $pdf->stream($name, ['Attachment' => 0]);
+        }
     }
 }

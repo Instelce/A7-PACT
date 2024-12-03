@@ -9,7 +9,7 @@ class m0011_create_table_offer_period
         $db = Application::$app->db;
         $sql = "CREATE TABLE offer_period (
             id SERIAL PRIMARY KEY,
-            
+            offer_id INT NOT NULL,
             start_date DATE NOT NULL,
             end_date DATE NOT NULL
         );

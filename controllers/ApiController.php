@@ -9,6 +9,7 @@ use app\core\Response;
 use app\models\account\UserAccount;
 use app\models\offer\Offer;
 use app\models\offer\schedule\OfferSchedule;
+use app\models\offer\schedule\LinkSchedule;
 use app\models\opinion\Opinion;
 use app\models\opinion\OpinionPhoto;
 use app\models\user\MemberUser;
@@ -22,6 +23,9 @@ use app\models\offer\OfferPeriod;
 use app\models\offer\VisitOffer;
 use app\models\user\professional\ProfessionalUser;
 use app\core\Utils;
+use DateTime;
+use DateInterval;
+
 
 class ApiController extends Controller
 {
@@ -58,9 +62,9 @@ class ApiController extends Controller
         $category = $request->getQueryParams('category');
         $minimumPrice = $request->getQueryParams('minimumPrice');
         $maximumPrice = $request->getQueryParams('maximumPrice');
-        $open = $request->getQueryParams('open');
-        $minimumEventDate = $request->getQueryParams('minimumEventDate');
-        $maximumEventDate = $request->getQueryParams('maximumEventDate');
+        // $open = $request->getQueryParams('open');
+        // $minimumEventDate = $request->getQueryParams('minimumEventDate');
+        // $maximumEventDate = $request->getQueryParams('maximumEventDate');
         $location = $request->getQueryParams('location');
         $rating = $request->getQueryParams('rating');
 
@@ -81,13 +85,11 @@ class ApiController extends Controller
         if ($maximumPrice) {
             $where[] = ['minimum_price', $maximumPrice, '<=', 'maximum_price'];
         }
+        $where[] = ['offline', "false"];
+        if ($rating) {
+            $where[] = ['rating', $rating, '>='];
+        }
 
-        // if ($minimumEventDate) {
-        //     $where[] = ['OfferPeriod__end_date', $minimumEventDate, '<='];
-        // }
-        // if ($maximumEventDate) {
-        //     $where[] = ['OfferPeriod__start_date', $maximumEventDate, '>=', 'maximum_event_date'];
-        // }
 
         if (in_array('price_asc', $order_by)) {
             $order_by = array_diff($order_by, ['price_asc']);
@@ -97,6 +99,16 @@ class ApiController extends Controller
             $order_by = array_diff($order_by, ['price_desc']);
             $order_by[] = 'minimum_price DESC';
             $where[] = ['minimum_price', '0', '>', 'minimum_priceDesc'];
+        }
+
+        if (in_array('rating_asc', $order_by)) {
+            $order_by = array_diff($order_by, ['rating_asc']);
+            $order_by[] = 'rating ASC';
+            $where[] = ['rating', '0', '>', 'ratingAsc'];
+        } elseif (in_array('rating_desc', $order_by)) {
+            $order_by = array_diff($order_by, ['rating_desc']);
+            $order_by[] = 'rating DESC';
+            $where[] = ['rating', '0', '>', 'ratingDesc'];
         }
 
 
@@ -111,27 +123,39 @@ class ApiController extends Controller
             ->order_by($order_by);
 
         // Calculate the average rating
-        if ($rating) {
-            $query->joinString("LEFT JOIN opinion ON opinion.offer_id = offer.id")
-                ->group_by(['offer.id'])
-                ->having('AVG(opinion.rating) >= ' . $rating);
-        }
-        if ($open) {
-            $query->joinString("INNER JOIN link_schedule ON link_schedule.offer_id = offer.id")
-                ->joinString("INNER JOIN offer_schedule ON offer_schedule.id = link_schedule.schedule_id")
-                ->filters([
-                    ['offer_schedule__opening_hours', 'fermé', '!='],
-                    ['offer_schedule__closing_hours', 'fermé', '!='],
-                    ['offer_schedule__opening_hours', date('H:i'), '<='],
-                    ['offer_schedule__closing_hours', date('H:i'), '>=']
-                ]);
-        }
+        // if ($rating) {
+        //     $query->joinString("LEFT JOIN opinion ON opinion.offer_id = offer.id")
+        //         ->group_by(['offer.id'])
+        //         ->having('AVG(opinion.rating) >= ' . $rating);
+        // }
+        // if ($minimumEventDate && $maximumEventDate) {
+
+        //     $query->joinString("JOIN offer_period ON offer.id = offer_period.offer_id")
+        //         ->filters([
+        //             ['offer_period__start_date', "TO_DATE(cast($minimumEventDate, DATE), 'YYYY-MM-DD')", '>='],
+        //             ['offer_period__end_date', "TO_DATE(cast($maximumEventDate, DATE), 'YYYY-MM-DD')", '<='],
+        //         ])
+        //     ;
+        // }
+        // if ($open) {
+        //     $query->joinString("INNER JOIN link_schedule ON link_schedule.offer_id = offer.id")
+        //         ->joinString("INNER JOIN offer_schedule ON offer_schedule.id = link_schedule.schedule_id")
+        //         ->filters([
+        //             ['offer_schedule__opening_hours', 'fermé', '!='],
+        //             ['offer_schedule__closing_hours', 'fermé', '!='],
+        //             ['offer_schedule__opening_hours', date('H:i'), '<='],
+        //             ['offer_schedule__closing_hours', date('H:i'), '>='],
+        //         ])
+        //         ->group_by(['offer.id']);
+        // }
 
         /** @var Offer[] $offers */
         $offers = $query->make();
 
         foreach ($offers as $i => $offer) {
             $data[$i] = $offer->toJson();
+
+            $data[$i]['rating'] = $offer->rating();
 
             // Add professionalUser account
             $data[$i]['profesionalUser'] = ProfessionalUser::findOneByPk($offer->professional_id)->toJson();
@@ -149,8 +173,37 @@ class ApiController extends Controller
             $address = Address::findOneByPk($offer->address_id);
             $data[$i]['address'] = $address->toJson();
             unset($data[$i]['address']['id']);
-        }
 
+            //add status
+            $linkSchedules = LinkSchedule::find(['offer_id' => $offer->id]);
+            $dayOfWeek = strtolower((new DateTime())->format('N'));
+            foreach ($linkSchedules as $linkSchedule) {
+                $offerSchedules = OfferSchedule::find(['id' => $linkSchedule->schedule_id]);
+                foreach ($offerSchedules as $offerSchedule) {
+                    if ($offerSchedule->day == $dayOfWeek) {
+                        $closingHour = $offerSchedule->closing_hours;
+                        $openingHour = $offerSchedule->opening_hours;
+                    }
+                }
+            }
+            if ($closingHour === 'fermé') {
+                $status = "Fermé";
+            } else {
+                $closingTime = new DateTime($closingHour);
+                $openingTime = new DateTime($openingHour);
+
+                $currentTime = new DateTime();
+
+                if ($closingTime <= $currentTime && $openingTime >= $currentTime) {
+                    $status = "Fermé";
+                } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
+                    $status = "Ferme bientôt";
+                } else {
+                    $status = "Ouvert";
+                }
+            }
+            $data[$i]['status'] = $status;
+        }
         return $response->json($data);
     }
 

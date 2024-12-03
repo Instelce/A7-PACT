@@ -50,12 +50,53 @@
     stroke-width: 2px;
 }
 
+
 .research-card .summary {
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.research-card .research-card--title{
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.research-card--photo--enRelief {
+    height: 300px;
+    padding: .4rem;
+    border: 1px solid rgb(var(--color-orange-primary));
+    border-radius: calc(var(--radius-medium));
+    overflow: hidden;
+}
+
+.research-card--body--enRelief {
+    margin: 1rem 0;
+    padding: .5rem .5rem .5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(var(--color-orange-primary));
+    border-left: none;
+    border-radius: 0 var(--radius-medium) var(--radius-medium) 0;
+}
+
+.enRelief{
+    border: 1px solid rgb(var(--color-orange-primary));
+    position: relative;
+}
+
+.enReliefIcon{
+    width: 15px;
+    height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 @media (max-width: 768px) {

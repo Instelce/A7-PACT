@@ -32,9 +32,9 @@ class Controller
         return Application::$app->view->json($model);
     }
 
-    public function pdf($name, $view, $params = [])
+    public function pdf($name, $view, $params = [], $download = false)
     {
-        return Application::$app->view->pdf($name, $view, $params);
+        return Application::$app->view->pdf($name, $view, $params, $download);
     }
 
     public function registerMiddleware(BaseMiddleware $middleware)

@@ -85,7 +85,7 @@ class DashboardController extends Controller
 
     public function invoices(Request $request, Response $response)
     {
-        $invoices = Invoice::query()->join(new Offer())->filters(['offer__professional_id' => Application::$app->user->account_id])->make();
+        $invoices = Invoice::query()->join(new Offer())->filters(['offer__professional_id' => Application::$app->user->account_id])->order_by(["-issue_date"])->make();
         $offers = Offer::find(['professional_id' => Application::$app->user->account_id]);
         $subscriptions = [];
 
@@ -100,6 +100,7 @@ class DashboardController extends Controller
     }
 
     public function invoicesPDF(Request $request, Response $response, $routeParams){
+        $pk = $routeParams['pk'];
         $invoiceId = $routeParams['pk'];
         $invoice = Invoice::findOneByPk($routeParams['pk']);
         $offer = Offer::findOneByPk($invoice->offer_id);
@@ -109,23 +110,24 @@ class DashboardController extends Controller
         //PROFESSIONAL DATA
         $professionalAddress = Address::findOneByPk($user->address_id);
 
-        //PAYMENT DATA (revoir tout ça )
-        //$offerType = OfferType::findOne(['id' => $offer->offer_type]);
-        //$offerOption = OfferOption::findOne(['offer_id' => $offer->offer_id]);
-        //$offerTypeDuration = NULL;
+        //PAYMENT DATA
+        $subscription = $offer->subscription();
+        $type = $offer->type();
 
-        $HTPrice = NULL;
-        $TVA = 20;
-        $TTCPrice = NULL;
-        
-        return $this->pdf("Facture $invoiceId", 'invoicePreview', [
-            'pk' => $routeParams['pk'],
+        $download = false;
+        if ($request->isGet() && $request->getQueryParams('download') === 'true') {
+            $download = true;
+        }
+
+        return $this->pdf("Facture $pk - $invoice->service_date - $offer->title", 'invoicePreview', [
+            'pk' => $pk,
             'invoice' => $invoice,
             'offer' => $offer,
             'user' => $user,
             'professional' => $professional,
             'professionalAddress' => $professionalAddress,
-        ]);
+            'subscription' => $subscription,
+            'type' => $type,
+        ], $download);
     }
-
 }

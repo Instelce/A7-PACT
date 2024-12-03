@@ -32,11 +32,15 @@ abstract class DBModel extends Model
         $params = array_map(fn($attr) => ":$attr", $attributes);
 
         // If a model has created_at or updated_at class attribute are not set, set them to the current time
-        if (property_exists($this, 'created_at') && !$this->created_at) {
+        if (property_exists($this, 'created_at') && $this->created_at === '') {
             $this->created_at = date('Y-m-d H:i:s');
         }
         if (property_exists($this, 'updated_at')) {
-            $this->updated_at = date('Y-m-d H:i:s');
+            if (property_exists($this, 'created_at') && !empty($this->created_at)) {
+                $this->updated_at = $this->created_at;
+            } else {
+                $this->updated_at = date('Y-m-d H:i:s');
+            }
         }
 
         // Add the created_at and updated_at attributes to the model
@@ -158,7 +162,7 @@ abstract class DBModel extends Model
         $tableName = static::tableName();
         $pk = static::pk();
 
-        $statement = self::prepare("SELECT * FROM $tableName WHERE $pk = $pkValue");
+        $statement = self::prepare("SELECT * FROM $tableName WHERE $pk = $pkValue;");
         $statement->execute();
 
         return $statement->fetchObject(static::class);

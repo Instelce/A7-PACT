@@ -186,18 +186,20 @@ class AuthController extends Controller
     public function updateAccount(Request $request, Response $response){
         $form = new MemberUpdateForm();
 
-
-        if ($request->isPost() && $request->formName() === "update-main") {
+        if ($request->isPost() && $request->formName() == "update-main") {
             $form->loadData($request->getBody());
 
-            if ($form->validate() && $form->update()) {
+            if ($form->passwordMatch() && $form->validate() && $form->update()) {
                 Application::$app->session->setFlash('success', "Votre compte à bien été modifié !");
                 $response->redirect('/comptes/modification');
-                exit;
             }
         }
 
-        if ($request->isPost() && $request->formName() === "update-avatar") {
+        echo '<pre>';
+        var_dump($form);
+        echo '</pre>';
+
+        if ($request->isPost() && $request->formName() == "update-avatar") {
             $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
             Application::$app->user->avatar_url=$avatarPath;
             Application::$app->user->update();
@@ -213,6 +215,7 @@ class AuthController extends Controller
             Application::$app->session->setFlash('success', "Un mail a bien été envoyé a l'adresse $mail");
             $response->redirect('/comptes/modification');
         }
+
         return $this->render('auth/update-member-account', ['model' => $form]);
     }
 

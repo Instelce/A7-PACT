@@ -35,6 +35,9 @@ if ($status == "Fermé") {
     $class = "offer-open";
 }
 
+$longitude = $offer->address()->longitude;
+$latitude = $offer->address()->latitude;
+
 ?>
 
 <input id="offer-id" type="hidden" value="<?php echo $pk ?>">
@@ -52,17 +55,32 @@ if ($status == "Fermé") {
 
         <!-- Header -->
         <header class="page-header">
-            <h2 class="heading-2 font-title"><?php echo $offerData["title"] ?></h2> <!-- title -->
+            <div class="flex gap-3 items-center flex-wrap">
+                <h2 class="heading-2 font-title"><?php echo $offerData["title"] ?></h2> <!-- title -->
+                <div class="stars" data-number="<?php echo $offerData["rating"] ?>"></div>
+                <p>(<?php echo $offer->opinionsCount() ?> avis)</p>
+            </div>
 
-            <div class="flex gap-3 items-center">
+            <div class="flex justify-between items-center">
                 <p>
                     <?php echo $offerData["category"] ?>
                     par
                     <a href="/comptes/<?php echo $offerData["professionalId"] ?>" class="underline"><?php echo $offerData["author"] ?></a>
                 </p>
-                <span class="dot"></span>
-                <div class="stars" data-number="<?php echo $offerData["rating"] ?>"></div>
-                <p>(<?php echo $offer->opinionsCount() ?> avis)</p>
+                <div class="flex gap-4 items-center">
+                    <div class="inline-offer">
+                        <i data-lucide="clock"></i>
+
+                        <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+                    </div>
+                    <div class="inline-offer">
+                        <i data-lucide="coins"></i>
+                        <p>
+                            <?php echo $offerData["price"]; ?>
+                        </p>
+                    </div>
+                </div>
+
             </div>
         </header>
 
@@ -77,10 +95,9 @@ if ($status == "Fermé") {
             <?php endforeach; ?>
         </div>
 
-        <!-- Summary and description -->
+        <!-- Summary -->
         <div class="flex flex-col gap-4 mb-8">
             <p><?php echo $offerData["summary"] ?></p>
-            <p><?php echo $offerData["description"] ?></p>
         </div>
 
         <!-- Information presented in a list with icons -->
@@ -102,38 +119,6 @@ if ($status == "Fermé") {
                 </div>
             <?php endif; ?>
 
-            <!-- Price -->
-            <?php if ($offerData["category"] !== "Restaurant"): ?>
-                <div class="inline-offer">
-                    <i data-lucide="coins"></i>
-
-                    <p>
-                        <?php if ($offerData["price"] == 0): ?>
-                            Gratuit
-                        <?php else: ?>
-                            À partir de <?php echo $offerData["price"]; ?> € / personne
-                        <?php endif; ?>
-                    </p>
-                </div>
-
-                <!-- Price for restaurant -->
-            <?php elseif ($offerData["category"] === "Restaurant"): ?>
-                <div class="inline-offer">
-                    <i data-lucide="coins"></i>
-
-                    <p>
-                        <?php for ($i = 0; $i < $offerData['range_price']; $i++) {
-                            echo "€";
-                        } ?>
-                    </p>
-                </div>
-            <?php endif; ?>
-
-            <div class="inline-offer">
-                <i data-lucide="clock"></i>
-
-                <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
-            </div>
 
             <div class="inline-offer">
                 <i data-lucide="map-pin"></i>
@@ -164,6 +149,12 @@ if ($status == "Fermé") {
                 </div>
             <?php endif; ?>
         </div>
+
+        <!-- Description -->
+        <div class="flex flex-col gap-4 mb-8">
+            <p><?php echo $offerData["description"] ?></p>
+        </div>
+
 
         <?php if ($offerData["category"] === "Restaurant"): ?>
             <div class="mb-8">
@@ -254,6 +245,10 @@ if ($status == "Fermé") {
                     Rédiger un avis
                     <i data-lucide="pen-line"></i>
                 </button>
+            <?php } ?>
+
+            <?php if (Application::$app->user?->isProfessional()) { ?>
+                <p>En tant que proffessionnel vous ne pouvez pas rédiger d'avis.</p>
             <?php } ?>
 
             <!-- Creation form -->
@@ -420,15 +415,19 @@ if ($status == "Fermé") {
     <!-- Sidebar -->
     <aside class="sticky col-span-2 h-fit flex flex-col gap-4 top-navbar-height">
         <div class="map-container">
+            <!-- Generated with leaflet -->
             <div id="map" class="map"></div>
+            <input type="hidden" id="map-latitude" value="<?php echo $latitude ?>">
+            <input type="hidden" id="map-longitude" value="<?php echo $longitude ?>">
+
             <!-- <button class="button gray spaced">
                 Itinéraire
                 <i data-lucide="map"></i>
-            </button>
-            <button class="button gray spaced">
+            </button> -->
+            <a class="button gray spaced" href="https://maps.google.com/?q=<?php echo $latitude . ',' . $longitude ?>" target="_blank">
                 Ouvrir dans Maps
                 <i data-lucide="arrow-up-right"></i>
-            </button> -->
+            </a>
         </div>
 
         <?php if (Application::$app->user?->isProfessional() && Application::$app->user->specific()->hasOffer($pk)) { ?>

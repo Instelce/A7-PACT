@@ -19,8 +19,6 @@ class Offer extends DBModel
     public string $description = '';
     public int $likes = 0;
     public int $offline = self::STATUS_OFFLINE;
-    public ?string $last_offline_date = '';
-    public int $offline_days = 0;
     public int $view_counter = 0;
     public int $click_counter = 0;
     public string $website = '';
@@ -40,6 +38,24 @@ class Offer extends DBModel
     public string $created_at = '';
     public string $updated_at = '';
 
+    public function save(): bool
+    {
+        parent::save();
+
+        // Add history line
+        $history = new OfferStatusHistory();
+        $history->offer_id = $this->id;
+        if ($this->offline) {
+            $history->switch_to = "offline";
+        } else {
+            $history->switch_to = "online";
+        }
+        $history->created_at = date("Y-m-d", strtotime($this->created_at . "-1 days"));
+        $history->save();
+
+        return true;
+    }
+
     public static function tableName(): string
     {
         return 'offer';
@@ -47,18 +63,18 @@ class Offer extends DBModel
 
     public function attributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'last_offline_date', 'offline_days', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price', 'rating'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price', 'rating'];
     }
 
     public function updateAttributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'last_offline_date', 'offline_days', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price', 'rating'];
+        return ['title', 'summary', 'description', 'likes', 'offline', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price', 'rating'];
     }
 
     public function rules(): array
     {
         return [
-//            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
+            //            'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 60]],
 //            'summary' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]],
 //            'description' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 1024]],
 //            'website' => [],
@@ -102,7 +118,7 @@ class Offer extends DBModel
 
     public function address(): Address
     {
-        return Address::findOne(['address_id' => $this->id]);
+        return Address::findOneByPk($this->address_id);
     }
 
     public function tags(): array
@@ -143,14 +159,16 @@ class Offer extends DBModel
         };
     }
 
-    public function addPhoto(string $url) {
+    public function addPhoto(string $url)
+    {
         $photo = new OfferPhoto();
         $photo->offer_id = $this->id;
         $photo->url_photo = $url;
         $photo->save();
     }
 
-    public function removePhoto(int $photoId) {
+    public function removePhoto(int $photoId)
+    {
         $photo = OfferPhoto::findOne(['id' => $photoId, 'offer_id' => $this->id]);
         if ($photo) {
             $photo->delete();
@@ -163,6 +181,13 @@ class Offer extends DBModel
         $isTagged->tag_id = $tagId;
         $isTagged->offer_id = $this->id;
         $isTagged->save();
+    }
+
+    public function hasTag(string $tagName): bool
+    {
+        $tag = OfferTag::findOne(['name' => strtolower($tagName)]);
+        $isTagged = OfferIsTagged::findOne(['tag_id' => $tag->id, 'offer_id' => $this->id]);
+        return $isTagged !== false;
     }
 
     public function addSubscription(string $type, string $launchDate, int $duration): void
@@ -195,15 +220,104 @@ class Offer extends DBModel
         return count(Opinion::find(['offer_id' => $this->id, 'read' => 0]));
     }
 
-    public function isALaUne() {
+    public function isALaUne()
+    {
         return count(Subscription::query()
-                ->join(new Option())
-                ->filters(['offer_id' => $this->id, 'option__type' => Subscription::A_LA_UNE])->make()) > 0;
+            ->join(new Option())
+            ->filters(['offer_id' => $this->id, 'option__type' => Subscription::A_LA_UNE])->make()) > 0;
     }
 
     public function rating(): int
     {
         $opinions = Opinion::find(['offer_id' => $this->id]);
         return count($opinions) > 0 ? array_sum(array_map(fn($opinion) => $opinion->rating, $opinions)) / count($opinions) : 0;
+    }
+
+    public function addInvoice(): void
+    {
+        $invoice = new Invoice();
+        $invoice->offer_id = $this->id;
+        $invoice->service_date = date("m");
+        $invoice->issue_date = date("Y-m-d");
+        $invoice->due_date = date("Y-m-d", strtotime("+30 days"));
+        $invoice->save();
+    }
+
+    /**
+     * Count activate days in order of the history for the current month
+     */
+    public function activeDays(): int
+    {
+        $lastMonthHistories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m', strtotime("-1 month"))])->make();
+        $histories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m')])->make();
+        $lastMonthDay = date('t', strtotime(date('Y-m')));
+        $count = 0;
+
+        // Set status
+        if (empty($lastMonthHistories)) {
+            $status = $this->offline ? "offline" : "online";
+        } else {
+            $status = $lastMonthHistories[count($lastMonthHistories) - 1]->switch_to;
+        }
+
+//        echo $status;
+
+//        echo "<pre>";
+        for ($day = 1; $day <= $lastMonthDay; $day++) {
+            // Check if the status has change on this day
+            $dayHistories = array_filter($histories, fn($history) => date('d', strtotime($history->created_at)) == $day);
+            $dayHistories = array_values($dayHistories);
+
+            if (!empty($dayHistories)) {
+                $lastDayHistory = $dayHistories[count($dayHistories) - 1];
+                $status = $lastDayHistory->switch_to;
+            }
+
+//            echo $status . "($day)" . PHP_EOL;
+
+            if ($status === "online") {
+                $count++;
+            }
+        }
+//                echo "</pre>";
+
+
+        return $count;
+    }
+
+    public function activeDaysToNow(): int
+    {
+        $lastMonthHistories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m', strtotime("-1 month"))])->make();
+        $histories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m')])->make();
+        $currentDay = date('d');
+        $count = 0;
+
+        // Set status
+        if (empty($lastMonthHistories)) {
+            $status = $this->offline ? "offline" : "online";
+        } else {
+            $status = $lastMonthHistories[count($lastMonthHistories) - 1]->switch_to;
+        }
+
+//        echo "<pre>";
+        for ($day = 1; $day <= $currentDay; $day++) {
+            // Check if the status has change on this day
+            $dayHistories = array_filter($histories, fn($history) => date('d', strtotime($history->created_at)) == $day);
+            $dayHistories = array_values($dayHistories);
+
+            if (!empty($dayHistories)) {
+                $lastDayHistory = $dayHistories[count($dayHistories) - 1];
+                $status = $lastDayHistory->switch_to;
+            }
+
+//            echo $status . "($day)" . PHP_EOL;
+
+            if ($status === "online") {
+                $count++;
+            }
+        }
+//        echo "</pre>";
+
+        return $count;
     }
 }

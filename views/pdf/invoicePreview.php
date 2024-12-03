@@ -5,11 +5,16 @@
 /** @var $user \app\models\account\UserAccount */
 /** @var $professional \app\models\user\professional\ProfessionalUser */
 /** @var $professionalAddress \app\models\Address */
+/** @var $subscription  \app\models\offer\Subscription */
+/** @var $type \app\models\offer\OfferType */
+
 
 use app\core\Application;
 use app\core\Utils;
 
 $url = $_ENV['DOMAIN'] . '/offres/' . $offer->id;
+
+$offerPrice = $invoice->activeDays() * $type->price;
 
 ?>
 
@@ -121,6 +126,36 @@ $url = $_ENV['DOMAIN'] . '/offres/' . $offer->id;
             color: inherit;
         }
 
+        /* Totals */
+
+        .totals {
+            margin-top: 20px;
+        }
+
+        .totals-table {
+            width: 50%;
+            border-spacing: 0;
+            margin-left: 22rem;
+        }
+
+        .totals-table td,
+        .totals-table th,
+        .totals-table{
+            border: none;
+        }
+
+        .totals-table td {
+            padding: 5px;
+            text-align: right;
+        }
+
+        .totals-table .total {
+            font-weight: bold;
+            color: #d032e7;
+        }
+
+        /* Footer */
+
         footer {
             line-height: 30%;
         }
@@ -136,6 +171,40 @@ $url = $_ENV['DOMAIN'] . '/offres/' . $offer->id;
             bottom: 0;
             right: 0;
             text-align: right;
+        }
+
+        .payment-terms {
+            padding: 15px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            margin-top: 40px;
+        }
+
+        .payment-terms h3 {
+            color: #d032e7;
+            font-size: 18px;
+            padding-bottom: 10px;
+        }
+
+        .payment-terms p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .contact {
+            /* background-color: #333;*/
+            position: absolute;
+            bottom: 0;
+            right: 28%;
+            color: #333;
+            text-align: center;
+            padding: 10px 10px;
+            font-size: 12px;
+            margin-top: 50px;
+        }
+
+        .contact p {
+            padding: 5px;
         }
     </style>
 </head>
@@ -173,55 +242,71 @@ $url = $_ENV['DOMAIN'] . '/offres/' . $offer->id;
         Facturation de l'offre <a href="<?php echo $url ?>"><?php echo $offer->title ?></a> pour le mois de <?php echo Utils::monthConversion($invoice->service_date) ?>
     </h2>
 
-    <table>
-        <thead>
+    <div>
+        <table>
+            <thead>
             <tr>
                 <th>Prestations</th>
                 <th>Qté</th>
                 <th>Prix HT</th>
                 <th>Montant</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr>
-                <td>Offre Standard / jour</td>
-                <td>30</td>
-                <td>1.67€</td>
-                <td>50.1€</td>
+                <td>Offre "<?php echo $type->type ?>" / jour</td>
+                <td><?php echo $invoice->activeDays() ?></td>
+                <td><?php echo $type->price ?> €</td>
+                <td><?php echo $offerPrice ?> €</td>
             </tr>
-            <tr>
-                <td>Option "En relief" / semaine</td>
-                <td>1</td>
-                <td>8.34€</td>
-                <td>8.34€</td>
-            </tr>
-            <tr>
-                <td colspan="2"></td>
-                <td>Sous-total</td>
-                <td>58.44€</td>
-            </tr>
-            <tr>
-                <td colspan="2"></td>
-                <td>Total TVA 20%</td>
-                <td>11.688€</td>
-            </tr>
-            <tr class="sous-total">
-                <td colspan="2"></td>
-                <td>Prix TTC</td>
-                <td>70.128€</td>
-            </tr>
-        </tbody>
-    </table>
+            <?php if ($subscription) {
+                $optionPrice = $subscription->duration * $subscription->price();
+
+                $sousTotal = $offerPrice;
+                if($subscription){
+                    $sousTotal = $offerPrice + $optionPrice;
+                }?>
+                <tr>
+                    <td>Option "<?php echo $subscription->option()->french() ?>" / semaine</td>
+                    <td><?php echo $subscription->duration ?></td>
+                    <td><?php echo $subscription->price() ?></td>
+                    <td><?php echo $optionPrice ?> €</td>
+                </tr>
+            <?php } ?>
+            </tbody>
+        </table>
+
+        <div class="totals">
+            <table class="totals-table">
+                <tr>
+                    <td>Sous-total</td>
+                    <td><?php echo $sousTotal ?> €</td>
+                </tr>
+                <tr>
+                    <td>Total TVA 20%</td>
+                    <td><?php echo $sousTotal * 0.2 ?> €</td>
+                </tr>
+                <tr>
+                    <td class="total">TOTAL TTC</td>
+                    <td class="total"><?php echo $sousTotal + $sousTotal*0.2 ?> €</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+
 
     <footer>
-        <div class="left">
-            <strong>Payement à l'ordre de de <?php echo $professional->denomination ?></strong>
-            <p>N° de compte</p>
+        <div class="payment-terms">
+            <h3>Conditions et modalités de paiement</h3>
+            <p>Le paiement est dû à <?php echo $professional->denomination ?> dans 30 jours à compter de la date de facture.</p>
         </div>
 
-        <div class="right">
-            <strong>Conditions de paiement</strong>
-            <p>Paiement sous 30 jours</p>
+        <div class="contact">
+            <p>TEL : 02 96 01 10 51 | FAX : 00212535-00-00-00</p>
+            <p>IBAN : FR15 1265 9574 | BIC : 0123456789</p>
+            <p>Merci de votre confiance.</p>
         </div>
     </footer>
 </body>

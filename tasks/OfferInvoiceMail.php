@@ -21,11 +21,15 @@ class OfferInvoiceMail extends CronTask
 
     public function run(): void
     {
+        echo "Sending offer invoice mail...\n";
+    }
+
+    public function runCondition(): bool
+    {
         $tomorrow = date("d", strtotime("+1 day"));
 
-        if ($tomorrow == 1) {
-            echo "Sending offer invoice mail...\n";
-        }
+        // Verify if the current day is the last day of the month
+        return $tomorrow == 1;
     }
 
     public function schedule(): string
