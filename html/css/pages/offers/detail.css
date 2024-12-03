@@ -94,6 +94,7 @@ x-acordeon {
 
     display: flex;
     flex-direction: column;
+    gap: 5px;
 
     background: white;
     border: 1px solid rgb(var(--color-gray-1));
@@ -125,6 +126,18 @@ x-acordeon {
     border-radius: 0;
     border: 0;
     border-top: 1px solid rgb(var(--color-gray-1));
+}
+
+/* Important Data */
+
+.important_data {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-medium);
+    overflow: hidden;
+    border: 1px solid rgb(var(--color-gray-1));
+    background-color: white;
+    padding: .5rem;
 }
 
 /* Sections */
