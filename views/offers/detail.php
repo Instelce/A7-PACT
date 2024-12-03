@@ -259,7 +259,7 @@ $latitude = $offer->address()->latitude;
                 </button>
             <?php } ?>
 
-            <?php if (Application::$app->user->isProfessional()) { ?>
+            <?php if (Application::$app->user?->isProfessional()) { ?>
                 <p>En tant que proffessionnel vous ne pouvez pas rédiger d'avis.</p>
             <?php } ?>
 

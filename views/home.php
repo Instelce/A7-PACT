@@ -13,7 +13,7 @@ $this->jsFile = "home";
 <main class="homeDisplay">
     <h1 class="heading-1">Découvrez Lannion</h1>
 
-    <x-input rounded>
+    <x-input rounded class="w-[600px]">
         <input slot="input" type="text" placeholder="Recherchez des activités, visites, spectacles...">
         <button onclick="window.location.href='/recherche'" slot="button" class="button only-icon sm">
             <i data-lucide="search" stroke-width="2"></i>

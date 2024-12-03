@@ -1355,8 +1355,8 @@ foreach ($offers as $offer) {
         $opinion->save();
         $account_ids[] = $opinion->account_id;
 
-        // $offer->rating = $offer->rating();
-        //$offer->save();
+        $offer->rating = $offer->rating();
+        $offer->update();
     }
 
 }
