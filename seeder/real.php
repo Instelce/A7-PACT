@@ -741,6 +741,7 @@ $offre11->professional_id = 4;
 $offre11->address_id = 26;
 $offre11->offer_type_id = 1;
 $offre11->save();
+$offre11->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
 
 //type offres
 $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (" . $offre11->id . ", 'https://media-cdn.tripadvisor.com/media/photo-m/1280/1c/44/ac/3b/menu.jpg',3);");
