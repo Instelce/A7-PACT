@@ -72,6 +72,7 @@ class ApiController extends Controller
 
         $data = [];
         $where = [];
+        $where['offline'] = false;
         if ($professional_id) {
             $where['professional_id'] = $professional_id;
         }
