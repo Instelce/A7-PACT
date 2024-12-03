@@ -55,17 +55,30 @@ $latitude = $offer->address()->latitude;
 
         <!-- Header -->
         <header class="page-header">
-            <h2 class="heading-2 font-title"><?php echo $offerData["title"] ?></h2> <!-- title -->
-
             <div class="flex gap-3 items-center">
+                <h2 class="heading-2 font-title"><?php echo $offerData["title"] ?></h2> <!-- title -->
+                <span class="dot"></span>
+                <div class="stars" data-number="<?php echo $offerData["rating"] ?>"></div>
+                <p>(<?php echo $offer->opinionsCount() ?> avis)</p>
+            </div>
+
+            <div class="flex gap-5 items-center">
                 <p>
                     <?php echo $offerData["category"] ?>
                     par
                     <a href="/comptes/<?php echo $offerData["professionalId"] ?>" class="underline"><?php echo $offerData["author"] ?></a>
                 </p>
-                <span class="dot"></span>
-                <div class="stars" data-number="<?php echo $offerData["rating"] ?>"></div>
-                <p>(<?php echo $offer->opinionsCount() ?> avis)</p>
+                <div class="inline-offer">
+                    <i data-lucide="clock"></i>
+
+                    <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+                </div>
+                <div class="inline-offer">
+                    <i data-lucide="coins"></i>
+                    <p>
+                        <?php echo $offerData["price"]; ?>
+                    </p>
+                </div>
             </div>
         </header>
 
@@ -80,10 +93,9 @@ $latitude = $offer->address()->latitude;
             <?php endforeach; ?>
         </div>
 
-        <!-- Summary and description -->
+        <!-- Summary -->
         <div class="flex flex-col gap-4 mb-8">
             <p><?php echo $offerData["summary"] ?></p>
-            <p><?php echo $offerData["description"] ?></p>
         </div>
 
         <!-- Information presented in a list with icons -->
@@ -105,34 +117,6 @@ $latitude = $offer->address()->latitude;
                 </div>
             <?php endif; ?>
 
-            <!-- Price -->
-            <?php if ($offerData["category"] !== "Restaurant"): ?>
-                <div class="inline-offer">
-                    <i data-lucide="coins"></i>
-
-                    <p>
-                        <?php echo $offerData["price"]; ?>
-                    </p>
-                </div>
-
-                <!-- Price for restaurant -->
-            <?php elseif ($offerData["category"] === "Restaurant"): ?>
-                <div class="inline-offer">
-                    <i data-lucide="coins"></i>
-
-                    <p>
-                        <?php for ($i = 0; $i < $offerData['range_price']; $i++) {
-                            echo "€";
-                        } ?>
-                    </p>
-                </div>
-            <?php endif; ?>
-
-            <div class="inline-offer">
-                <i data-lucide="clock"></i>
-
-                <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
-            </div>
 
             <div class="inline-offer">
                 <i data-lucide="map-pin"></i>
@@ -163,6 +147,12 @@ $latitude = $offer->address()->latitude;
                 </div>
             <?php endif; ?>
         </div>
+
+        <!-- Description -->
+        <div class="flex flex-col gap-4 mb-8">
+            <p><?php echo $offerData["description"] ?></p>
+        </div>
+
 
         <?php if ($offerData["category"] === "Restaurant"): ?>
             <div class="mb-8">
