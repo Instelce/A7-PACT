@@ -85,6 +85,7 @@ class ApiController extends Controller
         if ($maximumPrice) {
             $where[] = ['minimum_price', $maximumPrice, '<=', 'maximum_price'];
         }
+        $where[] = ['offline', "false"];
         if ($rating) {
             $where[] = ['rating', $rating, '>='];
         }
