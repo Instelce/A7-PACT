@@ -134,7 +134,11 @@ class DBQueryBuilder
                     $sql .= ", ";
                 }
 
-                $sql .= $tableName . "." . (str_starts_with($attr, '-') ? substr($attr, 1) : $attr);
+                if (str_starts_with($attr, '__')) {
+                    $sql .= (str_starts_with($attr, '-') ? substr($attr, 1) : $attr);
+                } else {
+                    $sql .= $tableName . "." . (str_starts_with($attr, '-') ? substr($attr, 1) : $attr);
+                }
             }
 
             if (str_starts_with($this->order_by[0], '-')) {
