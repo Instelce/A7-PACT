@@ -46,8 +46,6 @@ class PrivateProfessionalUpdateForm extends Model
     public ?Address $address = null;
     public ?ProfessionalUser $professional = null;
     public PrivateProfessional|null|false $privateProfessional = null;
-    public MeanOfPayment|null|false $meanOfPayment = null;
-
 
     public function __construct()
     {
@@ -67,28 +65,8 @@ class PrivateProfessionalUpdateForm extends Model
         $this->notifications = $this->professionalUser->allows_notifications;
 
         $this->privateProfessional = PrivateProfessional::findOneByPk(Application::$app->user->account_id);
-
-        if($this->privateProfessional){
-            $this->meanOfPayment = $this->privateProfessional->payment();
-
-            if($this->meanOfPayment){
-                if($this->meanOfPayment->isRibPayment()){
-                    $this->titularAccount = $this->meanOfPayment->name;
-                    $this->iban = $this->meanOfPayment->iban;
-                    $this->bic = $this->meanOfPayment->bic;
-                }
-                else if($this->meanOfPayment->isCbPayment()) {
-                    $this->titularCard = $this->meanOfPayment->name;
-                    $this->cardnumber = $this->meanOfPayment->card_number;
-                    $this->expirationdate = $this->meanOfPayment->expiration_date;
-                    $this->cryptogram = $this->meanOfPayment->cvv;
-                }
-                else if($this->meanOfPayment->isPaypalPayment()){
-                    $this->paypallink = $this->meanOfPayment->paypal_url;
-                }
-            }
-        }
     }
+
 
     public function update(){
         $request = Application::$app->request;
@@ -100,9 +78,19 @@ class PrivateProfessionalUpdateForm extends Model
         $this->professionalUser->update();
         $this->privateProfessional->loadData($request->getBody());
         $this->privateProfessional->update();
-        $this->meanOfPayment->loadData($request->getBody());
-        $this->meanOfPayment->update();
         return true;
+    }
+
+    public function saveUpdate()
+    {
+        /**
+         * @var UserAccount $user
+         */
+        if (!password_verify($this->password, $user->password)) {
+            $this->addError('password', 'Mot-de-passe incorrect.');
+            return false;
+        }
+        return false;
     }
 
 

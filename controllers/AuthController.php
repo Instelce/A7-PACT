@@ -119,6 +119,17 @@ class AuthController extends Controller
             Application::$app->user->update();
         }
 
+        if ($request->isPost() && $request->formName() === "reset-password") {
+            $mail = Application::$app->user->mail;
+
+            Application::$app->user->reset_password_hash = Utils::generateHash();
+            Application::$app->user->update();
+
+            Application::$app->mailer->send($mail, "Modification du mot de passe de $mail", 'reset-password', ['mail' => $mail, 'hash' => Application::$app->user->reset_password_hash]);
+            Application::$app->session->setFlash('success', "Un mail a bien été envoyé a l'adresse $mail");
+            $response->redirect('/comptes/modification');
+        }
+
         return $this->render('auth/update-public-professional-account', ['proPublic' => $proPublic]);
     }
 
@@ -138,6 +149,17 @@ class AuthController extends Controller
             $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
             Application::$app->user->avatar_url=$avatarPath;
             Application::$app->user->update();
+        }
+
+        if ($request->isPost() && $request->formName() === "reset-password") {
+            $mail = Application::$app->user->mail;
+
+            Application::$app->user->reset_password_hash = Utils::generateHash();
+            Application::$app->user->update();
+
+            Application::$app->mailer->send($mail, "Modification du mot de passe de $mail", 'reset-password', ['mail' => $mail, 'hash' => Application::$app->user->reset_password_hash]);
+            Application::$app->session->setFlash('success', "Un mail a bien été envoyé a l'adresse $mail");
+            $response->redirect('/comptes/modification');
         }
 
         return $this->render('auth/update-private-professional-account', ['proPrivate' => $form]);

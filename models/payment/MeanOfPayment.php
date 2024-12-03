@@ -6,7 +6,8 @@ use app\core\DBModel;
 
 class MeanOfPayment extends DBModel
 {
-    public int $payment_id = 0;
+    public int $id = 0;
+
     public static function tableName(): string
     {
         return 'mean_of_payment';
@@ -19,7 +20,7 @@ class MeanOfPayment extends DBModel
 
     public static function pk(): string
     {
-        return 'payment_id';
+        return 'id';
     }
 
     public function rules(): array
@@ -32,27 +33,28 @@ class MeanOfPayment extends DBModel
 
     public function isCbPayment(): bool
     {
-        return CbMeanOfPayment::findOneByPk($this->payment_id) !== false;
+        return CbMeanOfPayment::findOneByPk($this->id) !== false;
     }
 
     public function isRibPayment(): bool
     {
-        return RibMeanOfPayment::findOneByPk($this->payment_id) !== false;
+        return RibMeanOfPayment::findOneByPk($this->id) !== false;
     }
 
     public function isPaypalPayment(): bool
     {
-        return PaypalMeanOfPayment::findOneByPk($this->payment_id) !== false;
+        return PaypalMeanOfPayment::findOneByPk($this->id) !== false;
     }
 
 
     public function specific(){
         if($this->isCbPayment()){
-            return CbMeanOfPayment::findOneByPk($this->payment_id);
+            return CbMeanOfPayment::findOneByPk($this->id);
         } else if ($this->isRibPayment()){
-            return RibMeanOfPayment::findOneByPk($this->payment_id);
+            return RibMeanOfPayment::findOneByPk($this->id);
         } else if ($this->isPaypalPayment()){
-            return PaypalMeanOfPayment::findOneByPk($this->payment_id);
+            return PaypalMeanOfPayment::findOneByPk($this->id);
         }
+        return null;
     }
 }

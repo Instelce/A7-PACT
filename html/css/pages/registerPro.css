@@ -33,6 +33,11 @@ x-tab[id="prive"]
     padding: 10px 32px;
 }
 
+px-16{
+    padding-left: 4rem;
+    padding-right: 4rem;
+}
+
 @media screen and (max-width: 992px){
     x-tabs{
         width: 530px;
