@@ -70,28 +70,43 @@ class ApiController extends Controller
         $location = $request->getQueryParams('location');
         $rating = $request->getQueryParams('rating');
         $rangePrice = $request->getQueryParams('rangePrice');
+        $latitude = $request->getQueryParams('latitude');
+        $longitude = $request->getQueryParams('longitude');
 
         $data = [];
         $where = [];
-        $where['offline'] = false;
+        $where[] = ['offline', "false"];
         if ($professional_id) {
             $where['professional_id'] = $professional_id;
         }
         if ($category) {
             $where['category'] = $category;
         }
-        if ($location) {
-            $where['address__city'] = $location;
-        }
+        // if ($location) {
+        //     $where['address__city'] = $location;
+        // }
         if ($minimumPrice) {
             $where[] = ['minimum_price', $minimumPrice, '>='];
         }
         if ($maximumPrice) {
             $where[] = ['minimum_price', $maximumPrice, '<=', 'maximum_price'];
         }
-        $where[] = ['offline', "false"];
         if ($rating) {
             $where[] = ['rating', $rating, '>='];
+        }
+        if ($latitude && $longitude) {
+            $latitudePositif = floatval($latitude + 0.3);
+            $latitudeNegatif = floatval(value: $latitude - 0.3);
+            $longitudePositif = floatval($longitude + 0.3);
+            $longitudeNegatif = floatval($longitude - 0.3);
+            $latitudePositif = strval($latitudePositif);
+            $latitudeNegatif = strval(value: $latitudeNegatif);
+            $longitudePositif = strval($longitudePositif);
+            $longitudeNegatif = strval($longitudeNegatif);
+            $where[] = ['address__latitude', $latitudePositif, '<=', 'latitudepositif'];
+            $where[] = ['address__latitude', $latitudeNegatif, '>=', 'latitudenegatif'];
+            $where[] = ['address__longitude', $longitudePositif, '<=', 'longitudepositif'];
+            $where[] = ['address__longitude', $longitudeNegatif, '>=', 'longitudenegatif'];
         }
 
 
@@ -122,7 +137,7 @@ class ApiController extends Controller
             ->limit($limit)
             ->offset($offset)
             ->filters($where)
-            ->search(['title' => $q])
+            ->search(['address__city' => $location, 'title' => $q])
             ->order_by($order_by);
 
         if ($rangePrice) {

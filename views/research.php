@@ -34,11 +34,11 @@ $iconsNames = [
         foreach ($filtersNames as $key => $filterName) {
             $iconName = $iconsNames[$key];
             ?>
-            <button id="<?php echo strtolower($filterName); ?>" class="category-item">
-                <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
-                <span><?php echo htmlentities($filterName); ?></span>
-            </button>
-            <?php
+        <button id="<?php echo strtolower($filterName); ?>" class="category-item">
+            <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
+            <span><?php echo htmlentities($filterName); ?></span>
+        </button>
+        <?php
         }
         ?>
     </div>
@@ -47,9 +47,14 @@ $iconsNames = [
             <span>Plus de filtres</span>
             <i data-lucide="sliders-horizontal" class="w-[18px] h-[18px]"> </i>
         </button>
-        <button class="button gray w-full">
+        <button class="button gray w-full" id="aProximite">
             <span>A proximité</span>
             <i data-lucide="navigation" class="w-[18px] h-[18px]"> </i>
+            <svg class="animate-spin hidden" id="proximiteLoader" xmlns="http://www.w3.org/2000/svg" width="0.8rem"
+                height="0.8rem" viewBox="0 0 24 24" fill="none" stroke="#FFA800" stroke-width="1" stroke-linecap="round"
+                stroke-linejoin="round" class="lucide lucide-loader-circle">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+            </svg>
         </button>
     </div>
 </div>
