@@ -431,26 +431,28 @@ sliderRating.addEventListener(
 
 const aProximite = document.getElementById("aProximite");
 const proximiteLoader = document.getElementById("proximiteLoader");
+const proximiteIcon = document.getElementById("proximiteIcon");
 
-aProximite.addEventListener("click", async (event) => {
+async function success(position) {
+    let x = position.coords.latitude;
+    let y = position.coords.longitude;
+    await applyFilters({ latitude: x, longitude: y });
+    proximiteLoader.classList.add("hidden");
+    proximiteIcon.classList.remove("hidden");
+}
+function error(err) {
+    console.warn(`ERREUR (${err.code}): ${err.message}`);
+    proximiteLoader.classList.add("hidden");
+    proximiteIcon.classList.remove("hidden");
+}
+
+aProximite.addEventListener("click", (event) => {
     if (aProximite.classList.contains("gray")) {
         aProximite.classList.remove("gray");
         aProximite.classList.add("blue");
         proximiteLoader.classList.remove("hidden");
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    const { x, y } = position.coords;
-                    await applyFilters({ latitude: x, longitude: y });
-                },
-                (error) => {
-                    console.error("Error getting location: ", error);
-                }
-            );
-        } else {
-            console.error("Geolocation is not supported by this browser.");
-        }
-        proximiteLoader.classList.add("hidden");
+        proximiteIcon.classList.add("hidden");
+        if (navigator.geolocation) { navigator.geolocation.getCurrentPosition(success, error); } else { console.error('La géolocalisation n\'est pas supportée par ce navigateur.'); }
     } else if (aProximite.classList.contains("blue")) {
         applyFilters({ latitude: null, longitude: null });
         aProximite.classList.remove("blue");
@@ -532,10 +534,13 @@ filterRangePriceRestau.addEventListener("change", (event) => {
 // Observer
 // ---------------------------------------------------------------------------------------------- //
 
-let loaderSection = document.querySelector("#loader-section");
+const loaderSection = document.querySelector("#loader-section");
+const loaderLoaderSection = document.getElementById("loaderLoaderSection");
 
 async function loadOffers() {
+    loaderLoaderSection.classList.remove("hidden");
     await applyFilters();
+    loaderLoaderSection.classList.add("hidden");
 }
 
 // Create intersection observer on loader section
