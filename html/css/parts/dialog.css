@@ -1,0 +1,33 @@
+.dialog-container{
+    inset: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.dialog{
+    background-color: white;
+    border: solid rgba(0, 0, 0, 0.1) 0.2px;
+    width: fit-content;
+    border-radius: 15px;
+    padding-top: 1.5vw;
+    padding-right: 1.5vw;
+    padding-left: 1.5vw;
+    box-shadow: 0 2px 5px rgba(0.1, 0.1, 0.1, 0.1);
+}
+
+.dialog-header {
+    width: auto;
+}
+
+h3{
+    font-size: large;
+    font-weight: bold;
+}
