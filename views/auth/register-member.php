@@ -24,7 +24,7 @@ $this->jsFile = 'registerMember';
 
             <?php echo $form->field($model, 'pseudo') ?>
             <?php echo $form->field($model, 'mail') ?>
-            <?php echo $form->field($model, 'phone') ?>
+            <?php echo $form->field($model, 'phone')->phoneField()?>
             <div class="flex gap-4">
                 <div class="w-25%">
                     <?php echo $form->field($model, 'streetNumber') ?>

@@ -90,10 +90,11 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, -3.5262799946878105, 48.784432468993565),
                                                                     (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
                                                                     (24, 13, 'Rue des Ruees', 'Tréhorenteuc', 56430, -2.2850415831640905, 48.00799182324886),
-                                                                    (25, 7, 'Chau. des Corsaires', 'Saint-Malo', 35400, -2.018348791710329, 48.64509219510429),
-                                                                    (26, 1, 'place abbé Gillard', 'Tréhorenteuc', 56430 , -2.2872720618427955, 48.007504883778765),
+                                                                    (25, 7, 'Chau. des Corsaires', 'Saint-Malo', 35400, 48.64509219510429, -2.018348791710329),
+                                                                    (26, 1, 'place abbé Gillard', 'Tréhorenteuc', 56430 , 48.007504883778765, -2.2872720618427955),
                                                                     (27, 34, 'Sentier des Douaniers', 'Plogoff', 29770 ,-4.6664956672893725, 48.03667645649522),
                                                                     (28, 1, 'All. de l\`Embarcadere', 'Baden', 56870, -2.8604925767306435, 47.60272463103174),
+                                                                    (29, 3, 'Pl. Saint-Tanguy', 'Plougonvelin', 29217, 48.33125210141691, -4.7701230204747525),
                                                                     (16, 1, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, -2.999732772564104, 48.84070603138791),
                                                                     (17, 1, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, -4.526581655177133, 48.47492014209391),
                                                                     (18, 1, 'La Vallée des Saints', 'Carnoët', 22160, -2.999732772564104, 48.84070603138791),
@@ -722,6 +723,124 @@ for ($i = 0; $i < 3; $i++) {
     }
 }
 
+$offre11 = new Offer();
+$offre11->title = "La Crepe Dantel";
+$offre11->summary = "La crêperie Dantel vous accueille sur le site exceptionnel de la Pointe Saint Mathieu et vous propose un large choix de crêpes blé noir et froment cuisinées avec des produits frais.";
+$offre11->description = 'Située sur le site exceptionnel de la pointe Saint-Mathieu, un peu à l\'écart du phare, la Crêpe Dantel est désormais incontournable. C\'est en toute simplicité, qu\'à l\'heure du déjeuner du goûter ou du repas vous y dégusterez de délicieuses crêpes salées ou sucrées.';
+$offre11->likes = 300;
+$offre11->offline = 0;
+$offre11->last_offline_date = null;
+$offre11->offline_days = 0;
+$offre11->view_counter = 120;
+$offre11->click_counter = 180;
+$offre11->website = 'http://fr-fr.facebook.com/lacrepedantel';
+$offre11->phone_number = '0298402968';
+$offre11->category = 'restaurant';
+$offre11->professional_id = 4;
+$offre11->address_id = 26;
+$offre11->offer_type_id = 1;
+$offre11->save();
+$offre11->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+
+//type offres
+$db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (" . $offre11->id . ", 'https://media-cdn.tripadvisor.com/media/photo-m/1280/1c/44/ac/3b/menu.jpg',3);");
+
+//repas
+// $repas1 = new Meal();
+// $repas1->name = 'Galette complète';
+// $repas1->save();
+
+// $repas2 = new Meal();
+// $repas2->name = 'Uncle IPA';
+// $repas2->save();
+
+// $repas3 = new Meal();
+// $repas3->name = 'Crèpe beurre sucre';
+// $repas3->save();
+
+// $repas4 = new Meal();
+// $repas4->name = 'Andouille de Guémené accompagnée d’une purée de carrotte';
+// $repas4->save();
+
+// $repas5 = new Meal();
+// $repas5->name = 'Breizh Tea';
+// $repas5->save();
+
+// $repas6 = new Meal();
+// $repas6->name = 'Far breton';
+// $repas6->save();
+
+// RestaurantOffer::findOne(['offer_id' => $offre11->id])->addMeal($repas1->meal_id);
+// RestaurantOffer::findOne(['offer_id' => $offre11->id])->addMeal($repas2->meal_id);
+// RestaurantOffer::findOne(['offer_id' => $offre11->id])->addMeal($repas3->meal_id);
+// RestaurantOffer::findOne(['offer_id' => $offre11->id])->addMeal($repas4->meal_id);
+// RestaurantOffer::findOne(['offer_id' => $offre11->id])->addMeal($repas5->meal_id);
+// RestaurantOffer::findOne(['offer_id' => $offre11->id])->addMeal($repas6->meal_id);
+
+//add tags
+for ($i = 0; $i < 4; $i++) {
+    $tag = $tagsIds['restaurant'][array_rand($tagsIds['restaurant'])];
+    if (!in_array($tag, $offre11->tags())) {
+        $offre11->addTag($tag);
+    }
+}
+
+$horaire1o11 = new OfferSchedule();
+$horaire1o11->day = 1;
+$horaire1o11->opening_hours = '12:00';
+$horaire1o11->closing_hours = '23:00';
+$horaire1o11->save();
+$horaire2o11 = new OfferSchedule();
+$horaire2o11->day = 2;
+$horaire2o11->opening_hours = '12:00';
+$horaire2o11->closing_hours = '23:00';
+$horaire2o11->save();
+$horaire3o11 = new OfferSchedule();
+$horaire3o11->day = 3;
+$horaire3o11->opening_hours = 'fermé';
+$horaire3o11->closing_hours = 'fermé';
+$horaire3o11->save();
+$horaire4o11 = new OfferSchedule();
+$horaire4o11->day = 4;
+$horaire4o11->opening_hours = '12:00';
+$horaire4o11->closing_hours = '23:00';
+$horaire4o11->save();
+$horaire5o11 = new OfferSchedule();
+$horaire5o11->day = 5;
+$horaire5o11->opening_hours = '12:00';
+$horaire5o11->closing_hours = '23:00';
+$horaire5o11->save();
+$horaire6o11 = new OfferSchedule();
+$horaire6o11->day = 6;
+$horaire6o11->opening_hours = '19:30';
+$horaire6o11->closing_hours = '23:00';
+$horaire6o11->save();
+$horaire7o11 = new OfferSchedule();
+$horaire7o11->day = 7;
+$horaire7o11->opening_hours = 'fermé';
+$horaire7o11->closing_hours = 'fermé';
+$horaire7o11->save();
+
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire1o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire2o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire3o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire4o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire5o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire6o11->id);
+RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire7o11->id);
+
+// ---------------------------------------------------------------------- //
+// photos offre11
+// ---------------------------------------------------------------------- //
+
+$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/la-crepe-dantel.JPG');
+$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/crepe-0cad6daa38a643599b9bcd44703c0d7d.JPG');
+$offre11->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/92/91/22/20190726-142709-largejpg.jpg?w=900&h=500&s=1');
+$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/table-9.JPG');
+$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/la-crepe-dantel.JPG');
+$offre11->addPhoto('https://media-cdn.tripadvisor.com/media/photo-m/1280/1c/44/ac/3b/menu.jpg');
+
+
 // ---------------------------------------------------------------------- //
 // photos offre1
 // ---------------------------------------------------------------------- //
@@ -732,6 +851,8 @@ $offre1->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/16
 $offre1->addPhoto('https://media-cdn.tripadvisor.com/media/photo-s/1b/80/31/6a/cafe-des-halles.jpg');
 $offre1->addPhoto('https://img.lacarte.menu/storage/media/company_gallery/8769476/conversions/contribution_gallery.jpg');
 $offre1->addPhoto('https://menu.restaurantguru.com/m9/Cafe-Des-Halles-Lannion-menu.jpg');
+
+
 
 // ---------------------------------------------------------------------- //
 // photos offre2
@@ -1404,6 +1525,20 @@ foreach ($offers as $offer) {
         $invoice->save();
 
         $date->modify('+1 month');
+    }
+}
+
+
+foreach ($offers as $offer) {
+    if ($offer->offline) {
+        $status = new OfferStatusHistory();
+        $status->offer_id = $offer->id;
+        $status->switch_to = "online";
+        $status->created_at = date('Y-m-d');
+        $status->save();
+
+        $offer->offline = false;
+        $offer->update();
     }
 }
 

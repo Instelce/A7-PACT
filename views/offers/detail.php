@@ -57,30 +57,19 @@ $latitude = $offer->address()->latitude;
         <header class="page-header">
             <div class="flex gap-3 items-center flex-wrap">
                 <h2 class="heading-2 font-title"><?php echo $offerData["title"] ?></h2> <!-- title -->
-                <div class="stars" data-number="<?php echo $offerData["rating"] ?>"></div>
-                <p>(<?php echo $offer->opinionsCount() ?> avis)</p>
             </div>
 
-            <div class="flex justify-between items-center">
+            <div class="flex gap-3 items-center">
                 <p>
                     <?php echo $offerData["category"] ?>
                     par
                     <a href="/comptes/<?php echo $offerData["professionalId"] ?>" class="underline"><?php echo $offerData["author"] ?></a>
                 </p>
-                <div class="flex gap-4 items-center">
-                    <div class="inline-offer">
-                        <i data-lucide="clock"></i>
-
-                        <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
-                    </div>
-                    <div class="inline-offer">
-                        <i data-lucide="coins"></i>
-                        <p>
-                            <?php echo $offerData["price"]; ?>
-                        </p>
-                    </div>
+                <span class="dot"></span>
+                <div class="flex gap-3 items-center">
+                    <div class="stars" data-number="<?php echo $offerData["rating"] ?>"></div>
+                    <p>(<?php echo $offer->opinionsCount() ?> avis)</p>
                 </div>
-
             </div>
         </header>
 
@@ -118,6 +107,18 @@ $latitude = $offer->address()->latitude;
                     <p>A partir de <?php echo $offerData["required_age"] ?> ans</p>
                 </div>
             <?php endif; ?>
+
+            <div class="inline-offer">
+                <i data-lucide="clock"></i>
+
+                <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+            </div>
+            <div class="inline-offer">
+                <i data-lucide="coins"></i>
+                <p>
+                    <?php echo $offerData["price"]; ?>
+                </p>
+            </div>
 
 
             <div class="inline-offer">
@@ -248,7 +249,7 @@ $latitude = $offer->address()->latitude;
             <?php } ?>
 
             <?php if (Application::$app->user?->isProfessional()) { ?>
-                <p>En tant que proffessionnel vous ne pouvez pas rédiger d'avis.</p>
+                <p class="mb-6 block">En tant que professionnel vous ne pouvez pas rédiger d'avis.</p>
             <?php } ?>
 
             <!-- Creation form -->
@@ -413,7 +414,7 @@ $latitude = $offer->address()->latitude;
     </div>
 
     <!-- Sidebar -->
-    <aside class="sticky col-span-2 h-fit flex flex-col gap-4 top-navbar-height">
+    <aside class="sticky col-span-2 h-fit flex flex-col gap-3 top-navbar-height">
         <div class="map-container">
             <!-- Generated with leaflet -->
             <div id="map" class="map"></div>
@@ -429,6 +430,22 @@ $latitude = $offer->address()->latitude;
                 <i data-lucide="arrow-up-right"></i>
             </a>
         </div>
+        <div class="important_data">
+            <div class="flex gap-4 items-center">
+                <div class="inline-offer">
+                    <i data-lucide="clock"></i>
+
+                    <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+                </div>
+                <div class="inline-offer">
+                    <i data-lucide="coins"></i>
+                    <p>
+                        <?php echo $offerData["price"]; ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+
 
         <?php if (Application::$app->user?->isProfessional() && Application::$app->user->specific()->hasOffer($pk)) { ?>
             <a href="/offres/<?php echo $pk ?>/modification" class="button purple">

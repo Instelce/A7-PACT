@@ -17,6 +17,8 @@ use app\models\offer\AttractionParkOffer;
 use app\models\offer\OfferPhoto;
 use app\models\offer\ActivityOffer;
 use app\models\offer\RestaurantOffer;
+use app\models\offer\Subscription;
+use app\models\offer\Option;
 use app\models\Address;
 use app\models\offer\ShowOffer;
 use app\models\offer\OfferPeriod;
@@ -57,7 +59,7 @@ class ApiController extends Controller
         $q = $request->getQueryParams('q');
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
-        $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-created_at'];
+        $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-_est_en_relief'];
         $professional_id = $request->getQueryParams('professional_id');
         $category = $request->getQueryParams('category');
         $minimumPrice = $request->getQueryParams('minimumPrice');
@@ -67,9 +69,11 @@ class ApiController extends Controller
         // $maximumEventDate = $request->getQueryParams('maximumEventDate');
         $location = $request->getQueryParams('location');
         $rating = $request->getQueryParams('rating');
+        $rangePrice = $request->getQueryParams('rangePrice');
 
         $data = [];
         $where = [];
+        $where['offline'] = false;
         if ($professional_id) {
             $where['professional_id'] = $professional_id;
         }
@@ -99,13 +103,11 @@ class ApiController extends Controller
             $order_by = array_diff($order_by, ['price_desc']);
             $order_by[] = 'minimum_price DESC';
             $where[] = ['minimum_price', '0', '>', 'minimum_priceDesc'];
-        }
-
-        if (in_array('rating_asc', $order_by)) {
+        } else if (in_array('rating_asc', $order_by)) {
             $order_by = array_diff($order_by, ['rating_asc']);
             $order_by[] = 'rating ASC';
             $where[] = ['rating', '0', '>', 'ratingAsc'];
-        } elseif (in_array('rating_desc', $order_by)) {
+        } else if (in_array('rating_desc', $order_by)) {
             $order_by = array_diff($order_by, ['rating_desc']);
             $order_by[] = 'rating DESC';
             $where[] = ['rating', '0', '>', 'ratingDesc'];
@@ -113,14 +115,23 @@ class ApiController extends Controller
 
 
         $query = Offer::query()
-            // ->join(new OfferPeriod())
-            //->join(new OfferSchedule())
+            ->select(attrs: ['offer.*', "(CASE WHEN option.type = 'en_relief' THEN 1 ELSE 0 END) as _est_en_relief"])
             ->join(new Address())
+            ->joinString("LEFT JOIN subscription ON subscription.offer_id = offer.id")
+            ->joinString("LEFT JOIN option ON option.id = subscription.option_id")
             ->limit($limit)
             ->offset($offset)
             ->filters($where)
             ->search(['title' => $q])
             ->order_by($order_by);
+
+        if ($rangePrice) {
+            $query->joinString("JOIN restaurant_offer ON restaurant_offer.offer_id = offer.id")
+                ->filters([
+                    ['restaurant_offer__range_price', $rangePrice]
+                ]);
+
+        }
 
         // Calculate the average rating
         // if ($rating) {
@@ -203,6 +214,17 @@ class ApiController extends Controller
                 }
             }
             $data[$i]['status'] = $status;
+
+            // add relief
+            $relief = false;
+            $subscription = Subscription::findOne(['offer_id' => $offer->id]);
+            if ($subscription) {
+                $option = Option::findOne(['id' => $subscription->option_id]);
+                if ($option->type == 'en_relief') {
+                    $relief = true;
+                }
+            }
+            $data[$i]['relief'] = $relief;
         }
         return $response->json($data);
     }

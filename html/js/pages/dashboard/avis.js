@@ -45,6 +45,18 @@ let opinionsContainer = document.querySelector('.opinions-container');
 let loaderSection = document.querySelector('#loader-section');
 let user = null; // Represents the current authenticated user
 
+let filterGet = new URLSearchParams(window.location.search).get('filter');
+if (filterGet === "non-lu") {
+    read = false;
+    document.querySelector('#filter-non-lu').checked = true;
+
+    // Reset the URL
+    let url = new URL(window.location.href);
+    url.searchParams.delete('filter');
+    window.history.pushState({}, '', url);
+}
+
+
 // Create intersection observer on loader section
 const observer = new IntersectionObserver((entries) => {
     if (entries[0].isIntersecting) {

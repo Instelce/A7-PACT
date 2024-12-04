@@ -1,23 +1,4 @@
 // ---------------------------------------------------------------------------------------------- //
-// Gestion du toggle switch
-// ---------------------------------------------------------------------------------------------- //
-
-const toggleKey = "notificationToggleState";
-const toggleSwitch = document.getElementById("switch-notification");
-
-document.addEventListener("DOMContentLoaded", () => {
-    const savedState = localStorage.getItem(toggleKey);
-
-    if (savedState !== null) {
-        toggleSwitch.checked = savedState === "true";
-    }
-});
-
-toggleSwitch.addEventListener("change", () => {
-    localStorage.setItem(toggleKey, toggleSwitch.checked);
-});
-
-// ---------------------------------------------------------------------------------------------- //
 // Gestion des pop up
 // ---------------------------------------------------------------------------------------------- //
 
@@ -32,9 +13,9 @@ let popupSaveUpdate = document.getElementById("popupSaveUpdate");
 let closePopupSave = document.getElementById("closePopupSave");
 
 // Popup pour la supression du compte
-//let popupAccountDelete = document.getElementById("popupAccountDelete");
+let popupAccountDelete = document.getElementById("popupAccountDelete");
 let accountDelete = document.getElementById("accountDelete");
-//let closeAccountDelete = document.getElementById("closeAccountDelete");
+let closePopupDelete = document.getElementById("closePopupDelete")
 
 // Popup pour la modification du mot de passe
 let popupPasswordModify = document.getElementById("popupPasswordModify");
@@ -75,7 +56,6 @@ closePopupSave.addEventListener("click", (event) => {
 });
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
-/*
 accountDelete.addEventListener("click", () => {
     popupAccountDelete.classList.toggle("hidden");
 });
@@ -85,31 +65,23 @@ popupAccountDelete.addEventListener("click", (event) => {
         popupAccountDelete.classList.add("hidden");
     }
 });
-*/
 
-// closeAccountDelete.addEventListener("click", (event) => {
-//     if (!popupContent.contains(event.target)) {
-//         popupAccountDelete.classList.add("hidden");
-//     }
-// });
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-passwordModify.addEventListener("click", () => {
-    popupPasswordModify.classList.toggle("hidden");
+closePopupDelete.addEventListener("click", (event) => {
+    popupAccountDelete.classList.add("hidden");
 });
+/////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-popupPasswordModify.addEventListener("click", (event) => {
-    if (!popupContent.contains(event.target)) {
-        popupPasswordModify.classList.add("hidden");
-    }
-});
+const phoneInputs = document.querySelectorAll('input[type="tel"]');
 
-/*
-closePasswordModify.addEventListener("click", (event) => {
-    if (!popupContent.contains(event.target)) {
-        popupPasswordModify.classList.add("hidden");
-    }
+function formatPhoneInput(event) {
+    const input = event.target;
+    let rawValue = input.value.replace(/\D/g, '');
+    rawValue = rawValue.substring(0, 10);
+    const format = rawValue.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
+    input.value = format;
+}
+
+phoneInputs.forEach((input) => {
+    input.addEventListener('input', formatPhoneInput);
 });
-*/
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////

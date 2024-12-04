@@ -31,7 +31,7 @@ use app\core\Mailer;
 
                     <?php echo $form->field($model, 'pseudo') ?>
                     <?php echo $form->field($model, 'mail') ?>
-                    <?php echo $form->field($model, 'phone') ?>
+                    <?php echo $form->field($model, 'phone')->phoneField()?>
                     <div class="flex gap-4">
                         <div>
                             <?php echo $form->field($model, 'streetNumber') ?>
@@ -48,7 +48,7 @@ use app\core\Mailer;
                 <div class="flex flex-col gap-4">
                     <div class="flex gap-4 items-center">
                         <div class="flex items-center">
-                            <input class="switch" type="checkbox" id="switch-notification" name="notification" value="true"/>
+                            <input class="switch" type="checkbox" id="switch-notification" name="notification" value="1" <?php echo $model->notification == 1 ? "checked": "" ?>/>
                             <label class="switch" for="switch-notification"></label>
                         </div>
                         <label for="switch-period" id="switch-period-label">J’autorise l’envoi de
@@ -67,7 +67,7 @@ use app\core\Mailer;
 
                 <!--//////////////////////////////////////////////////////////////////////////
                 // save update pop up
-                //////////////////////////////////////////////////////////////////////////:-->
+                ///////////////////////////////////////////////////////////////////////////-->
 
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="form-name" value="update-main">
@@ -76,7 +76,7 @@ use app\core\Mailer;
                         <div>
                             <h1  class="heading-1">Valider les modifications</h1>
                         </div>
-                        <div class="w-[400px]" id="password-condition-utilisation">
+                        <div class="w-[400px]" id="password">
                             <?php echo $form->field($model, 'passwordCheck')->passwordField() ?>
                         </div>
                         <div class="flex flex-row gap-4">
@@ -111,8 +111,8 @@ use app\core\Mailer;
 </div>
 
 <!--//////////////////////////////////////////////////////////////////////////
-// Avatar pop up
-//////////////////////////////////////////////////////////////////////////:-->
+// Avatar pop up v1
+///////////////////////////////////////////////////////////////////////////-->
 
 <div id="popupAvatarUpdate"
      class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
@@ -135,7 +135,7 @@ use app\core\Mailer;
                     <input id="file" class="hidden" type="file" name="avatar">
                 </div>
                 <div class="w-[200px]">
-                    <button class="button w-full gray">
+                    <button class="button danger w-full gray">
                         <i data-lucide="trash"></i>
                         Supprimer
                     </button>
@@ -154,25 +154,30 @@ use app\core\Mailer;
 </div>
 
 <!--//////////////////////////////////////////////////////////////////////////
-// Modify Password page
-//////////////////////////////////////////////////////////////////////////:
+// Delete account
+///////////////////////////////////////////////////////////////////////////-->
 
-<div id="popupPasswordModify" class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
-    <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px] w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
-        <div>
-            <h1  class="heading-1">Modification du mot de passe</h1>
-        </div>
-        <div>
-            <form type="text">test</form>
-        </div>
-        <div class="flex flex-row gap-4">
-            <div class="w-[400px]">
-                <button id="closePasswordModify" type="submit" class="button w-full gray">Annuler</button>
+<!--<div id="popupAccountDelete"
+     class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
+    <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="form-name" value="delete-account">
+        <div
+            class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px]
+            w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
+            <div>
+                <h1  class="heading-1">Demande de suppression</h1>
             </div>
-            <div class="w-[400px]">
-                <button type="submit" class="button w-full">confirmer</button>
+            <div class="w-[400px]" id="password-delete-account">
+                <?php echo $form->field($model, 'passwordCheckdd')->passwordField() ?>
+            </div>
+            <div class="flex gap-4">
+                <div class="w-[400px]">
+                    <button type="button" class="button w-full gray" id="closePopupDelete">Annuler</button>
+                </div>
+                <div class="w-[400px]">
+                    <button type="submit" class="button danger w-full">Valider</button>
+                </div>
             </div>
         </div>
-    </div>
-</div> 
-        -->
+    </form>
+</div>-->
