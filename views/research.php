@@ -34,11 +34,11 @@ $iconsNames = [
         foreach ($filtersNames as $key => $filterName) {
             $iconName = $iconsNames[$key];
             ?>
-        <button id="<?php echo strtolower($filterName); ?>" class="category-item">
-            <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
-            <span><?php echo htmlentities($filterName); ?></span>
-        </button>
-        <?php
+            <button id="<?php echo strtolower($filterName); ?>" class="category-item">
+                <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
+                <span><?php echo htmlentities($filterName); ?></span>
+            </button>
+            <?php
         }
         ?>
     </div>
@@ -73,42 +73,42 @@ $iconsNames = [
 
         <div>
             <div class="hidden lg:flex flex-col hidden lg:block">
-                <span class="text-base font-bold text-black">Intervalle de prix</span>
                 <div class="h-px bg-zinc-400 mt-2"></div>
             </div>
+            <div class="hidden lg:flex flex-col hidden lg:block">
+                <span class="text-base font-bold text-black">Intervalle de prix</span>
+            </div>
+
             <div class="flex gap-2 pl-4">
                 <x-slider id="slider-price" color="#0057FF" label="Prix" min="0" max="50" type="double"></x-slider>
             </div>
             <div class="hidden lg:flex flex-col hidden lg:block">
-                <span class="text-base font-bold text-black">Note minimal</span>
                 <div class="h-px bg-zinc-400 mt-2"></div>
             </div>
+            <div class="hidden lg:flex flex-col hidden lg:block">
+                <span class="text-base font-bold text-black">Note minimal</span>
+            </div>
+
             <div class="flex gap-2 pl-4">
                 <x-slider id="slider-rating" color="#0057FF" label="Note" min="0" max="5" type=""></x-slider>
             </div>
             <div class="hidden lg:flex flex-col hidden lg:block">
-                <span class="text-base font-bold text-black">Ville</span>
                 <div class="h-px bg-zinc-400 mt-2"></div>
+            </div>
+            <div class="hidden lg:flex flex-col hidden lg:block">
+                <span class="text-base font-bold text-black">Ville</span>
+
             </div>
             <x-input>
                 <input slot="input" type="text" placeholder="Ville" class="searchCity">
 
             </x-input>
             <div class="hidden lg:flex flex-col hidden lg:block">
-                <span class="text-base font-bold text-black">Restaurant</span>
                 <div class="h-px bg-zinc-400 mt-2"></div>
             </div>
-            <x-select id="filterRangePriceRestau">
-                <span slot="trigger">Gamme de prix</span>
-                <div slot="options">
-                    <div data-value="1" class="selected">€ (Moins de 25 €)</div>
-                    <div data-value="2">€€ (Entre 25 et 40€)</div>
-                    <div data-value="3">€€€ (Plus de 40€)</div>
-                </div>
-            </x-select>
             <div class="hidden lg:flex flex-col hidden lg:block">
                 <span class="text-base font-bold text-black">Tris</span>
-                <div class="h-px bg-zinc-400 mt-2"></div>
+
             </div>
 
             <x-select id="sort">
@@ -158,7 +158,26 @@ $iconsNames = [
                     <div data-value="reset">Réinitialiser</div>
                 </div>
             </x-select>
+            <div class="hidden lg:flex flex-col hidden lg:block">
+                <div class="h-px bg-zinc-400 mt-2"></div>
+            </div>
 
+            <div class="hidden lg:flex flex-col hidden lg:block">
+                <span class="text-base font-bold text-black">Restaurant</span>
+            </div>
+            <x-select id="filterRangePriceRestau">
+                <span slot="trigger">Gamme de prix</span>
+                <div slot="options">
+                    <div data-value="1" class="selected">€ (Moins de 25 €)</div>
+                    <div data-value="2">€€ (Entre 25 et 40€)</div>
+                    <div data-value="3">€€€ (Plus de 40€)</div>
+                    <div data-value="reset">Réinitialiser</div>
+
+                </div>
+            </x-select>
+            <div class="hidden lg:flex flex-col hidden lg:block">
+                <div class="h-px bg-zinc-400 mt-2"></div>
+            </div>
 
 
 
