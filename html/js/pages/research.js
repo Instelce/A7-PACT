@@ -147,9 +147,11 @@ async function applyFilters(newFilters = {}, neworder = null) {
         offset = 0;
         let Data = await getOffers();
         displayOffers(Data);
+        listenerIteneraire(Data);
     } else {
         let Data = await getOffers();
         displayOffers(Data);
+        listenerIteneraire(Data);
     }
     offset += 5;
 }
@@ -213,7 +215,6 @@ function displayOffers(Data) {
                     stars.appendChild(star);
                 }
                 const offerElement = document.createElement("a");
-                offerElement.href = `/offres/${offer.id}`;
                 offerElement.innerHTML = `
                 <article                 
                 ${
@@ -286,7 +287,9 @@ function displayOffers(Data) {
                         </div >
                         </div >
                     <div class="flex gap-2 mt-auto pt-4">
-                        <a href="" class="button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></a>
+                        <div id="${
+                            offer.id
+                        }" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
                         <a href="/offres/${
                             offer.id
                         }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
@@ -429,67 +432,6 @@ sliderRating.addEventListener(
     }, 300)
 );
 
-const aProximite = document.getElementById("aProximite");
-const proximiteLoader = document.getElementById("proximiteLoader");
-const proximiteIcon = document.getElementById("proximiteIcon");
-
-async function success(position) {
-    let x = position.coords.latitude;
-    let y = position.coords.longitude;
-    await applyFilters({ latitude: x, longitude: y });
-    proximiteLoader.classList.add("hidden");
-    proximiteIcon.classList.remove("hidden");
-}
-function error(err) {
-    console.warn(`ERREUR (${err.code}): ${err.message}`);
-    proximiteLoader.classList.add("hidden");
-    proximiteIcon.classList.remove("hidden");
-}
-
-aProximite.addEventListener("click", (event) => {
-    if (aProximite.classList.contains("gray")) {
-        aProximite.classList.remove("gray");
-        aProximite.classList.add("blue");
-        proximiteLoader.classList.remove("hidden");
-        proximiteIcon.classList.add("hidden");
-        if (navigator.geolocation) { navigator.geolocation.getCurrentPosition(success, error); } else { console.error('La géolocalisation n\'est pas supportée par ce navigateur.'); }
-    } else if (aProximite.classList.contains("blue")) {
-        applyFilters({ latitude: null, longitude: null });
-        aProximite.classList.remove("blue");
-        aProximite.classList.add("gray");
-    }
-});
-
-// ---------------------------------------------------------------------------------------------- //
-// SearchBar
-// ---------------------------------------------------------------------------------------------- //
-const urlParams = new URLSearchParams(window.location.search);
-const searchQuery = urlParams.get("search");
-if (searchQuery) {
-    searchInput.value = searchQuery;
-    filters = { q: searchQuery };
-}
-// const switchInput = document.getElementById("switchtest");
-
-// switchInput.addEventListener("change", async (event) => {
-//     await applyFilters({ open });
-// });
-
-// const dateBeforeInput = document
-//     .querySelector(".dateBefore")
-//     .closest("x-input");
-// const dateAfterInput = document.querySelector(".dateAfter").closest("x-input");
-
-// dateBeforeInput.addEventListener("dateChange", (event) => {
-//     console.log(event.detail.value);
-//     applyFilters({ minimumEventDate: event.detail.value });
-// });
-
-// dateAfterInput.addEventListener("dateChange", (event) => {
-//     console.log(event.detail.value);
-
-//     applyFilters({ maximumEventDate: event.detail.value });
-// });
 let sort = document.getElementById("sort");
 sort.addEventListener("change", (event) => {
     const inputValue = event.target.querySelector("input").value;
@@ -530,6 +472,93 @@ filterRangePriceRestau.addEventListener("change", (event) => {
     }
     if (dataValue === "reset") applyFilters({ rangePrice: null });
 });
+
+const aProximite = document.getElementById("aProximite");
+const proximiteLoader = document.getElementById("proximiteLoader");
+const proximiteIcon = document.getElementById("proximiteIcon");
+
+async function success(position) {
+    let x = position.coords.latitude;
+    let y = position.coords.longitude;
+    await applyFilters({ latitude: x, longitude: y });
+    proximiteLoader.classList.add("hidden");
+    proximiteIcon.classList.remove("hidden");
+}
+function error(err) {
+    console.warn(`ERREUR (${err.code}): ${err.message}`);
+    proximiteLoader.classList.add("hidden");
+    proximiteIcon.classList.remove("hidden");
+}
+
+aProximite.addEventListener("click", (event) => {
+    if (aProximite.classList.contains("gray")) {
+        aProximite.classList.remove("gray");
+        aProximite.classList.add("blue");
+        proximiteLoader.classList.remove("hidden");
+        proximiteIcon.classList.add("hidden");
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+            console.error(
+                "La géolocalisation n'est pas supportée par ce navigateur."
+            );
+        }
+    } else if (aProximite.classList.contains("blue")) {
+        applyFilters({ latitude: null, longitude: null });
+        aProximite.classList.remove("blue");
+        aProximite.classList.add("gray");
+    }
+});
+
+function listenerIteneraire(Data) {
+    let iteneraire = document.querySelectorAll(".iteneraire");
+    iteneraire.forEach((element) => {
+        element.addEventListener("click", (event) => {
+            console.log(event.target.id);
+            let offerId = event.target.id;
+            Data.forEach((offer) => {
+                if (offer.id == offerId) {
+                    let latitude = offer.address["latitude"];
+                    let longitude = offer.address["longitude"];
+                    let url = `https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=${latitude},${longitude}`;
+                    window.open(url, "_blank");
+                }
+            });
+        });
+    });
+}
+
+// ---------------------------------------------------------------------------------------------- //
+// SearchBar
+// ---------------------------------------------------------------------------------------------- //
+const urlParams = new URLSearchParams(window.location.search);
+const searchQuery = urlParams.get("search");
+if (searchQuery) {
+    searchInput.value = searchQuery;
+    filters = { q: searchQuery };
+}
+// const switchInput = document.getElementById("switchtest");
+
+// switchInput.addEventListener("change", async (event) => {
+//     await applyFilters({ open });
+// });
+
+// const dateBeforeInput = document
+//     .querySelector(".dateBefore")
+//     .closest("x-input");
+// const dateAfterInput = document.querySelector(".dateAfter").closest("x-input");
+
+// dateBeforeInput.addEventListener("dateChange", (event) => {
+//     console.log(event.detail.value);
+//     applyFilters({ minimumEventDate: event.detail.value });
+// });
+
+// dateAfterInput.addEventListener("dateChange", (event) => {
+//     console.log(event.detail.value);
+
+//     applyFilters({ maximumEventDate: event.detail.value });
+// });
+
 // ---------------------------------------------------------------------------------------------- //
 // Observer
 // ---------------------------------------------------------------------------------------------- //
