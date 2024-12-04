@@ -98,7 +98,8 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (16, 1, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, -2.999732772564104, 48.84070603138791),
                                                                     (17, 1, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, -4.526581655177133, 48.47492014209391),
                                                                     (18, 1, 'La Vallée des Saints', 'Carnoët', 22160, -2.999732772564104, 48.84070603138791),
-                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230, -1.6674224847189223, 48.041895277402126);");
+                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230, -1.6674224847189223, 48.041895277402126),
+                                                                    (20, 9, 'Place de L`hôtel de Ville', 'Perros-Guirec', 22700, -3.446007, 48.815243);");
 
 
 // ---------------------------------------------------------------------- //
@@ -784,7 +785,6 @@ for ($i = 0; $i < 4; $i++) {
         $offre11->addTag($tag);
     }
 }
-
 $horaire1o11 = new OfferSchedule();
 $horaire1o11->day = 1;
 $horaire1o11->opening_hours = '12:00';
@@ -829,16 +829,95 @@ RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire5o11
 RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire6o11->id);
 RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire7o11->id);
 
-// ---------------------------------------------------------------------- //
-// photos offre11
-// ---------------------------------------------------------------------- //
 
-$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/la-crepe-dantel.JPG');
-$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/crepe-0cad6daa38a643599b9bcd44703c0d7d.JPG');
-$offre11->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/92/91/22/20190726-142709-largejpg.jpg?w=900&h=500&s=1');
-$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/table-9.JPG');
-$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/la-crepe-dantel.JPG');
-$offre11->addPhoto('https://media-cdn.tripadvisor.com/media/photo-m/1280/1c/44/ac/3b/menu.jpg');
+//offre 12 : Basilico
+$tagBasilico = [
+    'Toscana',
+    'italian',
+    'pizza',
+    'Romana',
+    'Del Lacio',
+];
+
+$offre12 = new Offer();
+$offre12->title = "Basilico";
+$offre12->summary = "Basilico, à Perros-Guirec, offre des pizzas artisanales avec des ingrédients authentiques importés d’Italie pour une expérience italienne unique.";
+$offre12->description = 'Basilico c’est une pizzeria située à Perros-Guirec spécialisée dans la cuisine italienne authentique. Notre priorité est de vous offrir une expérience culinaire unique en utilisant uniquement des produits importés d’Italie. Notre pâte à pizza est préparée selon une recette traditionnelle italienne, en utilisant de la farine italienne de haute qualité, de la levure fraîche et de l’eau pure. Elle est ensuite façonnée à la main pour garantir une texture légère et croustillante. Nous accordons également une grande importance aux ingrédients que nous utilisons pour garnir nos pizzas. Tous nos fromages, comme la mozzarella di bufala, le pecorino ou le parmesan, sont importés d’Italie pour une saveur authentique.';
+$offre12->likes = 569;
+$offre12->offline = 0;
+$offre12->last_offline_date = null;
+$offre12->offline_days = 0;
+$offre12->view_counter = 2600;
+$offre12->click_counter = 1200;
+$offre12->website = 'https://gigifamily.fr/basilico-perros-guirec/';
+$offre12->phone_number = '0296141754';
+$offre12->category = 'restaurant';
+$offre12->professional_id = 3;
+$offre12->address_id = 20;
+$offre12->offer_type_id = 1;
+
+$offre12->save();
+$offre12->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+
+
+//type offres
+$db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (" . $offre12->id . ", 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/f4/d9/31/caption.jpg?w=1000&h=-1&s=1',1);");
+
+foreach ($tagBasilico as $tagName) {
+    $tag = OfferTag::findOne(['name' => strtolower($tagName)]);
+    $newTag = new OfferTag();
+    $newTag->name = strtolower($tagName);
+    $newTag->save();
+    $offre12->addTag($newTag->id);
+
+}
+
+
+
+$horaire1o12 = new OfferSchedule();
+$horaire1o12->day = 1;
+$horaire1o12->opening_hours = '12:00';
+$horaire1o12->closing_hours = '23:00';
+$horaire1o12->save();
+$horaire2o12 = new OfferSchedule();
+$horaire2o12->day = 2;
+$horaire2o12->opening_hours = '12:00';
+$horaire2o12->closing_hours = '23:00';
+$horaire2o12->save();
+$horaire3o12 = new OfferSchedule();
+$horaire3o12->day = 3;
+$horaire3o12->opening_hours = 'fermé';
+$horaire3o12->closing_hours = 'fermé';
+$horaire3o12->save();
+$horaire4o12 = new OfferSchedule();
+$horaire4o12->day = 4;
+$horaire4o12->opening_hours = '12:00';
+$horaire4o12->closing_hours = '23:00';
+$horaire4o12->save();
+$horaire5o12 = new OfferSchedule();
+$horaire5o12->day = 5;
+$horaire5o12->opening_hours = '12:00';
+$horaire5o12->closing_hours = '23:00';
+$horaire5o12->save();
+$horaire6o12 = new OfferSchedule();
+$horaire6o12->day = 6;
+$horaire6o12->opening_hours = '19:30';
+$horaire6o12->closing_hours = '23:00';
+$horaire6o12->save();
+$horaire7o12 = new OfferSchedule();
+$horaire7o12->day = 7;
+$horaire7o12->opening_hours = 'fermé';
+$horaire7o12->closing_hours = 'fermé';
+$horaire7o12->save();
+
+RestaurantOffer::findOne(['offer_id' => $offre12->id])->addSchedule($horaire1o12->id);
+RestaurantOffer::findOne(['offer_id' => $offre12->id])->addSchedule($horaire2o12->id);
+RestaurantOffer::findOne(['offer_id' => $offre12->id])->addSchedule($horaire3o12->id);
+RestaurantOffer::findOne(['offer_id' => $offre12->id])->addSchedule($horaire4o12->id);
+RestaurantOffer::findOne(['offer_id' => $offre12->id])->addSchedule($horaire5o12->id);
+RestaurantOffer::findOne(['offer_id' => $offre12->id])->addSchedule($horaire6o12->id);
+RestaurantOffer::findOne(['offer_id' => $offre12->id])->addSchedule($horaire7o12->id);
+
 
 
 // ---------------------------------------------------------------------- //
@@ -1084,6 +1163,29 @@ $photoMorb3 = new OfferPhoto();
 $photoMorb3->url_photo = 'https://www.navix.fr/wp-content/uploads/2023/03/NAVIX_Golfe-ile-aux-moines_by-zulaan.net_-scaled.jpg';
 $photoMorb3->offer_id = $offre10->id;
 $photoMorb3->save();
+
+// ---------------------------------------------------------------------- //
+// photos offre11
+// ---------------------------------------------------------------------- //
+
+$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/la-crepe-dantel.JPG');
+$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/crepe-0cad6daa38a643599b9bcd44703c0d7d.JPG');
+$offre11->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/92/91/22/20190726-142709-largejpg.jpg?w=900&h=500&s=1');
+$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/table-9.JPG');
+$offre11->addPhoto('https://cdt29.media.tourinsoft.eu/upload/la-crepe-dantel.JPG');
+$offre11->addPhoto('https://media-cdn.tripadvisor.com/media/photo-m/1280/1c/44/ac/3b/menu.jpg');
+
+
+// ---------------------------------------------------------------------- //
+// photos offre11
+// ---------------------------------------------------------------------- //
+
+$offre12->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/4a/22/d1/basilico-devanture.jpg?w=1000&h=-1&s=1');
+$offre12->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/4a/22/ce/donna-pizza.jpg?w=1000&h=-1&s=1');
+$offre12->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/4a/22/cb/simplement-bonbini-et.jpg?w=1000&h=-1&s=1');
+$offre12->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/4a/22/c5/fratello-pizza.jpg?w=1000&h=-1&s=1');
+$offre12->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/9f/2d/4b/photo0jpg.jpg?w=1000&h=-1&s=1');
+
 
 
 // ---------------------------------------------------------------------- //
