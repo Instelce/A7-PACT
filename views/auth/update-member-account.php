@@ -8,6 +8,9 @@ use app\core\Application;
 use app\core\Mailer;
 
 ?>
+
+<button data-dialog-trigger="avatar-update" class="dialog-trigger button w-25% gray"><i data-lucide="pen-line"></i>Modifier mon avatar</button>
+
 <div class="flex gap-2">
     <x-tabs class="column" save>
         <x-tab role="heading" slot="tab" id="info">
@@ -18,7 +21,7 @@ use app\core\Mailer;
         <x-tab-panel role="region" slot="panel">
             <div class="flex flex-row mb-8 items-center">
                 <img class="w-[125px] h-[125px] rounded-full mr-10 object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
-                <button id="avatarUpdate" type="button" class="button w-25% gray"><i data-lucide="pen-line"></i>Modifier mon avatar</button>
+                <button data-dialog-trigger="avatar-update" class="dialog-trigger button w-25% gray"><i data-lucide="pen-line"></i>Modifier mon avatar</button>
             </div>
             <?php $form = \app\core\form\Form::begin('', 'post', '', 'flex flex-col justify-center items-center') ?>
             <input type="hidden" name="form-name" value="update-main">
@@ -196,7 +199,7 @@ use app\core\Mailer;
 // Avatar pop up v3
 ///////////////////////////////////////////////////////////////////////////-->
 
-<div class="dialog-container" id="popupAvatarUpdate">
+<div class="dialog-container hidden" data-dialog-name="avatar-update">
     <div class="dialog">
         <header class="dialog-header">
             <h3 class="dialog-title"> Modification de votre avatar</h3>

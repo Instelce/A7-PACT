@@ -6,6 +6,7 @@ import { Acordeon } from "./components/Acordeon.js";
 import { Tabs } from "./components/tabs/Tabs.js";
 import { Tab } from "./components/tabs/Tab.js";
 import { Panel } from "./components/tabs/Panel.js";
+import "./components/dialog.js";
 
 
 // Do not change
