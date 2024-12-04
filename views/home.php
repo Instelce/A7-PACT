@@ -12,6 +12,8 @@ $this->waves = true;
 
 ?>
 
+<body>
+
 <main class="homeDisplay">
     <div class="homeDisplayDiv w-full">
         <h1 class="heading-1">
@@ -32,11 +34,12 @@ $this->waves = true;
                 <i data-lucide="search" stroke-width="2"></i>
             </button>
         </x-input>
+    </div>
 
         <div class="homeDisplayDiv">
             <h1 class="home-category-title">Destinations phares</h1>
 
-            <div class="carousel-gen" data-slides-visible="3" data-slides-to-scroll="1">
+        <div class="carousel-gen" data-slides-visible="3" data-slides-to-scroll="1" data-slides-visible-mobile="1">
 
                 <?php foreach ($offersALaUne as $offer) { ?>
                     <a href="/offres/<?php echo $offer["id"]; ?>">
@@ -80,14 +83,54 @@ $this->waves = true;
                                     <p><?php echo $offer["summary"]; ?></p>
                                 </div>
 
-                            </div>
-                            <div class="price">
-                                <p class="price-text"><?php echo $offer["price"]; ?></p>
-                            </div>
                         </div>
-                    </a>
-                <?php } ?>
+                        <div class="price">
+                            <p class="price-text"><?php echo $offer["price"]; ?></p>
+                        </div>
+                    </div>
+                </a>
+            <?php } ?>
+        </div>
+    </div>
+
+    <div class="homeDisplayDiv">
+        <h1 class="home-category-title">Venez découvrir</h1>
+
+        <div class="carousel-gen carouselBG" data-slides-visible="4" data-slides-to-scroll="1" data-slides-visible-mobile="2">
+            <div class="carousel-filter-card">
+                <img src="/assets/images/homeCarouselImages/Saint-Brieuc.webp" alt="Saint-Brieuc" style="width:100%;">
+                <p class="carousel-filter-card-text">Saint-Brieuc</p>
+            </div>
+            <div class="carousel-filter-card">
+                <img src="/assets/images/homeCarouselImages/Brehat.jpeg" alt="Brehat" style="width:100%;">
+                <p class="carousel-filter-card-text">Bréhat</p>
+            </div>
+            <div class="carousel-filter-card">
+                <img src="/assets/images/homeCarouselImages/Plouha.jpg" alt="Plouha" style="width:100%;">
+                <p class="carousel-filter-card-text">Plouha</p>
+            </div>
+            <div class="carousel-filter-card">
+                <img src="/assets/images/homeCarouselImages/Lannion.jpg" alt="Lannion" style="width:100%;">
+                <p class="carousel-filter-card-text">Lannion</p>
+            </div>            <div class="carousel-filter-card">
+                <img src="/assets/images/homeCarouselImages/Pleneuf.jpg" alt="Pleneuf" style="width:100%;">
+                <p class="carousel-filter-card-text">Pléneuf</p>
+            </div>
+            <div class="carousel-filter-card">
+                <img src="/assets/images/homeCarouselImages/Paimpol.jpg" alt="Paimpol" style="width:100%;">
+                <p class="carousel-filter-card-text">Paimpol</p>
+            </div>
+            <div class="carousel-filter-card">
+                <img src="/assets/images/homeCarouselImages/Erquy.jpg" alt="Erquy" style="width:100%;">
+                <p class="carousel-filter-card-text">Erquy</p>
+            </div>
+            <div class="carousel-filter-card">
+                <img src="/assets/images/homeCarouselImages/Pontrieux.jpg" alt="Pontrieux" style="width:100%;">
+                <p class="carousel-filter-card-text">Pontrieux</p>
             </div>
         </div>
 
 </main>
+
+
+</body>
