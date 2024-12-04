@@ -62,6 +62,8 @@ export function createOpinionCard(opinion, dashboard = false) {
         photos.appendChild(photoElement);
     }
 
+    console.log(opinion)
+
     card.innerHTML = `
         <!-- Header -->
         <header class="${!opinion.read && dashboard ? "not-read" : ""}">
@@ -105,6 +107,8 @@ export function createOpinionCard(opinion, dashboard = false) {
     
             <!-- Comment -->
             <p>${opinion.comment}</p>
+            
+            ${dashboard ? `<p class="mt-2">Le ${formatDate(opinion.visit_date)} en ${opinion.visit_context}</p>` : ``}
         </div>
         
         <!-- Photos -->
@@ -128,4 +132,9 @@ function translateCategory(category) {
         case 'show':
             return 'spectacle';
     }
+}
+
+function formatDate(string) {
+    let date = new Date(string);
+    return `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
 }

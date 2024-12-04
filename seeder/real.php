@@ -741,7 +741,7 @@ $offre11->professional_id = 4;
 $offre11->address_id = 26;
 $offre11->offer_type_id = 1;
 $offre11->save();
-$offre11->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+//$offre11->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
 
 //type offres
 $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (" . $offre11->id . ", 'https://media-cdn.tripadvisor.com/media/photo-m/1280/1c/44/ac/3b/menu.jpg',3);");
@@ -1566,8 +1566,8 @@ foreach ($offers as $offer) {
         $opinion->read = false;
         $opinion->blacklisted = false;
         $opinion->visit_context = $contexts[array_rand($contexts)];
-        $opinion->visit_date = date('Y-m-d', strtotime('-' . rand(1, 365) . ' days'));
-        $opinion->created_at = date('Y-m-d H:i:s', strtotime('-' . rand(1, 365) . ' days'));
+        $opinion->visit_date = date('Y-m-d', rand(strtotime($offer->created_at), strtotime('-7 days')));
+        $opinion->created_at = date('Y-m-d H:i:s', rand(strtotime($opinion->visit_date), strtotime('-2 days')));
         $opinion->save();
         $account_ids[] = $opinion->account_id;
 

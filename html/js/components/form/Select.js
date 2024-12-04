@@ -147,6 +147,10 @@ export class Select extends WebComponent {
                 cursor: pointer;
             }
             
+            .trigger.rounded {
+                border-radius: 100px;
+            }
+            
             ::slotted([slot="label"]) {
                 display: block;
                 margin-bottom: .5rem;
@@ -173,7 +177,7 @@ export class Select extends WebComponent {
         return `
             <slot name="label"></slot>
             <div class="select">
-                <button class="trigger">
+                <button class="trigger ${this.rounded ? `rounded` : ``}">
                     <slot name="trigger"></slot>
                     ${this.renderChevron()}
                 </button>
@@ -199,5 +203,9 @@ export class Select extends WebComponent {
         return `
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg>
         `;
+    }
+
+    get rounded() {
+        return this.hasAttribute('rounded')
     }
 }

@@ -8,6 +8,7 @@ use app\core\Request;
 use app\core\Response;
 use app\models\account\UserAccount;
 use app\models\offer\Offer;
+use app\models\offer\OfferType;
 use app\models\offer\schedule\OfferSchedule;
 use app\models\offer\schedule\LinkSchedule;
 use app\models\opinion\Opinion;
@@ -59,7 +60,13 @@ class ApiController extends Controller
         $q = $request->getQueryParams('q');
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
-        $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-_est_en_relief'];
+        $enrelief = $request->getQueryParams('enrelief');
+        $online = $request->getQueryParams('online');
+        if ($enrelief) {
+            $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-_est_en_relief'];
+        } else {
+            $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-created_at'];
+        }
         $professional_id = $request->getQueryParams('professional_id');
         $category = $request->getQueryParams('category');
         $minimumPrice = $request->getQueryParams('minimumPrice');
@@ -75,7 +82,9 @@ class ApiController extends Controller
 
         $data = [];
         $where = [];
-        $where[] = ['offline', "false"];
+        if ($online) {
+            $where[] = ['offline', "false"];
+        }
         if ($professional_id) {
             $where['professional_id'] = $professional_id;
         }
@@ -232,16 +241,40 @@ class ApiController extends Controller
             } else {$status = NULL;}
             $data[$i]['status'] = $status;
 
-            // add relief
+            // Add offer type
+            $data[$i]['type'] = OfferType::findOneByPk($offer->offer_type_id)->type;
+            unset($data[$i]['offer_type_id']);
+
+            // Add relief and a la une
             $relief = false;
-            $subscription = Subscription::findOne(['offer_id' => $offer->id]);
+            $a_la_une = false;
+            $subscription = $offer->subscription();
             if ($subscription) {
                 $option = Option::findOne(['id' => $subscription->option_id]);
                 if ($option->type == 'en_relief') {
                     $relief = true;
                 }
+                if ($option->type == 'a_la_une') {
+                    $a_la_une = true;
+                }
             }
             $data[$i]['relief'] = $relief;
+            $data[$i]['a_la_une'] = $a_la_une;
+
+            // Add subscription and option
+            if ($subscription) {
+                $data[$i]['subscription'] = $subscription->toJson();
+                $data[$i]['subscription']['end_date'] = $subscription->endDate();
+                $data[$i]['subscription']['option'] = $subscription->option()->toJson();
+            } else {
+                $data[$i]['subscription'] = null;
+            }
+            unset($data[$i]['subscription']['option_id']);
+            unset($data[$i]['subscription']['offer_id']);
+
+            // Opinion count
+            $data[$i]['opinion_count'] = $offer->opinionsCount();
+            $data[$i]['no_read_opinion_count'] = $offer->noReadOpinions();
         }
         return $response->json($data);
     }

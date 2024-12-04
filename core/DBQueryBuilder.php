@@ -166,6 +166,7 @@ class DBQueryBuilder
             if ($specialKey) {
                 $attr = $specialKey;
             }
+
             $this->statement->bindValue(":$attr", $value);
         }
 

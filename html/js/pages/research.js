@@ -90,6 +90,10 @@ async function getOffers() {
         limit +
         "&offset=" +
         offset +
+        "&enrelief=" +
+        true +
+        "&online=" +
+        true +
         moreSearch +
         search; //url of the api for research page offers's data
     console.log("url : " + url);
