@@ -13,7 +13,7 @@ $this->waves = true;
 ?>
 
 <main class="homeDisplay">
-    <div class="homeDisplayDiv">
+    <div class="homeDisplayDiv w-full">
         <h1 class="heading-1">
             Découvrez
             <div class="rotating-text-container">
@@ -25,8 +25,9 @@ $this->waves = true;
             </div>
         </h1>
 
-        <x-input rounded class="w-[600px]">
-            <input slot="input" type="text" placeholder="Recherchez des activités, visites, spectacles..." id="searchBar">
+        <x-input rounded class=" w-[90%] max-w-[600px]">
+            <input slot="input" type="text" placeholder="Recherchez des activités, visites, spectacles..."
+                id="searchBar">
             <button slot="button" class="button only-icon sm" id="searchButton">
                 <i data-lucide="search" stroke-width="2"></i>
             </button>
@@ -57,8 +58,8 @@ $this->waves = true;
                                 <p><?php echo $offer["type"]; ?></p>
                                 <div class="enLigne">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
-                                         stroke-linejoin="round" class="lucide lucide-map-pin">
+                                        fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                                        stroke-linejoin="round" class="lucide lucide-map-pin">
                                         <path
                                             d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
                                         <circle cx="12" cy="10" r="3" />
@@ -68,7 +69,7 @@ $this->waves = true;
                             </div>
 
                             <div class="enLigneGap">
-                                <div class="stars" data-number="<?php echo $offer["rating"]?>">
+                                <div class="stars" data-number="<?php echo $offer["rating"] ?>">
                                 </div>
                                 <div class="enLigne">
                                     <p><?php echo $offer["ratingsCount"] ?></p>
@@ -91,5 +92,3 @@ $this->waves = true;
     </div>
 
 </main>
-
-

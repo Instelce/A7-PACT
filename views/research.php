@@ -71,7 +71,7 @@ $iconsNames = [
                 </button>
             </x-input> -->
 
-        <div>
+        <div class="w-full">
             <div class="hidden lg:flex flex-col hidden lg:block">
                 <div class="h-px bg-zinc-400 mt-2"></div>
             </div>
@@ -79,8 +79,9 @@ $iconsNames = [
                 <span class="text-base font-bold text-black">Intervalle de prix</span>
             </div>
 
-            <div class="flex gap-2 pl-4">
-                <x-slider id="slider-price" color="#0057FF" label="Prix" min="0" max="50" type="double"></x-slider>
+            <div class="flex gap-2 pl-4 w-full">
+                <x-slider class="w-full" id="slider-price" color="#0057FF" label="Prix" min="0" max="50"
+                    type="double"></x-slider>
             </div>
             <div class="hidden lg:flex flex-col hidden lg:block">
                 <div class="h-px bg-zinc-400 mt-2"></div>
@@ -89,8 +90,9 @@ $iconsNames = [
                 <span class="text-base font-bold text-black">Note minimal</span>
             </div>
 
-            <div class="flex gap-2 pl-4">
-                <x-slider id="slider-rating" color="#0057FF" label="Note" min="0" max="5" type=""></x-slider>
+            <div class="flex gap-2 pl-4 w-full">
+                <x-slider class="w-full" id="slider-rating" color="#0057FF" label="Note" min="0" max="5"
+                    type=""></x-slider>
             </div>
             <div class="hidden lg:flex flex-col hidden lg:block">
                 <div class="h-px bg-zinc-400 mt-2"></div>
