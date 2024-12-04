@@ -23,6 +23,7 @@ use app\models\offer\OfferStatusHistory;
 use app\models\offer\OfferTag;
 use app\models\offer\OfferType;
 use app\models\offer\RestaurantOffer;
+use app\models\offer\schedule\LinkSchedule;
 use app\models\offer\schedule\OfferSchedule;
 use app\models\offer\ShowOffer;
 use app\models\offer\VisitOffer;
@@ -245,23 +246,38 @@ class OfferController extends Controller
             array_push($url_images, $image->url_photo);
         }
 
-        $closingHour = OfferSchedule::findOne(['id' => $id])->closing_hours;
-
-        if ($closingHour === 'fermé') {
-            $status = "Fermé";
-        } else {
-            $closingTime = new DateTime($closingHour);
-
-            $currentTime = new DateTime();
-
-            if ($closingTime <= $currentTime) {
-                $status = "Fermé";
-            } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
-                $status = "Ferme bientôt";
-            } else {
-                $status = "Ouvert";
+        $openingHours = $offer->schedule();
+        $dayOfWeek = strtolower((new DateTime())->format('N'));
+        foreach($openingHours as $openingHour){
+            if($openingHour->day==$dayOfWeek){
+                $todayHour = $openingHour;
             }
         }
+
+        $closingHour = $todayHour->closing_hours;
+        $openingHour = $todayHour->opening_hours;
+
+        if ($todayHour){
+            if ($closingHour === 'fermé') {
+                $status = "Fermé";
+            } else {
+                $closingTime = new DateTime($closingHour);
+                $openingTime = new DateTime($openingHour);
+
+                $currentTime = new DateTime();
+
+                if ($closingTime <= $currentTime && $openingTime >= $currentTime) {
+                    $status = "Fermé";
+                } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
+                    $status = "Ferme bientôt";
+                } else {
+                    $status = "Ouvert";
+                }
+            }
+        } else {$status = NULL;}
+
+
+
 
         $professional = ProfessionalUser::findOne(['user_id' => $offer->professional_id])->denomination ?? NULL;//get the name of the professional who posted the offer
 
@@ -271,26 +287,27 @@ class OfferController extends Controller
         $price = NULL;
         $range_price = NULL;
 
+        $servicesIncluded = NULL;
+        $servicesNonIncluded = NULL;
+        $accessibility = NULL;
+        $mealsIncluded = NULL;
+
         switch ($offer->category) {
             case 'restaurant':
                 $type = "Restaurant";
                 $range_price = RestaurantOffer::findOne(['offer_id' => $id])->range_price;
                 $carte_restaurant = RestaurantOffer::findOne(['offer_id' => $id])->url_image_carte;
-                if ($range_price == 1) {
-                    $price = "Dès €";
-                } elseif ($range_price == 2) {
-                    $price = "Dès €€";
-                } elseif ($range_price == 3) {
-                    $price = "Dès €€€";
-                } else {
-                    $price = $range_price;
-                }
+                $price = $range_price === 1 ? "Dès €" : ($range_price === 2 ? "Dès €€" : "Dès €€€");
+                $mealsIncluded = "Petit dej";
                 break;
             case 'activity':
                 $type = "Activité";
                 $duration = ActivityOffer::findOne(['offer_id' => $id])->duration ?? NULL;
                 $required_age = ActivityOffer::findOne(['offer_id' => $id])->required_age ?? NULL;
                 $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
+                $servicesIncluded = "Le vélo";
+                $servicesNonIncluded = "La selle";
+                $accessibility = "Pour tout le monde";
                 break;
             case 'show':
                 $type = "Spectacle";
@@ -309,6 +326,7 @@ class OfferController extends Controller
                 $carte_park = AttractionParkOffer::findOne(['offer_id' => $id])->url_image_park_map;
                 break;
         }
+
 
         $offerData = [
             'url_images' => $url_images,
@@ -329,13 +347,15 @@ class OfferController extends Controller
             'tags' => $tagsName,
             'languages' => $languages,
             'range_price' => $range_price,
-            'prestationsIncluses' => $prestationsIncluses,
-            'prestationsNonIncluses' => $prestationsNonIncluses,
-            'accessibilite' => $accessibilite,
             'carteRestaurant' => $carte_restaurant,
             'cartePark' => $carte_park,
             'professionalId' => $offer->professional_id,
-            'rating' => $offer->rating()
+            'rating' => $offer->rating(),
+            'servicesIncluded' => $servicesIncluded,
+            'servicesNonIncluded' => $servicesNonIncluded,
+            'accessibility' => $accessibility,
+            'mealsIncluded' => $mealsIncluded,
+            'openingHours' => $openingHours,
         ];
 
         // Opinion creation
