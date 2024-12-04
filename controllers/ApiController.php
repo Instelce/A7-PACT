@@ -59,7 +59,13 @@ class ApiController extends Controller
         $q = $request->getQueryParams('q');
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
-        $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-_est_en_relief'];
+        $enrelief = $request->getQueryParams('enrelief');
+        $online = $request->getQueryParams('online');
+        if ($enrelief) {
+            $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-_est_en_relief'];
+        } else {
+            $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-created_at'];
+        }
         $professional_id = $request->getQueryParams('professional_id');
         $category = $request->getQueryParams('category');
         $minimumPrice = $request->getQueryParams('minimumPrice');
@@ -75,7 +81,9 @@ class ApiController extends Controller
 
         $data = [];
         $where = [];
-        $where[] = ['offline', "false"];
+        if ($online) {
+            $where[] = ['offline', "false"];
+        }
         if ($professional_id) {
             $where['professional_id'] = $professional_id;
         }
