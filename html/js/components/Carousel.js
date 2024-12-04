@@ -225,6 +225,6 @@ for (let el of carouselGen) {
         slidesToScroll: parseInt(el.getAttribute('data-slides-to-scroll')),
         loop: el.hasAttribute('data-loop'),
         pagination : el.hasAttribute('data-pagination'),
-        slidesVisibleMobile: parseInt(el.getAttribute('data-slides-visible-mobile'))
+        slidesVisibleMobile: el.hasAttribute('data-slides-visible-mobile') ? parseInt(el.getAttribute('data-slides-visible-mobile')) : 1
     })
 }

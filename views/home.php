@@ -12,7 +12,6 @@ $this->waves = true;
 
 ?>
 
-<body>
 
 <main class="homeDisplay">
     <div class="homeDisplayDiv w-full">
@@ -39,7 +38,7 @@ $this->waves = true;
         <div class="homeDisplayDiv">
             <h1 class="home-category-title">Destinations phares</h1>
 
-        <div class="carousel-gen" data-slides-visible="3" data-slides-to-scroll="1" data-slides-visible-mobile="1">
+        <div class="carousel-gen" data-slides-visible="3" data-slides-to-scroll="1">
 
                 <?php foreach ($offersALaUne as $offer) { ?>
                     <a href="/offres/<?php echo $offer["id"]; ?>">
@@ -132,5 +131,3 @@ $this->waves = true;
 
 </main>
 
-
-</body>

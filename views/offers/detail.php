@@ -108,19 +108,20 @@ $latitude = $offer->address()->latitude;
                 </div>
             <?php endif; ?>
 
-            <?php if (!empty ($status)){ ?>
+            <div class="lg:hidden sm: flex flex-col gap-3">
+                <?php if (!empty ($status)){ ?>
+                    <div class="inline-offer">
+                        <i data-lucide="clock"></i>
+                        <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+                    </div>
+                <?php } ?>
+
                 <div class="inline-offer">
-                    <i data-lucide="clock"></i>
-
-                    <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+                    <i data-lucide="coins"></i>
+                    <p>
+                        <?php echo $offerData["price"]; ?>
+                    </p>
                 </div>
-            <?php } ?>
-
-            <div class="inline-offer">
-                <i data-lucide="coins"></i>
-                <p>
-                    <?php echo $offerData["price"]; ?>
-                </p>
             </div>
 
 
