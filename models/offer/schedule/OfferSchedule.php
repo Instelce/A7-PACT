@@ -40,4 +40,17 @@ class OfferSchedule extends DBModel
             'closing_hours' => [self::RULE_REQUIRED]
         ];
     }
+
+    public function frenchDay()
+    {
+        return match ($this->day) {
+            1 => 'Lundi',
+            2 => 'Mardi',
+            3 => 'Mercredi',
+            4 => 'Jeudi',
+            5 => 'Vendredi',
+            6 => 'Samedi',
+            7 => 'Dimanche'
+        };
+    }
 }

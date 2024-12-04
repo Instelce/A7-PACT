@@ -4,6 +4,8 @@ namespace app\models\offer;
 
 use app\core\DBModel;
 use app\models\Address;
+use app\models\offer\schedule\LinkSchedule;
+use app\models\offer\schedule\OfferSchedule;
 use app\models\opinion\Opinion;
 use app\models\payment\Invoice;
 use app\models\user\professional\ProfessionalUser;
@@ -132,6 +134,16 @@ class Offer extends DBModel
         }
 
         return $tags;
+    }
+
+    public function schedule(): array
+    {
+        $schedules = [];
+        $associations = LinkSchedule::find(['offer_id'=>$this->id]);
+        foreach($associations as $association){
+            $schedules[] = OfferSchedule::findOneByPk($association->schedule_id);
+        }
+        return $schedules;
     }
 
     /**

@@ -201,33 +201,35 @@ class ApiController extends Controller
             unset($data[$i]['address']['id']);
 
             //add status
-            $linkSchedules = LinkSchedule::find(['offer_id' => $offer->id]);
+            $openingHours = $offer->schedule();
             $dayOfWeek = strtolower((new DateTime())->format('N'));
-            foreach ($linkSchedules as $linkSchedule) {
-                $offerSchedules = OfferSchedule::find(['id' => $linkSchedule->schedule_id]);
-                foreach ($offerSchedules as $offerSchedule) {
-                    if ($offerSchedule->day == $dayOfWeek) {
-                        $closingHour = $offerSchedule->closing_hours;
-                        $openingHour = $offerSchedule->opening_hours;
+            foreach($openingHours as $openingHour){
+                if($openingHour->day==$dayOfWeek){
+                    $todayHour = $openingHour;
+                }
+            }
+
+            $closingHour = $todayHour->closing_hours;
+            $openingHour = $todayHour->opening_hours;
+
+            if ($todayHour){
+                if ($closingHour === 'fermé') {
+                    $status = "Fermé";
+                } else {
+                    $closingTime = new DateTime($closingHour);
+                    $openingTime = new DateTime($openingHour);
+
+                    $currentTime = new DateTime();
+
+                    if ($closingTime <= $currentTime && $openingTime >= $currentTime) {
+                        $status = "Fermé";
+                    } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
+                        $status = "Ferme bientôt";
+                    } else {
+                        $status = "Ouvert";
                     }
                 }
-            }
-            if ($closingHour === 'fermé') {
-                $status = "Fermé";
-            } else {
-                $closingTime = new DateTime($closingHour);
-                $openingTime = new DateTime($openingHour);
-
-                $currentTime = new DateTime();
-
-                if ($closingTime <= $currentTime && $openingTime >= $currentTime) {
-                    $status = "Fermé";
-                } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
-                    $status = "Ferme bientôt";
-                } else {
-                    $status = "Ouvert";
-                }
-            }
+            } else {$status = NULL;}
             $data[$i]['status'] = $status;
 
             // add relief

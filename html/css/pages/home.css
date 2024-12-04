@@ -35,7 +35,15 @@
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 25px;
+    gap: 110px;
+}
+
+.homeDisplayDiv{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 40px;
 }
 
 .home-card .enLigne {
