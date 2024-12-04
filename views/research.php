@@ -1,10 +1,14 @@
 <?php
 /** @var $this \app\core\View */
-/** @var $offers array */
+/** @var $researchInfo array */
+
+$maxPrice = intval($researchInfo["MaxMinimumPrice"]);
 
 $this->title = "Recherche";
 $this->cssFile = "research";
 $this->jsFile = "research";
+
+
 
 $filtersNames = [
     "Spectacles",
@@ -34,11 +38,11 @@ $iconsNames = [
         foreach ($filtersNames as $key => $filterName) {
             $iconName = $iconsNames[$key];
             ?>
-            <button id="<?php echo strtolower($filterName); ?>" class="category-item">
-                <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
-                <span><?php echo htmlentities($filterName); ?></span>
-            </button>
-            <?php
+        <button id="<?php echo strtolower($filterName); ?>" class="category-item">
+            <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
+            <span><?php echo htmlentities($filterName); ?></span>
+        </button>
+        <?php
         }
         ?>
     </div>
@@ -80,8 +84,8 @@ $iconsNames = [
             </div>
 
             <div class="flex gap-2 pl-4 w-full">
-                <x-slider class="w-full" id="slider-price" color="#0057FF" label="Prix" min="0" max="50"
-                    type="double"></x-slider>
+                <x-slider class="w-full" id="slider-price" color="#0057FF" label="Prix" min="0" max="50" type="double">
+                </x-slider>
             </div>
             <div class="hidden lg:flex flex-col hidden lg:block">
                 <div class="h-px bg-zinc-400 mt-2"></div>
@@ -91,8 +95,8 @@ $iconsNames = [
             </div>
 
             <div class="flex gap-2 pl-4 w-full">
-                <x-slider class="w-full" id="slider-rating" color="#0057FF" label="Note" min="0" max="5"
-                    type=""></x-slider>
+                <x-slider class="w-full" id="slider-rating" color="#0057FF" label="Note" min="0" max="5" type="">
+                </x-slider>
             </div>
             <div class="hidden lg:flex flex-col hidden lg:block">
                 <div class="h-px bg-zinc-400 mt-2"></div>
