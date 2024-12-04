@@ -27,7 +27,7 @@ export class Slider extends WebComponent {
             .slider-container {
                 display: flex;
                 flex-direction: column;
-                width: 150px;
+                width: 100%;
                 margin: 10px auto;
                 position: relative;
             }
@@ -43,7 +43,7 @@ export class Slider extends WebComponent {
                 display: flex;
                 align-items: center;
                 width: 100%;
-                height: 8px;
+                height: 12px;
                 background-color: #E1E1E1;
                 border-radius: 100px;
             }
@@ -55,8 +55,8 @@ export class Slider extends WebComponent {
             }
             .range-slider-handle {
                 position: absolute;
-                width: 15px;
-                height: 15px;
+                width: 19px;
+                height: 19px;
                 background-color: #fff;
                 border: 3px solid ${this.color};
                 box-sizing: border-box;
