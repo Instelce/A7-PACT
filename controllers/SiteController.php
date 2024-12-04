@@ -42,8 +42,16 @@ class SiteController extends Controller
                 switch ($offer->category) {
                     case 'restaurant':
                         $type = "Restaurant";
-                        $rangePrice = $offerInfo->range_price ?? null;
-                        $price = $rangePrice === 1 ? "Dès €" : ($rangePrice === 2 ? "Dès €€" : "Dès €€€");
+                        $range_price = RestaurantOffer::findOne(['offer_id' => $offer->id])->range_price ?? 0;
+                        if ($range_price == 1) {
+                            $price = "Dès €";
+                        } elseif ($range_price == 2) {
+                            $price = "Dès €€";
+                        } elseif ($range_price == 3) {
+                            $price = "Dès €€€";
+                        } else {
+                            $price = $range_price;
+                        }
                         break;
 
                     case 'activity':
@@ -79,7 +87,7 @@ class SiteController extends Controller
 
                 $ratingsCount = Offer::findOne(['id' => $offer->id])->opinionsCount();
 
-                if ($offer->isALaUne()){
+                if ($offer->isALaUne()) {
                     $offersALaUne[$offer->id] = [
                         "id" => $offer->id,
                         "image" => $image,

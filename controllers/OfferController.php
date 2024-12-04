@@ -276,7 +276,15 @@ class OfferController extends Controller
                 $type = "Restaurant";
                 $range_price = RestaurantOffer::findOne(['offer_id' => $id])->range_price;
                 $carte_restaurant = RestaurantOffer::findOne(['offer_id' => $id])->url_image_carte;
-                $price = $range_price === 1 ? "Dès €" : ($range_price === 2 ? "Dès €€" : "Dès €€€");
+                if ($range_price == 1) {
+                    $price = "Dès €";
+                } elseif ($range_price == 2) {
+                    $price = "Dès €€";
+                } elseif ($range_price == 3) {
+                    $price = "Dès €€€";
+                } else {
+                    $price = $range_price;
+                }
                 break;
             case 'activity':
                 $type = "Activité";
