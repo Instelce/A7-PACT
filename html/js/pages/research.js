@@ -216,41 +216,49 @@ function displayOffers(Data) {
                 offerElement.href = `/offres/${offer.id}`;
                 offerElement.innerHTML = `
                 <article                 
-                ${offer.relief
+                ${
+                    offer.relief
                         ? "class='research-card enReliefArticle mb-4 relative'"
                         : "class='research-card mb-4 relative'"
-                    }>
+                }>
                 
                 
-                ${offer.relief
+                ${
+                    offer.relief
                         ? "<img class='enReliefIcon' src='/assets/images/reliefIcon.svg' alt='Icone offre en relief'>"
                         : "<div class='hidden'></div>"
-                    }
+                }
                 
                 <div                
-                ${offer.relief
+                ${
+                    offer.relief
                         ? "class='research-card--photo enRelief'"
                         : "class='research-card--photo'"
-                    }>
+                }>
                 
-                ${offer.photos[0]
+                ${
+                    offer.photos[0]
                         ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
                         : ""
-                    }
+                }
                 </div>
                 <div                 
-                ${offer.relief
+                ${
+                    offer.relief
                         ? "class='research-card--body enRelief'"
                         : "class='research-card--body'"
-                    }">
+                }">
                 
                 <header>
                 <h2 class="research-card--title">${offer.title}</h2>
                 <div class="flex flex-row gap-2 justify-between items-center">
-                <p>${translateCategory(offer.category)} par <a href="/comptes/${offer.professional_id
-                    }" class="underline">${offer.profesionalUser["denomination"]
-                    }</a></p>
-                    <div class="flex flex-row gap-1 justify-center items-center">${stars.outerHTML
+                <p>${translateCategory(offer.category)} par <a href="/comptes/${
+                    offer.professional_id
+                }" class="underline">${
+                    offer.profesionalUser["denomination"]
+                }</a></p>
+                    <div class="flex flex-row gap-1 justify-center items-center">${
+                        stars.outerHTML
                     }
                         </div>
                     </div>
@@ -258,26 +266,30 @@ function displayOffers(Data) {
                         <div class="flex flex-col gap-2">
                         <p class="summary">${offer.summary}</p>
                         <div class="flex flex-row gap-6">
-                        ${offer.minimum_price
-                        ? "<div> À partir de " +
-                        offer.minimum_price +
-                        " € </div >"
-                        : "<div class='hidden'></div>"
-                    }
-                        ${offer.status
-                        ? "<div>" + offer.status + "</div >"
-                        : "<div class='hidden'></div>"
-                    }
-                        ${offer.address.city
-                        ? "<div>" + offer.address.city + "</div>"
-                        : "<div class='hidden'></div>"
-                    }
+                        ${
+                            offer.minimum_price
+                                ? "<div> À partir de " +
+                                  offer.minimum_price +
+                                  " € </div >"
+                                : "<div class='hidden'></div>"
+                        }
+                        ${
+                            offer.status
+                                ? "<div>" + offer.status + "</div >"
+                                : "<div class='hidden'></div>"
+                        }
+                        ${
+                            offer.address.city
+                                ? "<div>" + offer.address.city + "</div>"
+                                : "<div class='hidden'></div>"
+                        }
                         </div >
                         </div >
                     <div class="flex gap-2 mt-auto pt-4">
                         <a href="" class="button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></a>
-                        <a href="/offres/${offer.id
-                    }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
+                        <a href="/offres/${
+                            offer.id
+                        }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
                     </div>
             </article >
                     `;
@@ -444,14 +456,13 @@ aProximite.addEventListener("click", async (event) => {
         aProximite.classList.remove("blue");
         aProximite.classList.add("gray");
     }
-
 });
 
 // ---------------------------------------------------------------------------------------------- //
 // SearchBar
 // ---------------------------------------------------------------------------------------------- //
 const urlParams = new URLSearchParams(window.location.search);
-const searchQuery = urlParams.get('search');
+const searchQuery = urlParams.get("search");
 if (searchQuery) {
     searchInput.value = searchQuery;
     filters = { q: searchQuery };
@@ -515,6 +526,7 @@ filterRangePriceRestau.addEventListener("change", (event) => {
     if (dataValue === "3") {
         applyFilters({ rangePrice: 3 });
     }
+    if (dataValue === "reset") applyFilters({ rangePrice: null });
 });
 // ---------------------------------------------------------------------------------------------- //
 // Observer
@@ -541,4 +553,3 @@ const observer = new IntersectionObserver(
 );
 
 observer.observe(loaderSection);
-
