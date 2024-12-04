@@ -10,24 +10,68 @@
     justify-content: center;
     align-items: center;
     background-color: rgba(255, 255, 255, 0.5);
+    z-index: 100000;
+    animation: dialogIn 0.3s forwards;
+}
+.dialog-container.close {
+    animation: dialogOut 0.3s forwards;
+    pointer-events: none;
 }
 
-.dialog{
+.dialog {
+    position: relative;
     background-color: white;
     border: solid rgba(0, 0, 0, 0.1) 0.2px;
     width: fit-content;
     border-radius: 15px;
-    padding-top: 1.5vw;
-    padding-right: 1.5vw;
-    padding-left: 1.5vw;
     box-shadow: 0 2px 5px rgba(0.1, 0.1, 0.1, 0.1);
 }
 
 .dialog-header {
-    width: auto;
+    width: 100%;
+    padding: 1rem 1.5rem;
+
+    display: flex;
+    flex-direction: column;
 }
 
-h3{
-    font-size: large;
-    font-weight: bold;
+.dialog-header h3 {
+    font-weight: 700;
+}
+
+.dialog-content {
+    padding: 1rem 1rem;
+}
+
+.dialog-cross {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.dialog-cross:hover {
+    transform: scale(1.1);
+}
+
+@keyframes dialogOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-.8rem) scale(0.95);
+    }
+}
+
+@keyframes dialogIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-.8rem) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }

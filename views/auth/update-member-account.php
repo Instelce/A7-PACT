@@ -9,8 +9,6 @@ use app\core\Mailer;
 
 ?>
 
-<button data-dialog-trigger="avatar-update" class="dialog-trigger button w-25% gray"><i data-lucide="pen-line"></i>Modifier mon avatar</button>
-
 <div class="flex gap-2">
     <x-tabs class="column" save>
         <x-tab role="heading" slot="tab" id="info">
@@ -59,10 +57,10 @@ use app\core\Mailer;
                             la mise en ligne de nouvelles offres et autre</label>
                     </div>
                 </div>
-                
-                <div class="flex flex-col gap-4 mt-8">
+
+                <div class="flex flex-col gap-4 mt-4">
                     <p><?php echo $form->error($model, 'passwordCheck') ?></p>
-                    <button id="saveUpdatePopupTrigger" type="button" class="button w-full">Enregistrer les modifications</button>
+                    <button id="saveUpdatePopupTrigger" type="button" class="button">Enregistrer les modifications</button>
                 </div>
             </div>
             <div id="popupSaveUpdate"
@@ -199,44 +197,32 @@ use app\core\Mailer;
 // Avatar pop up v3
 ///////////////////////////////////////////////////////////////////////////-->
 
-<div class="dialog-container hidden" data-dialog-name="avatar-update">
+<div class="dialog-container close" data-dialog-name="avatar-update">
     <div class="dialog">
         <header class="dialog-header">
             <h3 class="dialog-title"> Modification de votre avatar</h3>
-            <!--<p class="dialog-description"></p>-->
+            <p class="dialog-description"></p>
         </header>
 
         <div class="dialog-content">
             <!-- Chacun mettra ce qu'il veux ici -->
             <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="form-name" value="update-avatar">
-                <div class="grid gap-4 py-6">
-                    <div class="grid gap-4 py-6">
+                <div class="grid gap-4">
+                    <div class="grid gap-6 py-6">
                         <div class="flex justify-center items-center w-full">
                             <img class="w-[125px] h-[125px] rounded-full object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
                         </div>
                         <div class="flex justify-center items-center gap-2 w-full">
-                            <div class="">
-                                <label for="file" class="button gray w-[250px]">
-                                    <i data-lucide="upload"></i> Importer
-                                </label>
-                                <input id="file" class="hidden" type="file" name="avatar">
-                            </div>
-                            <!--<div class="">
-                                <button class="button danger gray">
-                                    <i data-lucide="trash"></i>
-                                    Supprimer
-                                </button>
-                            </div>-->
+                            <label for="file" class="button gray w-[250px]">
+                                <i data-lucide="upload"></i> Importer
+                            </label>
+                            <input id="file" class="hidden" type="file" name="avatar">
                         </div>
                     </div>
                     <div class="flex justify-center items-center gap-4 w-full">
-                        <div class="">
-                            <button type="button" class="button gray w-[250px]" id="closePopupAvatar">Annuler</button>
-                        </div>
-                        <div class="">
-                            <button type="submit" class="button w-[250px]">Enregistrer les modifications</button>
-                        </div>
+                        <button type="button" class="dialog-close button gray w-[250px]" id="closePopupAvatar">Annuler</button>
+                        <button type="submit" class="button w-[250px]">Enregistrer les modifications</button>
                     </div>
                 </div>
 

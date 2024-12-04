@@ -316,12 +316,12 @@ let filterButton = document.getElementById("filterButton");
 const popupContent = document.querySelector(".popup-content");
 
 filterButton.addEventListener("click", () => {
-    popup.classList.toggle("hidden");
+    popup.classList.toggle("close");
 });
 
 popup.addEventListener("click", (event) => {
     if (!popupContent.contains(event.target)) {
-        popup.classList.add("hidden");
+        popup.classList.add("close");
     }
 });
 

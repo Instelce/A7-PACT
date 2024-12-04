@@ -35,7 +35,7 @@ export class Slider extends WebComponent {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                font-size: 14px;
+                font-size: 16px;
                 margin-bottom: 10px;
             }
             .range-slider {

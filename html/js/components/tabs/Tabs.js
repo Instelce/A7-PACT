@@ -210,16 +210,25 @@ export class Tabs extends WebComponent {
     }
 
     onClick(event) {
-        if (event.target.getAttribute('role') !== 'tab') {
-            return;
+        if (event.target.getAttribute('role') === 'tab') {
+            this.selectTab(event.target);
+
+            if (this.saveInGet) {
+                const newUrl = new URL(window.location.href);
+                newUrl.searchParams.set('tab', event.target.id);
+                history.replaceState(null, '', newUrl);
+            }
         }
 
-        this.selectTab(event.target);
-
-        if (this.saveInGet) {
-            const newUrl = new URL(window.location.href);
-            newUrl.searchParams.set('tab', event.target.id);
-            history.replaceState(null, '', newUrl);
+        // Handle dialog trigger
+        if (event.target.matches('.dialog-trigger')) {
+            const dialogName = event.target.getAttribute("data-dialog-trigger");
+            const dialogContainer = document.querySelector(
+                `.dialog-container[data-dialog-name="${dialogName}"]`
+            );
+            if (dialogContainer) {
+                dialogContainer.classList.remove("close");
+            }
         }
     }
 }

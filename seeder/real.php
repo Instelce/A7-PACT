@@ -1253,19 +1253,7 @@ $reviews = [
             "content" => "Les photos en ligne semblaient prometteuses, mais la réalité était bien différente. Plats insipides et ambiance désagréable.",
             "rating" => 2,
             "activity" => "restaurant"
-        ],
-        [
-            "title" => "Trop cher pour ce que c'est",
-            "content" => "Les portions étaient minuscules, et la qualité ne justifiait pas du tout les prix exorbitants. Je ne recommande pas.",
-            "rating" => 1,
-            "activity" => "restaurant"
-        ],
-        [
-            "title" => "Évitez à tout prix",
-            "content" => "La nourriture était immangeable, et il y avait une forte odeur de renfermé dans la salle. Horrible expérience.",
-            "rating" => 1,
-            "activity" => "restaurant"
-        ],
+        ]
     ],
 
     // Visits
@@ -1320,18 +1308,6 @@ $reviews = [
         [
             "title" => "Très décevant",
             "content" => "Le site est petit et sans intérêt. La visite guidée manquait d'informations et le guide semblait pressé d'en finir.",
-            "rating" => 1,
-            "activity" => "visit"
-        ],
-        [
-            "title" => "Ne vaut pas le détour",
-            "content" => "Rien de fascinant ici. Les bâtiments sont en mauvais état, et il n’y a aucune ambiance. Très ennuyant.",
-            "rating" => 2,
-            "activity" => "visit"
-        ],
-        [
-            "title" => "Grosse déception",
-            "content" => "Le site n’a rien d’extraordinaire, et les panneaux explicatifs sont usés ou illisibles. Une vraie arnaque.",
             "rating" => 1,
             "activity" => "visit"
         ],
@@ -1392,18 +1368,6 @@ $reviews = [
             "rating" => 2,
             "activity" => "attraction_park"
         ],
-        [
-            "title" => "Manque de sécurité",
-            "content" => "Certains manèges semblaient vieux et mal entretenus. Cela ne m’a pas rassuré, surtout pour les enfants.",
-            "rating" => 1,
-            "activity" => "attraction_park"
-        ],
-        [
-            "title" => "Déception totale",
-            "content" => "Le parc était sale, mal organisé et rien ne fonctionnait correctement. Nous n’y retournerons jamais.",
-            "rating" => 1,
-            "activity" => "attraction_park"
-        ],
     ],
 
     // Shows ---------------------------------------------------------------------------------------
@@ -1458,18 +1422,6 @@ $reviews = [
         [
             "title" => "Une grosse perte de temps",
             "content" => "Le show manquait de cohérence et de professionnalisme. Les acteurs semblaient peu préparés.",
-            "rating" => 1,
-            "activity" => "show"
-        ],
-        [
-            "title" => "Pas à la hauteur",
-            "content" => "Les critiques étaient positives, mais ce spectacle était une vraie déception. Décors pauvres et musique assourdissante.",
-            "rating" => 2,
-            "activity" => "show"
-        ],
-        [
-            "title" => "A éviter absolument",
-            "content" => "Les sièges étaient inconfortables, et le spectacle n'avait aucun intérêt. Une soirée gâchée.",
             "rating" => 1,
             "activity" => "show"
         ],
@@ -1529,18 +1481,6 @@ $reviews = [
             "title" => "Très ennuyeux",
             "content" => "L’activité manquait d’originalité et était beaucoup trop chère pour ce que c’est. Je ne recommande pas.",
             "rating" => 2,
-            "activity" => "activity"
-        ],
-        [
-            "title" => "Une arnaque",
-            "content" => "La description promettait une expérience inoubliable, mais c'était loin d'être le cas. Rien n’était à la hauteur.",
-            "rating" => 1,
-            "activity" => "activity"
-        ],
-        [
-            "title" => "Un désastre",
-            "content" => "Tout était mal organisé, et les conditions étaient déplorables. Nous avons quitté avant la fin.",
-            "rating" => 1,
             "activity" => "activity"
         ]
     ],

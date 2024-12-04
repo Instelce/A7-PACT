@@ -394,7 +394,7 @@ $latitude = $offer->address()->latitude;
 
                 <!-- If the current user has already created an opinion -->
                 <?php if ($userOpinion) { ?>
-                    <div>
+                    <div class="mb-4">
                         <p class="text-sm ml-5 mb-1">Votre avis</p>
                         <article class="opinion-card user-own">
                             <header>

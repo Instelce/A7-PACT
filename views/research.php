@@ -64,7 +64,7 @@ $iconsNames = [
 </div>
 <!-- more filters-->
 <div id="popup"
-    class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex lg:justify-start justify-between items-start z-50">
+    class="close lg:fixed lg:inset-0 lg:bg-black/50 flex lg:justify-start justify-between items-start z-50">
     <div
         class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[400px] w-full h-full mb-1 lg:mb-0 p-2 lg:p-6 lg:pt-[84px] flex flex-row justify-start justify-between items-start">
         <!-- Contenu de la popup -->
@@ -75,113 +75,93 @@ $iconsNames = [
                 </button>
             </x-input> -->
 
-        <div class="w-full">
-            <div class="hidden lg:flex flex-col hidden lg:block">
-                <div class="h-px bg-zinc-400 mt-2"></div>
-            </div>
-            <div class="hidden lg:flex flex-col hidden lg:block">
-                <span class="text-base font-bold text-black">Intervalle de prix</span>
-            </div>
+        <div class="flex flex-col gap-4 w-full">
+            <div>
+                <h3 class="section-header mb-2">Intervalle de prix</h3>
 
-            <div class="flex gap-2 pl-4 w-full">
-                <x-slider class="w-full" id="slider-price" color="#0057FF" label="Prix" min="0" max="50" type="double">
-                </x-slider>
-            </div>
-            <div class="hidden lg:flex flex-col hidden lg:block">
-                <div class="h-px bg-zinc-400 mt-2"></div>
-            </div>
-            <div class="hidden lg:flex flex-col hidden lg:block">
-                <span class="text-base font-bold text-black">Note minimal</span>
-            </div>
-
-            <div class="flex gap-2 pl-4 w-full">
-                <x-slider class="w-full" id="slider-rating" color="#0057FF" label="Note" min="0" max="5" type="">
-                </x-slider>
-            </div>
-            <div class="hidden lg:flex flex-col hidden lg:block">
-                <div class="h-px bg-zinc-400 mt-2"></div>
-            </div>
-            <div class="hidden lg:flex flex-col hidden lg:block">
-                <span class="text-base font-bold text-black">Ville</span>
-
-            </div>
-            <x-input>
-                <input slot="input" type="text" placeholder="Ville" class="searchCity">
-
-            </x-input>
-            <div class="hidden lg:flex flex-col hidden lg:block">
-                <div class="h-px bg-zinc-400 mt-2"></div>
-            </div>
-            <div class="hidden lg:flex flex-col hidden lg:block">
-                <span class="text-base font-bold text-black">Tris</span>
-
-            </div>
-
-            <x-select id="sort">
-                <span slot="trigger">Tri par prix</span>
-                <div slot="options">
-                    <div data-value="croissantPrice">
-                        Prix croissant
-                        <i data-lucide="lucide-arrow-down-narrow-wide"></i>
-                    </div>
-                    <div data-value="decroissantPrice">Prix décroissant <svg xmlns="http://www.w3.org/2000/svg"
-                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-arrow-down-wide-narrow">
-                            <path d="m3 16 4 4 4-4" />
-                            <path d="M7 20V4" />
-                            <path d="M11 4h10" />
-                            <path d="M11 8h7" />
-                            <path d="M11 12h4" />
-                        </svg></div>
-
-                    <div data-value="croissantRating">Notes croissantes <svg xmlns="http://www.w3.org/2000/svg"
-                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-arrow-down-narrow-wide">
-                            <path d="m3 16 4 4 4-4" />
-                            <path d="M7 20V4" />
-                            <path d="M11 4h4" />
-                            <path d="M11 8h7" />
-                            <path d="M11 12h10" />
-                        </svg></div>
-                    <div data-value="decroissantRating">Notes décroissantes <svg xmlns="http://www.w3.org/2000/svg"
-                            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                            class="lucide lucide-arrow-down-wide-narrow">
-                            <path d="m3 16 4 4 4-4" />
-                            <path d="M7 20V4" />
-                            <path d="M11 4h10" />
-                            <path d="M11 8h7" />
-                            <path d="M11 12h4" />
-                        </svg>
-                    </div>
-                    <div data-value="reset">Réinitialiser</div>
+                <div class="flex gap-2 w-full">
+                    <x-slider class="w-full" id="slider-price" color="#0057FF" label="Prix" min="0" max="50" type="double"></x-slider>
                 </div>
-            </x-select>
-            <div class="hidden lg:flex flex-col hidden lg:block">
-                <div class="h-px bg-zinc-400 mt-2"></div>
             </div>
 
-            <div class="hidden lg:flex flex-col hidden lg:block">
-                <span class="text-base font-bold text-black">Restaurant</span>
-            </div>
-            <x-select id="filterRangePriceRestau">
-                <span slot="trigger">Gamme de prix</span>
-                <div slot="options">
-                    <div data-value="1" class="selected">€ (Moins de 25 €)</div>
-                    <div data-value="2">€€ (Entre 25 et 40€)</div>
-                    <div data-value="3">€€€ (Plus de 40€)</div>
-                    <div data-value="reset">Réinitialiser</div>
+            <div>
+                <h3 class="section-header mb-2">Note minimale</h3>
 
+                <div class="flex gap-2 w-full">
+                    <x-slider class="w-full" id="slider-rating" color="#0057FF" label="Note" min="0" max="5" type="">
+                    </x-slider>
                 </div>
-            </x-select>
-            <div class="hidden lg:flex flex-col hidden lg:block">
-                <div class="h-px bg-zinc-400 mt-2"></div>
+            </div>
+
+            <div>
+                <h3 class="section-header mb-2">Ville</h3>
+
+                <x-input>
+                    <input slot="input" type="text" placeholder="Ville" class="searchCity">
+                </x-input>
             </div>
 
 
+            <div>
+                <h3 class="section-header mb-2">Tris</h3>
 
+                <x-select id="sort">
+                    <span slot="trigger">Tri par prix</span>
+                    <div slot="options">
+                        <div data-value="croissantPrice">
+                            Prix croissant
+                            <i data-lucide="lucide-arrow-down-narrow-wide"></i>
+                        </div>
+                        <div data-value="decroissantPrice">Prix décroissant <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                 width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                                                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                                                                 class="lucide lucide-arrow-down-wide-narrow">
+                                <path d="m3 16 4 4 4-4" />
+                                <path d="M7 20V4" />
+                                <path d="M11 4h10" />
+                                <path d="M11 8h7" />
+                                <path d="M11 12h4" />
+                            </svg></div>
+
+                        <div data-value="croissantRating">Notes croissantes <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                 width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                                                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                                                                 class="lucide lucide-arrow-down-narrow-wide">
+                                <path d="m3 16 4 4 4-4" />
+                                <path d="M7 20V4" />
+                                <path d="M11 4h4" />
+                                <path d="M11 8h7" />
+                                <path d="M11 12h10" />
+                            </svg></div>
+                        <div data-value="decroissantRating">Notes décroissantes <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                     width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                                                     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                                                                     class="lucide lucide-arrow-down-wide-narrow">
+                                <path d="m3 16 4 4 4-4" />
+                                <path d="M7 20V4" />
+                                <path d="M11 4h10" />
+                                <path d="M11 8h7" />
+                                <path d="M11 12h4" />
+                            </svg>
+                        </div>
+                        <div data-value="reset">Réinitialiser</div>
+                    </div>
+                </x-select>
+            </div>
+
+            <div>
+                <h3 class="section-header mb-2">Restaurant</h3>
+
+                <x-select id="filterRangePriceRestau">
+                    <span slot="trigger">Gamme de prix</span>
+                    <div slot="options">
+                        <div data-value="1" class="selected">€ (Moins de 25 €)</div>
+                        <div data-value="2">€€ (Entre 25 et 40€)</div>
+                        <div data-value="3">€€€ (Plus de 40€)</div>
+                        <div data-value="reset">Réinitialiser</div>
+                    </div>
+                </x-select>
+            </div>
         </div>
     </div>
 </div>

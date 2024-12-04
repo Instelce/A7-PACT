@@ -75,6 +75,15 @@
     left: -15px;
 }
 
+#popup {
+    animation: popupOpen .3s forwards;
+}
+
+#popup.close {
+    pointer-events: none;
+    animation: popupClose .3s forwards;
+}
+
 
 
 @media (max-width: 768px) {
@@ -100,5 +109,27 @@
         flex: 1;
         max-width: calc(100% / 5 - 10px);
         /* Ensures each filter takes up 1/5th of the container */
+    }
+}
+
+@keyframes popupOpen {
+    0% {
+        opacity: 0;
+        transform: translateX(-2rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes popupClose {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-2rem);
     }
 }
