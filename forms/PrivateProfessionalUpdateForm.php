@@ -41,7 +41,7 @@ class PrivateProfessionalUpdateForm extends Model
     public string $expirationdate = '';
     public string $cryptogram = '';
     public string $paypallink = '';
-
+    public string $passwordCheck = '';
     public ?UserAccount $userAccount = null;
     public ?Address $address = null;
     public ?ProfessionalUser $professional = null;
@@ -81,16 +81,19 @@ class PrivateProfessionalUpdateForm extends Model
         return true;
     }
 
-    public function saveUpdate()
+    public function passwordMatch()
     {
         /**
          * @var UserAccount $user
          */
-        if (!password_verify($this->password, $user->password)) {
-            $this->addError('password', 'Mot-de-passe incorrect.');
+        $user = Application::$app->user;
+
+        if (!password_verify($this->passwordCheck, $user->password)) {
+            $this->addError('passwordCheck', 'Mot-de-passe incorrect.');
             return false;
         }
-        return false;
+
+        return true;
     }
 
 

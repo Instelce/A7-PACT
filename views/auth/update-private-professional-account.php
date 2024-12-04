@@ -6,8 +6,8 @@ use app\core\Application;
 use app\models\user\professional\PrivateProfessional;
 
 
-$this->title = 'Modifier mon profil';
-$this->jsFile = 'updateProfessionalAccount';
+$this->title = 'Modifier mon profil privé';
+$this->jsFile = 'updatePrivateProfessionalAccount';
 
 ?>
 <div class="flex gap-2">
@@ -24,40 +24,82 @@ $this->jsFile = 'updateProfessionalAccount';
                     <button id="avatarUpdate" type="button" class="button w-25% gray"><i data-lucide="pen-line"></i>Modifier mon avatar</button>
                 </div>
             </div>
-            <?php $form = \app\core\form\Form::begin('', 'post', '', 'form-w') ?>
+            <?php $form = \app\core\form\Form::begin('', 'post', '', 'form-w items-start') ?>
                 <input type="hidden" name="form-name" value="update-private">
-                <div class="form-inputs">
-                    <div class="flex gap-4 on-same-line">
-                        <?php echo $form->field($proPrivate, 'denomination') ?>
-                        <?php echo $form->field($proPrivate, 'siren') ?>
-                    </div>
 
-                    <?php echo $form->field($proPrivate, 'mail')?>
-                    <?php echo $form->field($proPrivate, 'phone')->phoneField() ?>
-
-                    <div class="flex gap-4 on-same-line">
-                        <div class="w-25%">
-                            <?php echo $form->field($proPrivate, 'streetnumber')?>
+                <div class="form-inputs flex flex-col gap-8 w-full">
+                    <div class="flex flex-col w-full">
+                        <h2 class="section-header font-semibold">Données personnelles</h2>
+                        <div class="flex gap-4 on-same-line">
+                            <?php echo $form->field($proPrivate, 'denomination') ?>
+                            <?php echo $form->field($proPrivate, 'siren') ?>
                         </div>
-                        <?php echo $form->field($proPrivate, 'streetname')?>
+
+                        <?php echo $form->field($proPrivate, 'mail')?>
+                        <?php echo $form->field($proPrivate, 'phone')->phoneField() ?>
                     </div>
 
-                    <div class="flex gap-4 on-same-line">
-                        <div class="w-25%">
-                            <?php echo $form->field($proPrivate, 'postaleCode')?>
+                    <div class="flex flex-col">
+                        <h2 class="section-header font-semibold">Adresse</h2>
+                        <div class="flex gap-4 on-same-line">
+                            <div class="w-25%">
+                                <?php echo $form->field($proPrivate, 'streetnumber')?>
+                            </div>
+                            <?php echo $form->field($proPrivate, 'streetname')?>
                         </div>
-                        <?php echo $form->field($proPrivate, 'city')?>
+
+                        <div class="flex gap-4 on-same-line">
+                            <div class="w-25%">
+                                <?php echo $form->field($proPrivate, 'postaleCode')?>
+                            </div>
+                            <?php echo $form->field($proPrivate, 'city')?>
+                        </div>
                     </div>
 
-                    <div class="flex gap-4 items-center">
-                        <div class="flex items-center">
-                            <input class="switch" type="checkbox" id="switch-notifs2" name="notifs" />
-                            <label class="switch" for="switch-notifs2"></label>
+                    <div class="flex flex-col">
+                        <h2 class="section-header font-semibold">Autorisations</h2>
+                        <div class="flex gap-4 items-center">
+                            <div class="flex items-center">
+                                <input class="switch" type="checkbox" id="switch-notifs2" name="notifs" />
+                                <label class="switch" for="switch-notifs2"></label>
+                            </div>
+                            <label for="switch-period" id="switch-period-label2">J'autorise l'envoie de notifications</label>
                         </div>
-                        <label for="switch-period" id="switch-period-label2">J'autorise l'envoie de notifications</label>
                     </div>
+
                 </div>
-                <button id="saveUpdatePopupTrigger" type="button" class="button w-full">Enregistrer les modifications</button>
+                <div class="flex flex-col gap-4 mt-8 w-[90%]">
+                    <p><?php echo $form->error($proPrivate, 'passwordCheck') ?></p>
+                    <button id="saveUpdatePopupTrigger" type="button" class="button w-full">Enregistrer les modifications</button>
+                </div>
+                <div id="popupSaveUpdate"
+                     class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
+
+                    <!--//////////////////////////////////////////////////////////////////////////
+                    // save update pop up
+                    //////////////////////////////////////////////////////////////////////////:-->
+
+                    <form method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="form-name" value="update-main">
+                        <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[225px]
+                                        w-full h-full lg:p-10 flex flex-col items-center gap-6">
+                            <div>
+                                <h1  class="heading-1">Valider les modifications</h1>
+                            </div>
+                            <div class="w-[400px]" id="password-condition-utilisation">
+                                <?php echo $form->field($proPrivate, 'passwordCheck')->passwordField() ?>
+                            </div>
+                            <div class="flex flex-row gap-4">
+                                <div>
+                                    <button type="button" class="button gray w-[400px]" id="closePopupSave">Annuler</button>
+                                </div>
+                                <div>
+                                    <button type="submit" class="button w-[400px]">Enregistrer les modifications</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             <?php \app\core\form\Form::end() ?>
         </x-tab-panel>
 
@@ -74,7 +116,7 @@ $this->jsFile = 'updateProfessionalAccount';
                     </div>
 
                     <div class="flex flex-col gap-3">
-                        <h2 class="section-header">Moyen de paiement enregistré :</h2>
+                        <h2 class="section-header">Moyen de paiement enregistré</h2>
                         <div class="flex gap-4 items-center">
                             <div class="py-4 px-16 flex gap-2 border rounded border-solid border-gray-1">
                                 <?php if((MeanOfPayment::findOneByPk(PrivateProfessional::findOneByPk(Application::$app->user->account_id)->payment_id))->isRibPayment()){?>
@@ -110,8 +152,11 @@ $this->jsFile = 'updateProfessionalAccount';
         </x-tab>
         <x-tab-panel role="region" slot="panel">
             <div class="flex flex-col gap-4">
-                <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
-                <button id ="accountDelete" type="submit" class="button w-full danger">Supprimer mon compte</button>
+                <h2 class="section-header">Mot de passe</h2>
+                <form method="post" class="flex">
+                    <input type="hidden" name="form-name" value="reset-password">
+                    <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
+                </form>
             </div>
         </x-tab-panel>
     </x-tabs>
@@ -207,7 +252,7 @@ $this->jsFile = 'updateProfessionalAccount';
             </div>
             <div class="flex flex-row gap-4">
                 <div class="w-[400px]">
-                    <button type="button" class="button w-full gray">Annuler</button>
+                    <button id="closePopupAvatar" type="button" class="button w-full gray">Annuler</button>
                 </div>
                 <div class="w-[400px]">
                     <button type="submit" class="button w-full">Enregistrer les modifications</button>
@@ -252,58 +297,6 @@ $this->jsFile = 'updateProfessionalAccount';
             </div>
             <div class="w-[400px]">
                 <button type="submit" class="button w-full">Enregistrer les modifications</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--//////////////////////////////////////////////////////////////////////////
-// Modify Password page
-//////////////////////////////////////////////////////////////////////////:-->
-
-
-<!-- <div id="popupPasswordModify" class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
-    <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px] w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
-        <div>
-            <h1  class="heading-1"></h1>
-        </div>
-        <div>
-            <form type="text">test</form>
-        </div>
-        <div class="flex flex-row gap-4">
-            <div class="w-[400px]">
-                <button id="closePasswordModify" type="submit" class="button w-full gray">Annuler</button>
-            </div>
-            <div class="w-[400px]">
-                <button type="submit" class="button w-full danger">Supprimer le compte</button>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-<!--//////////////////////////////////////////////////////////////////////////
-// Delete Account pop up
-//////////////////////////////////////////////////////////////////////////:-->
-
-
-<div id="popupAccountDelete" class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
-    <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px] w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
-        <div>
-            <h1  class="heading-1">Suppression définitive du compte</h1>
-        </div>
-        <div>
-            <x-input>
-                <input class="search-input" slot="input" type="text" placeholder="Rechercher">
-                <button slot="button" class="button only-icon sm">
-                </button>
-            </x-input>
-        </div>
-        <div class="flex flex-row gap-4">
-            <div class="w-[400px]">
-                <button id="closeAccountDelete" type="submit" class="button w-full gray">Annuler</button>
-            </div>
-            <div class="w-[400px]">
-                <button type="submit" class="button w-full danger">Supprimer le compte</button>
             </div>
         </div>
     </div>
