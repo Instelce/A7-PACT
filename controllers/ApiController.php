@@ -57,15 +57,18 @@ class ApiController extends Controller
      */
     public function offers(Request $request, Response $response)
     {
+        $query = Offer::query();
+
         $q = $request->getQueryParams('q');
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
         $enrelief = $request->getQueryParams('enrelief');
         $online = $request->getQueryParams('online');
+        $status = $request->getQueryParams('status');
         if ($enrelief) {
-            $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-_est_en_relief'];
+            $order_by = ['-_est_en_relief'];
         } else {
-            $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-created_at'];
+            $order_by = ['-created_at'];
         }
         $professional_id = $request->getQueryParams('professional_id');
         $category = $request->getQueryParams('category');
@@ -79,11 +82,16 @@ class ApiController extends Controller
         $rangePrice = $request->getQueryParams('rangePrice');
         $latitude = $request->getQueryParams('latitude');
         $longitude = $request->getQueryParams('longitude');
+        $type = $request->getQueryParams('type');
+        $option = $request->getQueryParams('option');
 
         $data = [];
         $where = [];
         if ($online) {
             $where[] = ['offline', "false"];
+        }
+        if ($status) {
+            $where[] = ['offline', $status === 'offline' ? 'true' : 'false'];
         }
         if ($professional_id) {
             $where['professional_id'] = $professional_id;
@@ -117,7 +125,13 @@ class ApiController extends Controller
             $where[] = ['address__longitude', $longitudePositif, '<=', 'longitudepositif'];
             $where[] = ['address__longitude', $longitudeNegatif, '>=', 'longitudenegatif'];
         }
-
+        if ($type) {
+            $where['offer_type__type'] = $type;
+            $query->joinString("JOIN offer_type ON offer_type.id = offer.offer_type_id");
+        }
+        if ($option) {
+            $where['option__type'] = $option;
+        }
 
         if (in_array('price_asc', $order_by)) {
             $order_by = array_diff($order_by, ['price_asc']);
@@ -137,9 +151,7 @@ class ApiController extends Controller
             $where[] = ['rating', '0', '>', 'ratingDesc'];
         }
 
-
-        $query = Offer::query()
-            ->select(attrs: ['offer.*', "(CASE WHEN option.type = 'en_relief' THEN 1 ELSE 0 END) as _est_en_relief"])
+        $query->select(attrs: ['offer.*', "(CASE WHEN option.type = 'en_relief' THEN 1 ELSE 0 END) as _est_en_relief"])
             ->join(new Address())
             ->joinString("LEFT JOIN subscription ON subscription.offer_id = offer.id")
             ->joinString("LEFT JOIN option ON option.id = subscription.option_id")

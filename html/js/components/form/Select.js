@@ -56,6 +56,9 @@ export class Select extends WebComponent {
             if (option.getAttribute("data-value") !== this.input.value) {
                 check.classList.add("opacity-0");
             }
+            if (option.classList.contains("selected")) {
+                check.classList.remove("opacity-0");
+            }
             check.innerHTML = this.renderCheck();
             option.appendChild(check);
         });
@@ -168,6 +171,11 @@ export class Select extends WebComponent {
                 display: flex;
                 align-items: center;
                 gap: .5rem;
+                margin-bottom: .2rem !important;
+            }
+            
+            :host([rounded]) ::slotted([slot="options"]) {
+                border-radius: var(--radius-medium) !important;
             }
         </style>
         `;

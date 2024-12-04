@@ -7,14 +7,15 @@ import {getUser} from "../../user.js";
 let user;
 let loading = false;
 let nextMonday = document.querySelector('input#next-monday').value;
-
-// Filter values
-let category = "";
 let offset = 0;
 let limit = 3;
 
 // Filter elements
 let searchInput = document.querySelector('#search-input');
+let categorySelect = document.querySelector('input#category-select');
+let typeSelect = document.querySelector('input#type-select');
+let optionSelect = document.querySelector('input#option-select');
+let statusSelect = document.querySelector('input#status-select');
 
 let offersContainer = document.querySelector('#offers-container');
 let loaderSection = offersContainer.querySelector('.loader-section');
@@ -36,17 +37,41 @@ getUser().then(_user => {
     observer.observe(loaderSection);
 });
 
-// Refresh the offers when the search input is updated
+// Refresh the offers when the input or select change
 searchInput.addEventListener('input', debounce(() => {
-    offset = 0;
-    loading = true;
-    removeCards();
+    preloadReset();
     loadCards();
 }, 300))
+
+categorySelect.addEventListener('change', () => {
+    preloadReset();
+    loadCards();
+})
+
+typeSelect.addEventListener('change', () => {
+    preloadReset();
+    loadCards();
+})
+
+optionSelect.addEventListener('change', () => {
+    preloadReset();
+    loadCards();
+})
+
+statusSelect.addEventListener('change', () => {
+    preloadReset();
+    loadCards();
+})
 
 // -------------------------------------------------------------------------------------------------
 // Functions
 // -------------------------------------------------------------------------------------------------
+
+function preloadReset() {
+    offset = 0;
+    loading = true;
+    removeCards();
+}
 
 function loadCards() {
     fetchOffers()
@@ -74,6 +99,16 @@ async function fetchOffers() {
     params.set('professional_id', user.account_id.toString());
     params.set('q', searchInput.value.trim());
 
+    if (categorySelect.value !== 'all')
+        params.set('category', categorySelect.value);
+    if (typeSelect.value !== 'all')
+        params.set('type', typeSelect.value);
+    if (optionSelect.value !== 'all')
+        params.set('option', optionSelect.value);
+    if (statusSelect.value !== 'all') {
+        params.set('status', statusSelect.value);
+    }
+
     return fetch(`/api/offers?${params.toString()}`).then(r => {
         loading = false;
         return r.json();
@@ -90,10 +125,12 @@ function createCard(offer) {
     let price = '';
     if (offer.minimum_price === null || offer.minimum_price === 0) {
         price = 'Gratuit';
-    } else if (offer.category === 'restaurant') {
-        price = Array(offer.minimum_price).fill('€').join('');
     } else {
         price = 'A partir de ' + offer.minimum_price + ' €';
+    }
+
+    if (offer.category === 'restaurant') {
+        price = Array(offer.minimum_price).fill('€').join('');
     }
 
     card.innerHTML = `

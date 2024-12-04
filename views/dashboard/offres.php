@@ -63,14 +63,50 @@ $this->cssFile = "dashboard/offers";
                 <input slot="input" id="search-input" type="text" placeholder="Rechercher une de vos offres">
             </x-input>
 
-            <x-select id="offer-type" rounded>
-                <span slot="trigger">Abonnement</span>
-                <div slot="options">
-                    <div data-value="" class="selected">Tous</div>
-                    <div data-value="2">Standard</div>
-                    <div data-value="3">Premium</div>
-                </div>
-            </x-select>
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <x-select id="type-select">
+                    <p slot="label">Abonnement</p>
+                    <span slot="trigger">Tous</span>
+                    <div slot="options">
+                        <div data-value="all" class="selected">Tous</div>
+                        <div data-value="standard">Standard</div>
+                        <div data-value="premium">Premium</div>
+                    </div>
+                </x-select>
+
+                <x-select id="option-select">
+                    <p slot="label">Option</p>
+                    <span slot="trigger">Toutes</span>
+                    <div slot="options">
+                        <div data-value="all" class="selected">Toutes</div>
+                        <div data-value="en_relief">En relief</div>
+                        <div data-value="a_la_une">A la une</div>
+                    </div>
+                </x-select>
+
+                <x-select id="category-select">
+                    <p slot="label">Categories</p>
+                    <span slot="trigger">Toutes</span>
+                    <div slot="options">
+                        <div data-value="all" class="selected">Toutes</div>
+                        <div data-value="visit">Visite</div>
+                        <div data-value="activity">Activité</div>
+                        <div data-value="restaurant">Restaurant</div>
+                        <div data-value="show">Spectacle</div>
+                        <div data-value="attraction-parc">Parc d'attraction</div>
+                    </div>
+                </x-select>
+
+                <x-select id="status-select">
+                    <p slot="label">Status</p>
+                    <span slot="trigger">Tous</span>
+                    <div slot="options">
+                        <div data-value="all" class="selected">Tous</div>
+                        <div data-value="online">En ligne</div>
+                        <div data-value="offline">Hors ligne</div>
+                    </div>
+                </x-select>
+            </div>
         </header>
 
         <!-- All offers cards generated in JS -->

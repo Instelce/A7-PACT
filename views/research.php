@@ -56,7 +56,7 @@ $iconsNames = [
             <i data-lucide="navigation" id="proximiteIcon" class="w-[18px] h-[18px]"> </i>
             <svg class="animate-spin hidden" id="proximiteLoader" xmlns="http://www.w3.org/2000/svg" width="0.8rem"
                 height="0.8rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
-                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-loader-circle">
+                stroke-linecap="round" stroke-linejoin="round" class="lucide ">
                 <path d="M21 12a9 9 0 1 1-6.219-8.56" />
             </svg>
         </button>
@@ -120,15 +120,10 @@ $iconsNames = [
             <x-select id="sort">
                 <span slot="trigger">Tri par prix</span>
                 <div slot="options">
-                    <div data-value="croissantPrice">Prix croissant <svg xmlns="http://www.w3.org/2000/svg" width="20"
-                            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-                            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-narrow-wide">
-                            <path d="m3 16 4 4 4-4" />
-                            <path d="M7 20V4" />
-                            <path d="M11 4h4" />
-                            <path d="M11 8h7" />
-                            <path d="M11 12h10" />
-                        </svg></div>
+                    <div data-value="croissantPrice">
+                        Prix croissant
+                        <i data-lucide="lucide-arrow-down-narrow-wide"></i>
+                    </div>
                     <div data-value="decroissantPrice">Prix décroissant <svg xmlns="http://www.w3.org/2000/svg"
                             width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
