@@ -25,6 +25,8 @@ class PublicProfessionalUpdateForm extends Model
     public string $city = '';
     public string $phone = '';
 
+    public string $passwordCheck = '';
+
     public int $notifications = self::REFUSE_NOTIFICATIONS;
 
     public UserAccount $userAccount;
@@ -70,6 +72,20 @@ class PublicProfessionalUpdateForm extends Model
         return true;
     }
 
+    public function passwordMatch()
+    {
+        /**
+         * @var UserAccount $user
+         */
+        $user = Application::$app->user;
+
+        if (!password_verify($this->passwordCheck, $user->password)) {
+            $this->addError('passwordCheck', 'Mot-de-passe incorrect.');
+            return false;
+        }
+
+        return true;
+    }
 
     public function rules(): array
     {

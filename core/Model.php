@@ -172,11 +172,11 @@ abstract class Model
     public function errorMessage(): array
     {
         return [
-            self::RULE_REQUIRED => 'Ce champs est obligatoire',
-            self::RULE_MAIL => 'Ce champs doit être une email valide',
-            self::RULE_MIN => 'La taille minimum de ce champs est de {min} caractères',
-            self::RULE_MAX => 'La taille maximum de ce champs est de {max} caractères',
-            self::RULE_MATCH => 'Ce champs doit être le même que {match}',
+            self::RULE_REQUIRED => 'Ce champ est obligatoire',
+            self::RULE_MAIL => 'Ce champ doit être une email valide',
+            self::RULE_MIN => 'La taille minimum de ce champ est de {min} caractères',
+            self::RULE_MAX => 'La taille maximum de ce champ est de {max} caractères',
+            self::RULE_MATCH => 'Ce champ doit être le même que {match}',
             self::RULE_UNIQUE => '{field} existe déjà',
             self::RULE_DATE => 'Format de date incorrecte',
             self::RULE_EXP_DATE => 'Format de date d\'expiration incorrecte',

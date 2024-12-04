@@ -54,7 +54,31 @@ $this->cssFile = "registerPro";
                         <?php echo $form->field($proPublic, 'city')?>
                     </div>
 
-                    <?php echo $form->field($proPublic, 'password')->passwordField()?>
+
+                    <div class="password-check">
+                        <?php echo $form->field($proPublic, 'password')->passwordField()?>
+                        <div class="hidden password-requirements">
+                            <p>Le mot de passe doit contenir au moins :</p>
+                            <ul>
+                                <li class="invalid letter">
+                                    <span class="icon"></span> Une minuscule
+                                </li>
+                                <li class="invalid capital">
+                                    <span class="icon"></span> Une majuscule
+                                </li>
+                                <li class="invalid number">
+                                    <span class="icon"></span> Un nombre
+                                </li>
+                                <li class="invalid special">
+                                    <span class="icon"></span> Un caractère spécial
+                                </li>
+                                <li class="invalid length">
+                                    <span class="icon"></span> Au minimum 12 caractères
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
                     <?php echo $form->field($proPublic, 'passwordConfirm')->passwordField()?>
 
                     <div class="flex flex-col gap-4 mt-4 mb-4">
@@ -107,8 +131,31 @@ $this->cssFile = "registerPro";
                         </div>
                         <?php echo $form->field($proPrivate, 'city')?>
                     </div>
+                    <div class="password-check">
+                        <?php echo $form->field($proPrivate, 'password')->passwordField()?>
+                        <div class="hidden password-requirements">
+                            <p>Le mot de passe doit contenir au moins :</p>
+                            <ul>
+                                <li class="invalid letter">
+                                    <span class="icon"></span> Une minuscule
+                                </li>
+                                <li class="invalid capital">
+                                    <span class="icon"></span> Une majuscule
+                                </li>
+                                <li class="invalid number">
+                                    <span class="icon"></span> Un nombre
+                                </li>
+                                <li class="invalid special">
+                                    <span class="icon"></span> Un caractère spécial
+                                </li>
+                                <li class="invalid length">
+                                    <span class="icon"></span> Au minimum 12 caractères
+                                </li>
 
-                    <?php echo $form->field($proPrivate, 'password')->passwordField()?>
+                            </ul>
+                        </div>
+                    </div>
+
                     <?php echo $form->field($proPrivate, 'passwordConfirm')->passwordField()?>
 
                     <div id="check-payment" class="flex flex-row gap-2 mb-4">

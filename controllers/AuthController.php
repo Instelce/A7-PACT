@@ -101,16 +101,16 @@ class AuthController extends Controller
     }
 
 
-    public function updatePublicProfessionalAccount(Request $request, Response $response)
-    {
-        $proPublic  = new PublicProfessionalUpdateForm();
+    public function updatePublicProfessionalAccount(Request $request, Response $response){
+        $form  = new PublicProfessionalUpdateForm();
 
         if ($request->isPost() && $request->formName()==="update-public") {
-            $proPublic->loadData($request->getBody());
-            if ($proPublic->validate() && $proPublic->update()) {
-                Application::$app->session->setFlash('success', "Votre compte à bien été modifié !");
-                $response->redirect('/');
-                exit;
+            $form->loadData($request->getBody());
+            if ($form->validate() && $form->update()) {
+                if ($form->passwordMatch() && $form->validate() && $form->update()) {
+                    Application::$app->session->setFlash('success', "Votre compte à bien été modifié !");
+                    $response->redirect('/comptes/modification');
+                }
             }
         }
 
@@ -131,7 +131,7 @@ class AuthController extends Controller
             $response->redirect('/comptes/modification');
         }
 
-        return $this->render('auth/update-public-professional-account', ['proPublic' => $proPublic]);
+        return $this->render('auth/update-public-professional-account', ['proPublic' => $form]);
     }
 
     public function updatePrivateProfessionalAccount(Request $request, Response $response)
@@ -140,10 +140,9 @@ class AuthController extends Controller
         if ($request->isPost() && $request->formName()=="update-private") {
             $form->loadData($request->getBody());
 
-            if ($form->validate() && $form->update()) {
+            if ($form->passwordMatch() && $form->validate() && $form->update()) {
                 Application::$app->session->setFlash('success', "Votre compte à bien été modifié !");
-                $response->redirect('/');
-                exit;
+                $response->redirect('/comptes/modification');
             }
         }
 
@@ -151,6 +150,12 @@ class AuthController extends Controller
             $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
             Application::$app->user->avatar_url=$avatarPath;
             Application::$app->user->update();
+        }
+
+        if ($request->isPost() && $request->formName() === "update-payment") {
+//            $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
+//            Application::$app->user->avatar_url=$avatarPath;
+//            Application::$app->user->update();
         }
 
         if ($request->isPost() && $request->formName() === "reset-password") {
