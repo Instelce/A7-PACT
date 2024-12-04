@@ -139,6 +139,7 @@ async function applyFilters(newFilters = {}, neworder = null) {
             delete filters[key];
         }
     });
+
     if (neworder || (newFilters && Object.keys(newFilters).length > 0)) {
         offset = 0;
         let Data = await getOffers();
@@ -212,18 +213,21 @@ function displayOffers(Data) {
                 offerElement.href = `/offres/${offer.id}`;
                 offerElement.innerHTML = `
                 <article                 
-                ${
-                    offer.relief
-                        ? "class='enRelief mb-4'"
-                        : "class='research-card mb-4'"
+                ${offer.relief
+                    ? "class='research-card enReliefArticle mb-4 relative'"
+                    : "class='research-card mb-4 relative'"
                 }>
-                 
+                
+                
+                ${offer.relief
+                    ? "<img class='enReliefIcon' src='/assets/images/reliefIcon.svg' alt='Icone offre en relief'>"
+                    : "<div class='hidden'></div>"
+                }
                 
                 <div                
-                ${
-                    offer.relief
-                        ? "class='research-card--photo--enRelief'"
-                        : "class='research-card--photo'"
+                ${offer.relief
+                    ? "class='research-card--photo enRelief'"
+                    : "class='research-card--photo'"
                 }>
                 
                 ${
@@ -232,30 +236,25 @@ function displayOffers(Data) {
                         : ""
                 }
                 </div>
-                ${
-                    offer.relief
-                        ? "<div> <img class='enReliefIcon' src='images/reliefIcon.svg' alt='Icone offre en relief'> </div >"
-                        : "<div class='hidden'></div>"
-                }
                 <div                 
-                ${
-                    offer.relief
-                        ? "class='research-card--body--enRelief'"
-                        : "class='research-card--body'"
+                ${offer.relief
+                    ? "class='research-card--body enRelief'"
+                    : "class='research-card--body'"
                 }">
+                
                 <header>
-                <div class="flex flex-row gap-2 justify-between items-center">
                 <h2 class="research-card--title">${offer.title}</h2>
-                <div class="flex flex-row gap-1 justify-center items-center">${
-                    stars.outerHTML
-                }
-                </div>
-                </div>
+
+                                <div class="flex flex-row gap-2 justify-between items-center">
+
                 <p>${translateCategory(offer.category)} par <a href="/comptes/${
                     offer.professional_id
                 }" class="underline">${
                     offer.profesionalUser["denomination"]
-                }</a></p>
+                }</a></p>                <div class="flex flex-row gap-1 justify-center items-center">${
+                    stars.outerHTML
+                }
+                </div></div>
                         </header>
                         <div class="flex flex-col gap-2">
                         <p class="summary">${offer.summary}</p>
@@ -427,7 +426,7 @@ sliderRating.addEventListener(
 // SearchBar
 // ---------------------------------------------------------------------------------------------- //
 const urlParams = new URLSearchParams(window.location.search);
-const searchQuery = urlParams.get("search");
+const searchQuery = urlParams.get('search');
 if (searchQuery) {
     searchInput.value = searchQuery;
     filters = { q: searchQuery };
@@ -525,3 +524,4 @@ const observer = new IntersectionObserver(
 );
 
 observer.observe(loaderSection);
+
