@@ -74,6 +74,10 @@ async function getOffers() {
     if (filters["rangePrice"]) {
         searchParams.set("rangePrice", filters["rangePrice"] || null);
     }
+    if (filters["latitude"] && filters["longitude"]) {
+        searchParams.set("latitude", filters["latitude"] || null);
+        searchParams.set("longitude", filters["longitude"] || null);
+    }
     let search = searchParams.toString();
     let moreSearch = "";
     if (search) {
@@ -127,7 +131,6 @@ async function applyFilters(newFilters = {}, neworder = null) {
     } else if (neworder === -1) {
         order = null;
     }
-    console.log(filters);
     Object.keys(filters).forEach((key) => {
         if (
             filters[key] === null ||
@@ -214,75 +217,67 @@ function displayOffers(Data) {
                 offerElement.innerHTML = `
                 <article                 
                 ${offer.relief
-                    ? "class='research-card enReliefArticle mb-4 relative'"
-                    : "class='research-card mb-4 relative'"
-                }>
+                        ? "class='research-card enReliefArticle mb-4 relative'"
+                        : "class='research-card mb-4 relative'"
+                    }>
                 
                 
                 ${offer.relief
-                    ? "<img class='enReliefIcon' src='/assets/images/reliefIcon.svg' alt='Icone offre en relief'>"
-                    : "<div class='hidden'></div>"
-                }
+                        ? "<img class='enReliefIcon' src='/assets/images/reliefIcon.svg' alt='Icone offre en relief'>"
+                        : "<div class='hidden'></div>"
+                    }
                 
                 <div                
                 ${offer.relief
-                    ? "class='research-card--photo enRelief'"
-                    : "class='research-card--photo'"
-                }>
+                        ? "class='research-card--photo enRelief'"
+                        : "class='research-card--photo'"
+                    }>
                 
-                ${
-                    offer.photos[0]
+                ${offer.photos[0]
                         ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
                         : ""
-                }
+                    }
                 </div>
                 <div                 
                 ${offer.relief
-                    ? "class='research-card--body enRelief'"
-                    : "class='research-card--body'"
-                }">
+                        ? "class='research-card--body enRelief'"
+                        : "class='research-card--body'"
+                    }">
                 
                 <header>
                 <h2 class="research-card--title">${offer.title}</h2>
-
-                                <div class="flex flex-row gap-2 justify-between items-center">
-
-                <p>${translateCategory(offer.category)} par <a href="/comptes/${
-                    offer.professional_id
-                }" class="underline">${
-                    offer.profesionalUser["denomination"]
-                }</a></p>                <div class="flex flex-row gap-1 justify-center items-center">${
-                    stars.outerHTML
-                }
-                </div></div>
+                <div class="flex flex-row gap-2 justify-between items-center">
+                <p>${translateCategory(offer.category)} par <a href="/comptes/${offer.professional_id
+                    }" class="underline">${offer.profesionalUser["denomination"]
+                    }</a></p>
+                    <div class="flex flex-row gap-1 justify-center items-center">${stars.outerHTML
+                    }
+                        </div>
+                    </div>
                         </header>
                         <div class="flex flex-col gap-2">
                         <p class="summary">${offer.summary}</p>
                         <div class="flex flex-row gap-6">
-                        ${
-                            offer.minimum_price
-                                ? "<div> À partir de " +
-                                  offer.minimum_price +
-                                  " € </div >"
-                                : "<div class='hidden'></div>"
-                        }
-                        ${
-                            offer.status
-                                ? "<div>" + offer.status + "</div >"
-                                : "<div class='hidden'></div>"
-                        }
-                        ${
-                            offer.address.city
-                                ? "<div>" + offer.address.city + "</div>"
-                                : "<div class='hidden'></div>"
-                        }
+                        ${offer.minimum_price
+                        ? "<div> À partir de " +
+                        offer.minimum_price +
+                        " € </div >"
+                        : "<div class='hidden'></div>"
+                    }
+                        ${offer.status
+                        ? "<div>" + offer.status + "</div >"
+                        : "<div class='hidden'></div>"
+                    }
+                        ${offer.address.city
+                        ? "<div>" + offer.address.city + "</div>"
+                        : "<div class='hidden'></div>"
+                    }
                         </div >
                         </div >
                     <div class="flex gap-2 mt-auto pt-4">
                         <a href="" class="button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></a>
-                        <a href="/offres/${
-                            offer.id
-                        }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
+                        <a href="/offres/${offer.id
+                    }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
                     </div>
             </article >
                     `;
@@ -422,6 +417,36 @@ sliderRating.addEventListener(
     }, 300)
 );
 
+const aProximite = document.getElementById("aProximite");
+const proximiteLoader = document.getElementById("proximiteLoader");
+
+aProximite.addEventListener("click", async (event) => {
+    if (aProximite.classList.contains("gray")) {
+        aProximite.classList.remove("gray");
+        aProximite.classList.add("blue");
+        proximiteLoader.classList.remove("hidden");
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const { x, y } = position.coords;
+                    await applyFilters({ latitude: x, longitude: y });
+                },
+                (error) => {
+                    console.error("Error getting location: ", error);
+                }
+            );
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+        }
+        proximiteLoader.classList.add("hidden");
+    } else if (aProximite.classList.contains("blue")) {
+        applyFilters({ latitude: null, longitude: null });
+        aProximite.classList.remove("blue");
+        aProximite.classList.add("gray");
+    }
+
+});
+
 // ---------------------------------------------------------------------------------------------- //
 // SearchBar
 // ---------------------------------------------------------------------------------------------- //
@@ -460,19 +485,14 @@ sort.addEventListener("change", (event) => {
         ? selectedOption.getAttribute("data-value")
         : null;
     if (dataValue === "croissantPrice") {
-        console.log("Tri par prix croissant");
         applyFilters({}, "price_asc");
     } else if (dataValue === "decroissantPrice") {
-        console.log("Tri par prix décroissant");
         applyFilters({}, "price_desc");
     } else if (dataValue === "croissantRating") {
-        console.log("Tri par note croissante");
         applyFilters({}, "rating_asc");
     } else if (dataValue === "decroissantRating") {
-        console.log("Tri par note décroissante");
         applyFilters({}, "rating_desc");
     } else if (dataValue === "reset") {
-        console.log("Reset des filtres");
         applyFilters({}, -1);
     }
 });
@@ -487,15 +507,12 @@ filterRangePriceRestau.addEventListener("change", (event) => {
         ? selectedOption.getAttribute("data-value")
         : null;
     if (dataValue === "1") {
-        console.log("Filtre prix moins de 25");
         applyFilters({ rangePrice: 1 });
     }
     if (dataValue === "2") {
-        console.log("Filtre prix entre 25 et 40");
         applyFilters({ rangePrice: 2 });
     }
     if (dataValue === "3") {
-        console.log("Filtre prix superieur a 40");
         applyFilters({ rangePrice: 3 });
     }
 });
