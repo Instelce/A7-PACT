@@ -297,14 +297,14 @@ class OfferController extends Controller
                 $type = "Restaurant";
                 $range_price = RestaurantOffer::findOne(['offer_id' => $id])->range_price;
                 $carte_restaurant = RestaurantOffer::findOne(['offer_id' => $id])->url_image_carte;
-                $price = $range_price === 1 ? "Dès €" : ($range_price === 2 ? "Dès €€" : "Dès €€€");
+                $price = $range_price === 1 ? "€" : ($range_price === 2 ? "€€" : "€€€");
                 $mealsIncluded = "Petit dej";
                 break;
             case 'activity':
                 $type = "Activité";
                 $duration = ActivityOffer::findOne(['offer_id' => $id])->duration ?? NULL;
                 $required_age = ActivityOffer::findOne(['offer_id' => $id])->required_age ?? NULL;
-                $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
+                $price = $offer->minimum_price !== null ? "À partir de " . $offer->minimum_price . "€" : "Gratuit";
                 $servicesIncluded = "Le vélo";
                 $servicesNonIncluded = "La selle";
                 $accessibility = "Pour tout le monde";
@@ -312,16 +312,16 @@ class OfferController extends Controller
             case 'show':
                 $type = "Spectacle";
                 $duration = ShowOffer::findOne(['offer_id' => $id])->duration ?? NULL;
-                $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
+                $price = $offer->minimum_price !== null ? "À partir de " . $offer->minimum_price . "€" : "Gratuit";
                 break;
             case 'visit':
                 $type = "Visite";
                 $duration = VisitOffer::findOne(['offer_id' => $id])->duration ?? NULL;
-                $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
+                $price = $offer->minimum_price !== null ? "À partir de " . $offer->minimum_price . "€" : "Gratuit";
                 break;
             case 'attraction_park':
                 $type = "Parc d'attraction";
-                $price = $offer->minimum_price !== null ? "Dès " . $offer->minimum_price . "€ /Pers." : "Gratuit";
+                $price = $offer->minimum_price !== null ? "À partir de " . $offer->minimum_price . "€" : "Gratuit";
                 $required_age = AttractionParkOffer::findOne(['offer_id' => $id])->required_age ?? NULL;
                 $carte_park = AttractionParkOffer::findOne(['offer_id' => $id])->url_image_park_map;
                 break;
