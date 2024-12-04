@@ -829,6 +829,26 @@ RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire5o11
 RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire6o11->id);
 RestaurantOffer::findOne(['offer_id' => $offre11->id])->addSchedule($horaire7o11->id);
 
+//offre 12 : Basilico
+$offre12 = new Offer();
+$offre12->title = "Basilico";
+$offre12->summary = "Basilico, à Perros-Guirec, offre des pizzas artisanales avec des ingrédients authentiques importés d’Italie pour une expérience italienne unique.";
+$offre12->description = 'Basilico c’est une pizzeria située à Perros-Guirec spécialisée dans la cuisine italienne authentique. Notre priorité est de vous offrir une expérience culinaire unique en utilisant uniquement des produits importés d’Italie. Notre pâte à pizza est préparée selon une recette traditionnelle italienne, en utilisant de la farine italienne de haute qualité, de la levure fraîche et de l’eau pure. Elle est ensuite façonnée à la main pour garantir une texture légère et croustillante. Nous accordons également une grande importance aux ingrédients que nous utilisons pour garnir nos pizzas. Tous nos fromages, comme la mozzarella di bufala, le pecorino ou le parmesan, sont importés d’Italie pour une saveur authentique.';
+$offre12->likes = 569;
+$offre12->offline = 0;
+$offre12->last_offline_date = null;
+$offre12->offline_days = 0;
+$offre12->view_counter = 2600;
+$offre12->click_counter = 1200;
+$offre12->website = 'https://gigifamily.fr/basilico-perros-guirec/';
+$offre12->phone_number = '0296141754';
+$offre12->category = 'restaurant';
+$offre12->professional_id = 3;
+$offre12->address_id = 29;
+
+
+
+
 // ---------------------------------------------------------------------- //
 // photos offre11
 // ---------------------------------------------------------------------- //
