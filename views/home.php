@@ -25,13 +25,12 @@ $this->waves = true;
             </div>
         </h1>
 
-        <x-input rounded class="w-[600px]">
-            <input slot="input" type="text" placeholder="Recherchez des activités, visites, spectacles..." id="searchBar">
-            <button slot="button" class="button only-icon sm" id="searchButton">
-                <i data-lucide="search" stroke-width="2"></i>
-            </button>
-        </x-input>
-    </div>
+    <x-input rounded class="lg:w-[600px] sm:w-full">
+        <input slot="input" type="text" placeholder="Recherchez des activités, visites, spectacles..." id="searchBar">
+        <button slot="button" class="button only-icon sm" id="searchButton">
+            <i data-lucide="search" stroke-width="2"></i>
+        </button>
+    </x-input>
 
     <div class="homeDisplayDiv">
         <h1 class="home-category-title">Destinations phares</h1>
