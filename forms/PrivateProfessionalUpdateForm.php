@@ -8,6 +8,7 @@ use app\models\account\UserAccount;
 use app\models\Address;
 use app\models\payment\CbMeanOfPayment;
 use app\models\payment\MeanOfPayment;
+use app\models\payment\PaypalMeanOfPayment;
 use app\models\payment\RibMeanOfPayment;
 use app\models\user\professional\PrivateProfessional;
 use app\models\user\professional\ProfessionalUser;
@@ -15,9 +16,6 @@ use app\core\Utils;
 
 class PrivateProfessionalUpdateForm extends Model
 {
-    public const PAYMENT = 1;
-    public const NOPAYMENT = 0;
-
     public const ACCEPT_NOTIFICATIONS = 1;
     public const REFUSE_NOTIFICATIONS = 0;
 
@@ -31,7 +29,6 @@ class PrivateProfessionalUpdateForm extends Model
     public string $city = '';
     public string $phone = '';
 
-    public int $payment = self::NOPAYMENT;
     public int $notifications = self::REFUSE_NOTIFICATIONS;
     public string $titularAccount = '';
     public string $iban = '';
@@ -46,6 +43,10 @@ class PrivateProfessionalUpdateForm extends Model
     public ?Address $address = null;
     public ?ProfessionalUser $professional = null;
     public PrivateProfessional|null|false $privateProfessional = null;
+    public ?MeanOfPayment $payment = null;
+    public ?CbMeanOfPayment $cb = null;
+    public ?RibMeanOfPayment $rib = null;
+    public ?PaypalMeanOfPayment $paypal = null;
 
     public function __construct()
     {
@@ -65,6 +66,30 @@ class PrivateProfessionalUpdateForm extends Model
         $this->notifications = $this->professionalUser->allows_notifications;
 
         $this->privateProfessional = PrivateProfessional::findOneByPk(Application::$app->user->account_id);
+
+        $this->payment = MeanOfPayment::findOneByPk($this->privateProfessional->payment_id);
+
+        if(!$this->payment){
+
+        }
+
+        else if (MeanOfPayment::findOneByPk($this->payment->id)->isRibPayment()) {
+            $this->rib = RibMeanOfPayment::findOneByPk($this->payment->id);
+            $this->titularAccount = $this->rib->name;
+            $this->iban = $this->rib->iban;
+            $this->bic = $this->rib->bic;
+        }
+        else if (MeanOfPayment::findOneByPk($this->payment->id)->isCbPayment()) {
+            $this->cb = CBMeanOfPayment::findOneByPk($this->payment->id);
+            $this->titularCard = $this->cb->name;
+            $this->cardnumber = $this->cb->card_number;
+            $this->expirationdate = $this->cb->expiration_date;
+            $this->cryptogram = $this->cb->cvv;
+        }
+        else{
+            $this->paypal = PaypalMeanOfPayment::findOneByPk($this->payment->id);
+            $this->paypallink = $this->paypal->paypal_url;
+        }
     }
 
 
@@ -96,27 +121,44 @@ class PrivateProfessionalUpdateForm extends Model
         return true;
     }
 
+    public function paymentLoad(){
+        $request = Application::$app->request;
+        $this->payment->loadData($request->getBody());
+        $this->payment->update();
+        if (MeanOfPayment::findOneByPk($this->payment->id)->isRibPayment()){
+            $this->rib->loadData($request->getBody());
+            $this->rib->update();
+        }
+        else if (MeanOfPayment::findOneByPk($this->payment->id)->isCbPayment()){
+            $this->cb->loadData($request->getBody());
+            $this->cb->update();
+        }
+        else if (MeanOfPayment::findOneByPk($this->payment->id)->isPaypalPayment()){
+            $this->paypal->loadData($request->getBody());
+            $this->paypal->update();
+        }
+    }
+
 
     public function rules(): array
     {
         return [
-            'siren' =>[self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'siren', 'class' => ProfessionalUser::class], [self::RULE_MAX, 'max' => 9]],
+            'siren' =>[self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 9]],
             'denomination' => [self::RULE_REQUIRED],
-            'mail' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'mail', 'class' => UserAccount::class], self::RULE_MAIL],
+            'mail' => [self::RULE_REQUIRED, self::RULE_MAIL],
             'streetnumber' => [self::RULE_REQUIRED],
             'streetname' => [self::RULE_REQUIRED],
             'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
             'city' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10], [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
-            'password' => [self::RULE_REQUIRED, self::RULE_PASSWORD],
-            'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
+            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10]],
             'titular-account' => [[self::RULE_MAX, 'max' => 255]],
-            'iban' => [[self::RULE_MAX, 'max' => 34], [self::RULE_UNIQUE, 'attribute' => 'iban', 'class' => RibMeanOfPayment::class]],
+            'iban' => [[self::RULE_MAX, 'max' => 34]],
             'bic' => [[self::RULE_MAX, 'max' => 11]],
-            'cardnumber' => [[self::RULE_MAX, 'max' => 16], [self::RULE_UNIQUE, 'attribute' => 'card_number', 'class' => CbMeanOfPayment::class]],
+            'cardnumber' => [[self::RULE_MAX, 'max' => 16]],
             'titular-card' => [[self::RULE_MAX, 'max' => 255]],
             'expirationdate' => [self::RULE_EXP_DATE],
-            'cryptogram' => [[self::RULE_MAX, 'max' => 3]]
+            'cryptogram' => [[self::RULE_MAX, 'max' => 3]],
+            'passwordCheck' => [self::RULE_REQUIRED]
         ];
     }
 
@@ -132,8 +174,6 @@ class PrivateProfessionalUpdateForm extends Model
             'postaleCode' => 'Code postal',
             'city' => 'Ville',
             'phone' => 'Téléphone',
-            'password' => 'Mot de passe',
-            'passwordConfirm' => 'Confirmez votre mot de passe',
             'payment' => 'Je souhaite de rentrer mes coordonnées bancaires maintenant (possibilité de le faire plus tard)',
             'conditions' => 'J\'accepte les conditions géénrales d\'utilisation',
             'notifications' => 'J\'autorise l\'envoi de notifications',
@@ -143,7 +183,8 @@ class PrivateProfessionalUpdateForm extends Model
             'titular-card' => 'Titulaire de la carte',
             'cardnumber' => 'Numéro de carte',
             'expirationdate' => 'Date d\'expiration',
-            'cryptogram' => 'CVV'
+            'cryptogram' => 'CVV',
+            'passwordCheck' => 'Mot de passe'
         ];
     }
 
@@ -158,15 +199,14 @@ class PrivateProfessionalUpdateForm extends Model
             'postaleCode' => '22300',
             'city' => 'Lannion',
             'phone' => '06 01 02 03 04',
-            'password' => '********',
-            'passwordConfirm' => '********',
             'titular-account' => 'Nom entreprise / Nom personne',
             'iban' => 'FR76 XXXX XXXX XXXX XXXX XXXX XXXX XX',
             'bic' => 'vore BIC (optionnel)',
             'titular-card' => 'Nom entreprise / Nom personne',
             'cardnumber' => 'XXXX XXXX XXXX XXXX',
             'expirationdate' => 'MM/AA',
-            'cryptogram' => '000'
+            'cryptogram' => '000',
+            'passwordCheck' => '********'
         ];
     }
 }

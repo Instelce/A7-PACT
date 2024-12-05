@@ -6,7 +6,6 @@
 
     min-height: 60px;
     height: auto;
-    padding: .8rem 2rem;
 
     background: rgb(var(--background));
     border: 1px solid rgb(var(--border));
@@ -40,7 +39,7 @@
     width : 100%;
     gap : 1rem;
     height: 50px;
-    padding: .8rem;
+    padding: 1.6rem 2rem;
 }
 
 .bt-payment .clickable img {

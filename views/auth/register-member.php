@@ -38,7 +38,31 @@ $this->jsFile = 'registerMember';
                 <?php echo $form->field($model, 'city') ?>
             </div>
 
-            <?php echo $form->field($model, 'password')->passwordField() ?>
+            <div class="password-check">
+                <?php echo $form->field($model, 'password')->passwordField() ?>
+                <div class="hidden password-requirements">
+                    <p>Le mot de passe doit contenir au moins :</p>
+                    <ul>
+                        <li class="invalid letter">
+                            <span class="icon"></span> Une minuscule
+                        </li>
+                        <li class="invalid capital">
+                            <span class="icon"></span> Une majuscule
+                        </li>
+                        <li class="invalid number">
+                            <span class="icon"></span> Un nombre
+                        </li>
+                        <li class="invalid special">
+                            <span class="icon"></span> Un caractère spécial
+                        </li>
+                        <li class="invalid length">
+                            <span class="icon"></span> Au minimum 12 caractères
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+
             <?php echo $form->field($model, 'passwordConfirm')->passwordField() ?>
         </div>
         <div class="flex flex-col gap-4">

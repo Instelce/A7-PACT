@@ -145,7 +145,7 @@ $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 
 $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VieilArbre', TRUE);");
 
-$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren, phone) VALUES (3, 5462, 'SergeMytho and Co', '60622644000034', '" . generatePhoneNumber() . "'), (4, 7421, 'Fred port', '65941542000012', '" . generatePhoneNumber() . "'),(5,8452,'Rance Evasion','26915441000024', '" . generatePhoneNumber() . "'), (8, 9587, 'Brehat', '79658412354789', '" . generatePhoneNumber() . "'), (9, 7896, 'Récrée des 3 curés', '12548965324785', '" . generatePhoneNumber() . "'), (10, 1489, 'La vallée des Saints', '25489600358897', '" . generatePhoneNumber() . "'), (6, 9635, 'VoyageurGuidé', '95489433452897', '" . generatePhoneNumber() . "');");
+$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren, phone) VALUES (3, 5462, 'SergeMytho and Co', '986321475', '" . generatePhoneNumber() . "'), (4, 7421, 'Fred port', '365879587', '" . generatePhoneNumber() . "'),(5,8452,'Rance Evasion','789325471', '" . generatePhoneNumber() . "'), (8, 9587, 'Brehat', '986321547', '" . generatePhoneNumber() . "'), (9, 7896, 'Récrée des 3 curés', '325478951', '" . generatePhoneNumber() . "'), (10, 1489, 'La vallée des Saints', '789654268', '" . generatePhoneNumber() . "'), (6, 9635, 'VoyageurGuidé', '879632547', '" . generatePhoneNumber() . "');");
 
 $db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3), (8), (10), (6);");
 //publics : sergemytho(3) ; brehat(8) ; -> valleedessaints(10) <-

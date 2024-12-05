@@ -69,6 +69,12 @@ export class Tabs extends WebComponent {
               width: auto;
               flex-direction: column;
           }
+          
+          @media screen and (max-width: 768px){
+              :host(.column) .triggers {
+                  display: none;
+              }
+          }
         </style>
         `;
     }
