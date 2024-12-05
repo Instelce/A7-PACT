@@ -19,6 +19,7 @@
 }
 
 .dialog {
+    max-width: 40%;
     position: relative;
     background-color: white;
     border: solid rgba(0, 0, 0, 0.1) 0.2px;
@@ -50,6 +51,7 @@
     cursor: pointer;
     transition: transform 0.2s;
 }
+
 .dialog-cross:hover {
     transform: scale(1.1);
 }
@@ -73,5 +75,28 @@
     100% {
         opacity: 1;
         transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 1440px) {
+    .dialog{
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-width: 992px){
+    .dialog{
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .dialog{
+        max-width: 100%;
+    }
+
+    .on-same-line{
+        flex-direction: column;
+        gap: 0.5rem;
     }
 }

@@ -72,7 +72,7 @@ export class Tabs extends WebComponent {
           
           @media screen and (max-width: 768px){
               :host(.column) .triggers {
-                  display: none;
+                  width: 100%;
               }
           }
         </style>
@@ -232,9 +232,28 @@ export class Tabs extends WebComponent {
             const dialogContainer = document.querySelector(
                 `.dialog-container[data-dialog-name="${dialogName}"]`
             );
+
             if (dialogContainer) {
                 dialogContainer.classList.remove("close");
             }
+        }
+
+        if (event.target.matches('.dialog-close')) {
+            const dialogContainer = event.target.closest('.dialog-container');
+
+            if (dialogContainer) {
+                dialogContainer.classList.add("close");
+            }
+
+            console.log(dialogContainer)
+        }
+
+        if (event.target.matches('.dialog-container')) {
+            event.target.classList.add("close");
+        }
+
+        if (event.target.matches('svg')) {
+            event.target.closest('.dialog-container').classList.add("close");
         }
     }
 }
