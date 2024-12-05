@@ -60,6 +60,7 @@
 
 .enRelief{
     border: 1px solid rgb(var(--color-orange-primary));
+    border-left: none;
 }
 
 @media only screen and (max-width: 728px) {

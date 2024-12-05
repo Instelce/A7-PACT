@@ -1,6 +1,7 @@
 @import "variables.css";
 @import "reset.css";
 
+@import "parts/dialog.css";
 @import "parts/navbar.css";
 @import "parts/footer.css";
 @import "parts/loader.css";

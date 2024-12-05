@@ -133,7 +133,7 @@ $form = new Form();
                         </div>
 
                         <!-- Start end end DATE of the option -->
-                        <div id="option-dates" class="flex gap-4 mt-2 w-full hidden">
+                        <div id="option-dates" class="flex gap-4 mt-2 w-full">
                             <x-input>
                                 <p slot="label">Date de lancement</p>
                                 <input slot="input" type="date" name="option-launch-date" step="7"

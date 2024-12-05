@@ -82,7 +82,7 @@ class DBQueryBuilder
                     $attrName = str_replace('__', '.', $attr);
                     $modelName = implode('', array_map(fn($part) => ucfirst($part), explode('_', explode('__', $attr)[0])));
 
-                    return "$attrName = :$attr";
+                    return "$attrName $operation :$attrBindKey";
                 } else {
                     return "$tableName.$attr $operation :$attrBindKey";
                 }
@@ -96,7 +96,7 @@ class DBQueryBuilder
                 $sql .= " WHERE ";
             }
 
-            $sql .= implode(" OR ", array_map(function ($attr) {
+            $sql .= implode(" AND ", array_map(function ($attr) {
                 $tableName = $this->model->tableName();
 
                 // Check for double __ in the attribute name
@@ -156,15 +156,17 @@ class DBQueryBuilder
 
         $this->statement = Application::$app->db->pdo->prepare($sql);
 
-//        echo "<pre>";
-//        var_dump($this->statement->queryString);
-//        echo "</pre>";
+        // echo "<pre>";
+        // var_dump($this->statement->queryString);
+        // echo "</pre>";
+        // exit;
 
         foreach ($this->filters as $sets) {
             [$attr, $value, $op, $specialKey] = $sets;
             if ($specialKey) {
                 $attr = $specialKey;
             }
+
             $this->statement->bindValue(":$attr", $value);
         }
 

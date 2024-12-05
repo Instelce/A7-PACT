@@ -8,6 +8,7 @@ use app\core\Request;
 use app\core\Response;
 use app\models\account\UserAccount;
 use app\models\offer\Offer;
+use app\models\offer\OfferType;
 use app\models\offer\schedule\OfferSchedule;
 use app\models\offer\schedule\LinkSchedule;
 use app\models\opinion\Opinion;
@@ -56,10 +57,19 @@ class ApiController extends Controller
      */
     public function offers(Request $request, Response $response)
     {
+        $query = Offer::query();
+
         $q = $request->getQueryParams('q');
         $offset = $request->getQueryParams('offset');
         $limit = $request->getQueryParams('limit');
-        $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-_est_en_relief'];
+        $enrelief = $request->getQueryParams('enrelief');
+        $online = $request->getQueryParams('online');
+        $status = $request->getQueryParams('status');
+        if ($enrelief) {
+            $order_by = ['-_est_en_relief'];
+        } else {
+            $order_by = ['-created_at'];
+        }
         $professional_id = $request->getQueryParams('professional_id');
         $category = $request->getQueryParams('category');
         $minimumPrice = $request->getQueryParams('minimumPrice');
@@ -70,30 +80,58 @@ class ApiController extends Controller
         $location = $request->getQueryParams('location');
         $rating = $request->getQueryParams('rating');
         $rangePrice = $request->getQueryParams('rangePrice');
+        $latitude = $request->getQueryParams('latitude');
+        $longitude = $request->getQueryParams('longitude');
+        $type = $request->getQueryParams('type');
+        $option = $request->getQueryParams('option');
 
         $data = [];
         $where = [];
-        $where['offline'] = false;
+        if ($online) {
+            $where[] = ['offline', "false"];
+        }
+        if ($status) {
+            $where[] = ['offline', $status === 'offline' ? 'true' : 'false'];
+        }
         if ($professional_id) {
             $where['professional_id'] = $professional_id;
         }
         if ($category) {
             $where['category'] = $category;
         }
-        if ($location) {
-            $where['address__city'] = $location;
-        }
+        // if ($location) {
+        //     $where['address__city'] = $location;
+        // }
         if ($minimumPrice) {
             $where[] = ['minimum_price', $minimumPrice, '>='];
         }
         if ($maximumPrice) {
             $where[] = ['minimum_price', $maximumPrice, '<=', 'maximum_price'];
         }
-        $where[] = ['offline', "false"];
         if ($rating) {
             $where[] = ['rating', $rating, '>='];
         }
-
+        if ($latitude && $longitude) {
+            $latitudePositif = floatval($latitude + 0.3);
+            $latitudeNegatif = floatval(value: $latitude - 0.3);
+            $longitudePositif = floatval($longitude + 0.3);
+            $longitudeNegatif = floatval($longitude - 0.3);
+            $latitudePositif = strval($latitudePositif);
+            $latitudeNegatif = strval(value: $latitudeNegatif);
+            $longitudePositif = strval($longitudePositif);
+            $longitudeNegatif = strval($longitudeNegatif);
+            $where[] = ['address__latitude', $latitudePositif, '<=', 'latitudepositif'];
+            $where[] = ['address__latitude', $latitudeNegatif, '>=', 'latitudenegatif'];
+            $where[] = ['address__longitude', $longitudePositif, '<=', 'longitudepositif'];
+            $where[] = ['address__longitude', $longitudeNegatif, '>=', 'longitudenegatif'];
+        }
+        if ($type) {
+            $where['offer_type__type'] = $type;
+            $query->joinString("JOIN offer_type ON offer_type.id = offer.offer_type_id");
+        }
+        if ($option) {
+            $where['option__type'] = $option;
+        }
 
         if (in_array('price_asc', $order_by)) {
             $order_by = array_diff($order_by, ['price_asc']);
@@ -113,16 +151,14 @@ class ApiController extends Controller
             $where[] = ['rating', '0', '>', 'ratingDesc'];
         }
 
-
-        $query = Offer::query()
-            ->select(attrs: ['offer.*', "(CASE WHEN option.type = 'en_relief' THEN 1 ELSE 0 END) as _est_en_relief"])
+        $query->select(attrs: ['offer.*', "(CASE WHEN option.type = 'en_relief' THEN 1 ELSE 0 END) as _est_en_relief"])
             ->join(new Address())
             ->joinString("LEFT JOIN subscription ON subscription.offer_id = offer.id")
             ->joinString("LEFT JOIN option ON option.id = subscription.option_id")
             ->limit($limit)
             ->offset($offset)
             ->filters($where)
-            ->search(['title' => $q])
+            ->search(['address__city' => $location, 'title' => $q])
             ->order_by($order_by);
 
         if ($rangePrice) {
@@ -186,45 +222,71 @@ class ApiController extends Controller
             unset($data[$i]['address']['id']);
 
             //add status
-            $linkSchedules = LinkSchedule::find(['offer_id' => $offer->id]);
+            $openingHours = $offer->schedule();
             $dayOfWeek = strtolower((new DateTime())->format('N'));
-            foreach ($linkSchedules as $linkSchedule) {
-                $offerSchedules = OfferSchedule::find(['id' => $linkSchedule->schedule_id]);
-                foreach ($offerSchedules as $offerSchedule) {
-                    if ($offerSchedule->day == $dayOfWeek) {
-                        $closingHour = $offerSchedule->closing_hours;
-                        $openingHour = $offerSchedule->opening_hours;
+            foreach($openingHours as $openingHour){
+                if($openingHour->day==$dayOfWeek){
+                    $todayHour = $openingHour;
+                }
+            }
+
+            $closingHour = $todayHour->closing_hours;
+            $openingHour = $todayHour->opening_hours;
+
+            if ($todayHour){
+                if ($closingHour === 'fermé') {
+                    $status = "Fermé";
+                } else {
+                    $closingTime = new DateTime($closingHour);
+                    $openingTime = new DateTime($openingHour);
+
+                    $currentTime = new DateTime();
+
+                    if ($closingTime <= $currentTime && $openingTime >= $currentTime) {
+                        $status = "Fermé";
+                    } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
+                        $status = "Ferme bientôt";
+                    } else {
+                        $status = "Ouvert";
                     }
                 }
-            }
-            if ($closingHour === 'fermé') {
-                $status = "Fermé";
-            } else {
-                $closingTime = new DateTime($closingHour);
-                $openingTime = new DateTime($openingHour);
-
-                $currentTime = new DateTime();
-
-                if ($closingTime <= $currentTime && $openingTime >= $currentTime) {
-                    $status = "Fermé";
-                } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
-                    $status = "Ferme bientôt";
-                } else {
-                    $status = "Ouvert";
-                }
-            }
+            } else {$status = NULL;}
             $data[$i]['status'] = $status;
 
-            // add relief
+            // Add offer type
+            $data[$i]['type'] = OfferType::findOneByPk($offer->offer_type_id)->type;
+            unset($data[$i]['offer_type_id']);
+
+            // Add relief and a la une
             $relief = false;
-            $subscription = Subscription::findOne(['offer_id' => $offer->id]);
+            $a_la_une = false;
+            $subscription = $offer->subscription();
             if ($subscription) {
                 $option = Option::findOne(['id' => $subscription->option_id]);
                 if ($option->type == 'en_relief') {
                     $relief = true;
                 }
+                if ($option->type == 'a_la_une') {
+                    $a_la_une = true;
+                }
             }
             $data[$i]['relief'] = $relief;
+            $data[$i]['a_la_une'] = $a_la_une;
+
+            // Add subscription and option
+            if ($subscription) {
+                $data[$i]['subscription'] = $subscription->toJson();
+                $data[$i]['subscription']['end_date'] = $subscription->endDate();
+                $data[$i]['subscription']['option'] = $subscription->option()->toJson();
+            } else {
+                $data[$i]['subscription'] = null;
+            }
+            unset($data[$i]['subscription']['option_id']);
+            unset($data[$i]['subscription']['offer_id']);
+
+            // Opinion count
+            $data[$i]['opinion_count'] = $offer->opinionsCount();
+            $data[$i]['no_read_opinion_count'] = $offer->noReadOpinions();
         }
         return $response->json($data);
     }

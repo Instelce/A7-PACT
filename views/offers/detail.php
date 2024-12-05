@@ -59,13 +59,13 @@ $latitude = $offer->address()->latitude;
                 <h2 class="heading-2 font-title"><?php echo $offerData["title"] ?></h2> <!-- title -->
             </div>
 
-            <div class="flex gap-3 items-center">
+            <div class="flex gap-3 items-center flex-wrap">
                 <p>
                     <?php echo $offerData["category"] ?>
                     par
                     <a href="/comptes/<?php echo $offerData["professionalId"] ?>" class="underline"><?php echo $offerData["author"] ?></a>
                 </p>
-                <span class="dot"></span>
+                <!-- <span class="dot"></span> -->
                 <div class="flex gap-3 items-center">
                     <div class="stars" data-number="<?php echo $offerData["rating"] ?>"></div>
                     <p>(<?php echo $offer->opinionsCount() ?> avis)</p>
@@ -108,16 +108,20 @@ $latitude = $offer->address()->latitude;
                 </div>
             <?php endif; ?>
 
-            <div class="inline-offer">
-                <i data-lucide="clock"></i>
+            <div class="lg:hidden sm: flex flex-col gap-3">
+                <?php if (!empty ($status)){ ?>
+                    <div class="inline-offer">
+                        <i data-lucide="clock"></i>
+                        <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+                    </div>
+                <?php } ?>
 
-                <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
-            </div>
-            <div class="inline-offer">
-                <i data-lucide="coins"></i>
-                <p>
-                    <?php echo $offerData["price"]; ?>
-                </p>
+                <div class="inline-offer">
+                    <i data-lucide="coins"></i>
+                    <p>
+                        <?php echo $offerData["price"]; ?>
+                    </p>
+                </div>
             </div>
 
 
@@ -197,32 +201,70 @@ $latitude = $offer->address()->latitude;
                 </div>
             </x-acordeon> --->
 
-                <?php if (!empty($offerData["prestationsIncluses"])): ?>
+                <?php if (!empty($offerData["servicesIncluded"])): ?>
                     <x-acordeon text="Prestations incluses">
                         <div slot="content">
                             <p>
-                                <?php echo $offerData["prestationsIncluses"] ?>
+                                <?php echo $offerData["servicesIncluded"] ?>
                             </p>
                         </div>
                     </x-acordeon>
                 <?php endif; ?>
 
-                <?php if (!empty($offerData["prestationsNonIncluses"])): ?>
+                <?php if (!empty($offerData["servicesNonIncluded"])): ?>
                     <x-acordeon text="Prestations non incluses">
                         <div slot="content">
                             <p>
-                                <?php echo $offerData["prestationsNonIncluses"] ?>
+                                <?php echo $offerData["servicesNonIncluded"] ?>
                             </p>
                         </div>
                     </x-acordeon>
                 <?php endif; ?>
 
-                <?php if (!empty($offerData["accessibilite"])): ?>
+                <?php if (!empty($offerData["accessibility"])): ?>
                     <x-acordeon text="Accessibilité">
                         <div slot="content">
                             <p>
-                                <?php echo $offerData["accessibilite"] ?>
+                                <?php echo $offerData["accessibility"] ?>
                             </p>
+                        </div>
+                    </x-acordeon>
+                <?php endif; ?>
+
+                <?php if (!empty($offerData["mealsIncluded"])): ?>
+                    <x-acordeon text="Repas compris">
+                        <div slot="content">
+                            <p>
+                                <?php echo $offerData["mealsIncluded"] ?>
+                            </p>
+                        </div>
+                    </x-acordeon>
+                <?php endif; ?>
+
+                <?php if (!empty($offerData["openingHours"])): ?>
+                    <x-acordeon text="Horaires d'ouverture">
+                        <div slot="content">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th class="table-head" colspan="3">Grille des horaires</th>
+                                </tr>
+                                <tr>
+                                    <th>Jour</th>
+                                    <th>Ouverture</th>
+                                    <th>Fermeture</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($offerData['openingHours'] as $openingHour) { ?>
+                                        <tr>
+                                            <td><?php echo $openingHour->frenchDay() ?></td>
+                                            <td><?php echo $openingHour->opening_hours ?></td>
+                                            <td><?php echo $openingHour->closing_hours ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
                         </div>
                     </x-acordeon>
                 <?php endif; ?>
@@ -353,7 +395,7 @@ $latitude = $offer->address()->latitude;
 
                 <!-- If the current user has already created an opinion -->
                 <?php if ($userOpinion) { ?>
-                    <div>
+                    <div class="mb-4">
                         <p class="text-sm ml-5 mb-1">Votre avis</p>
                         <article class="opinion-card user-own">
                             <header>
@@ -420,11 +462,11 @@ $latitude = $offer->address()->latitude;
             <div id="map" class="map"></div>
             <input type="hidden" id="map-latitude" value="<?php echo $latitude ?>">
             <input type="hidden" id="map-longitude" value="<?php echo $longitude ?>">
-
-            <!-- <button class="button gray spaced">
+            <a href="https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=<?php echo $latitude . ',' . $longitude ?>"
+                class="button gray spaced">
                 Itinéraire
                 <i data-lucide="map"></i>
-            </button> -->
+            </button>
             <a class="button gray spaced" href="https://maps.google.com/?q=<?php echo $latitude . ',' . $longitude ?>" target="_blank">
                 Ouvrir dans Maps
                 <i data-lucide="arrow-up-right"></i>
@@ -432,11 +474,13 @@ $latitude = $offer->address()->latitude;
         </div>
         <div class="important_data">
             <div class="flex gap-4 items-center">
-                <div class="inline-offer">
-                    <i data-lucide="clock"></i>
+                <?php if (!empty($status)) { ?>
+                    <div class="inline-offer">
+                        <i data-lucide="clock"></i>
 
-                    <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
-                </div>
+                        <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+                    </div>
+                <?php } ?>
                 <div class="inline-offer">
                     <i data-lucide="coins"></i>
                     <p>

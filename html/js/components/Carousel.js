@@ -10,6 +10,7 @@ class Carousel {
      * @param {HTMLElement} element
      * @param {Object} options
      * @param {Object} [options.slidesToScroll=1] Nombres d'éléments à faire défiler
+     * @param {Object} [options.slidesVisibleMobile=1] Nombres d'éléments visibles en mobile
      * @param {Object} [options.slidesVisible=1] Nombres d'éléments visible dans un slide
      * @param {boolean} [options.loop=false] Doit-on boucler en fin de carousel
      * @param {boolean} [options.pagination=false] Doit-on afficher les petits points
@@ -21,6 +22,7 @@ class Carousel {
         this.options = Object.assign({}, {
             slidesToScroll : 1,
             slidesVisible : 1,
+            slidesVisibleMobile :1,
             loop : false,
             pagination : false,
             navigation: true
@@ -212,7 +214,7 @@ class Carousel {
      * @returns {number}
      */
     get slidesVisible (){
-        return this.isMobile? 1 : this.options.slidesVisible
+        return this.isMobile? this.options.slidesVisibleMobile : this.options.slidesVisible
     }
 }
 
@@ -222,6 +224,7 @@ for (let el of carouselGen) {
         slidesVisible: parseInt(el.getAttribute('data-slides-visible')),
         slidesToScroll: parseInt(el.getAttribute('data-slides-to-scroll')),
         loop: el.hasAttribute('data-loop'),
-        pagination : el.hasAttribute('data-pagination')
+        pagination : el.hasAttribute('data-pagination'),
+        slidesVisibleMobile: el.hasAttribute('data-slides-visible-mobile') ? parseInt(el.getAttribute('data-slides-visible-mobile')) : 1
     })
 }

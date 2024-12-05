@@ -1,5 +1,14 @@
+.page-content {
+    width: 100%;
+}
+
+.page-content > header {
+    width: 100%;
+    margin-bottom: 2rem;
+}
 
 .offer-card {
+    width: 100%;
     display: flex;
     gap: 1rem;
     padding-bottom: 2rem;
@@ -24,7 +33,7 @@
 }
 
 .card-body {
-    width: 30rem;
+    width: 100%;
 }
 
 .offer-card .image-container {

@@ -74,6 +74,10 @@ async function getOffers() {
     if (filters["rangePrice"]) {
         searchParams.set("rangePrice", filters["rangePrice"] || null);
     }
+    if (filters["latitude"] && filters["longitude"]) {
+        searchParams.set("latitude", filters["latitude"] || null);
+        searchParams.set("longitude", filters["longitude"] || null);
+    }
     let search = searchParams.toString();
     let moreSearch = "";
     if (search) {
@@ -86,6 +90,10 @@ async function getOffers() {
         limit +
         "&offset=" +
         offset +
+        "&enrelief=" +
+        true +
+        "&online=" +
+        true +
         moreSearch +
         search; //url of the api for research page offers's data
     console.log("url : " + url);
@@ -127,7 +135,6 @@ async function applyFilters(newFilters = {}, neworder = null) {
     } else if (neworder === -1) {
         order = null;
     }
-    console.log(filters);
     Object.keys(filters).forEach((key) => {
         if (
             filters[key] === null ||
@@ -144,9 +151,11 @@ async function applyFilters(newFilters = {}, neworder = null) {
         offset = 0;
         let Data = await getOffers();
         displayOffers(Data);
+        listenerIteneraire(Data);
     } else {
         let Data = await getOffers();
         displayOffers(Data);
+        listenerIteneraire(Data);
     }
     offset += 5;
 }
@@ -210,79 +219,71 @@ function displayOffers(Data) {
                     stars.appendChild(star);
                 }
                 const offerElement = document.createElement("a");
-                offerElement.href = `/offres/${offer.id}`;
                 offerElement.innerHTML = `
                 <article                 
                 ${offer.relief
-                    ? "class='research-card enReliefArticle mb-4 relative'"
-                    : "class='research-card mb-4 relative'"
-                }>
+                        ? "class='research-card enReliefArticle mb-4 relative'"
+                        : "class='research-card mb-4 relative'"
+                    }>
                 
                 
                 ${offer.relief
-                    ? "<img class='enReliefIcon' src='/assets/images/reliefIcon.svg' alt='Icone offre en relief'>"
-                    : "<div class='hidden'></div>"
-                }
+                        ? "<img class='enReliefIcon' src='/assets/images/reliefIcon.svg' alt='Icone offre en relief'>"
+                        : "<div class='hidden'></div>"
+                    }
                 
                 <div                
                 ${offer.relief
-                    ? "class='research-card--photo enRelief'"
-                    : "class='research-card--photo'"
-                }>
+                        ? "class='research-card--photo enRelief'"
+                        : "class='research-card--photo'"
+                    }>
                 
-                ${
-                    offer.photos[0]
+                ${offer.photos[0]
                         ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
                         : ""
-                }
+                    }
                 </div>
                 <div                 
                 ${offer.relief
-                    ? "class='research-card--body enRelief'"
-                    : "class='research-card--body'"
-                }">
+                        ? "class='research-card--body enRelief'"
+                        : "class='research-card--body'"
+                    }">
                 
                 <header>
                 <h2 class="research-card--title">${offer.title}</h2>
-
-                                <div class="flex flex-row gap-2 justify-between items-center">
-
-                <p>${translateCategory(offer.category)} par <a href="/comptes/${
-                    offer.professional_id
-                }" class="underline">${
-                    offer.profesionalUser["denomination"]
-                }</a></p>                <div class="flex flex-row gap-1 justify-center items-center">${
-                    stars.outerHTML
-                }
-                </div></div>
+                <div class="flex flex-row gap-2 justify-between items-center">
+                <p>${translateCategory(offer.category)} par <a href="/comptes/${offer.professional_id
+                    }" class="underline">${offer.profesionalUser["denomination"]
+                    }</a></p>
+                    <div class="flex flex-row gap-1 justify-center items-center">${stars.outerHTML
+                    }
+                        </div>
+                    </div>
                         </header>
                         <div class="flex flex-col gap-2">
                         <p class="summary">${offer.summary}</p>
                         <div class="flex flex-row gap-6">
-                        ${
-                            offer.minimum_price
-                                ? "<div> À partir de " +
-                                  offer.minimum_price +
-                                  " € </div >"
-                                : "<div class='hidden'></div>"
-                        }
-                        ${
-                            offer.status
-                                ? "<div>" + offer.status + "</div >"
-                                : "<div class='hidden'></div>"
-                        }
-                        ${
-                            offer.address.city
-                                ? "<div>" + offer.address.city + "</div>"
-                                : "<div class='hidden'></div>"
-                        }
+                        ${offer.minimum_price
+                        ? "<div> À partir de " +
+                        offer.minimum_price +
+                        " € </div >"
+                        : "<div class='hidden'></div>"
+                    }
+                        ${offer.status
+                        ? "<div>" + offer.status + "</div >"
+                        : "<div class='hidden'></div>"
+                    }
+                        ${offer.address.city
+                        ? "<div>" + offer.address.city + "</div>"
+                        : "<div class='hidden'></div>"
+                    }
                         </div >
                         </div >
                     <div class="flex gap-2 mt-auto pt-4">
-                        <a href="" class="button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></a>
-                        <a href="/offres/${
-                            offer.id
-                        }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
+                        <div id="${offer.id
+                    }" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
+                        <a href="/offres/${offer.id
+                    }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
                     </div>
             </article >
                     `;
@@ -315,12 +316,12 @@ let filterButton = document.getElementById("filterButton");
 const popupContent = document.querySelector(".popup-content");
 
 filterButton.addEventListener("click", () => {
-    popup.classList.toggle("hidden");
+    popup.classList.toggle("close");
 });
 
 popup.addEventListener("click", (event) => {
     if (!popupContent.contains(event.target)) {
-        popup.classList.add("hidden");
+        popup.classList.add("close");
     }
 });
 
@@ -404,8 +405,9 @@ const sliderPrice = document.getElementById("slider-price");
 sliderPrice.addEventListener(
     "slider-change",
     debounce((event) => {
+        let maxPrice = event.target.max;
         let { minValue, maxValue } = event.detail;
-        if (maxValue == 50) {
+        if (maxValue == maxPrice) {
             maxValue = null;
         }
         applyFilters({ minimumPrice: minValue, maximumPrice: maxValue });
@@ -422,11 +424,107 @@ sliderRating.addEventListener(
     }, 300)
 );
 
+let sort = document.getElementById("sort");
+sort.addEventListener("change", (event) => {
+    const inputValue = event.target.querySelector("input").value;
+    const selectedOption = sort.querySelector(`[data-value="${inputValue}"]`);
+    const dataValue = selectedOption
+        ? selectedOption.getAttribute("data-value")
+        : null;
+    if (dataValue === "croissantPrice") {
+        applyFilters({}, "price_asc");
+    } else if (dataValue === "decroissantPrice") {
+        applyFilters({}, "price_desc");
+    } else if (dataValue === "croissantRating") {
+        applyFilters({}, "rating_asc");
+    } else if (dataValue === "decroissantRating") {
+        applyFilters({}, "rating_desc");
+    } else if (dataValue === "reset") {
+        applyFilters({}, -1);
+    }
+});
+
+let filterRangePriceRestau = document.getElementById("filterRangePriceRestau");
+filterRangePriceRestau.addEventListener("change", (event) => {
+    const inputValue = event.target.querySelector("input").value;
+    const selectedOption = filterRangePriceRestau.querySelector(
+        `[data-value="${inputValue}"]`
+    );
+    const dataValue = selectedOption
+        ? selectedOption.getAttribute("data-value")
+        : null;
+    if (dataValue === "1") {
+        applyFilters({ rangePrice: 1 });
+    }
+    if (dataValue === "2") {
+        applyFilters({ rangePrice: 2 });
+    }
+    if (dataValue === "3") {
+        applyFilters({ rangePrice: 3 });
+    }
+    if (dataValue === "reset") applyFilters({ rangePrice: null });
+});
+
+const aProximite = document.getElementById("aProximite");
+const proximiteLoader = document.getElementById("proximiteLoader");
+const proximiteIcon = document.getElementById("proximiteIcon");
+
+async function success(position) {
+    let x = position.coords.latitude;
+    let y = position.coords.longitude;
+    await applyFilters({ latitude: x, longitude: y });
+    proximiteLoader.classList.add("hidden");
+    proximiteIcon.classList.remove("hidden");
+}
+function error(err) {
+    console.warn(`ERREUR (${err.code}): ${err.message}`);
+    proximiteLoader.classList.add("hidden");
+    proximiteIcon.classList.remove("hidden");
+}
+
+aProximite.addEventListener("click", (event) => {
+    if (aProximite.classList.contains("gray")) {
+        aProximite.classList.remove("gray");
+        aProximite.classList.add("blue");
+        proximiteLoader.classList.remove("hidden");
+        proximiteIcon.classList.add("hidden");
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+            console.error(
+                "La géolocalisation n'est pas supportée par ce navigateur."
+            );
+        }
+    } else if (aProximite.classList.contains("blue")) {
+        applyFilters({ latitude: null, longitude: null });
+        aProximite.classList.remove("blue");
+        aProximite.classList.add("gray");
+    }
+});
+
+function listenerIteneraire(Data) {
+    let iteneraire = document.querySelectorAll(".iteneraire");
+    iteneraire.forEach((element) => {
+        element.addEventListener("click", (event) => {
+            console.log(event.target.id);
+            let offerId = event.target.id;
+            Data.forEach((offer) => {
+                if (offer.id == offerId) {
+                    let latitude = offer.address["latitude"];
+                    let longitude = offer.address["longitude"];
+                    let url = `https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=${latitude},${longitude}`;
+                    window.open(url, "_blank");
+                }
+            });
+        });
+    });
+}
+
 // ---------------------------------------------------------------------------------------------- //
 // SearchBar
 // ---------------------------------------------------------------------------------------------- //
 const urlParams = new URLSearchParams(window.location.search);
-const searchQuery = urlParams.get('search');
+const searchQuery = urlParams.get("search");
 if (searchQuery) {
     searchInput.value = searchQuery;
     filters = { q: searchQuery };
@@ -452,61 +550,18 @@ if (searchQuery) {
 
 //     applyFilters({ maximumEventDate: event.detail.value });
 // });
-let sort = document.getElementById("sort");
-sort.addEventListener("change", (event) => {
-    const inputValue = event.target.querySelector("input").value;
-    const selectedOption = sort.querySelector(`[data-value="${inputValue}"]`);
-    const dataValue = selectedOption
-        ? selectedOption.getAttribute("data-value")
-        : null;
-    if (dataValue === "croissantPrice") {
-        console.log("Tri par prix croissant");
-        applyFilters({}, "price_asc");
-    } else if (dataValue === "decroissantPrice") {
-        console.log("Tri par prix décroissant");
-        applyFilters({}, "price_desc");
-    } else if (dataValue === "croissantRating") {
-        console.log("Tri par note croissante");
-        applyFilters({}, "rating_asc");
-    } else if (dataValue === "decroissantRating") {
-        console.log("Tri par note décroissante");
-        applyFilters({}, "rating_desc");
-    } else if (dataValue === "reset") {
-        console.log("Reset des filtres");
-        applyFilters({}, -1);
-    }
-});
 
-let filterRangePriceRestau = document.getElementById("filterRangePriceRestau");
-filterRangePriceRestau.addEventListener("change", (event) => {
-    const inputValue = event.target.querySelector("input").value;
-    const selectedOption = filterRangePriceRestau.querySelector(
-        `[data-value="${inputValue}"]`
-    );
-    const dataValue = selectedOption
-        ? selectedOption.getAttribute("data-value")
-        : null;
-    if (dataValue === "1") {
-        console.log("Filtre prix moins de 25");
-        applyFilters({ rangePrice: 1 });
-    }
-    if (dataValue === "2") {
-        console.log("Filtre prix entre 25 et 40");
-        applyFilters({ rangePrice: 2 });
-    }
-    if (dataValue === "3") {
-        console.log("Filtre prix superieur a 40");
-        applyFilters({ rangePrice: 3 });
-    }
-});
 // ---------------------------------------------------------------------------------------------- //
 // Observer
 // ---------------------------------------------------------------------------------------------- //
 
-let loaderSection = document.querySelector("#loader-section");
+const loaderSection = document.querySelector("#loader-section");
+const loaderLoaderSection = document.getElementById("loaderLoaderSection");
 
 async function loadOffers() {
+    loaderLoaderSection.classList.remove("hidden");
     await applyFilters();
+    loaderLoaderSection.classList.add("hidden");
 }
 
 // Create intersection observer on loader section
@@ -524,4 +579,3 @@ const observer = new IntersectionObserver(
 );
 
 observer.observe(loaderSection);
-
