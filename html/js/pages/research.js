@@ -96,7 +96,7 @@ async function getOffers() {
         true +
         moreSearch +
         search; //url of the api for research page offers's data
-    console.log("url : " + url);
+    // console.log("url : " + url);
     try {
         const response = await fetch(url); //fetching the data from the api
         if (!response.ok) {
