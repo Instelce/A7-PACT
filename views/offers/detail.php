@@ -423,23 +423,24 @@ $latitude = $offer->address()->latitude;
                 <i data-lucide="arrow-up-right"></i>
             </a>
         </div>
-        <div class="important_data">
-            <div class="flex gap-4 items-center">
-                <?php if (!empty($status)) { ?>
-                    <div class="inline-offer">
-                        <i data-lucide="clock"></i>
+            <div class="important_data">
+                <div class="flex gap-4 items-center">
+                    <?php if (!empty($status)) { ?>
+                        <div class="inline-offer">
+                            <i data-lucide="clock"></i>
 
-                        <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+                            <p class="<?php echo $class; ?>"><?php echo $status; ?></p>
+                        </div>
+                    <?php } ?>
+                    <div class="inline-offer">
+                        <i data-lucide="coins"></i>
+                        <p>
+                            <?php echo $offerData["price"]; ?>
+                        </p>
                     </div>
-                <?php } ?>
-                <div class="inline-offer">
-                    <i data-lucide="coins"></i>
-                    <p>
-                        <?php echo $offerData["price"]; ?>
-                    </p>
                 </div>
             </div>
-        </div>
+
 
 
         <?php if (Application::$app->user?->isProfessional() && Application::$app->user->specific()->hasOffer($pk)) { ?>
