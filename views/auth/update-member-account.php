@@ -1,7 +1,7 @@
 <?php
 /** @var $model \app\forms\MemberUpdateForm */
 
-$this->title = 'Inscription update';
+$this->title = 'Modification compte';
 $this->jsFile = 'updateMemberAccount';
 
 use app\core\Application;
@@ -70,12 +70,6 @@ use app\core\Mailer;
                         Enregistrer les modifications
                     </button>
                 </div>
-                <div class="lg:hidden sm:block">
-                    <form method="post" class="flex">
-                        <input type="hidden" name="form-name" value="reset-password">
-                        <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
-                    </form>
-                </div>
             </div>
             <!--//////////////////////////////////////////////////////////////////////////
             // save update pop up
@@ -88,20 +82,16 @@ use app\core\Mailer;
                     </header>
 
                     <div class="dialog-content">
-                        <form method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="form-name" value="update-main">
+                        <?php echo $form->field($model, 'passwordCheck')->passwordField() ?>
 
-                            <?php echo $form->field($model, 'passwordCheck')->passwordField() ?>
-
-                            <div class="grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mt-8">
-                                <button type="button" class="button gray dialog-close">
-                                    Annuler
-                                </button>
-                                <button type="submit" class="button">Enregistrer les
-                                    modifications
-                                </button>
-                            </div>
-                        </form>
+                        <div class="grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mt-8">
+                            <button type="button" class="button gray dialog-close">
+                                Annuler
+                            </button>
+                            <button type="submit" class="button">Enregistrer les
+                                modifications
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -168,32 +158,3 @@ use app\core\Mailer;
         </div>
     </div>
 </div>
-
-<!--//////////////////////////////////////////////////////////////////////////
-// Delete account
-///////////////////////////////////////////////////////////////////////////-->
-
-<!--<div id="popupAccountDelete"
-     class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
-    <form method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="form-name" value="delete-account">
-        <div
-            class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px]
-            w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
-            <div>
-                <h1  class="heading-1">Demande de suppression</h1>
-            </div>
-            <div class="w-[400px]" id="password-delete-account">
-                <?php echo $form->field($model, 'passwordCheckdd')->passwordField() ?>
-            </div>
-            <div class="flex gap-4">
-                <div class="w-[400px]">
-                    <button type="button" class="button w-full gray" id="closePopupDelete">Annuler</button>
-                </div>
-                <div class="w-[400px]">
-                    <button type="submit" class="button danger w-full">Valider</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>-->

@@ -54,8 +54,6 @@ class MemberUpdateForm extends Model
 
     public function update()
     {
-        $request = Application::$app->request;
-
         $this->userAccount->mail = $this->mail;
         $this->userAccount->update();
 
@@ -63,8 +61,6 @@ class MemberUpdateForm extends Model
         $this->address->street = $this->streetName;
         $this->address->city = $this->city;
         $this->address->postal_code = $this->postalCode;
-        $this->address->longitude = 0;
-        $this->address->latitude = 0;
         $this->address->update();
 
         $this->memberUser->lastname = $this->lastname;
@@ -84,9 +80,6 @@ class MemberUpdateForm extends Model
          */
         $user = Application::$app->user;
 
-        var_dump($user);
-        var_dump($user->password);
-
         if (!password_verify($this->passwordCheck, $user->password)) {
             $this->addError('passwordCheck', 'Mot-de-passe incorrect.');
             return false;
@@ -102,9 +95,9 @@ class MemberUpdateForm extends Model
             'firstname' => [self::RULE_REQUIRED],
             'pseudo' => [self::RULE_REQUIRED],
             'mail' => [self::RULE_REQUIRED, self::RULE_MAIL],
-            'number' => [self::RULE_REQUIRED, self::RULE_NUMBER],
-            'street' => [self::RULE_REQUIRED],
-            'postal_code' => [self::RULE_REQUIRED, self::RULE_POSTAL],
+            'streetNumber' => [self::RULE_REQUIRED],
+            'streetName' => [self::RULE_REQUIRED],
+            'postalCode' => [self::RULE_REQUIRED, self::RULE_POSTAL],
             'city' => [self::RULE_REQUIRED],
             'phone' => [self::RULE_REQUIRED,self::RULE_PHONE],
         ];

@@ -95,7 +95,7 @@ $this->waves = true;
     <div class="homeDisplayDiv">
         <h1 class="home-category-title">Venez découvrir</h1>
 
-        <div class="carousel-gen carouselBG" data-slides-visible="4" data-slides-to-scroll="1"
+        <div class="carousel-gen carouselBG" data-slides-visible="4" data-slides-to-scroll="2"
             data-slides-visible-mobile="2">
             <a href="/recherche?city=Bréhat">
                 <div class="carousel-filter-card">

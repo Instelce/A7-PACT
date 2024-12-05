@@ -72,7 +72,7 @@ export class Tabs extends WebComponent {
           
           @media screen and (max-width: 768px){
               :host(.column) .triggers {
-                  display: none;
+                  width: 100%;
               }
           }
         </style>
