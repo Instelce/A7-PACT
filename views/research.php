@@ -63,8 +63,7 @@ $iconsNames = [
     </div>
 </div>
 <!-- more filters-->
-<div id="popup"
-    class="close lg:fixed lg:inset-0 lg:bg-black/50 flex lg:justify-start justify-between items-start z-50">
+<div id="popup" class="close lg:fixed lg:inset-0 lg:bg-black/50 flex lg:justify-start justify-between items-start z-50">
     <div
         class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[400px] w-full h-full mb-1 lg:mb-0 p-2 lg:p-6 lg:pt-[84px] flex flex-row justify-start justify-between items-start">
         <!-- Contenu de la popup -->
@@ -80,7 +79,8 @@ $iconsNames = [
                 <h3 class="section-header mb-2">Intervalle de prix</h3>
 
                 <div class="flex gap-2 w-full">
-                    <x-slider class="w-full" id="slider-price" color="#0057FF" label="Prix" min="0" max="50" type="double"></x-slider>
+                    <x-slider class="w-full" id="slider-price" color="#0057FF" label="Prix" min="0"
+                        max="<?php echo $maxPrice ?>" type="double"></x-slider>
                 </div>
             </div>
 
@@ -113,9 +113,9 @@ $iconsNames = [
                             <i data-lucide="lucide-arrow-down-narrow-wide"></i>
                         </div>
                         <div data-value="decroissantPrice">Prix décroissant <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                 width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                                                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                                                                                 class="lucide lucide-arrow-down-wide-narrow">
+                                width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                class="lucide lucide-arrow-down-wide-narrow">
                                 <path d="m3 16 4 4 4-4" />
                                 <path d="M7 20V4" />
                                 <path d="M11 4h10" />
@@ -124,9 +124,9 @@ $iconsNames = [
                             </svg></div>
 
                         <div data-value="croissantRating">Notes croissantes <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                 width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                                                 stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                                                                                 class="lucide lucide-arrow-down-narrow-wide">
+                                width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                class="lucide lucide-arrow-down-narrow-wide">
                                 <path d="m3 16 4 4 4-4" />
                                 <path d="M7 20V4" />
                                 <path d="M11 4h4" />
@@ -134,9 +134,9 @@ $iconsNames = [
                                 <path d="M11 12h10" />
                             </svg></div>
                         <div data-value="decroissantRating">Notes décroissantes <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                     width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                                                     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                                                                                     class="lucide lucide-arrow-down-wide-narrow">
+                                width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                class="lucide lucide-arrow-down-wide-narrow">
                                 <path d="m3 16 4 4 4-4" />
                                 <path d="M7 20V4" />
                                 <path d="M11 4h10" />
