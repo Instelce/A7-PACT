@@ -111,6 +111,7 @@ class MemberUpdateForm extends Model
             'city' => 'Ville',
             'phone' => 'Téléphone',
             'notifications' => 'notifications',
+            'passwordCheck' => 'Votre mot de passe',
         ];
     }
 

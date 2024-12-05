@@ -204,5 +204,15 @@ a {
     top: 100px;
 }
 
+@media only screen and (max-width: 728px) {
+    .waves {
+        transform: translateY(-100px);
+    }
+
+    .waves svg {
+        width: 200%;
+    }
+}
+
 @tailwind components;
 @tailwind utilities;
