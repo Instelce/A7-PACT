@@ -316,12 +316,20 @@ let filterButton = document.getElementById("filterButton");
 const popupContent = document.querySelector(".popup-content");
 
 filterButton.addEventListener("click", () => {
-    popup.classList.toggle("close");
+    if (popup.classList.contains("close")) {
+        popup.classList.remove("close");
+        popup.classList.remove("hidden");
+    }
+    else {
+        popup.classList.add("close");
+        setTimeout(() => { popup.classList.add("hidden"); }, 500);
+    }
 });
 
 popup.addEventListener("click", (event) => {
-    if (!popupContent.contains(event.target)) {
+    if (!popup.classList.contains("close") && !popupContent.contains(event.target)) {
         popup.classList.add("close");
+        setTimeout(() => { popup.classList.add("hidden"); }, 500);
     }
 });
 
