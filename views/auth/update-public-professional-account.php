@@ -18,9 +18,7 @@ $this->jsFile = 'updatePublicProfessionalAccount';
         <x-tab-panel role="region" slot="panel">
             <div class="flex flex-row mb-8 items-center">
                 <img class="w-[125px] h-[125px] rounded-full mr-10 object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
-                <div>
-                    <button id="avatarUpdate" type="button" class="button w-25% gray"><i data-lucide="pen-line"></i>Modifier mon avatar</button>
-                </div>
+                <button data-dialog-trigger="avatar-update" class="dialog-trigger button w-25% gray"><i data-lucide="pen-line"></i>Modifier mon avatar</button>
             </div>
             <?php $form = \app\core\form\Form::begin('', 'post', '', 'form-w items-start') ?>
             <input type="hidden" name="form-name" value="update-public">
@@ -117,81 +115,36 @@ $this->jsFile = 'updatePublicProfessionalAccount';
 // Avatar pop up
 //////////////////////////////////////////////////////////////////////////:-->
 
-<div id="popupAvatarUpdate"
-     class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
-    <form method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="form-name" value="update-avatar">
-        <div
-            class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px]
-        w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
-            <div>
-                <h1  class="heading-1">Ajout de votre photo de profil</h1>
-            </div>
-            <div>
-                <img class="w-[125px] h-[125px] rounded-full object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
-            </div>
-            <div class="flex flex-row gap-4">
-                <div class="w-[200px]">
-                    <label for="file" class="button w-full gray">
-                        <i data-lucide="upload"></i> Importer
-                    </label>
-                    <input id="file" class="hidden" type="file" name="avatar">
-                </div>
-                <div class="w-[200px]">
-                    <button class="button w-full gray">
-                        <i data-lucide="trash"></i>
-                        Supprimer
-                    </button>
-                </div>
-            </div>
-            <div class="flex flex-row gap-4">
-                <div class="w-[400px]">
-                    <button id="closePopupAvatar" type="button" class="button w-full gray">Annuler</button>
-                </div>
-                <div class="w-[400px]">
-                    <button type="submit" class="button purple w-full">Enregistrer les modifications</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
+<div class="dialog-container close" data-dialog-name="avatar-update">
+    <div class="dialog">
+        <header class="dialog-header">
+            <h3 class="dialog-title"> Modification de votre avatar</h3>
+            <p class="dialog-description"></p>
+        </header>
 
-<!--//////////////////////////////////////////////////////////////////////////
-// save update pop up
-//////////////////////////////////////////////////////////////////////////:-->
+        <div class="dialog-content">
+            <!-- Chacun mettra ce qu'il veux ici -->
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="form-name" value="update-avatar">
+                <div class="grid gap-4">
+                    <div class="grid gap-6 py-6">
+                        <div class="flex justify-center items-center w-full">
+                            <img class="w-[125px] h-[125px] rounded-full object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
+                        </div>
+                        <div class="flex justify-center items-center gap-2 w-full">
+                            <label for="file" class="button gray w-[250px]">
+                                <i data-lucide="upload"></i> Importer
+                            </label>
+                            <input id="file" class="hidden" type="file" name="avatar">
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center gap-4 w-full">
+                        <button type="button" class="dialog-close button gray w-[250px]" id="closePopupAvatar">Annuler</button>
+                        <button type="submit" class="button w-[250px]">Enregistrer les modifications</button>
+                    </div>
+                </div>
 
-<div id="popupSaveUpdate"
-     class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
-    <div
-        class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px]
-        w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
-        <div>
-            <h1  class="heading-1">Valider les modifications</h1>
-        </div>
-        <div>
-            <img class="w-[125px] h-[125px] rounded-full object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
-        </div>
-        <div class="flex flex-row gap-4">
-            <div class="w-[200px]">
-                <button type="submit" class="button w-full gray">
-                    <i data-lucide="upload"></i>
-                    Importer
-                </button>
-            </div>
-            <div class="w-[200px]">
-                <button type="submit" class="button w-full gray">
-                    <i data-lucide="trash"></i>
-                    Supprimer
-                </button>
-            </div>
-        </div>
-        <div class="flex flex-row gap-4">
-            <div class="w-[400px]">
-                <button type="submit" class="button w-full gray">Annuler</button>
-            </div>
-            <div class="w-[400px]">
-                <button type="submit" class="button purple w-full">Enregistrer les modifications</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>

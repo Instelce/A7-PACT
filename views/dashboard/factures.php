@@ -194,7 +194,7 @@ foreach ($offers as $offer) {
 
                                             <a href="/factures/<?php echo $invoice->id ?>"
                                                class="button gray sm" target="_blank" title="Visualizer la facture">
-                                                Visualizer
+                                                Visualiser
                                                 <i data-lucide="eye"></i>
                                             </a>
                                         </div>
@@ -211,8 +211,8 @@ foreach ($offers as $offer) {
                 <?php } ?>
 
                 <?php if (empty($invoices)) { ?>
-                    <p>Aucune factures. Attendez la fin du mois pour voir apparaitre vos première
-                        facture.</p>
+                    <p>Aucune facture. Attendez la fin du mois pour voir apparaitre vos premières
+                        factures.</p>
                 <?php } ?>
             </div>
         </div>

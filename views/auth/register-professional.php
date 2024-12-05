@@ -165,24 +165,24 @@ $this->cssFile = "registerPro";
 
                     <div id="mean-payment" class="hidden">
                         <div class="flex flex-col gap-4 w-full">
-                            <div class="bt-payment flex-col" id="rib">
+                            <div class="bt-payment px-6 flex-col" id="rib">
                                 <div id="payment" class="clickable">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0332aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-[30px] h-[30px] lucide lucide-credit-card"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                                     Virement bancaire
                                 </div>
-                                <div id="content-payment" class="w-full hidden">
+                                <div id="content-payment" class="w-full hidden pb-8">
                                     <?php echo $form->field($proPrivate, 'titular-account')?>
                                     <?php echo $form->field($proPrivate, 'iban')?>
                                     <?php echo $form->field($proPrivate, 'bic')?>
                                 </div>
                             </div>
-                            <div class="bt-payment p[.8rem] flex-col" id="cb">
+                            <div class="bt-payment px-6 flex-col" id="cb">
                                 <div id="card" class="clickable">
                                     <img src="/assets/images/payment/logoVisa.png" title="logo visa" alt="visa">
                                     <img src="/assets/images/payment/logoMS.png" title="logo visa" alt="visa">
                                     Carte bancaire
                                 </div>
-                                <div id="content-card" class="w-full hidden">
+                                <div id="content-card" class="w-full hidden pb-8">
                                     <?php echo $form->field($proPrivate, 'titular-card') ?>
                                     <?php echo $form->field($proPrivate, 'cardnumber') ?>
                                     <div class="flex gap-4">
