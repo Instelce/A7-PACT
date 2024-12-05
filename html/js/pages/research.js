@@ -529,6 +529,12 @@ if (searchQuery) {
     searchInput.value = searchQuery;
     filters = { q: searchQuery };
 }
+const cityParams = new URLSearchParams(window.location.city);
+const cityQuery = urlParams.get("city");
+if (cityQuery) {
+    searchCity.value = cityQuery;
+    filters = { location: cityQuery };
+}
 // const switchInput = document.getElementById("switchtest");
 
 // switchInput.addEventListener("change", async (event) => {
