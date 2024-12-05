@@ -182,7 +182,7 @@ use app\core\Application;
 <nav class="bottom-navbar">
     <a href="/" class="<?php echo Application::$app->request->getPath() === '/' ? "active" : "" ?>">
         <i data-lucide="home"></i>
-        <span>Acceuil</span>
+        <span>Accueil</span>
     </a>
 
     <a href="/recherche" class="<?php echo Application::$app->request->getPath() === "/recherche" ? "active" : "" ?>">
