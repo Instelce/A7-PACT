@@ -181,3 +181,9 @@ section {
 .opinions-container .opinion-card:last-child {
     border-bottom: 0;
 }
+
+@media only screen and (max-width: 728px) {
+    .important_data{
+        display: none;
+    }
+}
