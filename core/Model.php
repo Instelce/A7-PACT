@@ -108,7 +108,7 @@ abstract class Model
                     }
                 }
                 if ($rule_name === self::RULE_EXP_DATE) {
-                    $pattern = '/^\d{2}/\d{2}$/';
+                    $pattern = '/^\d{2}\/\d{2}$/'; // Escaped the '/' character
                     if (!preg_match($pattern, $value)) {
                         $this->addErrorForRule($attr, self::RULE_EXP_DATE, $rule);
                     }

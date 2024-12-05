@@ -1,26 +1,3 @@
-//--------------- Popup pour l'avatar ---------------
-let popupAvatarUpdate = document.getElementById("popupAvatarUpdate");
-let avatarUpdate = document.getElementById("avatarUpdate");
-let closePopupAvatar = document.getElementById("closePopupAvatar");
-
-
-avatarUpdate.addEventListener("click", () => {
-    popupAvatarUpdate.classList.toggle("hidden");
-});
-
-popupAvatarUpdate.addEventListener("click", (event) => {
-    let popupContent = popupAvatarUpdate.querySelector('.popup-content');
-    if (!popupContent.contains(event.target)) {
-        popupAvatarUpdate.classList.add("hidden");
-    }
-});
-
-closePopupAvatar.addEventListener("click", (event) => {
-    popupAvatarUpdate.classList.add("hidden");
-});
-
-
-
 //--------------- Popup pour l'enregistrement des modifications ---------------
 const saveUpdatePopupTrigger = document.getElementById("saveUpdatePopupTrigger");
 const popupSaveUpdate = document.getElementById("popupSaveUpdate");

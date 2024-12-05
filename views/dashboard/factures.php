@@ -211,8 +211,8 @@ foreach ($offers as $offer) {
                 <?php } ?>
 
                 <?php if (empty($invoices)) { ?>
-                    <p>Aucune factures. Attendez la fin du mois pour voir apparaitre vos première
-                        facture.</p>
+                    <p>Aucune facture. Attendez la fin du mois pour voir apparaitre vos premières
+                        factures.</p>
                 <?php } ?>
             </div>
         </div>
