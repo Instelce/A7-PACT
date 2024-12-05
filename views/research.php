@@ -29,9 +29,6 @@ $iconsNames = [
 <div class="flex flex-col mb-4">
     <x-input rounded>
         <input class="search-input" slot="input" type="text" placeholder="Rechercher">
-        <button slot="button" class="button only-icon sm">
-            <i data-lucide="search" stroke-width="2"></i>
-        </button>
     </x-input>
     <div class="categories-container">
         <?php

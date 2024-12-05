@@ -25,11 +25,13 @@ dialogContainers.forEach(dialogContainer => {
     // Insert cross icon into dialog
     let crossIcon = document.createElement("button");
     crossIcon.classList.add("dialog-cross");
+    crossIcon.type = "button";
     crossIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`
     dialog.appendChild(crossIcon);
 
     crossIcon.addEventListener("click", () => {
         dialogContainer.classList.add(closeClass);
+        console.log()
     })
 
     // Add event listener to container to close dialog

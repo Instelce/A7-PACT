@@ -95,15 +95,8 @@ $this->waves = true;
     <div class="homeDisplayDiv">
         <h1 class="home-category-title">Venez découvrir</h1>
 
-        <div class="carousel-gen carouselBG" data-slides-visible="4" data-slides-to-scroll="1"
+        <div class="carousel-gen carouselBG" data-slides-visible="4" data-slides-to-scroll="2"
             data-slides-visible-mobile="2">
-            <a href="/recherche?city=Saint-Brieuc">
-                <div class="carousel-filter-card">
-                    <img src="/assets/images/homeCarouselImages/Saint-Brieuc.webp" alt="Saint-Brieuc"
-                        style="width:100%;">
-                    <p class="carousel-filter-card-text">Saint-Brieuc</p>
-                </div>
-            </a>
             <a href="/recherche?city=Bréhat">
                 <div class="carousel-filter-card">
                     <img src="/assets/images/homeCarouselImages/Brehat.jpeg" alt="Brehat" style="width:100%;">
@@ -144,6 +137,13 @@ $this->waves = true;
                 <div class="carousel-filter-card">
                     <img src="/assets/images/homeCarouselImages/Pontrieux.jpg" alt="Pontrieux" style="width:100%;">
                     <p class="carousel-filter-card-text">Pontrieux</p>
+                </div>
+            </a>
+            <a href="/recherche?city=Saint-Brieuc">
+                <div class="carousel-filter-card">
+                    <img src="/assets/images/homeCarouselImages/Saint-Brieuc.webp" alt="Saint-Brieuc"
+                         style="width:100%;">
+                    <p class="carousel-filter-card-text">Saint-Brieuc</p>
                 </div>
             </a>
         </div>
