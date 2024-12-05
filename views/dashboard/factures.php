@@ -71,7 +71,7 @@ foreach ($offers as $offer) {
                 <h2><?php echo $monthTotal ?> € <span class="text-sm">HT</span></h2>
             </div>
             <div class="card-info">
-                <p>Jour en ligne toutes offres confondu</p>
+                <p>Jours en ligne toutes offres confondu</p>
                 <h2><?php echo $activeDaysTotal ?></h2>
             </div>
         </div>
@@ -193,8 +193,8 @@ foreach ($offers as $offer) {
                                             </a>
 
                                             <a href="/factures/<?php echo $invoice->id ?>"
-                                               class="button gray sm" target="_blank" title="Visualizer la facture">
-                                                Visualizer
+                                               class="button gray sm" target="_blank" title="Visualiser la facture">
+                                                Visualiser
                                                 <i data-lucide="eye"></i>
                                             </a>
                                         </div>
