@@ -77,3 +77,26 @@
         transform: translateY(0) scale(1);
     }
 }
+
+@media (max-width: 1440px) {
+    .dialog{
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-width: 992px){
+    .dialog{
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .dialog{
+        max-width: 100%;
+    }
+
+    .on-same-line{
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

@@ -84,7 +84,7 @@ use app\core\Mailer;
                     <div class="dialog-content">
                         <?php echo $form->field($model, 'passwordCheck')->passwordField() ?>
 
-                        <div class="grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mt-8">
+                        <div class="on-same-line grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mt-8">
                             <button type="button" class="button gray dialog-close">
                                 Annuler
                             </button>
@@ -145,7 +145,7 @@ use app\core\Mailer;
                             <input id="file" class="hidden avatar-input" type="file" name="avatar">
                         </div>
                     </div>
-                    <div class="flex justify-center items-center gap-4 w-full">
+                    <div class="on-same-line flex justify-center items-center gap-4 w-full">
                         <button type="button" class="dialog-close button gray w-[250px]"
                                 id="closePopupAvatar">Annuler
                         </button>
