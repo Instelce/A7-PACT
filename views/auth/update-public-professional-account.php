@@ -82,13 +82,9 @@ $this->jsFile = 'updatePublicProfessionalAccount';
                     <div class="w-[400px]" id="password-condition-utilisation">
                         <?php echo $form->field($proPublic, 'passwordCheck')->passwordField() ?>
                     </div>
-                    <div class="flex flex-row gap-4">
-                        <div>
-                            <button type="button" class="button gray w-[400px]" id="closePopupSave">Annuler</button>
-                        </div>
-                        <div>
-                            <button type="submit" class="button purple w-[400px]">Enregistrer les modifications</button>
-                        </div>
+                    <div class="flex flex-col gap-4">
+                        <button type="button" class="button gray w-[400px]" id="closePopupSave">Annuler</button>
+                        <button type="submit" class="button purple w-[400px]">Enregistrer les modifications</button>
                     </div>
                 </div>
             </div>

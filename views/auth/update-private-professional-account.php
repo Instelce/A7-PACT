@@ -78,21 +78,16 @@ $this->jsFile = 'updatePrivateProfessionalAccount';
                 // save update pop up
                 //////////////////////////////////////////////////////////////////////////:-->
 
-                    <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[225px]
-                                    w-full h-full lg:p-10 flex flex-col items-center gap-6">
+                    <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:p-10 flex flex-col items-center gap-6">
                         <div>
                             <h1  class="heading-1">Valider les modifications</h1>
                         </div>
                         <div class="w-[400px]" id="password-condition-utilisation">
                             <?php echo $form->field($proPrivate, 'passwordCheck')->passwordField() ?>
                         </div>
-                        <div class="flex flex-row gap-4">
-                            <div>
-                                <button type="button" class="button gray w-[400px]" id="closePopupSave">Annuler</button>
-                            </div>
-                            <div>
-                                <button type="submit" class="button purple w-[400px]">Enregistrer les modifications</button>
-                            </div>
+                        <div class="flex flex-col gap-4">
+                            <button type="submit" class="button purple w-[400px]">Enregistrer les modifications</button>
+                            <button type="button" class="button gray w-[400px]" id="closePopupSave">Annuler</button>
                         </div>
                     </div>
                 </div>
@@ -161,21 +156,16 @@ $this->jsFile = 'updatePrivateProfessionalAccount';
                                 // save update pop up
                                 //////////////////////////////////////////////////////////////////////////:-->
 
-                                <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[225px]
-                                    w-full h-full lg:p-10 flex flex-col items-center gap-6">
+                                <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:p-10 flex flex-col items-center gap-6">
                                     <div>
                                         <h1  class="heading-1">Valider les modifications</h1>
                                     </div>
                                     <div class="w-[400px]" id="password-condition-utilisation-payment">
                                         <?php echo $form->field($paymentForm, 'passwordCheckPayment')->passwordField() ?>
                                     </div>
-                                    <div class="flex flex-row gap-4">
-                                        <div>
-                                            <button type="button" class="button gray w-[400px]" id="closePopupSavePayment">Annuler</button>
-                                        </div>
-                                        <div>
-                                            <button type="submit" class="button purple w-[400px]">Enregistrer les modifications</button>
-                                        </div>
+                                    <div class="flex flex-col gap-4">
+                                        <button type="submit" class="button purple w-[400px]">Enregistrer les modifications</button>
+                                        <button type="button" class="button gray w-[400px]" id="closePopupSavePayment">Annuler</button>
                                     </div>
                                 </div>
                             </div>
