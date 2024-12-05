@@ -191,55 +191,6 @@ $latitude = $offer->address()->latitude;
         <div class="containerAcordeon">
 
             <div class="acordeonSize divide-y divide-gray-1">
-                <!--- <x-acordeon text="Grille tarifaire">
-                <div slot="content">
-                    <p>Adhérent enfant : 0 € <br>
-                        Adhérent adulte : 2 € <br>
-                        Non adhérent enfant : 10 € <br>
-                        Non adhérent adulte : 15 €
-                    </p>
-                </div>
-            </x-acordeon> --->
-
-                <?php if (!empty($offerData["servicesIncluded"])): ?>
-                    <x-acordeon text="Prestations incluses">
-                        <div slot="content">
-                            <p>
-                                <?php echo $offerData["servicesIncluded"] ?>
-                            </p>
-                        </div>
-                    </x-acordeon>
-                <?php endif; ?>
-
-                <?php if (!empty($offerData["servicesNonIncluded"])): ?>
-                    <x-acordeon text="Prestations non incluses">
-                        <div slot="content">
-                            <p>
-                                <?php echo $offerData["servicesNonIncluded"] ?>
-                            </p>
-                        </div>
-                    </x-acordeon>
-                <?php endif; ?>
-
-                <?php if (!empty($offerData["accessibility"])): ?>
-                    <x-acordeon text="Accessibilité">
-                        <div slot="content">
-                            <p>
-                                <?php echo $offerData["accessibility"] ?>
-                            </p>
-                        </div>
-                    </x-acordeon>
-                <?php endif; ?>
-
-                <?php if (!empty($offerData["mealsIncluded"])): ?>
-                    <x-acordeon text="Repas compris">
-                        <div slot="content">
-                            <p>
-                                <?php echo $offerData["mealsIncluded"] ?>
-                            </p>
-                        </div>
-                    </x-acordeon>
-                <?php endif; ?>
 
                 <?php if (!empty($offerData["openingHours"])): ?>
                     <x-acordeon text="Horaires d'ouverture">

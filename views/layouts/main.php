@@ -97,8 +97,10 @@ use app\core\Application;
                 </div>
             </div>
         <?php } else { ?>
-            <a href="/connexion" class="link">Connexion</a>
-            <a href="/inscription" class="button sm">Inscription</a>
+            <div class="navbarLoginButtons">
+                <a href="/connexion" class="link">Connexion</a>
+                <a href="/inscription" class="button sm">Inscription</a>
+            </div>
         <?php } ?>
 
         <div class="nav-burger" id="nav-burger">
@@ -116,6 +118,7 @@ use app\core\Application;
         <li><a href="/">Accueil</a></li>
         <li><a href="/recherche?search=">Rechercher</a></li>
         <li><a href="/connexion">Connexion</a></li>
+        <li><a href="/inscription">Inscription</a></li>
     </ul>
 </div>
 
