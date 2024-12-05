@@ -72,6 +72,9 @@ class MemberUpdateForm extends Model
          */
         $user = Application::$app->user;
 
+        var_dump($user);
+        var_dump($user->password);
+
         if (!password_verify($this->passwordCheck, $user->password)) {
             $this->addError('passwordCheck', 'Mot-de-passe incorrect.');
             return false;

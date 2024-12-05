@@ -34,56 +34,12 @@ x-tab[id="prive"]
 }
 
 px-16{
-    padding-left: 4rem;
-    padding-right: 4rem;
+    padding-left: 6rem;
+    padding-right: 6rem;
 }
 
-.password-requirements{
-    color: rgb(var(--color-gray-4));
-    margin-left: 5px;
-}
-
-
-.password-requirements ul {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 5px;
-}
-
-.password-requirements li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-
-.password-requirements .icon {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    margin-right: 10px;
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-
-.password-requirements .valid .icon {
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iI2I0ZTA3YSIgY2xhc3M9ImJpIGJpLWNvbnRlbnQiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJjNS41IDAgMTAgNC41IDEwIDEwcy00LjUgMTAtMTAgMTAtMTAtNC41LTEwLTEwUzYuNSAyIDEyIDJ6bTAgMmMtNC40MiAwLTggMy41OC04IDhzMy41OCA4IDggOCA4LTMuNTggOC04LTMuNTgtOC04LTd6bTQgNS43TDkuNyAxNC40Yy0uMjYuMjUtLjYxLjI1LS44NiAwbC0zLjItMy4yYy0uMzMtLjMyLS4zNS0uODUtLjA1LTEuMjEuMzUtLjM1Ljg5LS4zNSAxLjIxLjAxbDIuNzMgMi43MyAyLjcyLTIuNzJjLjMzLS4zNS44Ny0uMzguMTItLjAxbDMuMiAzLjJjLjMyLjM1LjMyLjktLjAyIDEuMjR6Ij48L3BhdGg+PC9zdmc+');
-}
-
-.password-requirements .invalid .icon {
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iI2I0YjRiNCIgY2xhc3M9ImJpIGJpLWNvbnRlbnQiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTExLjYyIDIybC01LjIxLTUuMjFjLS4zNC0uMzQtLjM0LS44OSAwLTEuMjNsNS4yMS01LjIxYy4zNC0uMzQuODktLjM0IDEuMjMgMGw1LjIxIDUuMjFjLjM0LjM0LjM0Ljg5IDAgMS4yM2wtNS4yMSA1LjIxYy0uMzQuMzQtLjg5LjM0LTEuMjMgMHoiPjwvcGF0aD48L3N2Zz4=');
-}
-
-.password-requirements .valid {
-    color: rgb(var(--color-success));
-    transition: color 0.3s ease;
-}
-
-.password-requirements .invalid {
-    color: rgb(var(--color-gray-4));
-    transition: color 0.3s ease;
+p-4{
+    padding: 1rem;
 }
 
 
@@ -99,7 +55,13 @@ px-16{
     }
 
     x-tabs{
-        width: 400px;
+        width: 100%;
+    }
+
+    x-tab[id="prive"]{
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .on-same-line{

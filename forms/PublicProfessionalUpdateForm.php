@@ -90,16 +90,15 @@ class PublicProfessionalUpdateForm extends Model
     public function rules(): array
     {
         return [
-            'siren' => [[self::RULE_UNIQUE, 'attribute' => 'siren', 'class' => ProfessionalUser::class], [self::RULE_MAX, 'max' => 9]],
+            'siren' => [[self::RULE_MAX, 'max' => 9]],
             'denomination' => [self::RULE_REQUIRED],
-            'mail' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'mail', 'class' => UserAccount::class], self::RULE_MAIL],
+            'mail' => [self::RULE_REQUIRED, self::RULE_MAIL],
             'streetname' => [self::RULE_REQUIRED],
             'streetnumber' => [self::RULE_REQUIRED],
             'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
             'city' => [self::RULE_REQUIRED],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10], [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
-            'password' => [self::RULE_REQUIRED, self::RULE_PASSWORD],
-            'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']]
+            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10]],
+            'passwordCheck' => [self::RULE_REQUIRED, self::RULE_PASSWORD]
         ];
     }
 
@@ -116,8 +115,7 @@ class PublicProfessionalUpdateForm extends Model
             'postaleCode' => 'Code postal',
             'city' => 'Ville',
             'phone' => 'Téléphone',
-            'password' => 'Mot de passe',
-            'passwordConfirm' => 'Confirmez votre mot de passe'
+            'passwordCheck' => 'Mot de passe'
         ];
     }
 
@@ -133,8 +131,7 @@ class PublicProfessionalUpdateForm extends Model
             'postaleCode' => '22300',
             'city' => 'Lannion',
             'phone' => '06 01 02 03 04',
-            'password' => '********',
-            'passwordConfirm' => '********'
+            'passwordCheck' => '********',
         ];
     }
 }

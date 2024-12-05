@@ -80,9 +80,13 @@ use app\core\Application;
                 </div>
 
                 <div class="avatar-options">
-                    <a href="/comptes/<?php echo Application::$app->user->account_id ?>">Mon profil</a>
+
+                    <?php if (Application::$app->user?->isMember()) { ?>
+                        <a href="/comptes/<?php echo Application::$app->user->account_id ?>">Mon profil</a>
+                    <?php } ?>
 
                     <?php if (Application::$app->user?->isProfessional()) { ?>
+                        <a href="/comptes/modification">Mon compte</a>
                         <a href="/dashboard">Mon dashboard</a>
                     <?php } ?>
 

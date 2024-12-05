@@ -22,6 +22,7 @@ x-tab[selected] {
     border-bottom: 2px solid rgb(var(--color-blue-primary));
 }
 
+
 x-tabs:not(:defined),
 x-tab:not(:defined),
 x-panel:not(:defined) {
@@ -35,9 +36,30 @@ x-tabs.column {
     gap: 2rem;
 }
 
+x-tabs.column.pro {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+}
+
 x-tabs.column x-tab,
 .tab-button {
     --color: var(--color-blue-primary);
+    display: flex;
+    gap: 1rem;
+    border: none;
+    position: relative;
+    border-radius: var(--radius-small);
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem 1rem 1rem;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+x-tabs.column.pro x-tab.pro,
+.tab-button.pro {
+    --color: var(--color-purple-primary);
     display: flex;
     gap: 1rem;
     border: none;
@@ -89,7 +111,9 @@ x-tabs.column x-tab[selected]::before,
     border-radius: var(--radius-rounded);
 }
 
-.tab-button.pro {
-    --color: var(--color-purple-primary);
-}
 
+@media screen and (max-width: 768px){
+    x-tabs.column{
+        display: flex;
+    }
+}

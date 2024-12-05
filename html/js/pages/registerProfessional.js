@@ -123,5 +123,3 @@ passwordInputs.forEach(container=>{
         formatPasswordInput(input, message);
     })
 })
-
-console.log(passwordInputs);

@@ -56,10 +56,16 @@ use app\core\Mailer;
                             la mise en ligne de nouvelles offres et autre</label>
                     </div>
                 </div>
-                
+
                 <div class="flex flex-col gap-4 mt-8">
                     <p><?php echo $form->error($model, 'passwordCheck') ?></p>
                     <button id="saveUpdatePopupTrigger" type="button" class="button w-full">Enregistrer les modifications</button>
+                </div>
+                <div class="lg:hidden sm:block">
+                    <form method="post" class="flex">
+                        <input type="hidden" name="form-name" value="reset-password">
+                        <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
+                    </form>
                 </div>
             </div>
             <div id="popupSaveUpdate"
@@ -104,7 +110,7 @@ use app\core\Mailer;
                     <input type="hidden" name="form-name" value="reset-password">
                     <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
                 </form>
-                <button id ="accountDelete" type="submit" class="button danger">Supprimer mon compte</button>
+<!--                <button id ="accountDelete" type="submit" class="button danger">Supprimer mon compte</button>-->
             </div>
         </x-tab-panel>
     </x-tabs>

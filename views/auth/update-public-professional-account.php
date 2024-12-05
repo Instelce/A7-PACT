@@ -9,8 +9,8 @@ $this->jsFile = 'updatePublicProfessionalAccount';
 
 ?>
 <div class="flex gap-2">
-    <x-tabs class="column">
-        <x-tab role="heading" slot="tab">
+    <x-tabs class="column pro">
+        <x-tab role="heading" slot="tab" class="pro">
             <i data-lucide="user"></i>
             Informations personnelles
         </x-tab>
@@ -23,7 +23,7 @@ $this->jsFile = 'updatePublicProfessionalAccount';
                 </div>
             </div>
             <?php $form = \app\core\form\Form::begin('', 'post', '', 'form-w items-start') ?>
-            <input type="hidden" name="form-name" value="update-private">
+            <input type="hidden" name="form-name" value="update-public">
 
             <div class="form-inputs flex flex-col gap-8 w-full">
                 <div class="flex flex-col w-full">
@@ -68,7 +68,7 @@ $this->jsFile = 'updatePublicProfessionalAccount';
             </div>
             <div class="flex flex-col gap-4 mt-8 w-[90%]">
                 <p><?php echo $form->error($proPublic, 'passwordCheck') ?></p>
-                <button id="saveUpdatePopupTrigger" type="button" class="button w-full">Enregistrer les modifications</button>
+                <button id="saveUpdatePopupTrigger" type="button" class="button purple w-full">Enregistrer les modifications</button>
             </div>
             <div id="popupSaveUpdate"
                  class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
@@ -77,31 +77,27 @@ $this->jsFile = 'updatePublicProfessionalAccount';
                 // save update pop up
                 //////////////////////////////////////////////////////////////////////////:-->
 
-                <form method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="form-name" value="update-main">
-                    <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[225px]
-                                        w-full h-full lg:p-10 flex flex-col items-center gap-6">
+                <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[225px] w-full h-full lg:p-10 flex flex-col items-center gap-6">
+                    <div>
+                        <h1  class="heading-1">Valider les modifications</h1>
+                    </div>
+                    <div class="w-[400px]" id="password-condition-utilisation">
+                        <?php echo $form->field($proPublic, 'passwordCheck')->passwordField() ?>
+                    </div>
+                    <div class="flex flex-row gap-4">
                         <div>
-                            <h1  class="heading-1">Valider les modifications</h1>
+                            <button type="button" class="button gray w-[400px]" id="closePopupSave">Annuler</button>
                         </div>
-                        <div class="w-[400px]" id="password-condition-utilisation">
-                            <?php echo $form->field($proPublic, 'passwordCheck')->passwordField() ?>
-                        </div>
-                        <div class="flex flex-row gap-4">
-                            <div>
-                                <button type="button" class="button gray w-[400px]" id="closePopupSave">Annuler</button>
-                            </div>
-                            <div>
-                                <button type="submit" class="button w-[400px]">Enregistrer les modifications</button>
-                            </div>
+                        <div>
+                            <button type="submit" class="button purple w-[400px]">Enregistrer les modifications</button>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
             <?php \app\core\form\Form::end() ?>
         </x-tab-panel>
 
-        <x-tab role="heading" slot="tab">
+        <x-tab role="heading" slot="tab" class="pro">
             <i data-lucide="key"></i>
             Sécurité
         </x-tab>
@@ -153,7 +149,7 @@ $this->jsFile = 'updatePublicProfessionalAccount';
                     <button id="closePopupAvatar" type="button" class="button w-full gray">Annuler</button>
                 </div>
                 <div class="w-[400px]">
-                    <button type="submit" class="button w-full">Enregistrer les modifications</button>
+                    <button type="submit" class="button purple w-full">Enregistrer les modifications</button>
                 </div>
             </div>
         </div>
@@ -194,7 +190,7 @@ $this->jsFile = 'updatePublicProfessionalAccount';
                 <button type="submit" class="button w-full gray">Annuler</button>
             </div>
             <div class="w-[400px]">
-                <button type="submit" class="button w-full">Enregistrer les modifications</button>
+                <button type="submit" class="button purple w-full">Enregistrer les modifications</button>
             </div>
         </div>
     </div>

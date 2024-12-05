@@ -11,8 +11,8 @@ $this->jsFile = 'updatePrivateProfessionalAccount';
 
 ?>
 <div class="flex gap-2">
-    <x-tabs class="column">
-        <x-tab role="heading" slot="tab">
+    <x-tabs class="column pro">
+        <x-tab role="heading" slot="tab" class="pro">
             <i data-lucide="user"></i>
             Informations personnelles
         </x-tab>
@@ -70,53 +70,50 @@ $this->jsFile = 'updatePrivateProfessionalAccount';
                 </div>
                 <div class="flex flex-col gap-4 mt-8 w-[90%]">
                     <p><?php echo $form->error($proPrivate, 'passwordCheck') ?></p>
-                    <button id="saveUpdatePopupTrigger" type="button" class="button w-full">Enregistrer les modifications</button>
+                    <button id="saveUpdatePopupTrigger" type="button" class="button purple w-full">Enregistrer les modifications</button>
                 </div>
                 <div id="popupSaveUpdate"
                      class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
 
-                    <!--//////////////////////////////////////////////////////////////////////////
-                    // save update pop up
-                    //////////////////////////////////////////////////////////////////////////:-->
+                <!--//////////////////////////////////////////////////////////////////////////
+                // save update pop up
+                //////////////////////////////////////////////////////////////////////////:-->
 
-                    <form method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="form-name" value="update-main">
-                        <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[225px]
-                                        w-full h-full lg:p-10 flex flex-col items-center gap-6">
+                    <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[225px]
+                                    w-full h-full lg:p-10 flex flex-col items-center gap-6">
+                        <div>
+                            <h1  class="heading-1">Valider les modifications</h1>
+                        </div>
+                        <div class="w-[400px]" id="password-condition-utilisation">
+                            <?php echo $form->field($proPrivate, 'passwordCheck')->passwordField() ?>
+                        </div>
+                        <div class="flex flex-row gap-4">
                             <div>
-                                <h1  class="heading-1">Valider les modifications</h1>
+                                <button type="button" class="button gray w-[400px]" id="closePopupSave">Annuler</button>
                             </div>
-                            <div class="w-[400px]" id="password-condition-utilisation">
-                                <?php echo $form->field($proPrivate, 'passwordCheck')->passwordField() ?>
-                            </div>
-                            <div class="flex flex-row gap-4">
-                                <div>
-                                    <button type="button" class="button gray w-[400px]" id="closePopupSave">Annuler</button>
-                                </div>
-                                <div>
-                                    <button type="submit" class="button w-[400px]">Enregistrer les modifications</button>
-                                </div>
+                            <div>
+                                <button type="submit" class="button purple w-[400px]">Enregistrer les modifications</button>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             <?php \app\core\form\Form::end() ?>
         </x-tab-panel>
 
         <?php if (Application::$app->user->isPrivateProfessional()) { ?>
-            <x-tab role="heading" slot="tab">
+            <x-tab role="heading" slot="tab" class="pro">
                 <i data-lucide="euro"></i>
                 Paiement
             </x-tab>
             <x-tab-panel role="region" slot="panel">
                 <div class="flex flex-col gap-8">
                     <div>
-                        <h2 class="section-header">Facturation</h2>
-                        <a href="/dashboard/factures" class="button">Consulter mes factures</a>
+                        <h2 class="section-header font-semibold">Facturation</h2>
+                        <a href="/dashboard/factures" class="button purple">Consulter mes factures</a>
                     </div>
 
                     <div class="flex flex-col gap-3">
-                        <h2 class="section-header">Moyen de paiement enregistré</h2>
+                        <h2 class="section-header font-semibold">Moyen de paiement enregistré</h2>
                         <div class="flex gap-4 items-center">
                             <div class="py-4 px-16 flex gap-2 border rounded border-solid border-gray-1">
                                 <?php if((MeanOfPayment::findOneByPk(PrivateProfessional::findOneByPk(Application::$app->user->account_id)->payment_id))->isRibPayment()){?>
@@ -146,13 +143,13 @@ $this->jsFile = 'updatePrivateProfessionalAccount';
             </x-tab-panel>
         <?php } ?>
 
-        <x-tab role="heading" slot="tab">
+        <x-tab role="heading" slot="tab" class="pro">
             <i data-lucide="key"></i>
             Sécurité
         </x-tab>
         <x-tab-panel role="region" slot="panel">
             <div class="flex flex-col gap-4">
-                <h2 class="section-header">Mot de passe</h2>
+                <h2 class="section-header font-semibold">Mot de passe</h2>
                 <form method="post" class="flex">
                     <input type="hidden" name="form-name" value="reset-password">
                     <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
@@ -169,28 +166,28 @@ $this->jsFile = 'updatePrivateProfessionalAccount';
      class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
     <form method="POST" enctype="multipart/form-data">
         <input type="hidden" name="form-name" value="update-payment">
-        <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[600px]
+        <div class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[700px]
         w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
             <div class="flex flex-col gap-4 w-full">
-                <div class="bt-payment flex-col" id="rib">
+                <div class="bt-payment flex-col p-4" id="rib">
                     <div id="payment" class="clickable">
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0332aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-[30px] h-[30px] lucide lucide-credit-card"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                         <p>Virement bancaire</p>
                     </div>
-                    <div id="content-payment" class="w-full hidden">
+                    <div id="content-payment" class="w-full <?php echo (MeanOfPayment::findOneByPk(PrivateProfessional::findOneByPk(Application::$app->user->account_id)->payment_id)->isRibPayment() ? "" : "hidden"); ?>">
                         <?php echo $form->field($proPrivate, 'titular-account')?>
                         <?php echo $form->field($proPrivate, 'iban')?>
                         <?php echo $form->field($proPrivate, 'bic')?>
                     </div>
                 </div>
-                <div class="bt-payment p[.8rem] flex-col" id="cb">
+                <div class="bt-payment p[.8rem] flex-col p-4" id="cb">
                     <div id="card" class="clickable">
                         <img src="/assets/images/payment/logoVisa.png" title="logo visa" alt="visa">
                         <img src="/assets/images/payment/logoMS.png" title="logo visa" alt="visa">
                         <p>Carte bancaire</p>
                     </div>
-                    <div id="content-card" class="w-full hidden">
-                        <?php echo $form->field($proPrivate, 'titular-card') ?>
+                    <div id="content-card" class="w-full <?php echo (MeanOfPayment::findOneByPk(PrivateProfessional::findOneByPk(Application::$app->user->account_id)->payment_id)->isCbPayment() ? "" : "hidden"); ?>">
+                        <?php echo $form->field($proPrivate, 'titularCard') ?>
                         <?php echo $form->field($proPrivate, 'cardnumber') ?>
                         <div class="flex gap-4">
                             <?php echo $form->field($proPrivate, 'expirationdate')?>
@@ -198,7 +195,7 @@ $this->jsFile = 'updatePrivateProfessionalAccount';
                         </div>
                     </div>
                 </div>
-                <div class="bt-payment flex-row justify-start" id="paypal">
+                <div class="bt-payment flex-row justify-start p-4" id="paypal">
                     <div class="clickable">
                         <img src="/assets/images/payment/logoPaypal.png" title="logo paypal" alt="paypal">
                         <p>Paypal (+1.15€)</p>
@@ -211,7 +208,7 @@ $this->jsFile = 'updatePrivateProfessionalAccount';
                     <button id="closePopup" type="button" class="button w-full gray">Annuler</button>
                 </div>
                 <div class="w-[400px]">
-                    <button type="submit" class="button w-full">Enregistrer les modifications</button>
+                    <button type="submit" class="button purple w-full">Enregistrer les modifications</button>
                 </div>
             </div>
         </div>
@@ -255,49 +252,9 @@ $this->jsFile = 'updatePrivateProfessionalAccount';
                     <button id="closePopupAvatar" type="button" class="button w-full gray">Annuler</button>
                 </div>
                 <div class="w-[400px]">
-                    <button type="submit" class="button w-full">Enregistrer les modifications</button>
+                    <button type="submit" class="button purple w-full">Enregistrer les modifications</button>
                 </div>
             </div>
         </div>
     </form>
-</div>
-
-<!--//////////////////////////////////////////////////////////////////////////
-// save update pop up
-//////////////////////////////////////////////////////////////////////////:-->
-
-<div id="popupSaveUpdate"
-     class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
-    <div
-        class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px]
-        w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
-        <div>
-            <h1  class="heading-1">Valider les modifications</h1>
-        </div>
-        <div>
-            <img class="w-[125px] h-[125px] rounded-full object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
-        </div>
-        <div class="flex flex-row gap-4">
-            <div class="w-[200px]">
-                <button type="submit" class="button w-full gray">
-                    <i data-lucide="upload"></i>
-                    Importer
-                </button>
-            </div>
-            <div class="w-[200px]">
-                <button type="submit" class="button w-full gray">
-                    <i data-lucide="trash"></i>
-                    Supprimer
-                </button>
-            </div>
-        </div>
-        <div class="flex flex-row gap-4">
-            <div class="w-[400px]">
-                <button type="submit" class="button w-full gray">Annuler</button>
-            </div>
-            <div class="w-[400px]">
-                <button type="submit" class="button w-full">Enregistrer les modifications</button>
-            </div>
-        </div>
-    </div>
 </div>
