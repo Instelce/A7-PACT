@@ -206,6 +206,7 @@ a {
 
 @media only screen and (max-width: 728px) {
     .waves {
+        overflow-x: hidden;
         transform: translateY(-100px);
     }
 

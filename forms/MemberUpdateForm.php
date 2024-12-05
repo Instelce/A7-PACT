@@ -55,13 +55,25 @@ class MemberUpdateForm extends Model
     public function update()
     {
         $request = Application::$app->request;
-        $this->userAccount->loadData($request->getBody());
+
+        $this->userAccount->mail = $this->mail;
         $this->userAccount->update();
-        $this->address->loadData($request->getBody());
+
+        $this->address->number = $this->streetNumber;
+        $this->address->street = $this->streetName;
+        $this->address->city = $this->city;
+        $this->address->postal_code = $this->postalCode;
+        $this->address->longitude = 0;
+        $this->address->latitude = 0;
         $this->address->update();
-        $this->memberUser->loadData($request->getBody());
+
+        $this->memberUser->lastname = $this->lastname;
+        $this->memberUser->firstname = $this->firstname;
+        $this->memberUser->phone = str_replace(' ', '', $this->phone);
+        $this->memberUser->pseudo = $this->pseudo;
         $this->memberUser->allows_notifications = $this->notification;
         $this->memberUser->update();
+
         return true;
     }
 
