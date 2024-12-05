@@ -31,18 +31,20 @@ $this->jsFile = "profile";
         <div class="profile-stats">
             <h3 class="flex heading-3 align-center gap-2">
                 <i data-lucide="message-circle"></i>
-                <?php if ($user->isProfessional()) { ?>
-                    <span class="pt-1"><?php echo $user->specific()->opinionsReceiveCount() ?> avis reçu</span>
-                <?php } else { ?>
-                    <span class="pt-1"><?php echo $user->specific()->opinionsCount() ?> avis publié</span>
+                <?php if (!$user->isAdministrator()) { ?>
+                    <?php if ($user->isProfessional()) { ?>
+                        <span class="pt-1"><?php echo $user->specific()->opinionsReceiveCount() ?> avis reçu</span>
+                    <?php } else { ?>
+                        <span class="pt-1"><?php echo $user->specific()?->opinionsCount() ?> avis publié</span>
+                    <?php } ?>
                 <?php } ?>
             </h3>
             <?php if ($user->isProfessional()) { ?>
                 <h3 class="flex heading-3 align-center gap-2">
                     <i data-lucide="heart"></i>
-                    <span class="pt-1"> <?php echo $user->specific()->offerLikes() ?>  likes</span>
+                    <span class="pt-1"> <?php echo $user->specific()?->offerLikes() ?>  likes</span>
                 </h3>
-                <?php } ?>
+            <?php } ?>
 
             <h3 class="flex heading-3 align-center gap-2">
                 <i data-lucide="badge-check"></i>

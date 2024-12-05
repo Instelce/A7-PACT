@@ -116,7 +116,7 @@ use app\core\Application;
 <div id="menu" class="menu-hidden">
     <ul>
         <li><a href="/">Accueil</a></li>
-        <li><a href="/recherche?search=">Rechercher</a></li>
+        <li><a href="/recherche">Rechercher</a></li>
         <li><a href="/connexion">Connexion</a></li>
         <li><a href="/inscription">Inscription</a></li>
     </ul>
