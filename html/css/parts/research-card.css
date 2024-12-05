@@ -58,8 +58,11 @@
     border-radius: calc(var(--radius-medium) - .4rem);
 }
 
-.enRelief{
+.enRelief {
     border: 1px solid rgb(var(--color-orange-primary));
+}
+
+.research-card--body.enRelief {
     border-left: none;
 }
 
@@ -72,7 +75,6 @@
         border-radius: var(--radius-medium);
         border: 1px solid rgb(var(--color-gray-1));
     }
-
 
     .research-card--photo {
         height: 250px;

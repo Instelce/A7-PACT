@@ -711,7 +711,7 @@ $offre10->category = 'activity';
 $offre10->minimum_price = 25;
 $offre10->created_at = randomOfferDate();
 $offre10->save();
-$offre10->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+$offre10->addSubscription("en_relief", date('Y-m-d', strtotime("last Monday")), 3);
 
 
 $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES (" . $offre10->id . ", 3.0, 6);");
