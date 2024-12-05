@@ -297,7 +297,7 @@ class OfferController extends Controller
                 $type = "Restaurant";
                 $range_price = RestaurantOffer::findOne(['offer_id' => $id])->range_price;
                 $carte_restaurant = RestaurantOffer::findOne(['offer_id' => $id])->url_image_carte;
-                $price = $range_price === 1 ? "€" : ($range_price === 2 ? "€€" : "€€€");
+                $price = $range_price == 1 ? "€" : ($range_price == 2 ? "€€" : "€€€");
                 $mealsIncluded = "Petit dej";
                 break;
             case 'activity':

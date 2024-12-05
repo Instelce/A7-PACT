@@ -12,7 +12,7 @@
 }
 
 .alert.success {
-    background: rgba(var(--color-success), .1);
+    background: rgba(var(--color-success), .3);
     border: 1px solid rgb(var(--color-success));
 }
 
