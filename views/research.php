@@ -26,7 +26,7 @@ $iconsNames = [
 ];
 ?>
 <!-- Search bar, sort and filter -->
-<div class="flex flex-col mb-10">
+<div class="flex flex-col mb-4">
     <x-input rounded>
         <input class="search-input" slot="input" type="text" placeholder="Rechercher">
         <button slot="button" class="button only-icon sm">
@@ -63,7 +63,8 @@ $iconsNames = [
     </div>
 </div>
 <!-- more filters-->
-<div id="popup" class="close lg:fixed lg:inset-0 lg:bg-black/50 flex lg:justify-start justify-between items-start z-50">
+<div id="popup"
+    class="close hidden lg:fixed lg:inset-0 lg:bg-black/50 flex lg:justify-start justify-between items-start z-50">
     <div
         class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[400px] w-full h-full mb-1 lg:mb-0 p-2 lg:p-6 lg:pt-[84px] flex flex-row justify-start justify-between items-start">
         <!-- Contenu de la popup -->
@@ -75,38 +76,12 @@ $iconsNames = [
             </x-input> -->
 
         <div class="flex flex-col gap-4 w-full">
-            <div>
-                <h3 class="section-header mb-2">Intervalle de prix</h3>
-
-                <div class="flex gap-2 w-full">
-                    <x-slider class="w-full" id="slider-price" color="#0057FF" label="Prix" min="0"
-                        max="<?php echo $maxPrice ?>" type="double"></x-slider>
-                </div>
-            </div>
 
             <div>
-                <h3 class="section-header mb-2">Note minimale</h3>
-
-                <div class="flex gap-2 w-full">
-                    <x-slider class="w-full" id="slider-rating" color="#0057FF" label="Note" min="0" max="5" type="">
-                    </x-slider>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="section-header mb-2">Ville</h3>
-
-                <x-input>
-                    <input slot="input" type="text" placeholder="Ville" class="searchCity">
-                </x-input>
-            </div>
-
-
-            <div>
-                <h3 class="section-header mb-2">Tris</h3>
+                <h3 class="lg:block hidden section-header mb-2">Tris</h3>
 
                 <x-select id="sort">
-                    <span slot="trigger">Tri par prix</span>
+                    <span slot="trigger">Tris</span>
                     <div slot="options">
                         <div data-value="croissantPrice">
                             Prix croissant
@@ -144,24 +119,50 @@ $iconsNames = [
                                 <path d="M11 12h4" />
                             </svg>
                         </div>
-                        <div data-value="reset">Réinitialiser</div>
+                        <div data-value="reset">Aucun Tri</div>
                     </div>
                 </x-select>
             </div>
 
             <div>
-                <h3 class="section-header mb-2">Restaurant</h3>
+                <h3 class="lg:block hidden section-header mb-2">Restaurant</h3>
 
                 <x-select id="filterRangePriceRestau">
-                    <span slot="trigger">Gamme de prix</span>
+                    <span slot="trigger">Gamme de prix <span class="lg:hidden">du restaurant</span></span>
                     <div slot="options">
                         <div data-value="1" class="selected">€ (Moins de 25 €)</div>
                         <div data-value="2">€€ (Entre 25 et 40€)</div>
                         <div data-value="3">€€€ (Plus de 40€)</div>
-                        <div data-value="reset">Réinitialiser</div>
+                        <div data-value="reset">Toute les Gammes de prix</div>
                     </div>
                 </x-select>
             </div>
+            <div>
+                <h3 class="lg:block hidden section-header mb-2">Intervalle de prix</h3>
+
+                <div class="flex gap-2 w-full">
+                    <x-slider class="w-full" id="slider-price" color="#0057FF" label="Prix" min="0"
+                        max="<?php echo $maxPrice ?>" type="double"></x-slider>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="lg:block hidden section-header mb-2">Note minimale</h3>
+
+                <div class="flex gap-2 w-full">
+                    <x-slider class="w-full" id="slider-rating" color="#0057FF" label="Note" min="0" max="5" type="">
+                    </x-slider>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="lg:block hidden section-header mb-2">Ville</h3>
+
+                <x-input>
+                    <input slot="input" type="text" placeholder="Ville" class="searchCity">
+                </x-input>
+            </div>
+
         </div>
     </div>
 </div>
