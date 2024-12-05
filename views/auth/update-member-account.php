@@ -128,89 +128,7 @@ use app\core\Mailer;
 </div>
 
 <!--//////////////////////////////////////////////////////////////////////////
-// Avatar pop up v1
-///////////////////////////////////////////////////////////////////////////-->
-
-<!--<div id="popupAvatarUpdate"
-     class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center">
-    <form method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="form-name" value="update-avatar">
-        <div
-            class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[900px] lg:max-h-[400px]
-            w-full h-full p-2 lg:p-10 flex flex-col justify-center items-center gap-6">
-            <div>
-                <h1  class="heading-1">Modification de votre photo de profil</h1>
-            </div>
-            <div>
-                <img class="w-[125px] h-[125px] rounded-full object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
-            </div>
-            <div class="flex flex-row gap-4">
-                <div class="w-[200px]">
-                    <label for="file" class="button w-full gray">
-                        <i data-lucide="upload"></i> Importer
-                    </label>
-                    <input id="file" class="hidden" type="file" name="avatar">
-                </div>
-                <div class="w-[200px]">
-                    <button class="button danger w-full gray">
-                        <i data-lucide="trash"></i>
-                        Supprimer
-                    </button>
-                </div>
-            </div>
-            <div class="flex gap-4">
-                <div class="w-[400px]">
-                    <button type="button" class="button w-full gray" id="closePopupAvatar">Annuler</button>
-                </div>
-                <div class="w-[400px]">
-                    <button type="submit" class="button w-full">Enregistrer les modifications</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>-->
-
-<!--//////////////////////////////////////////////////////////////////////////
-// Avatar pop up v2
-///////////////////////////////////////////////////////////////////////////-->
-
-<!--<form method="POST" enctype="multipart/form-data" id="popupAvatarUpdate"
-      class="hidden lg:fixed lg:inset-0 lg:bg-black/50 flex items-center justify-center ">
-    <input type="hidden" name="form-name" value="update-avatar">
-    <div class="grid gap-4 py-6 bg-white flex items-center justify-center rounded-lg w-[500px]">
-        <div class="heading-2 w-[200px]">
-            Modification de votre photo de profil
-        </div>
-        <div class="flex justify-center items-center w-full">
-            <img class="w-[125px] h-[125px] rounded-full object-cover" src="<?php echo Application::$app->user->avatar_url ?>">
-        </div>
-        <div class="flex justify-center items-center gap-2 w-full">
-            <div class="">
-                <label for="file" class="button gray">
-                    <i data-lucide="upload"></i> Importer
-                </label>
-                <input id="file" class="hidden" type="file" name="avatar">
-            </div>
-            <div class="">
-                <button class="button danger gray">
-                    <i data-lucide="trash"></i>
-                    Supprimer
-                </button>
-            </div>-
-        </div>
-        <div class="flex justify-center items-center gap-2 w-full">
-            <div class="">
-                <button type="button" class="button gray" id="closePopupAvatar">Annuler</button>
-            </div>
-            <div class="">
-                <button type="submit" class="button">Enregistrer les modifications</button>
-            </div>
-        </div>
-    </div>
-</form>-->
-
-<!--//////////////////////////////////////////////////////////////////////////
-// Avatar pop up v3
+// Avatar pop up
 ///////////////////////////////////////////////////////////////////////////-->
 
 <div class="dialog-container close" data-dialog-name="avatar-update">
@@ -246,12 +164,10 @@ use app\core\Mailer;
                         </button>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
 </div>
-
 
 <!--//////////////////////////////////////////////////////////////////////////
 // Delete account
