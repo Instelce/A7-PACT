@@ -1,0 +1,20 @@
+@media screen and (max-width: 992px){
+    .container{
+        width: 530px;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .form-page{
+        margin: 0 2%;
+    }
+
+    .container{
+        width: 100%;
+    }
+
+    .on-same-line{
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
