@@ -70,24 +70,25 @@ $this->jsFile = "profile";
 
 <?php if ($user->isProfessional()) { ?>
     <div class="flex flex-col gap-4">
-        <x-tabs>
-            <x-tab class="profile-up-bandeau profile-up-bandeau-l" id="offres" role="heading"
-                   slot="tab">Offre
-            </x-tab>
-            <x-tab-panel role="region" slot="panel">
-                <!-- All offers generated in js file -->
-                <div id="offers-container" class="flex flex-col gap-4 mt-4">
-                    <div id="offers-loader"></div>
-                </div>
-            </x-tab-panel>
-
-            <x-tab class="profile-bandeau profile-up-bandeau-r" id="reponses" role="heading"
-                   slot="tab">Réponse
-            </x-tab>
-            <x-tab-panel role="region" slot="panel">
-
-            </x-tab-panel>
-        </x-tabs>
+        <div id="offers-container" class="flex flex-col gap-4 mt-4">
+            <div id="offers-loader"></div>
+        </div>
+<!--        <x-tabs>-->
+<!--            <x-tab class="profile-up-bandeau profile-up-bandeau-l" id="offres" role="heading"-->
+<!--                   slot="tab">Offre-->
+<!--            </x-tab>-->
+<!--            <x-tab-panel role="region" slot="panel">-->
+<!--                 All offers generated in js file -->-->
+<!--                -->
+<!--            </x-tab-panel>-->
+<!---->
+<!--            <x-tab class="profile-bandeau profile-up-bandeau-r" id="reponses" role="heading"-->
+<!--                   slot="tab">Réponse-->
+<!--            </x-tab>-->
+<!--            <x-tab-panel role="region" slot="panel">-->
+<!---->
+<!--            </x-tab-panel>-->
+<!--        </x-tabs>-->
     </div>
 <?php } else { ?>
     <div class="flex items-center justify-center">

@@ -67,14 +67,14 @@ $this->cssFile = 'register-member';
             <?php echo $form->field($model, 'passwordConfirm')->passwordField() ?>
         </div>
         <div class="flex flex-col gap-4">
-            <div class="flex gap-4 items-center">
-                <div class="flex items-center">
-                    <input class="switch" type="checkbox" id="switch-notification" name="notification" value="true" />
-                    <label class="switch" for="switch-notification"></label>
-                </div>
-                <label for="switch-period" id="switch-period-label">J’autorise l’envoi de notifications concernant
-                    la mise en ligne de nouvelles offres et autre</label>
-            </div>
+<!--            <div class="flex gap-4 items-center">-->
+<!--                <div class="flex items-center">-->
+<!--                    <input class="switch" type="checkbox" id="switch-notification" name="notification" value="true" />-->
+<!--                    <label class="switch" for="switch-notification"></label>-->
+<!--                </div>-->
+<!--                <label for="switch-period" id="switch-period-label">J’autorise l’envoi de notifications concernant-->
+<!--                    la mise en ligne de nouvelles offres et autre</label>-->
+<!--            </div>-->
             <div class="flex gap-4 items-center">
                 <div class="flex items-center">
                     <input class="switch" type="checkbox" id="switch-condition-utilisation" />

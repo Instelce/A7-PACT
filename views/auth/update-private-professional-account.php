@@ -55,16 +55,16 @@ $this->jsFile = 'updatePrivateProfessionalAccount';
                         </div>
                     </div>
 
-                    <div class="flex flex-col">
-                        <h2 class="section-header font-semibold">Autorisations</h2>
-                        <div class="flex gap-4 items-center">
-                            <div class="flex items-center">
-                                <input class="switch" type="checkbox" id="switch-notifs2" name="notifs" />
-                                <label class="switch" for="switch-notifs2"></label>
-                            </div>
-                            <label for="switch-period" id="switch-period-label2">J'autorise l'envoie de notifications</label>
-                        </div>
-                    </div>
+<!--                    <div class="flex flex-col">-->
+<!--                        <h2 class="section-header font-semibold">Autorisations</h2>-->
+<!--                        <div class="flex gap-4 items-center">-->
+<!--                            <div class="flex items-center">-->
+<!--                                <input class="switch" type="checkbox" id="switch-notifs2" name="notifs" />-->
+<!--                                <label class="switch" for="switch-notifs2"></label>-->
+<!--                            </div>-->
+<!--                            <label for="switch-period" id="switch-period-label2">J'autorise l'envoie de notifications</label>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
                 </div>
                 <div class="flex flex-col gap-4 mt-8 w-[90%]">

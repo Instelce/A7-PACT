@@ -40,10 +40,6 @@ class PublicProfessionalRegister extends Model
 
     public function register()
     {
-        echo "<pre>";
-        var_dump("enter register");
-        echo "</pre>";
-        exit;
         /**
          * @var PublicProfessional $proPublic
          */
@@ -64,10 +60,6 @@ class PublicProfessionalRegister extends Model
         $userAccount->address_id = $address->id;
         $userAccount->avatar_url = "https://ui-avatars.com/api/?size=128&name=$this->denomination";
         $userAccount->save();
-        
-        echo "<pre>";
-        var_dump(Utils::generateUUID());
-        echo "</pre>";
         exit;
 
         $proUser = new ProfessionalUser();
@@ -75,13 +67,16 @@ class PublicProfessionalRegister extends Model
         $proUser->siren = $this->siren;
         $proUser->denomination = $this->denomination;
         $proUser->code = Utils::generateUUID();
-        $proUser->phone = $this->phone;
+        $proUser->phone = str_replace(' ', '', $this->phone);
         $proUser->allows_notifications = $this->notifications;
         $proUser->save();
 
         $proPublic = new PublicProfessional();
         $proPublic->pro_id = $account->id;
         $proPublic->save();
+
+        Application::$app->login($userAccount);
+
         return true;
     }
 
@@ -96,7 +91,7 @@ class PublicProfessionalRegister extends Model
             'streetnumber' => [self::RULE_REQUIRED],
             'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
             'city' => [self::RULE_REQUIRED],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10], [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
+            'phone' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
             'password' => [self::RULE_REQUIRED, self::RULE_PASSWORD],
             'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']]
         ];
