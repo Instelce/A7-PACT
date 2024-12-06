@@ -78,13 +78,12 @@ class AuthController extends Controller
         $proPrivate = new PrivateProfessionalRegister();
         if ($request->isPost() && $request->formName()=="public") {
             $proPublic->loadData($request->getBody());
-            var_dump("test");
+
+            var_dump($proPublic->register());
 
             if ($proPublic->validate() && $proPublic->register()) {
-                var_dump("test");
                 Application::$app->session->setFlash('success', "Bienvenue $proPublic->denomination. Votre compte à bien été crée !");
                 Application::$app->mailer->send($proPublic->mail, "Bienvenue $proPublic->denomination", 'welcome', ['denomination' => $proPublic->denomination]);
-                $response->redirect('/');
                 exit;
             }
         }
@@ -93,7 +92,6 @@ class AuthController extends Controller
             if ($proPrivate->validate() && $proPrivate->register()) {
                 Application::$app->session->setFlash('success', "Bienvenue $proPrivate->denomination. Votre compte à bien été crée !");
                 Application::$app->mailer->send($proPrivate->mail, "Bienvenue $proPrivate->denomination", 'welcome', ['denomination' => $proPrivate->denomination]);
-                $response->redirect('/');
                 exit;
             }
         }
@@ -172,7 +170,6 @@ class AuthController extends Controller
 
         if ($request->isPost() && $request->formName() === "update-payment") {
             $paymentForm->loadData($request->getBody());
-            var_dump($paymentForm->validate()); //renvoie false
             if ($paymentForm->passwordMatch() && $paymentForm->validate() && $paymentForm->update()) {
                 Application::$app->session->setFlash('success', "Votre moyen de paiement à bien été modifié !");
                 $response->redirect('/comptes/modification');

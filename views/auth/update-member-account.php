@@ -50,19 +50,19 @@ use app\core\Mailer;
                         <?php echo $form->field($model, 'city') ?>
                     </div>
                 </div>
-                <div class="flex flex-col gap-4">
-                    <div class="flex gap-4 items-center">
-                        <div class="flex items-center">
-                            <input class="switch" type="checkbox" id="switch-notification"
-                                   name="notification"
-                                   value="1" <?php echo $model->notification == 1 ? "checked" : "" ?>/>
-                            <label class="switch" for="switch-notification"></label>
-                        </div>
-                        <label for="switch-period" id="switch-period-label">J’autorise l’envoi de
-                            notifications concernant
-                            la mise en ligne de nouvelles offres et autre</label>
-                    </div>
-                </div>
+<!--                <div class="flex flex-col gap-4">-->
+<!--                    <div class="flex gap-4 items-center">-->
+<!--                        <div class="flex items-center">-->
+<!--                            <input class="switch" type="checkbox" id="switch-notification"-->
+<!--                                   name="notification"-->
+<!--                                   value="1" --><?php //echo $model->notification == 1 ? "checked" : "" ?><!--/>-->
+<!--                            <label class="switch" for="switch-notification"></label>-->
+<!--                        </div>-->
+<!--                        <label for="switch-period" id="switch-period-label">J’autorise l’envoi de-->
+<!--                            notifications concernant-->
+<!--                            la mise en ligne de nouvelles offres et autre</label>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div class="flex flex-col gap-4 mt-4">
                     <p><?php echo $form->error($model, 'passwordCheck') ?></p>
