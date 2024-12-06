@@ -21,11 +21,15 @@ foreach ($invoices as $i => $invoice) {
 
 $monthTotal = 0;
 $activeDaysTotal = 0;
+
+
 foreach ($offers as $offer) {
-    $offer->activeDaysToNow();
     $monthTotal += $offer->type()->price * $offer->activeDaysToNow();
     $activeDaysTotal += $offer->activeDaysToNow();
 }
+
+$activeSubscriptions = array_filter($subscriptions, fn($subscription) => $subscription->isActive());
+$notActiveSubscriptions = array_filter($subscriptions, fn($subscription) => !$subscription->isActive());
 
 ?>
 
@@ -77,11 +81,11 @@ foreach ($offers as $offer) {
         </div>
 
         <!-- Options -->
-        <div>
+        <div class="mb-8">
             <h2 class="section-header">Options en cours</h2>
 
             <div class="flex flex-col gap-4">
-                <?php foreach ($subscriptions as $subscription) {
+                <?php foreach ($activeSubscriptions as $subscription) {
                     $option = $subscription->option();
                     ?>
                     <article class="option-card">
@@ -98,13 +102,8 @@ foreach ($offers as $offer) {
                                     au <?php echo Utils::formatDateWithSlash($subscription->endDate()) ?>
                                     <span class="dot"></span> <?php echo $subscription->duration ?>
                                     semaines</p>
-                                <?php if ($subscription->isActive()) { ?>
-                                    <p>Active depuis <?php echo $subscription->durationInDays() ?>
-                                        jours</p>
-                                <?php } else { ?>
-                                    <p>Active dans <?php echo $subscription->startDurationDays() ?>
-                                        jours</p>
-                                <?php } ?>
+                                <p>Active depuis <?php echo $subscription->durationInDays() ?>
+                                    jours</p>
                             </div>
                         </div>
 
@@ -114,13 +113,56 @@ foreach ($offers as $offer) {
                             <span
                                 class="heading-1 font-normal font-title"><?php echo $option->price * $subscription->duration ?> € <span
                                     class="text-sm">HT</span></span>
-                            <span class="text-gray-4">pour le <?php echo date("d/m", strtotime($subscription->endDate())) ?></span>
+                            <span class="text-gray-4">pour le <?php echo date("t/m", strtotime($subscription->endDate())) ?></span>
                         </div>
                     </article>
                 <?php } ?>
 
-                <?php if (empty($subscriptions)) { ?>
-                    <p>Aucune option souscrite.</p>
+                <?php if (empty($activeSubscriptions)) { ?>
+                    <p>Aucune option active.</p>
+                <?php } ?>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="section-header">Options à venir</h2>
+
+            <div class="flex flex-col gap-4">
+                <?php foreach ($notActiveSubscriptions as $subscription) {
+                    $option = $subscription->option();
+                    ?>
+                    <article class="option-card">
+                        <div>
+                            <h3 class="text-lg mb-2">Option <span
+                                    class="font-bold"><?php echo $option->french() ?></span> pour
+                                <span
+                                    class="underline"><?php echo $subscription->offer()->title ?></span>
+                            </h3>
+
+                            <div class="flex flex-col gap-0.5">
+                                <p class="flex gap-2 items-center">
+                                    Du <?php echo Utils::formatDateWithSlash($subscription->launch_date) ?>
+                                    au <?php echo Utils::formatDateWithSlash($subscription->endDate()) ?>
+                                    <span class="dot"></span> <?php echo $subscription->duration ?>
+                                    semaines</p>
+                                <p>Active dans <?php echo $subscription->startDurationDays() ?>
+                                    jours</p>
+                            </div>
+                        </div>
+
+                        <!-- Option price -->
+                        <div class="flex flex-col text-right">
+                            <!--<span>Vous revient à</span>-->
+                            <span
+                                class="heading-1 font-normal font-title"><?php echo $option->price * $subscription->duration ?> € <span
+                                    class="text-sm">HT</span></span>
+                            <span class="text-gray-4">pour le <?php echo date("t/m", strtotime($subscription->endDate())) ?></span>
+                        </div>
+                    </article>
+                <?php } ?>
+
+                <?php if (empty($notActiveSubscriptions)) { ?>
+                    <p>Aucune option à venir.</p>
                 <?php } ?>
             </div>
         </div>

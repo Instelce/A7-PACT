@@ -299,10 +299,14 @@ class Offer extends DBModel
 
     public function activeDaysToNow(): int
     {
-        $lastMonthHistories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m', strtotime("-1 month"))])->make();
-        $histories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m')])->make();
+        $lastMonthHistories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m', strtotime("-1 month"))])->order_by(['created_at'])->make();
+        $histories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m')])->order_by(['created_at'])->make();
         $currentDay = date('d');
         $count = 0;
+//
+//        echo "<pre>";
+//        var_dump($lastMonthHistories);
+//        echo "</pre>";
 
         // Set status
         if (empty($lastMonthHistories)) {
@@ -310,6 +314,8 @@ class Offer extends DBModel
         } else {
             $status = $lastMonthHistories[count($lastMonthHistories) - 1]->switch_to;
         }
+
+//        echo $currentDay;
 
 //        echo "<pre>";
         for ($day = 1; $day <= $currentDay; $day++) {

@@ -76,11 +76,13 @@ function preloadReset() {
 function loadCards() {
     fetchOffers()
         .then(offers => {
-            console.log(offers)
-
             // Disable loader section
             if (offers.length < limit) {
                 loaderSection.classList.add('hidden');
+            }
+
+            if (offers.length === limit) {
+                loaderSection.classList.remove('hidden');
             }
 
             for (let offer of offers) {
