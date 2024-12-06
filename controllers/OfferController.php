@@ -248,8 +248,8 @@ class OfferController extends Controller
 
         $openingHours = $offer->schedule();
         $dayOfWeek = strtolower((new DateTime())->format('N'));
-        foreach($openingHours as $openingHour){
-            if($openingHour->day==$dayOfWeek){
+        foreach ($openingHours as $openingHour) {
+            if ($openingHour->day == $dayOfWeek) {
                 $todayHour = $openingHour;
             }
         }
@@ -257,7 +257,7 @@ class OfferController extends Controller
         $closingHour = $todayHour->closing_hours;
         $openingHour = $todayHour->opening_hours;
 
-        if ($todayHour){
+        if ($todayHour) {
             if ($closingHour === 'fermé') {
                 $status = "Fermé";
             } else {
@@ -274,7 +274,9 @@ class OfferController extends Controller
                     $status = "Ouvert";
                 }
             }
-        } else {$status = NULL;}
+        } else {
+            $status = NULL;
+        }
 
 
 
