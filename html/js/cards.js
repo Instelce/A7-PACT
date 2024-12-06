@@ -38,7 +38,7 @@ export function createOpinionCard(opinion, dashboard = false) {
     if (years > 0) {
         dateText = `${years}a`;
     } else if (months > 0) {
-        dateText = `${months}m`;
+        dateText = `${months}mo`;
     } else if (weeks > 0) {
         dateText = `${weeks}sem`;
     } else if (days > 0) {

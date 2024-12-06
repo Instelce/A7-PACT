@@ -97,8 +97,10 @@ use app\core\Application;
                 </div>
             </div>
         <?php } else { ?>
-            <a href="/connexion" class="link">Connexion</a>
-            <a href="/inscription" class="button sm">Inscription</a>
+            <div class="navbarLoginButtons">
+                <a href="/connexion" class="link">Connexion</a>
+                <a href="/inscription" class="button sm">Inscription</a>
+            </div>
         <?php } ?>
 
         <div class="nav-burger" id="nav-burger">
@@ -114,8 +116,9 @@ use app\core\Application;
 <div id="menu" class="menu-hidden">
     <ul>
         <li><a href="/">Accueil</a></li>
-        <li><a href="/recherche?search=">Rechercher</a></li>
+        <li><a href="/recherche">Rechercher</a></li>
         <li><a href="/connexion">Connexion</a></li>
+        <li><a href="/inscription">Inscription</a></li>
     </ul>
 </div>
 
@@ -174,6 +177,32 @@ use app\core\Application;
     {{content}}
 </main>
 
+
+<!-- Bottom navbar for mobile -->
+<nav class="bottom-navbar">
+    <a href="/" class="<?php echo Application::$app->request->getPath() === '/' ? "active" : "" ?>">
+        <i data-lucide="home"></i>
+        <span>Accueil</span>
+    </a>
+
+    <a href="/recherche" class="<?php echo Application::$app->request->getPath() === "/recherche" ? "active" : "" ?>">
+        <i data-lucide="search"></i>
+        <span>Recherche</span>
+    </a>
+
+<!--    <a href="/avis" class="--><?php //echo Application::$app->request->getPath() === "/avis" ? "active" : "" ?><!--">-->
+<!--        <i data-lucide="message-circle"></i>-->
+<!--        <span>Mes avis</span>-->
+<!--    </a>-->
+
+    <a
+        href="<?php echo Application::$app->isAuthenticated() ? '/comptes/' . Application::$app->user->account_id : '/connexion' ?>"
+        class="<?php echo Application::$app->request->getPath() === (Application::$app->isAuthenticated() ? '/comptes/' . Application::$app->user->account_id : '/connexion') ? "active" : "" ?>"
+    >
+        <i data-lucide="user"></i>
+        <span>Compte</span>
+    </a>
+</nav>
 
 <footer>
     <div class="footer-parts">

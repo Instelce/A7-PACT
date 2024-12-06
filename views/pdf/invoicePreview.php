@@ -239,7 +239,7 @@ $offerPrice = $invoice->activeDays() * $type->price;
     </div>
 
     <h2 class="title">
-        Facturation de l'offre <a href="<?php echo $url ?>"><?php echo $offer->title ?></a> pour le mois de <?php echo Utils::monthConversion($invoice->service_date) ?>
+        Facturation de l'offre <a href="<?php echo $url ?>"><?php echo $offer->title ?></a> du mois de <?php echo Utils::monthConversion($invoice->service_date) ?> <?php echo date('Y', strtotime($invoice->issue_date)); ?>
     </h2>
 
     <div>
@@ -279,7 +279,7 @@ $offerPrice = $invoice->activeDays() * $type->price;
         <div class="totals">
             <table class="totals-table">
                 <tr>
-                    <td>Sous-total</td>
+                    <td>Total HT</td>
                     <td><?php echo $sousTotal ?> €</td>
                 </tr>
                 <tr>

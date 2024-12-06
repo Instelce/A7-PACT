@@ -325,7 +325,7 @@ $offre2->address_id = 22;
 $offre2->minimum_price = 15;
 $offre2->created_at = randomOfferDate();
 $offre2->save();
-$offre2->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+$offre2->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), rand(2, 4));
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
 
@@ -464,7 +464,7 @@ $offre5->address_id = 16;
 $offre5->minimum_price = 35;
 $offre5->created_at = randomOfferDate();
 $offre5->save();
-$offre5->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+$offre5->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), rand(2, 4));
 
 
 $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES ($offre5->id, 1.0, 3);");
@@ -617,7 +617,7 @@ $offre7->category = 'visit';
 $offre7->minimum_price = 20;
 $offre7->created_at = randomOfferDate();
 $offre7->save();
-$offre7->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+$offre7->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), rand(2, 4));
 
 
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre7->id . ", 1.5, true);");
@@ -649,7 +649,7 @@ $offre8->address_id = 26;
 $offre8->category = 'visit';
 $offre8->created_at = randomOfferDate();
 $offre8->save();
-$offre8->addSubscription("en_relief", date('Y-m-d', strtotime("last Monday")), 3);
+$offre8->addSubscription("en_relief", date('Y-m-d', strtotime("last Monday")), rand(2, 4));
 
 
 $db->pdo->exec("INSERT INTO visit_offer (offer_id, duration, guide) VALUES (" . $offre8->id . ", 3.0, true);");
@@ -714,7 +714,7 @@ $offre10->category = 'activity';
 $offre10->minimum_price = 25;
 $offre10->created_at = randomOfferDate();
 $offre10->save();
-$offre10->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+$offre10->addSubscription("en_relief", date('Y-m-d', strtotime("last Monday")), rand(2, 4));
 
 
 $db->pdo->exec("INSERT INTO activity_offer (offer_id, duration, required_age) VALUES (" . $offre10->id . ", 3.0, 6);");
@@ -743,8 +743,9 @@ $offre11->category = 'restaurant';
 $offre11->professional_id = 4;
 $offre11->address_id = 26;
 $offre11->offer_type_id = 1;
+$offre10->created_at = randomOfferDate();
 $offre11->save();
-//$offre11->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+//$offre11->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), rand(2, 4));
 
 //type offres
 $db->pdo->exec("INSERT INTO restaurant_offer (offer_id, url_image_carte, range_price) VALUES (" . $offre11->id . ", 'https://media-cdn.tripadvisor.com/media/photo-m/1280/1c/44/ac/3b/menu.jpg',3);");
@@ -858,9 +859,9 @@ $offre12->category = 'restaurant';
 $offre12->professional_id = 3;
 $offre12->address_id = 20;
 $offre12->offer_type_id = 1;
-
+$offre10->created_at = randomOfferDate();
 $offre12->save();
-$offre12->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 3);
+$offre12->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), rand(2, 4));
 
 
 //type offres
@@ -1635,7 +1636,7 @@ foreach ($offers as $offer) {
         if (rand(0, 1) == 0) {
             $status = new OfferStatusHistory();
             $status->offer_id = $offer->id;
-            $status->switch_to = $offer->offline ? "offline" : "online";
+            $status->switch_to = $offer->offline ? "online" : "offline";
             $status->created_at = $date->format('Y-m-d');
             $status->save();
 
@@ -1644,6 +1645,19 @@ foreach ($offers as $offer) {
         }
 
         $date->modify('+6 days');
+    }
+}
+
+foreach ($offers as $offer) {
+    if ($offer->offline) {
+        $status = new OfferStatusHistory();
+        $status->offer_id = $offer->id;
+        $status->switch_to = "online";
+        $status->created_at = date('Y-m-d', strtotime('- 6 day'));
+        $status->save();
+
+        $offer->offline = false;
+        $offer->update();
     }
 }
 
@@ -1672,21 +1686,6 @@ foreach ($offers as $offer) {
         $date->modify('+1 month');
     }
 }
-
-
-foreach ($offers as $offer) {
-    if ($offer->offline) {
-        $status = new OfferStatusHistory();
-        $status->offer_id = $offer->id;
-        $status->switch_to = "online";
-        $status->created_at = date('Y-m-d');
-        $status->save();
-
-        $offer->offline = false;
-        $offer->update();
-    }
-}
-
 
 echo "Database seeded successfully.\n";
 

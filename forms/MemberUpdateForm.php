@@ -54,14 +54,22 @@ class MemberUpdateForm extends Model
 
     public function update()
     {
-        $request = Application::$app->request;
-        $this->userAccount->loadData($request->getBody());
+        $this->userAccount->mail = $this->mail;
         $this->userAccount->update();
-        $this->address->loadData($request->getBody());
+
+        $this->address->number = $this->streetNumber;
+        $this->address->street = $this->streetName;
+        $this->address->city = $this->city;
+        $this->address->postal_code = $this->postalCode;
         $this->address->update();
-        $this->memberUser->loadData($request->getBody());
+
+        $this->memberUser->lastname = $this->lastname;
+        $this->memberUser->firstname = $this->firstname;
+        $this->memberUser->phone = str_replace(' ', '', $this->phone);
+        $this->memberUser->pseudo = $this->pseudo;
         $this->memberUser->allows_notifications = $this->notification;
         $this->memberUser->update();
+
         return true;
     }
 
@@ -71,9 +79,6 @@ class MemberUpdateForm extends Model
          * @var UserAccount $user
          */
         $user = Application::$app->user;
-
-        var_dump($user);
-        var_dump($user->password);
 
         if (!password_verify($this->passwordCheck, $user->password)) {
             $this->addError('passwordCheck', 'Mot-de-passe incorrect.');
@@ -90,9 +95,9 @@ class MemberUpdateForm extends Model
             'firstname' => [self::RULE_REQUIRED],
             'pseudo' => [self::RULE_REQUIRED],
             'mail' => [self::RULE_REQUIRED, self::RULE_MAIL],
-            'number' => [self::RULE_REQUIRED, self::RULE_NUMBER],
-            'street' => [self::RULE_REQUIRED],
-            'postal_code' => [self::RULE_REQUIRED, self::RULE_POSTAL],
+            'streetNumber' => [self::RULE_REQUIRED],
+            'streetName' => [self::RULE_REQUIRED],
+            'postalCode' => [self::RULE_REQUIRED, self::RULE_POSTAL],
             'city' => [self::RULE_REQUIRED],
             'phone' => [self::RULE_REQUIRED,self::RULE_PHONE],
         ];
@@ -111,6 +116,7 @@ class MemberUpdateForm extends Model
             'city' => 'Ville',
             'phone' => 'Téléphone',
             'notifications' => 'notifications',
+            'passwordCheck' => 'Votre mot de passe',
         ];
     }
 

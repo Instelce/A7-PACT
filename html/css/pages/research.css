@@ -85,7 +85,6 @@
 }
 
 
-
 @media (max-width: 768px) {
     .categories-container {
         overflow-x: auto;
@@ -96,6 +95,14 @@
     .category-item {
         flex: 0 0 auto;
         scroll-snap-align: start;
+    }
+
+    #popup {
+        animation: none;
+    }
+
+    #popup.close {
+        display: none;
     }
 }
 

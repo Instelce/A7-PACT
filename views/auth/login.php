@@ -16,7 +16,7 @@ $this->title = 'Connexion';
             <a href="/inscription" class="link">S'inscrire</a>
         </div>
     </div>
-    <?php $form = Form::begin('', 'post', '', 'form-w') ?>
+    <?php $form = Form::begin('', 'post', '', 'form-w form-l') ?>
         <div class="form-inputs">
             <?php echo $form->field($model, 'mail') ?>
             <?php echo $form->field($model, 'password')->passwordField() ?>

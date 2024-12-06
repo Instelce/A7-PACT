@@ -113,7 +113,13 @@ x-tabs.column x-tab[selected]::before,
 
 
 @media screen and (max-width: 768px){
-    x-tabs.column{
-        display: flex;
+    x-tabs.column {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    x-tabs.column x-tab {
+        display: block;
+        width: 100%;
     }
 }

@@ -15,6 +15,7 @@ use app\core\Utils;
 use app\forms\LoginForm;
 use app\forms\MemberRegisterForm;
 use app\forms\MemberUpdateForm;
+use app\forms\PaymentForm;
 use app\forms\PrivateProfessionalRegister;
 use app\forms\PrivateProfessionalUpdateForm;
 use app\forms\PublicProfessionalRegister;
@@ -77,13 +78,12 @@ class AuthController extends Controller
         $proPrivate = new PrivateProfessionalRegister();
         if ($request->isPost() && $request->formName()=="public") {
             $proPublic->loadData($request->getBody());
-            var_dump("test");
+
+            var_dump($proPublic->register());
 
             if ($proPublic->validate() && $proPublic->register()) {
-                var_dump("test");
                 Application::$app->session->setFlash('success', "Bienvenue $proPublic->denomination. Votre compte à bien été crée !");
                 Application::$app->mailer->send($proPublic->mail, "Bienvenue $proPublic->denomination", 'welcome', ['denomination' => $proPublic->denomination]);
-                $response->redirect('/');
                 exit;
             }
         }
@@ -92,7 +92,6 @@ class AuthController extends Controller
             if ($proPrivate->validate() && $proPrivate->register()) {
                 Application::$app->session->setFlash('success', "Bienvenue $proPrivate->denomination. Votre compte à bien été crée !");
                 Application::$app->mailer->send($proPrivate->mail, "Bienvenue $proPrivate->denomination", 'welcome', ['denomination' => $proPrivate->denomination]);
-                $response->redirect('/');
                 exit;
             }
         }
@@ -146,6 +145,10 @@ class AuthController extends Controller
         $this->setLayout('back-office');
 
         $form  = new PrivateProfessionalUpdateForm();
+
+        $paymentForm = new PaymentForm(Application::$app->user->specific()->specific()->payment_id);
+
+
         if ($request->isPost() && $request->formName()=="update-private") {
             $form->loadData($request->getBody());
 
@@ -153,10 +156,9 @@ class AuthController extends Controller
                 $form->notifications = 0;
             }
 
-
             if ($form->passwordMatch() && $form->validate() && $form->update()) {
                 Application::$app->session->setFlash('success', "Votre compte à bien été modifié !");
-                //$response->redirect('/comptes/modification');
+                $response->redirect('/comptes/modification');
             }
         }
 
@@ -167,7 +169,11 @@ class AuthController extends Controller
         }
 
         if ($request->isPost() && $request->formName() === "update-payment") {
-//
+            $paymentForm->loadData($request->getBody());
+            if ($paymentForm->passwordMatch() && $paymentForm->validate() && $paymentForm->update()) {
+                Application::$app->session->setFlash('success', "Votre moyen de paiement à bien été modifié !");
+                $response->redirect('/comptes/modification');
+            }
         }
 
         if ($request->isPost() && $request->formName() === "reset-password") {
@@ -181,7 +187,7 @@ class AuthController extends Controller
             $response->redirect('/comptes/modification');
         }
 
-        return $this->render('auth/update-private-professional-account', ['proPrivate' => $form]);
+        return $this->render('auth/update-private-professional-account', ['proPrivate' => $form, 'paymentForm' => $paymentForm]);
     }
 
     public function registerMember(Request $request, Response $response)

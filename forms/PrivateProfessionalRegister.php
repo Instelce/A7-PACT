@@ -77,7 +77,7 @@ class PrivateProfessionalRegister extends Model
         $proUser->siren = $this->siren;
         $proUser->denomination = $this->denomination;
         $proUser->code = Utils::generateUUID();
-        $proUser->phone = $this->phone;
+        $proUser->phone = str_replace(' ', '', $this->phone);
         $proUser->allows_notifications = $this->notifications;
         $proUser->save();
 
@@ -129,7 +129,7 @@ class PrivateProfessionalRegister extends Model
             'streetname' => [self::RULE_REQUIRED],
             'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
             'city' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10], [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
+            'phone' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
             'password' => [self::RULE_REQUIRED, self::RULE_PASSWORD],
             'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
             'titular-account' => [[self::RULE_MAX, 'max' => 255]],

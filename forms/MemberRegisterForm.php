@@ -50,7 +50,7 @@ class MemberRegisterForm extends Model
         $member->user_id = $account->id;
         $member->lastname = $this->lastname;
         $member->firstname = $this->firstname;
-        $member->phone = $this->phone;
+        $member->phone = str_replace(' ', '', $this->phone);
         $member->pseudo = $this->pseudo;
         $member->allows_notifications = $this->notification;
         $member->save();

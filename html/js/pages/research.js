@@ -96,7 +96,7 @@ async function getOffers() {
         true +
         moreSearch +
         search; //url of the api for research page offers's data
-    console.log("url : " + url);
+    // console.log("url : " + url);
     try {
         const response = await fetch(url); //fetching the data from the api
         if (!response.ok) {
@@ -316,12 +316,20 @@ let filterButton = document.getElementById("filterButton");
 const popupContent = document.querySelector(".popup-content");
 
 filterButton.addEventListener("click", () => {
-    popup.classList.toggle("close");
+    if (popup.classList.contains("close")) {
+        popup.classList.remove("close");
+        popup.classList.remove("hidden");
+    }
+    else {
+        popup.classList.add("close");
+        setTimeout(() => { popup.classList.add("hidden"); }, 500);
+    }
 });
 
 popup.addEventListener("click", (event) => {
-    if (!popupContent.contains(event.target)) {
+    if (!popup.classList.contains("close") && !popupContent.contains(event.target)) {
         popup.classList.add("close");
+        setTimeout(() => { popup.classList.add("hidden"); }, 500);
     }
 });
 
