@@ -99,9 +99,7 @@ $db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, long
                                                                     (17, 1, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, -4.526581655177133, 48.47492014209391),
                                                                     (18, 1, 'La Vallée des Saints', 'Carnoët', 22160, -2.999732772564104, 48.84070603138791),
                                                                     (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230, -1.6674224847189223, 48.041895277402126),
-                                                                    (20, 9, 'Place de L`hôtel de Ville', 'Perros-Guirec', 22700, -3.446007, 48.815243),
-                                                                    (30, 140, 'Boulevard de Plymouth', 'Brest', 29200, -4.5199548, 48.3874059);");
-
+                                                                    (20, 9, 'Place de L`hôtel de Ville', 'Perros-Guirec', 22700, -3.446007, 48.815243);");
 
 
 // ---------------------------------------------------------------------- //
@@ -120,8 +118,7 @@ $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url
                                                                      (6, 'roiduvoyage@gmail.com', '" . $password . "', 'https://cdn.discordapp.com/attachments/1194441121376514099/1298550202579554314/roi_brigand.png?ex=6719f89e&is=6718a71e&hm=b3ad4fe032eb2ed29b6f15aba207cb3132a322b9c69317afa07869d783b13269&',19),
                                                                      (8, 'brehat@gmail.com', '" . $password . "', 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png',16),
                                                                      (9, 'recree_trois_cures@gmail.com', '" . $password . "', 'https://www.larecredes3cures.com/app/uploads/2024/04/vertika-la-recre-des-3-cures-scaled-910x668-c-center.jpg',17),
-                                                                     (10, 'valleedessaints@gmail.com', '" . $password . "', 'https://media.letelegramme.fr/api/v1/images/view/637cf1668f4302361f300639/web_golden_xl/637cf1668f4302361f300639.1',18),
-                                                                     (752, 'arenabrest29@gmail.com', '" . $password . "', 'https://brestarena.fr/wp-content/uploads/2023/07/LOGO-BA-d%E2%80%9Atour%E2%80%9A-blanc-et-orange.png',30);");
+                                                                     (10, 'valleedessaints@gmail.com', '" . $password . "', 'https://media.letelegramme.fr/api/v1/images/view/637cf1668f4302361f300639/web_golden_xl/637cf1668f4302361f300639.1',18);");
 
 
 // ---------------------------------------------------------------------- //
@@ -133,8 +130,8 @@ $members = generateUsername(10);
 foreach ($members as $i => $member) {
     $avatar = "https://avatar.iran.liara.run/public/" . rand(1, 100);
     //    $avatar = "https://ui-avatars.com/api/?size=128&name=" . $member['firstname'] . "+" . $member['lastname'];
-    $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES (" . 13 + $i . ", '" . $member['pseudo'] . "@gmail.com', '" . $password . "', '" . $avatar . "', 19);");
-    $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (" . 13 + $i . ", '" . $member["firstname"] . "', '" . $member["lastname"] . "', '" . generatePhoneNumber() . "', '" . $member["pseudo"] . "', TRUE);");
+    $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES (" . 11 + $i . ", '" . $member['pseudo'] . "@gmail.com', '" . $password . "', '" . $avatar . "', 19);");
+    $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (" . 11 + $i . ", '" . $member["firstname"] . "', '" . $member["lastname"] . "', '" . generatePhoneNumber() . "', '" . $member["pseudo"] . "', TRUE);");
 }
 
 // ---------------------------------------------------------------------- //
@@ -148,14 +145,14 @@ $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 
 $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VieilArbre', TRUE);");
 
-$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren, phone) VALUES (3, 5462, 'SergeMytho and Co', '986321475', '" . generatePhoneNumber() . "'), (4, 7421, 'Fred port', '365879587', '" . generatePhoneNumber() . "'),(5,8452,'Rance Evasion','789325471', '" . generatePhoneNumber() . "'), (8, 9587, 'Brehat', '986321547', '" . generatePhoneNumber() . "'), (9, 7896, 'Récrée des 3 curés', '325478951', '" . generatePhoneNumber() . "'), (10, 1489, 'La vallée des Saints', '789654268', '" . generatePhoneNumber() . "'), (6, 9635, 'VoyageurGuidé', '879632547', '" . generatePhoneNumber() . "'), (752, 9635, 'Arena Brest', '7895348761', '" . generatePhoneNumber() . "');");
+$db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren, phone) VALUES (3, 5462, 'SergeMytho and Co', '986321475', '" . generatePhoneNumber() . "'), (4, 7421, 'Fred port', '365879587', '" . generatePhoneNumber() . "'),(5,8452,'Rance Evasion','789325471', '" . generatePhoneNumber() . "'), (8, 9587, 'Brehat', '986321547', '" . generatePhoneNumber() . "'), (9, 7896, 'Récrée des 3 curés', '325478951', '" . generatePhoneNumber() . "'), (10, 1489, 'La vallée des Saints', '789654268', '" . generatePhoneNumber() . "'), (6, 9635, 'VoyageurGuidé', '879632547', '" . generatePhoneNumber() . "');");
 
 $db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3), (8), (10), (6);");
 //publics : sergemytho(3) ; brehat(8) ; -> valleedessaints(10) <-
 //                                           plus utilisé
 
-$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id) VALUES (4, '2024-11-30', 1),(5,'2024-11-30',2),(9, '2024-09-20', 3), (752, '2024-11-30', 1);");
-//privates : fredlechat(4) ; rance_evasion(5) ; recree_des_trois_cures(9) ; arena_brest(11);
+$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id) VALUES (4, '2024-11-30', 1),(5,'2024-11-30',2),(9, '2024-09-20', 3);");
+//privates : fredlechat(4) ; rance_evasion(5) ; recree_des_trois_cures(9) ; 
 
 // ---------------------------------------------------------------------- //
 // create offer types
@@ -922,100 +919,6 @@ RestaurantOffer::findOne(['offer_id' => $offre12->id])->addSchedule($horaire5o12
 RestaurantOffer::findOne(['offer_id' => $offre12->id])->addSchedule($horaire6o12->id);
 RestaurantOffer::findOne(['offer_id' => $offre12->id])->addSchedule($horaire7o12->id);
 
-// ---------------------------------------------------------------------- //
-// offre13
-// ---------------------------------------------------------------------- //
-$tagFabrice = [
-    'humour',
-    'stand-up',
-    'humoriste',
-    'humour noirf',
-    'spectacle',
-];
-
-$offre13 = new Offer();
-$offre13->title = "Fabrice Eboué - Nouveau Spectacle - Tournée";
-$offre13->summary = 'Après la tournée triomphale d’Adieu Hier, Fabrice Eboué revient en 2026 avec un Nouveau Spectacle !';
-$offre13->description = 'Il joue sur le même terrain que Stéphane Guillon. La spécialité de Fabrice Eboué, c`est l`humour noir, la torgnole au vitriol, le mépris des conventions sociales, la dérision, les sujets qui fâchent. Le comique a présenté son premier one-man show à Paris, en l`an 2000. Issu de la vague stand-up, Fabrice Eboué réussit à faire mouche avec une économie d`effets impressionnante. Il revient en 2026 avec son nouveau spectacle ! ';
-$offre13->likes = 741;
-$offre13->offline = 0;
-$offre13->last_offline_date = null;
-$offre13->offline_days = 0;
-$offre13->view_counter = 1200;
-$offre13->click_counter = 920;
-$offre13->website = 'https://www.fabriceeboue.com/';
-$offre13->phone_number = '0299566699';
-$offre13->offer_type_id = 2;
-$offre13->professional_id = 11;
-$offre13->address_id = 30;
-$offre13->category = 'show';
-$offre13->minimum_price = 42;
-$offre13->created_at = randomOfferDate();
-$offre13->save();
-
-$db->pdo->exec("INSERT INTO show_offer (offer_id, duration, artist) VALUES (" . $offre13->id . ", 2, 'Fabrice Eboué');");
-$db->pdo->exec("INSERT INTO show_language (offer_id, language) VALUES (" . $offre13->id . ", 'français')");
-
-//add tags
-foreach ($tagFabrice as $tagName) {
-    $tag = OfferTag::findOne(['name' => strtolower($tagName)]);
-    $newTag = new OfferTag();
-    $newTag->name = strtolower($tagName);
-    $newTag->save();
-    $offre13->addTag($newTag->id);
-}
-
-$horaire1o13 = new OfferSchedule();
-$horaire1o13->day = 1;
-$horaire1o13->opening_hours = 'fermé';
-$horaire1o13->closing_hours = 'fermé';
-$horaire1o13->save();
-
-$horaire2o13 = new OfferSchedule();
-$horaire2o13->day = 2;
-$horaire2o13->opening_hours = 'fermé';
-$horaire2o13->closing_hours = 'fermé';
-$horaire2o13->save();
-
-$horaire3o13 = new OfferSchedule();
-$horaire3o13->day = 3;
-$horaire3o13->opening_hours = 'fermé';
-$horaire3o13->closing_hours = 'fermé';
-$horaire3o13->save();
-
-$horaire4o13 = new OfferSchedule();
-$horaire4o13->day = 4;
-$horaire4o13->opening_hours = 'fermé';
-$horaire4o13->closing_hours = 'fermé';
-$horaire4o13->save();
-
-$horaire5o13 = new OfferSchedule();
-$horaire5o13->day = 5;
-$horaire5o13->opening_hours = '20:00';
-$horaire5o13->closing_hours = '22:00';
-$horaire5o13->save();
-
-$horaire6o13 = new OfferSchedule();
-$horaire6o13->day = 6;
-$horaire6o13->opening_hours = '20:00';
-$horaire6o13->closing_hours = '22:00';
-$horaire6o13->save();
-
-
-$horaire7o13 = new OfferSchedule();
-$horaire7o13->day = 7;
-$horaire7o13->opening_hours = 'fermé';
-$horaire7o13->closing_hours = 'fermé';
-$horaire7o13->save();
-
-ShowOffer::findOne(['offer_id' => $offre13->id])->addSchedule($horaire1o13->id);
-ShowOffer::findOne(['offer_id' => $offre13->id])->addSchedule($horaire2o13->id);
-ShowOffer::findOne(['offer_id' => $offre13->id])->addSchedule($horaire3o13->id);
-ShowOffer::findOne(['offer_id' => $offre13->id])->addSchedule($horaire4o13->id);
-ShowOffer::findOne(['offer_id' => $offre13->id])->addSchedule($horaire5o13->id);
-ShowOffer::findOne(['offer_id' => $offre13->id])->addSchedule($horaire6o13->id);
-ShowOffer::findOne(['offer_id' => $offre13->id])->addSchedule($horaire7o13->id);
-
 
 
 // ---------------------------------------------------------------------- //
@@ -1275,7 +1178,7 @@ $offre11->addPhoto('https://media-cdn.tripadvisor.com/media/photo-m/1280/1c/44/a
 
 
 // ---------------------------------------------------------------------- //
-// photos offre12
+// photos offre11
 // ---------------------------------------------------------------------- //
 
 $offre12->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/4a/22/d1/basilico-devanture.jpg?w=1000&h=-1&s=1');
@@ -1284,12 +1187,6 @@ $offre12->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/4
 $offre12->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/4a/22/c5/fratello-pizza.jpg?w=1000&h=-1&s=1');
 $offre12->addPhoto('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/9f/2d/4b/photo0jpg.jpg?w=1000&h=-1&s=1');
 
-// ---------------------------------------------------------------------- //
-// photos offre13
-// ---------------------------------------------------------------------- //
-
-$offre13->addPhoto('https://agendabrussels2.imgix.net/1732769055975-beatvenues-c27d5ee13c515424add2f045783f0e324f88adf1.jpg');
-$offre13->addPhoto('https://www.theatredelarenaissance.com/wp-content/uploads/2017/06/Fabrice-Eboue-%C2%A9John-Waxxx-2.jpg');
 
 
 // ---------------------------------------------------------------------- //

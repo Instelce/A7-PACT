@@ -65,10 +65,12 @@ class ApiController extends Controller
         $enrelief = $request->getQueryParams('enrelief');
         $online = $request->getQueryParams('online');
         $status = $request->getQueryParams('status');
+        $enrelief = $request->getQueryParams('enrelief');
+        $online = $request->getQueryParams('online');
         if ($enrelief) {
-            $order_by = ['-_est_en_relief'];
+            $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-_est_en_relief'];
         } else {
-            $order_by = ['-created_at'];
+            $order_by = $request->getQueryParams('order_by') ? explode(',', $request->getQueryParams('order_by')) : ['-created_at'];
         }
         $professional_id = $request->getQueryParams('professional_id');
         $category = $request->getQueryParams('category');
@@ -224,8 +226,8 @@ class ApiController extends Controller
             //add status
             $openingHours = $offer->schedule();
             $dayOfWeek = strtolower((new DateTime())->format('N'));
-            foreach($openingHours as $openingHour){
-                if($openingHour->day==$dayOfWeek){
+            foreach ($openingHours as $openingHour) {
+                if ($openingHour->day == $dayOfWeek) {
                     $todayHour = $openingHour;
                 }
             }
@@ -233,7 +235,7 @@ class ApiController extends Controller
             $closingHour = $todayHour->closing_hours;
             $openingHour = $todayHour->opening_hours;
 
-            if ($todayHour){
+            if ($todayHour) {
                 if ($closingHour === 'fermé') {
                     $status = "Fermé";
                 } else {
@@ -250,7 +252,9 @@ class ApiController extends Controller
                         $status = "Ouvert";
                     }
                 }
-            } else {$status = NULL;}
+            } else {
+                $status = NULL;
+            }
             $data[$i]['status'] = $status;
 
             // Add offer type
