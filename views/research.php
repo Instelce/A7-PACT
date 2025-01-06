@@ -35,11 +35,11 @@ $iconsNames = [
         foreach ($filtersNames as $key => $filterName) {
             $iconName = $iconsNames[$key];
             ?>
-        <button id="<?php echo strtolower($filterName); ?>" class="category-item">
-            <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
-            <span><?php echo htmlentities($filterName); ?></span>
-        </button>
-        <?php
+            <button id="<?php echo strtolower($filterName); ?>" class="category-item">
+                <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
+                <span><?php echo htmlentities($filterName); ?></span>
+            </button>
+            <?php
         }
         ?>
     </div>
@@ -82,7 +82,15 @@ $iconsNames = [
                     <div slot="options">
                         <div data-value="croissantPrice">
                             Prix croissant
-                            <i data-lucide="lucide-arrow-down-narrow-wide"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-arrow-down-narrow-wide">
+                                <path d="m3 16 4 4 4-4" />
+                                <path d="M7 20V4" />
+                                <path d="M11 4h4" />
+                                <path d="M11 8h7" />
+                                <path d="M11 12h10" />
+                            </svg>
                         </div>
                         <div data-value="decroissantPrice">Prix décroissant <svg xmlns="http://www.w3.org/2000/svg"
                                 width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"

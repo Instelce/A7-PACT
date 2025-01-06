@@ -96,7 +96,7 @@ class PrivateProfessionalUpdateForm extends Model
             'streetname' => [self::RULE_REQUIRED],
             'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
             'city' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10]]
+            'phone' => [self::RULE_REQUIRED]
         ];
     }
 

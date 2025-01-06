@@ -97,7 +97,7 @@ class PublicProfessionalUpdateForm extends Model
             'streetnumber' => [self::RULE_REQUIRED],
             'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
             'city' => [self::RULE_REQUIRED],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 10]],
+            'phone' => [self::RULE_REQUIRED],
             'passwordCheck' => [self::RULE_REQUIRED, self::RULE_PASSWORD]
         ];
     }
