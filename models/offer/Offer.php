@@ -118,6 +118,11 @@ class Offer extends DBModel
         return Subscription::findOne(['offer_id' => $this->id]);
     }
 
+    public function monthSubscriptions(): array
+    {
+        return Subscription::query()->filters(['offer_id' => $this->id])->search(['launch_date' => date('Y-m')])->make();
+    }
+
     public function address(): Address
     {
         return Address::findOneByPk($this->address_id);

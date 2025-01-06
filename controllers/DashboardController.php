@@ -103,6 +103,7 @@ class DashboardController extends Controller
         $pk = $routeParams['pk'];
         $invoiceId = $routeParams['pk'];
         $invoice = Invoice::findOneByPk($routeParams['pk']);
+        /** @var Offer $offer */
         $offer = Offer::findOneByPk($invoice->offer_id);
         $user = Application::$app->user;
         $professional = $user->specific();
@@ -111,7 +112,7 @@ class DashboardController extends Controller
         $professionalAddress = Address::findOneByPk($user->address_id);
 
         //PAYMENT DATA
-        $subscription = $offer->subscription();
+        $subscription = $offer->monthSubscriptions();
         $type = $offer->type();
 
         $download = false;

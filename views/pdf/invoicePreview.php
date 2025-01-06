@@ -254,25 +254,26 @@ $offerPrice = $invoice->activeDays() * $type->price;
             </thead>
             <tbody>
             <tr>
-                <td>Offre "<?php echo $type->type ?>" / jour</td>
-                <td><?php echo $invoice->activeDays() ?></td>
+                <td>Offre "<?php echo $type->type ?>"</td>
+                <td><?php echo $invoice->activeDays() ?> / jour</td>
                 <td><?php echo $type->price ?> €</td>
                 <td><?php echo $offerPrice ?> €</td>
             </tr>
-            <?php if ($subscription) {
-                $optionPrice = $subscription->duration * $subscription->price();
+            <?php foreach ($subscription as $sub) {
+                $optionPrice = $sub->duration * $sub->price();
 
                 $sousTotal = $offerPrice;
-                if($subscription){
+                if($sub){
                     $sousTotal = $offerPrice + $optionPrice;
-                }?>
+                } ?>
                 <tr>
-                    <td>Option "<?php echo $subscription->option()->french() ?>" / semaine</td>
-                    <td><?php echo $subscription->duration ?></td>
-                    <td><?php echo $subscription->price() ?></td>
+                    <td>Option "<?php echo $sub->option()->french() ?>"</td>
+                    <td><?php echo $sub->duration ?> / semaine</td>
+                    <td><?php echo $sub->price() ?></td>
                     <td><?php echo $optionPrice ?> €</td>
                 </tr>
             <?php } ?>
+
             </tbody>
         </table>
 
