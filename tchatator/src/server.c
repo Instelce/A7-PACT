@@ -26,6 +26,7 @@ int main() {
     config = malloc(sizeof(config_t));
 
     // Handles options (--help, -h, --verbose, --config, -c, ...) with getopt()
+    // ...
 
     // Load env variables
     env_load("..");
@@ -34,7 +35,7 @@ int main() {
     config_load(config);
 
     // Set log settings
-    log_verbose = 0;
+    log_verbose = 0;  // for now delete when options are available
     strcpy(log_file_path, config->log_file);
 
     // Login to the DB
