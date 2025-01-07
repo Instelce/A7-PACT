@@ -68,6 +68,11 @@ function randomOfferDate(): string
     return date('Y-m-d', rand(strtotime("2024-10-01"), strtotime("2024-11-30")));
 }
 
+function generatedApiKey(): string
+{
+    return hash('sha256', bin2hex(random_bytes(16)));
+}
+
 $db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, option, subscription, offer, offer_type, offer_period, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
 
 // ---------------------------------------------------------------------- //
@@ -109,16 +114,16 @@ for ($j = 0; $j <= 20; $j++) {
     $a = new Account();
     $a->save();
 }
-$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES 
-                                                                     (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11), 
-                                                                     (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',12), 
-                                                                     (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg',13),
-                                                                     (4, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14),                                                            
-                                                                     (5, 'rance.evasion@gmail.com', '" . $password . "', 'https://fr.web.img5.acsta.net/pictures/16/05/17/12/17/360795.jpg', 15),
-                                                                     (6, 'roiduvoyage@gmail.com', '" . $password . "', 'https://cdn.discordapp.com/attachments/1194441121376514099/1298550202579554314/roi_brigand.png?ex=6719f89e&is=6718a71e&hm=b3ad4fe032eb2ed29b6f15aba207cb3132a322b9c69317afa07869d783b13269&',19),
-                                                                     (8, 'brehat@gmail.com', '" . $password . "', 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png',16),
-                                                                     (9, 'recree_trois_cures@gmail.com', '" . $password . "', 'https://www.larecredes3cures.com/app/uploads/2024/04/vertika-la-recre-des-3-cures-scaled-910x668-c-center.jpg',17),
-                                                                     (10, 'valleedessaints@gmail.com', '" . $password . "', 'https://media.letelegramme.fr/api/v1/images/view/637cf1668f4302361f300639/web_golden_xl/637cf1668f4302361f300639.1',18);");
+$db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id,api_token) VALUES 
+                                                                     (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11,'" . generatedApiKey() . "'), 
+                                                                     (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',12,'" . generatedApiKey() . "'), 
+                                                                     (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg',13,'" . generatedApiKey() . "'),
+                                                                     (4, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14,'" . generatedApiKey() . "'),                                                            
+                                                                     (5, 'rance.evasion@gmail.com', '" . $password . "', 'https://fr.web.img5.acsta.net/pictures/16/05/17/12/17/360795.jpg', 15,'" . generatedApiKey() . "'),
+                                                                     (6, 'roiduvoyage@gmail.com', '" . $password . "', 'https://cdn.discordapp.com/attachments/1194441121376514099/1298550202579554314/roi_brigand.png?ex=6719f89e&is=6718a71e&hm=b3ad4fe032eb2ed29b6f15aba207cb3132a322b9c69317afa07869d783b13269&',19,'" . generatedApiKey() . "'),
+                                                                     (8, 'brehat@gmail.com', '" . $password . "', 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png',16,'" . generatedApiKey() . "'),
+                                                                     (9, 'recree_trois_cures@gmail.com', '" . $password . "', 'https://www.larecredes3cures.com/app/uploads/2024/04/vertika-la-recre-des-3-cures-scaled-910x668-c-center.jpg',17,'" . generatedApiKey() . "'),
+                                                                     (10, 'valleedessaints@gmail.com', '" . $password . "', 'https://media.letelegramme.fr/api/v1/images/view/637cf1668f4302361f300639/web_golden_xl/637cf1668f4302361f300639.1',18,'" . generatedApiKey() . "');");
 
 
 // ---------------------------------------------------------------------- //
@@ -130,7 +135,7 @@ $members = generateUsername(10);
 foreach ($members as $i => $member) {
     $avatar = "https://avatar.iran.liara.run/public/" . rand(1, 100);
     //    $avatar = "https://ui-avatars.com/api/?size=128&name=" . $member['firstname'] . "+" . $member['lastname'];
-    $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id) VALUES (" . 11 + $i . ", '" . $member['pseudo'] . "@gmail.com', '" . $password . "', '" . $avatar . "', 19);");
+    $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id,api_token) VALUES (" . 11 + $i . ", '" . $member['pseudo'] . "@gmail.com', '" . $password . "', '" . $avatar . "', 19,'" . generatedApiKey() . "');");
     $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (" . 11 + $i . ", '" . $member["firstname"] . "', '" . $member["lastname"] . "', '" . generatePhoneNumber() . "', '" . $member["pseudo"] . "', TRUE);");
 }
 
