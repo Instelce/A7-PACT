@@ -8,5 +8,6 @@
 #include <netinet/in.h>
 
 int main() {
+    printf("pee");
     return EXIT_SUCCESS;
 }
