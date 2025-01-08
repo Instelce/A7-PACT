@@ -6,7 +6,7 @@ port=4242
 log-file=tchatator.log
 
 # 
-ban-duration=3
+ban-duration=24
 
 # 
 max-messages-per-minutes=12

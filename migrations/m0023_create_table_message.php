@@ -17,7 +17,6 @@ class m0023_create_table_message
             received BOOLEAN NOT NULL,
             sended BOOLEAN NOT NULL,
             content TEXT NOT NULL
-
         );";
         $db->pdo->exec($sql);
     }

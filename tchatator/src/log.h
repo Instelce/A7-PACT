@@ -9,6 +9,6 @@ extern int log_verbose;
 // Path of the log file
 extern char log_file_path[CHAR_SIZE];
 
-void log_info(char message[]);
+void log_info(char *format, ...);
 
 #endif // LOG_H
