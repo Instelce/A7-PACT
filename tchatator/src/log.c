@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include "types.h"
 
@@ -11,11 +12,18 @@ int log_verbose;
 char log_file_path[CHAR_SIZE];
 
 // TODO - Add client identity and client IP
-void log_info(char message[]) {
+void log_info(char *format, ...) {
     int fd;
     time_t t;
     struct tm tm;
     char log_line[CHAR_SIZE];
+    va_list valist;
+    char message[CHAR_SIZE];
+
+    // Cook the message with the format args
+    va_start(valist, format);
+    vsprintf(message, format, valist);
+    va_end(valist);
 
     t = time(NULL);
     tm = *localtime(&t);
