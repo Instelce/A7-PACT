@@ -1,9 +1,13 @@
 {
     "files.associations": {
+        "*.ndjson": "jsonl",
+        "*.dbclient-js": "javascript",
+        "*.embeddedhtml": "html",
         "*.ldtk": "jsonl",
         "*.tcc": "c",
         "fstream": "c",
         "locale": "c",
-        "libpq-fe.h": "c"
+        "libpq-fe.h": "c",
+        "stdlib.h": "c"
     }
 }
