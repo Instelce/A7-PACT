@@ -63,12 +63,14 @@ static const command_def_t ACTIONS_DEF[] = {
     // {"SEND_MSG", {(sizeof(char) * 64), sizeof(int), -1}},
 };
 
-// s : SEND_MSG:azeazeaz,azeazeaz,azeazeazeazeaz,azeaze
-// a : action
 int parse_command(char s[], command_t *a);
 
 command_def_t *get_action_def(char action_name[]);
 
 char *format_status(status_t status);
+
+
+// Helper functions to send command to the server
+// ...
 
 #endif // PROTOCOL_H

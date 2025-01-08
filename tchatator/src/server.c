@@ -32,49 +32,10 @@ void send_status(int sock, status_t s, char message[]);
 // Handle signals (SIGINT, SIGQUIT)
 void signal_handler(int sig);
 
-<<<<<<< Updated upstream
 int main(int argc, char* argv[])
 {
-=======
-
-
-int main(int argc, char *argv[]) {
-
-    //int options; // claims the options on the command
-
     int options;
-      
-    // put ':' in the starting of the 
-    // string so that program can  
-    //distinguish between '?' and ':'  
 
-
-    while((options = getopt(argc, argv, ":if:hvc")) != -1)  
-    {  
-        // getopt_long() permettrait d'avoir des options en mot complet (genre verbose, help, config, et même de décider si plus de paramètres sont nécessaire)
-        switch(options)  
-        { 
-            case 'h':  
-                printf("\nUsage : build server --[options]\nLaunch the server and allows communication between client and professionnal\nOptions :\n--v, verbose     explains what is currently happening, giving more details\n-h, --help      shows help on the command\n-c --config  ");
-
-                // Usage : gcc [options] fichier…
-                // Options :
-                // -pass-exit-codes         Quitter avec le plus grand code d’erreur d’une phase.
-                // --help                   Afficher cette aide.
-                // --target-help            Afficher les options de ligne de commande spécifiques à la cible (y compris les options de l'assembleur et de l'éditeur de liens).
-
-                break;  
-            case 'v':  
-                printf("option verbose : ON\n");
-                log_verbose = 1;
-                break;  
-            case 'c':  
-                printf("option config: %c\n", options); 
-                break;  
-        }  
-    }  
-
->>>>>>> Stashed changes
     int sock;
     int sock_conn;
     int sock_ret;
@@ -103,43 +64,26 @@ int main(int argc, char *argv[]) {
     clients_pid = (pid_t*)malloc(current_clients_capacity * sizeof(pid_t));
     server_pid = getpid();
 
+    log_verbose = 0;
+
     config = malloc(sizeof(config_t));
 
     // Handles options (--help, -h, --verbose, --config, -c, ...) with getopt()
-    // ...
-<<<<<<< Updated upstream
-    int options; // claims the options on the command
+    while ((options = getopt(argc, argv, ":if:hvc")) != -1) {
+        switch (options) {
+        case 'h':
+            printf("Tchatator\n\nLaunch the server and allows communication between client and professionnal\n\nUsage : tachatator [options]\nOptions :\n  -v, --verbose \texplains what is currently happening, giving more details\n  -h, --help \tshows help on the command\n  -c --config  ");
 
-    // put ':' in the starting of the
-    // string so that program can
-    // distinguish between '?' and ':'
-    // while((options = getopt(argc, argv, “:if:hvc”)) != -1)
-    // {
-    //     switch(options)
-    //     {
-    //         case ‘i’:
-    //         case ‘l’:
-    //         case ‘h’:
-    //             printf(“option help : %c\n”, opt);
-
-    // Usage : gcc [options] fichier…
-    // Options :
-    // -pass-exit-codes         Quitter avec le plus grand code d’erreur d’une phase.
-    // --help                   Afficher cette aide.
-    // --target-help            Afficher les options de ligne de commande spécifiques à la cible (y compris les options de l'assembleur et de l'éditeur de liens).
-
-    //             break;
-    //         case ‘v’:
-    //             printf(“option verbose : %c\n”, opt);
-    //             break;
-    //         case ‘c’:
-    //             printf(“option config: %c\n”, opt);
-    //             break;
-    //     }
-    // }
-=======
-    
->>>>>>> Stashed changes
+            exit(0);
+        case 'v':
+            // printf("option verbose : ON\n");
+            log_verbose = 1;
+            break;
+        case 'c':
+            // printf("option config: %c\n", options);
+            break;
+        }
+    }
 
     // Load env variables
     env_load("..");
@@ -148,11 +92,6 @@ int main(int argc, char *argv[]) {
     config_load(config);
 
     // Set log settings
-<<<<<<< Updated upstream
-    log_verbose = 1; // for now delete when options are available
-=======
-    //log_verbose = 1;  // for now delete when options are available
->>>>>>> Stashed changes
     strcpy(log_file_path, config->log_file);
 
     // Login to the DB
@@ -245,6 +184,7 @@ int main(int argc, char *argv[]) {
                 } else {
                     // Parse commands
                     // ...
+
                 }
             }
         } else if (clients_pid[clients_count - 1] == -1) {
@@ -260,10 +200,10 @@ int main(int argc, char *argv[]) {
             }
             if (!already_registered) {
                 clients_pid[clients_count] = client_pid;
-                printf("Register child (%d)\n", clients_count);
+                // printf("Register child (%d)\n", clients_count);
                 clients_count++;
             } else {
-                printf("child already exists\n");
+                // printf("child already exists\n");
             }
         }
     }

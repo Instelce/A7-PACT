@@ -9,5 +9,6 @@
         "locale": "c",
         "libpq-fe.h": "c",
         "stdlib.h": "c"
-    }
+    },
+    "C_Cpp.clang_format_fallbackStyle": "WebKit"
 }

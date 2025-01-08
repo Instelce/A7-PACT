@@ -9,14 +9,11 @@ server: $(utils) src/server.c
 	./$(output)/server
 
 client: $(utils) src/client.c
-	$(CC) $^ -o $(output)/client
+	$(CC) $^ -o $(output)/client -I/usr/include -L/usr/lib -lpq
 	./$(output)/client
 
 clean:
 	rm -f $(output)/*
-<<<<<<< Updated upstream
-=======
 
 build-server: $(utils) src/server.c
 	$(CC) $^ -o $(output)/server -I/usr/include -L/usr/lib -lpq
->>>>>>> Stashed changes
