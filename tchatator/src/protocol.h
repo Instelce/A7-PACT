@@ -9,6 +9,11 @@ typedef struct {
 } status_t;
 
 typedef struct {
+    char identity[CHAR_SIZE];
+    char ip[CHAR_SIZE];
+} client_t;
+
+typedef struct {
     int id;
     char sended_date[DATE_CHAR_SIZE];
     char modified_date[DATE_CHAR_SIZE];
