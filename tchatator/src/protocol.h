@@ -3,17 +3,20 @@
 
 #include "types.h"
 
-typedef struct {
+typedef struct
+{
     int code;
     char message[6];
 } status_t;
 
-typedef struct {
+typedef struct
+{
     char identity[CHAR_SIZE];
     char ip[CHAR_SIZE];
 } client_t;
 
-typedef struct {
+typedef struct
+{
     int id;
     char sended_date[DATE_CHAR_SIZE];
     char modified_date[DATE_CHAR_SIZE];
@@ -26,23 +29,25 @@ typedef struct {
 } message_t;
 
 // Represent our protocol action
-typedef struct {
+typedef struct
+{
     char name[CHAR_SIZE];
     // Array of string
-    char ** params;
+    char **params;
 } command_t;
 
-typedef struct {
+typedef struct
+{
     char name[CHAR_SIZE];
     int params_count;
 } command_def_t;
 
 // All status
-static const status_t STATUS_OK = { 200, "OK" };
-static const status_t STATUS_DENIED = { 403, "DENIED" };
-static const status_t STATUS_UNAUTHORIZED = { 401, "UNAUTH" };
-static const status_t STATUS_MIS_FORMAT = { 416, "MISFMT" };
-static const status_t STATUS_TOO_MESSAGE_RECEIVED = { 426, "TOOMRQ" };
+static const status_t STATUS_OK = {200, "OK"};
+static const status_t STATUS_DENIED = {403, "DENIED"};
+static const status_t STATUS_UNAUTHORIZED = {401, "UNAUTH"};
+static const status_t STATUS_MIS_FORMAT = {416, "MISFMT"};
+static const status_t STATUS_TOO_MESSAGE_RECEIVED = {426, "TOOMRQ"};
 
 // All actions name
 static const char LOGIN[] = "LOGIN";
@@ -62,8 +67,8 @@ static const command_def_t ACTIONS_DEF[] = {
 // a : action
 int parse_command(char s[], command_t *a);
 
-command_def_t * get_action_def(char action_name[]);
+command_def_t *get_action_def(char action_name[]);
 
-char * format_status(status_t status);
+char *format_status(status_t status);
 
 #endif // PROTOCOL_H
