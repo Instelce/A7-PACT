@@ -14,3 +14,9 @@ client: $(utils) src/client.c
 
 clean:
 	rm -f $(output)/*
+<<<<<<< Updated upstream
+=======
+
+build-server: $(utils) src/server.c
+	$(CC) $^ -o $(output)/server -I/usr/include -L/usr/lib -lpq
+>>>>>>> Stashed changes

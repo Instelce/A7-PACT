@@ -32,8 +32,49 @@ void send_status(int sock, status_t s, char message[]);
 // Handle signals (SIGINT, SIGQUIT)
 void signal_handler(int sig);
 
+<<<<<<< Updated upstream
 int main(int argc, char* argv[])
 {
+=======
+
+
+int main(int argc, char *argv[]) {
+
+    //int options; // claims the options on the command
+
+    int options;
+      
+    // put ':' in the starting of the 
+    // string so that program can  
+    //distinguish between '?' and ':'  
+
+
+    while((options = getopt(argc, argv, ":if:hvc")) != -1)  
+    {  
+        // getopt_long() permettrait d'avoir des options en mot complet (genre verbose, help, config, et même de décider si plus de paramètres sont nécessaire)
+        switch(options)  
+        { 
+            case 'h':  
+                printf("\nUsage : build server --[options]\nLaunch the server and allows communication between client and professionnal\nOptions :\n--v, verbose     explains what is currently happening, giving more details\n-h, --help      shows help on the command\n-c --config  ");
+
+                // Usage : gcc [options] fichier…
+                // Options :
+                // -pass-exit-codes         Quitter avec le plus grand code d’erreur d’une phase.
+                // --help                   Afficher cette aide.
+                // --target-help            Afficher les options de ligne de commande spécifiques à la cible (y compris les options de l'assembleur et de l'éditeur de liens).
+
+                break;  
+            case 'v':  
+                printf("option verbose : ON\n");
+                log_verbose = 1;
+                break;  
+            case 'c':  
+                printf("option config: %c\n", options); 
+                break;  
+        }  
+    }  
+
+>>>>>>> Stashed changes
     int sock;
     int sock_conn;
     int sock_ret;
@@ -66,6 +107,7 @@ int main(int argc, char* argv[])
 
     // Handles options (--help, -h, --verbose, --config, -c, ...) with getopt()
     // ...
+<<<<<<< Updated upstream
     int options; // claims the options on the command
 
     // put ':' in the starting of the
@@ -95,6 +137,9 @@ int main(int argc, char* argv[])
     //             break;
     //     }
     // }
+=======
+    
+>>>>>>> Stashed changes
 
     // Load env variables
     env_load("..");
@@ -103,7 +148,11 @@ int main(int argc, char* argv[])
     config_load(config);
 
     // Set log settings
+<<<<<<< Updated upstream
     log_verbose = 1; // for now delete when options are available
+=======
+    //log_verbose = 1;  // for now delete when options are available
+>>>>>>> Stashed changes
     strcpy(log_file_path, config->log_file);
 
     // Login to the DB
