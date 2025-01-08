@@ -1,76 +1,85 @@
-#include "types.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
+#include <arpa/inet.h>
 
 #define SERVER_PORT 4242
 #define BUFFER_SIZE 1024
 
-void display_menu()
-{
-    printf("[1] Send message\n");
-    printf("[2] Connection\n");
+// Display menu
+void display_menu() {
+    printf("\n====== MENU ======\n");
+    printf("[1] Send Message\n");
+    printf("[2] Login\n");
     printf("[3] Exit\n");
-    printf("Choose an option: ");
+    printf("==================\n");
+    printf("Enter your choice: ");
 }
 
-void send_message(int sock)
-{
-    char token[64], message[BUFFER_SIZE], buffer[BUFFER_SIZE];
+// Handle login
+void handle_login(int sock, char *token) {
+    char email[BUFFER_SIZE], password[BUFFER_SIZE], buffer[BUFFER_SIZE];
 
-    printf("Enter your token: ");
-    fgets(token, sizeof(token), stdin);
-    token[strcspn(token, "\n")] = '\0';
-
-    printf("Enter your message: ");
-    fgets(message, sizeof(message), stdin);
-    message[strcspn(message, "\n")] = '\0';
-
-    // Create the MSG command
-    snprintf(buffer, sizeof(buffer), "MSG\ntoken:%s\nmessage-lenght:%lu\ncontent:%s\n", token, strlen(message), message);
-
-    // Send the command to the server
-    if (send(sock, buffer, strlen(buffer), 0) < 0) {
-        perror("Error sending message");
-        return;
-    }
-
-    // Receive response from the server
-    memset(buffer, 0, sizeof(buffer));
-    if (recv(sock, buffer, sizeof(buffer) - 1, 0) < 0) {
-        perror("Error receiving response");
-        return;
-    }
-
-    printf("Server response: %s\n", buffer);
-}
-void handle_login(int sock)
-{
-    char mail[CHAR_SIZE], password[CHAR_SIZE], buffer[BUFFER_SIZE];
-
-    printf("Enter your mail: ");
-    fgets(mail, sizeof(mail), stdin);
-    mail[strcspn(mail, "\n")] = '\0';
+    printf("Enter your email: ");
+    fgets(email, sizeof(email), stdin);
+    email[strcspn(email, "\n")] = '\0'; // Remove newline
 
     printf("Enter your password: ");
     fgets(password, sizeof(password), stdin);
-    password[strcspn(password, "\n")] = '\0';
+    password[strcspn(password, "\n")] = '\0'; // Remove newline
 
-    // Create the LOGIN command
-    snprintf(buffer, sizeof(buffer), "LOGIN\nmail:%s\npassword:%s\n", mail, password);
+    // Build LOGIN command
+    snprintf(buffer, sizeof(buffer), "LOGIN\nmail:%s\npassword:%s\n", email, password);
 
-    // Send the command to the server
+    // Send command to server
     if (send(sock, buffer, strlen(buffer), 0) < 0) {
         perror("Error sending login");
         return;
     }
 
-    // Receive response from the server
+    // Read server response
+    memset(buffer, 0, sizeof(buffer));
+    if (recv(sock, buffer, sizeof(buffer) - 1, 0) < 0) {
+        perror("Error receiving response");
+        return;
+    }
+
+    // Display response
+    printf("Server response: %s\n", buffer);
+
+    // Extract token on success
+    if (strncmp(buffer, "200/OK", 6) == 0) {
+        sscanf(buffer, "200/OK\ntoken:%63s\n", token);
+        printf("Logged in successfully! Token: %s\n", token);
+    } else {
+        printf("Login failed! Please check your credentials.\n");
+    }
+}
+
+void send_message(int sock, const char *token) {
+    char message[BUFFER_SIZE], buffer[BUFFER_SIZE];
+
+
+    // if (strlen(token) == 0) {
+    //     printf("You need to login first!\n");
+    //     return;
+    // }
+    printf("Enter your message: ");
+    fgets(message, sizeof(message), stdin);
+    message[strcspn(message, "\n")] = '\0'; // Remove newline
+
+    // Build MSG command
+    snprintf(buffer, sizeof(buffer), "MSG\ntoken:%s\nmessage-length:%lu\ncontent:%s\n", 
+             token, strlen(message), message);
+
+    // Send command to server
+    if (send(sock, buffer, strlen(buffer), 0) < 0) {
+        perror("Error sending message");
+        return;
+    }
+
+    // Read server response
     memset(buffer, 0, sizeof(buffer));
     if (recv(sock, buffer, sizeof(buffer) - 1, 0) < 0) {
         perror("Error receiving response");
@@ -79,45 +88,44 @@ void handle_login(int sock)
 
     printf("Server response: %s\n", buffer);
 }
-int main()
-{
+
+int main() {
     int sock;
-    int sock_ret;
     struct sockaddr_in server_addr;
     int choice;
+    char token[64] = ""; 
 
-    // Create socket
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("Cannot create socket");
         exit(EXIT_FAILURE);
     }
 
-    // Config server address
+    // Configure server address
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(SERVER_PORT);
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
-    if ((sock_ret = connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr))) < 0) {
-        perror("Cannot connect to the server socket");
+    // Connect to server
+    if (connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+        perror("Cannot connect to the server");
         exit(EXIT_FAILURE);
     }
 
     printf("Connected to server\n");
 
-    // Main menu loop
+    // Main loop
     while (1) {
         display_menu();
 
-        printf("Enter your choice: ");
         scanf("%d", &choice);
-        getchar(); // consume newline
+        getchar();
 
         switch (choice) {
         case 1:
-            send_message(sock);
+            send_message(sock, token);
             break;
         case 2:
-            handle_login(sock);
+            handle_login(sock, token);
             break;
         case 3:
             printf("Exiting...\n");
