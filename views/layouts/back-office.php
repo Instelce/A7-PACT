@@ -185,8 +185,8 @@ use app\models\account\UserAccount;
         </div>
         <div>
             <p>Explorez</p>
-            <a href="">Écrire un avis</a>
-            <a href="">S'inscrire</a>
+            <a href="/recherche">Voir des offres</a>
+            <a href="/inscription">S'inscrire</a>
         </div>
         <div>
             <p>Utilisez nos solutions</p>

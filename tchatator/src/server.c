@@ -48,6 +48,38 @@ int main() {
 
     // Handles options (--help, -h, --verbose, --config, -c, ...) with getopt()
     // ...
+    int options; // claims the options on the command
+      
+    // put ':' in the starting of the 
+    // string so that program can  
+    //distinguish between '?' and ':'  
+    while((options = getopt(argc, argv, “:if:hvc”)) != -1)  
+    {  
+        switch(options)  
+        {  
+            case ‘i’:  
+            case ‘l’:  
+            case ‘h’:  
+                printf(“option help : %c\n”, opt);
+
+
+                // Usage : gcc [options] fichier…
+                // Options :
+                // -pass-exit-codes         Quitter avec le plus grand code d’erreur d’une phase.
+                // --help                   Afficher cette aide.
+                // --target-help            Afficher les options de ligne de commande spécifiques à la cible (y compris les options de l'assembleur et de l'éditeur de liens).
+
+
+
+                break;  
+            case ‘v’:  
+                printf(“option verbose : %c\n”, opt);  
+                break;  
+            case ‘c’:  
+                printf(“option config: %c\n”, opt); 
+                break;  
+        }  
+    }  
 
     // Load env variables
     env_load("..");

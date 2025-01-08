@@ -60,7 +60,6 @@ class PublicProfessionalRegister extends Model
         $userAccount->address_id = $address->id;
         $userAccount->avatar_url = "https://ui-avatars.com/api/?size=128&name=$this->denomination";
         $userAccount->save();
-        exit;
 
         $proUser = new ProfessionalUser();
         $proUser->user_id = $account->id;
