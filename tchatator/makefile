@@ -17,3 +17,11 @@ clean:
 
 build-server: $(utils) src/server.c
 	$(CC) $^ -o $(output)/server -I/usr/include -L/usr/lib -lpq
+
+server-vic: $(utils) src/server.c
+	$(CC) $^ -o $(output)/server -I/usr/include/postgresql -L/usr/lib/x86_64-linux-gnu -lpq
+	./$(output)/server
+
+client-vic: $(utils) src/client.c
+	$(CC) $^ -o $(output)/client -I/usr/include/postgresql -L/usr/lib/x86_64-linux-gnu -lpq
+	./$(output)/client
