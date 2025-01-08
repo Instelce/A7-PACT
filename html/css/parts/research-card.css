@@ -58,6 +58,10 @@
     border-radius: calc(var(--radius-medium) - .4rem);
 }
 
+.research-card--photo.enRelief {
+    background-color: rgb(var(--color-orange-primary));
+}
+
 .enRelief {
     border: 1px solid rgb(var(--color-orange-primary));
 }
@@ -89,7 +93,7 @@
         border: none;
     }
 
-    .enReliefArticle{
+    .enReliefArticle {
         border: 1px solid rgb(var(--color-orange-primary));
     }
 

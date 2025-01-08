@@ -218,22 +218,23 @@ function displayOffers(Data) {
 
                     stars.appendChild(star);
                 }
+                let offerRelief = offer.relief || offer.a_la_une ? true : false;
                 const offerElement = document.createElement("a");
                 offerElement.innerHTML = `
                 <article                 
-                ${offer.relief
+                ${offerRelief
                         ? "class='research-card enReliefArticle mb-4 relative'"
                         : "class='research-card mb-4 relative'"
                     }>
                 
                 
-                ${offer.relief
+                ${offerRelief
                         ? "<img class='enReliefIcon' src='/assets/images/reliefIcon.svg' alt='Icone offre en relief'>"
                         : "<div class='hidden'></div>"
                     }
                 
                 <div                
-                ${offer.relief
+                ${offerRelief
                         ? "class='research-card--photo enRelief'"
                         : "class='research-card--photo'"
                     }>
@@ -244,7 +245,7 @@ function displayOffers(Data) {
                     }
                 </div>
                 <div                 
-                ${offer.relief
+                ${offerRelief
                         ? "class='research-card--body enRelief'"
                         : "class='research-card--body'"
                     }">
