@@ -25,56 +25,49 @@
 volatile sig_atomic_t running = 1;
 pid_t server_pid;
 int clients_count;
-pid_t* clients_pid;
+pid_t *clients_pid;
 
 // Send status message to the client
 void send_status(int sock, status_t s, char message[]);
 // Handle signals (SIGINT, SIGQUIT)
 void signal_handler(int sig);
 
-<<<<<<< Updated upstream
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-=======
 
-
-int main(int argc, char *argv[]) {
-
-    //int options; // claims the options on the command
+    // int options; // claims the options on the command
 
     int options;
-      
-    // put ':' in the starting of the 
-    // string so that program can  
-    //distinguish between '?' and ':'  
 
+    // put ':' in the starting of the
+    // string so that program can
+    // distinguish between '?' and ':'
 
-    while((options = getopt(argc, argv, ":if:hvc")) != -1)  
-    {  
+    while ((options = getopt(argc, argv, ":if:hvc")) != -1)
+    {
         // getopt_long() permettrait d'avoir des options en mot complet (genre verbose, help, config, et même de décider si plus de paramètres sont nécessaire)
-        switch(options)  
-        { 
-            case 'h':  
-                printf("\nUsage : build server --[options]\nLaunch the server and allows communication between client and professionnal\nOptions :\n--v, verbose     explains what is currently happening, giving more details\n-h, --help      shows help on the command\n-c --config  ");
+        switch (options)
+        {
+        case 'h':
+            printf("\nUsage : build server --[options]\nLaunch the server and allows communication between client and professionnal\nOptions :\n--v, verbose     explains what is currently happening, giving more details\n-h, --help      shows help on the command\n-c --config  ");
 
-                // Usage : gcc [options] fichier…
-                // Options :
-                // -pass-exit-codes         Quitter avec le plus grand code d’erreur d’une phase.
-                // --help                   Afficher cette aide.
-                // --target-help            Afficher les options de ligne de commande spécifiques à la cible (y compris les options de l'assembleur et de l'éditeur de liens).
+            // Usage : gcc [options] fichier…
+            // Options :
+            // -pass-exit-codes         Quitter avec le plus grand code d’erreur d’une phase.
+            // --help                   Afficher cette aide.
+            // --target-help            Afficher les options de ligne de commande spécifiques à la cible (y compris les options de l'assembleur et de l'éditeur de liens).
 
-                break;  
-            case 'v':  
-                printf("option verbose : ON\n");
-                log_verbose = 1;
-                break;  
-            case 'c':  
-                printf("option config: %c\n", options); 
-                break;  
-        }  
-    }  
+            break;
+        case 'v':
+            printf("option verbose : ON\n");
+            log_verbose = 1;
+            break;
+        case 'c':
+            printf("option config: %c\n", options);
+            break;
+        }
+    }
 
->>>>>>> Stashed changes
     int sock;
     int sock_conn;
     int sock_ret;
@@ -91,8 +84,8 @@ int main(int argc, char *argv[]) {
     command_t action;
     int action_parsed;
 
-    config_t* config;
-    PGconn* conn;
+    config_t *config;
+    PGconn *conn;
 
     // Register signal
     signal(SIGINT, signal_handler);
@@ -100,46 +93,13 @@ int main(int argc, char *argv[]) {
 
     clients_count = 0;
     current_clients_capacity = CLIENT_CAPACITY_INCR;
-    clients_pid = (pid_t*)malloc(current_clients_capacity * sizeof(pid_t));
+    clients_pid = (pid_t *)malloc(current_clients_capacity * sizeof(pid_t));
     server_pid = getpid();
 
     config = malloc(sizeof(config_t));
 
     // Handles options (--help, -h, --verbose, --config, -c, ...) with getopt()
     // ...
-<<<<<<< Updated upstream
-    int options; // claims the options on the command
-
-    // put ':' in the starting of the
-    // string so that program can
-    // distinguish between '?' and ':'
-    // while((options = getopt(argc, argv, “:if:hvc”)) != -1)
-    // {
-    //     switch(options)
-    //     {
-    //         case ‘i’:
-    //         case ‘l’:
-    //         case ‘h’:
-    //             printf(“option help : %c\n”, opt);
-
-    // Usage : gcc [options] fichier…
-    // Options :
-    // -pass-exit-codes         Quitter avec le plus grand code d’erreur d’une phase.
-    // --help                   Afficher cette aide.
-    // --target-help            Afficher les options de ligne de commande spécifiques à la cible (y compris les options de l'assembleur et de l'éditeur de liens).
-
-    //             break;
-    //         case ‘v’:
-    //             printf(“option verbose : %c\n”, opt);
-    //             break;
-    //         case ‘c’:
-    //             printf(“option config: %c\n”, opt);
-    //             break;
-    //     }
-    // }
-=======
-    
->>>>>>> Stashed changes
 
     // Load env variables
     env_load("..");
@@ -148,11 +108,7 @@ int main(int argc, char *argv[]) {
     config_load(config);
 
     // Set log settings
-<<<<<<< Updated upstream
-    log_verbose = 1; // for now delete when options are available
-=======
-    //log_verbose = 1;  // for now delete when options are available
->>>>>>> Stashed changes
+    // log_verbose = 1;  // for now delete when options are available
     strcpy(log_file_path, config->log_file);
 
     // Login to the DB
@@ -171,9 +127,10 @@ int main(int argc, char *argv[]) {
     sock_addr.sin_family = AF_INET;
     sock_addr.sin_port = htons(config->port);
 
-    sock_ret = bind(sock, (struct sockaddr*)&sock_addr, sizeof(sock_addr));
+    sock_ret = bind(sock, (struct sockaddr *)&sock_addr, sizeof(sock_addr));
 
-    if (sock_ret < 0) {
+    if (sock_ret < 0)
+    {
         perror("Cannot bind the socket");
         exit(1);
     }
@@ -182,7 +139,8 @@ int main(int argc, char *argv[]) {
 
     sock_ret = listen(sock, 10);
 
-    if (sock_ret) {
+    if (sock_ret)
+    {
         perror("Cannot listen connections");
         exit(1);
     }
@@ -191,15 +149,18 @@ int main(int argc, char *argv[]) {
 
     sock_conn_addr_size = sizeof(sock_conn_addr);
 
-    while (running) {
-        sock_conn = accept(sock, (struct sockaddr*)&sock_conn_addr, (socklen_t*)&sock_conn_addr_size);
+    while (running)
+    {
+        sock_conn = accept(sock, (struct sockaddr *)&sock_conn_addr, (socklen_t *)&sock_conn_addr_size);
 
-        if (sock_conn < 0) {
+        if (sock_conn < 0)
+        {
             perror("Cannot accept connection");
             exit(1);
         }
 
-        if (!running) {
+        if (!running)
+        {
             break;
         }
 
@@ -209,15 +170,17 @@ int main(int argc, char *argv[]) {
         log_info("New connection with %s", client_ip);
 
         // Increase the clients capacity if needed
-        if (clients_count >= current_clients_capacity) {
+        if (clients_count >= current_clients_capacity)
+        {
             log_info("Increase client capacity");
             current_clients_capacity += CLIENT_CAPACITY_INCR;
 
-            clients_pid = (pid_t*)realloc(clients_pid, current_clients_capacity * sizeof(pid_t));
+            clients_pid = (pid_t *)realloc(clients_pid, current_clients_capacity * sizeof(pid_t));
         }
 
         // Create a new child process
-        if ((client_pid = fork()) == 0) {
+        if ((client_pid = fork()) == 0)
+        {
             close(sock);
 
             client_t client;
@@ -228,7 +191,8 @@ int main(int argc, char *argv[]) {
             strcpy(log_client_ip, client.ip);
 
             // Child loop
-            while (1) {
+            while (1)
+            {
                 action_recv_len = read(sock_conn, action_recv, sizeof(action_recv));
 
                 // Format received string
@@ -240,29 +204,41 @@ int main(int argc, char *argv[]) {
 
                 action_parsed = parse_command(action_recv, &action);
 
-                if (action_parsed == -1) {
+                if (action_parsed == -1)
+                {
                     send_status(sock_conn, STATUS_MIS_FORMAT, "Message mal formaté");
-                } else {
+                }
+                else
+                {
                     // Parse commands
                     // ...
                 }
             }
-        } else if (clients_pid[clients_count - 1] == -1) {
+        }
+        else if (clients_pid[clients_count - 1] == -1)
+        {
             perror("Fork");
             abort();
-        } else {
+        }
+        else
+        {
             int already_registered = 0;
-            for (int i = 0; i < clients_count; i++) {
-                if (clients_pid[i] == client_pid) {
+            for (int i = 0; i < clients_count; i++)
+            {
+                if (clients_pid[i] == client_pid)
+                {
                     already_registered = 1;
                     break;
                 }
             }
-            if (!already_registered) {
+            if (!already_registered)
+            {
                 clients_pid[clients_count] = client_pid;
                 printf("Register child (%d)\n", clients_count);
                 clients_count++;
-            } else {
+            }
+            else
+            {
                 printf("child already exists\n");
             }
         }
@@ -294,19 +270,28 @@ void signal_handler(int sig)
 
     running = 0;
 
-    if (sig == SIGINT && server_pid == self) {
-        if (clients_count > 0) {
+    if (sig == SIGINT && server_pid == self)
+    {
+        if (clients_count > 0)
+        {
             kill(0, SIGQUIT);
 
-            for (int i = 0; i < clients_count; i++) {
+            for (int i = 0; i < clients_count; i++)
+            {
                 int status;
-                for (;;) {
+                for (;;)
+                {
                     pid_t child = wait(&status);
-                    if (child > 0 && WIFEXITED(status) && WEXITSTATUS(status) == 0) {
+                    if (child > 0 && WIFEXITED(status) && WEXITSTATUS(status) == 0)
+                    {
                         log_info("Child %d succesully quit", (int)child);
-                    } else if (child < 0 && errno == EINTR) {
+                    }
+                    else if (child < 0 && errno == EINTR)
+                    {
                         continue;
-                    } else {
+                    }
+                    else
+                    {
                         perror("Wait");
                         break;
                     }
@@ -318,8 +303,10 @@ void signal_handler(int sig)
         }
     }
 
-    if (sig == SIGQUIT) {
-        if (server_pid != self) {
+    if (sig == SIGQUIT)
+    {
+        if (server_pid != self)
+        {
             // printf("Child %d kill itself\n", (int)self);
             _exit(0);
         }
