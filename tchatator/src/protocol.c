@@ -80,7 +80,7 @@ command_def_t *get_action_def(char action_name[])
     {
         if (strcmp(ACTIONS_DEF[i].name, action_name) == 0)
         {
-            action_def = &ACTIONS_DEF[i];
+            memcpy(action_def, &ACTIONS_DEF[i], sizeof(ACTIONS_DEF[i]));
             found = 1;
         }
         i++;

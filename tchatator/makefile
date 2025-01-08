@@ -9,7 +9,7 @@ server: $(utils) src/server.c
 	./$(output)/server
 
 client: $(utils) src/client.c
-	$(CC) $^ -o $(output)/client
+	$(CC) $^ -o $(output)/client -I/usr/include -L/usr/lib -lpq
 	./$(output)/client
 
 clean:

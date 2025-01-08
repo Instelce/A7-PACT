@@ -7,27 +7,39 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#define SERVER_IP "127.0.0.1"
-#define SERVER_PORT 8080
+#define SERVER_PORT 4242
 #define BUFFER_SIZE 1024
 
 int main() {
-    int client_sock;
+    int sock;
+    int sock_ret;
     struct sockaddr_in server_addr;
-    char buffer[BUFFER_SIZE];
+    
 
-    //create socket
+    // Create socket
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("Erreur de création du socket");
+        perror("Cannot create socket");
         exit(EXIT_FAILURE);
     }
-    //config adr serv
+
+    // Config server address
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(SERVER_PORT);
-    if (inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr) <= 0) {
-        perror("Adresse IP invalide");
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+
+    if ((sock_ret = connect(sock, (struct sockaddr *) &server_addr, sizeof(server_addr))) < 0) {
+        perror("Cannot connect to the server socket");
         exit(EXIT_FAILURE);
     }
+
+    printf("Connected to server\n");
+
+    while (1)
+    {
+        
+    }
+
+    close(sock);
 
     return EXIT_SUCCESS;
 }
