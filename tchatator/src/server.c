@@ -66,6 +66,8 @@ int main(int argc, char* argv[])
         }
     }
 
+    log_verbose = 1;
+
     int sock;
     int sock_conn;
     int sock_ret;
@@ -93,8 +95,6 @@ int main(int argc, char* argv[])
     current_clients_capacity = CLIENT_CAPACITY_INCR;
     clients_pid = (pid_t*)malloc(current_clients_capacity * sizeof(pid_t));
     server_pid = getpid();
-
-    log_verbose = 0;
 
     config = malloc(sizeof(config_t));
 
