@@ -28,7 +28,7 @@ $iconsNames = [
 <!-- Search bar, sort and filter -->
 <div class="flex flex-col mb-4">
     <x-input rounded>
-        <input class="search-input" slot="input" type="text" placeholder="Rechercher">
+        <input class="search-input" slot="input" type="text" placeholder="Rechercher par nom d'offre">
     </x-input>
     <div class="categories-container">
         <?php
