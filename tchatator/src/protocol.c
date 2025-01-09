@@ -12,8 +12,9 @@ char* format_status(status_t status)
     return format;
 }
 
-char *format_command(command_t command) {
-    char *format = malloc(1024);
+char* format_command(command_t command)
+{
+    char* format = malloc(1024);
     command_def_t command_def = get_command_def(command.name);
 
     sprintf(format, "%s\n", command.name);
@@ -24,10 +25,11 @@ char *format_command(command_t command) {
     return format;
 }
 
-status_t *parse_status(char status_str[]) {
-    status_t *status = malloc(sizeof(status_t));
-    char *code_str = strtok(status_str, "/");
-    char *message = strtok(NULL, "/");
+status_t* parse_status(char status_str[])
+{
+    status_t* status = malloc(sizeof(status_t));
+    char* code_str = strtok(status_str, "/");
+    char* message = strtok(NULL, "/");
 
     status->code = atoi(code_str);
     strcpy(status->message, message);
@@ -45,16 +47,18 @@ int command_exist(char name[])
     return 0;
 }
 
-command_def_t get_command_def(char name[]) {
+command_def_t get_command_def(char name[])
+{
     for (int i = 0; i < sizeof(COMMANDS_DEFINITIONS) / sizeof(COMMANDS_DEFINITIONS[0]); i++) {
         if (strcmp(COMMANDS_DEFINITIONS[i].name, name) == 0) {
             return COMMANDS_DEFINITIONS[i];
         }
     }
-    return (command_def_t){"", 0};
+    return (command_def_t) { "", 0 };
 }
 
-char * get_command_param_value(command_t command, char name[]) {
+char* get_command_param_value(command_t command, char name[])
+{
     command_def_t command_def = get_command_def(command.name);
     for (int i = 0; i < command_def.params_count; i++) {
         if (strcmp(command.params[i].name, name) == 0) {
@@ -64,7 +68,8 @@ char * get_command_param_value(command_t command, char name[]) {
     return "";
 }
 
-command_t create_command(const char *name) {
+command_t create_command(const char* name)
+{
     command_t command;
     command_def_t command_def = get_command_def(name);
 
@@ -75,7 +80,8 @@ command_t create_command(const char *name) {
     return command;
 }
 
-void add_command_param(command_t *command, char name[], char value[]) {
+void add_command_param(command_t* command, char name[], char value[])
+{
     command_def_t command_def = get_command_def(command->name);
 
     if (command->_params_count <= command_def.params_count) {
@@ -85,7 +91,8 @@ void add_command_param(command_t *command, char name[], char value[]) {
     }
 }
 
-void request(int sock, char buf[]) {
+void request(int sock, char buf[])
+{
     char response[1024];
     memset(response, 0, sizeof(response));
 
@@ -105,10 +112,11 @@ void request(int sock, char buf[]) {
     // return parse_status(buf);
 }
 
-void send_message(int sock, char token[], char message[]) {
+void send_message(int sock, char token[], char message[])
+{
     command_t command = create_command(SEND_MESSAGE);
     char message_len[5];
-    char *buf;
+    char* buf;
 
     sprintf(message_len, "%d", strlen(message));
 
@@ -121,9 +129,10 @@ void send_message(int sock, char token[], char message[]) {
     request(sock, buf);
 }
 
-void send_login(int sock, char api_token[]) {
+void send_login(int sock, char api_token[])
+{
     command_t command = create_command(LOGIN);
-    char *buf;
+    char* buf;
 
     add_command_param(&command, "api-token", api_token);
 

@@ -1,9 +1,9 @@
 {
     "files.associations": {
-        "*.ldtk": "jsonl",
         "*.ndjson": "jsonl",
         "*.dbclient-js": "javascript",
         "*.embeddedhtml": "html",
+        "*.ldtk": "jsonl",
         "*.tcc": "c",
         "fstream": "c",
         "locale": "c",
@@ -28,7 +28,8 @@
         "bitset": "c",
         "deque": "c",
         "limits": "c",
-        "vector": "c"
+        "vector": "c",
+        "config.h": "c"
     },
     "C_Cpp.clang_format_fallbackStyle": "WebKit"
 }

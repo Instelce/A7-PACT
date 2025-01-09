@@ -10,15 +10,25 @@
 #include <sys/types.h>
 
 #include "config.h"
+#include "database.h"
 #include "protocol.h"
 #include "types.h"
+#include "utils.h"
 
 #define SERVER_PORT 4242
 #define BUFFER_SIZE 1024
 
+PGconn* conn;
 volatile sig_atomic_t running = 1;
 status_t* response;
 int sock;
+
+void input(char* output)
+{
+    fgets(output, sizeof(output), stdin);
+    output[strcspn(output, "\n")] = '\0';
+    getchar();
+}
 
 void display_choice_login()
 {
@@ -27,14 +37,28 @@ void display_choice_login()
     printf("[3] - connection admin\n");
     printf("[4] - EXIT\n\n");
 }
-
 void connection()
 {
-    char mail[CHAR_SIZE], token[API_TOKEN_SIZE];
-    printf("enter your email :");
-    input(mail);
-}
+    char mail[CHAR_SIZE], token[API_TOKEN_SIZE] = { 0 };
+    printf("Enter your email: ");
+    scanf("%s", mail);
 
+    if (strcmp(mail, "o") == 0) {
+        strcpy(mail, "brehat@gmail.com");
+    }
+
+    printf("Email entered: '%s'\n", mail);
+
+    char* temp_token = get_token_by_email(conn, mail);
+    if (temp_token == NULL) {
+        printf("User not found\n");
+        return;
+    }
+
+    strcpy(token, temp_token);
+    printf("Token: %s\n", token);
+    printf("Connected\n");
+}
 void display_menu_client()
 {
     printf("[1] - send a message\n");
@@ -61,11 +85,6 @@ void display_menu_admin()
     printf("[2] - block message\n");
     printf("[3] - ban user\n");
     printf("[4] - EXIT\n\n");
-}
-void input(char* output)
-{
-    fgets(output, sizeof(output), stdin);
-    output[strcspn(output, "\n")] = '\0';
 }
 
 void menu_message(int sock)
@@ -102,7 +121,7 @@ int main()
     int sock_ret;
     struct sockaddr_in server_addr;
     int choice;
-    PGconn* conn;
+    // PGconn* conn;
 
     config_t* config;
     config = malloc(sizeof(config_t));
@@ -110,7 +129,7 @@ int main()
 
     env_load("..");
 
-    db_login(conn);
+    db_login(&conn);
 
     signal(SIGINT, signal_handler);
 
