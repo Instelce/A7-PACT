@@ -19,7 +19,7 @@ class CbMeanOfPayment extends DBModel
 
     public function attributes(): array
     {
-        return ['name', 'card_number', 'expiration_date', 'cvv'];
+        return ['payment_id', 'name', 'card_number', 'expiration_date', 'cvv'];
     }
 
     public static function pk(): string

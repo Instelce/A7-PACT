@@ -7,7 +7,7 @@ use app\core\form\Form;
 
 $this->title = 'RegisterProfessional';
 $this->jsFile = 'registerProfessional';
-$this->cssFile = "registerPro";
+$this->cssFile = "register-pro";
 
 ?>
 
@@ -151,7 +151,6 @@ $this->cssFile = "registerPro";
                                 <li class="invalid length">
                                     <span class="icon"></span> Au minimum 12 caractères
                                 </li>
-
                             </ul>
                         </div>
                     </div>
@@ -207,14 +206,6 @@ $this->cssFile = "registerPro";
                                 <label class="switch" for="switch-cond-private"></label>
                             </div>
                             <label for="switch-period" id="switch-period-label2">J'accepte les <a href="" class="link">conditions générales d'utilisation</a></label>
-                        </div>
-
-                        <div class="flex gap-4 items-center">
-                            <div class="flex items-center">
-                                <input class="switch" type="checkbox" id="switch-notifs2" name="notifs" />
-                                <label class="switch" for="switch-notifs2"></label>
-                            </div>
-                            <label for="switch-period" id="switch-period-label2">J'autorise l'envoie de notifications</label>
                         </div>
                     </div>
                 </div>

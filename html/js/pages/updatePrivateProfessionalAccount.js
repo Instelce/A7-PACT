@@ -1,5 +1,5 @@
 //--------------- payment ---------------
-import "../pages/registerProfessional.js";
+import "./registerProfessional.js";
 
 
 //--------------- Popup pour l'enregistrement des modifications ---------------

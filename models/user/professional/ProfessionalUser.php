@@ -7,16 +7,12 @@ use app\models\opinion\Opinion;
 
 class ProfessionalUser extends DBModel
 {
-    private const ACCEPT_NOTIFICATIONS = 1;
-    private const REFUSED_NOTIFICATIONS = 0;
 
     public int $user_id = 0;
     public string $code = '';
     public string $denomination = '';
     public string $siren = '';
     public string $phone = '';
-
-    public bool $allows_notifications = false;
 
     public static function tableName(): string
     {
@@ -25,7 +21,7 @@ class ProfessionalUser extends DBModel
 
     public function attributes(): array
     {
-        return ['code', 'denomination', 'siren', 'allows_notifications', 'phone'];
+        return ['user_id', 'code', 'denomination', 'siren', 'phone'];
     }
 
     public static function pk(): string
@@ -79,5 +75,4 @@ class ProfessionalUser extends DBModel
     {
         return array_sum(array_map(fn($offer) => $offer->likes, Offer::find(['professional_id' => $this->user_id])));
     }
-
 }

@@ -143,8 +143,8 @@ foreach ($members as $i => $member) {
 // create means of payment
 // ---------------------------------------------------------------------- //
 
-$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (1), (2), (3);");
-$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (1, 'Fred port', '1548759863254125', '07/25', '123'),(2,'Rance Evasion','4287621589632154','08/29','123'), (3,'Recrée des 3 curés','5168789654123654','08/27','458');");
+$db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (11), (12), (13);");
+$db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (11, 'Fred port', '1548759863254125', '07/25', '123'),(12,'Rance Evasion','4287621589632154','08/29','123'), (13,'Recrée des 3 curés','5168789654123654','08/27','458');");
 
 $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 
@@ -156,7 +156,7 @@ $db->pdo->exec("INSERT INTO public_professional (pro_id) VALUES (3), (8), (10), 
 //publics : sergemytho(3) ; brehat(8) ; -> valleedessaints(10) <-
 //                                           plus utilisé
 
-$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id) VALUES (4, '2024-11-30', 1),(5,'2024-11-30',2),(9, '2024-09-20', 3);");
+$db->pdo->exec("INSERT INTO private_professional (pro_id, last_veto, payment_id) VALUES (4, '2024-11-30', 11),(5,'2024-11-30',12),(9, '2024-09-20', 13);");
 //privates : fredlechat(4) ; rance_evasion(5) ; recree_des_trois_cures(9) ; 
 
 // ---------------------------------------------------------------------- //

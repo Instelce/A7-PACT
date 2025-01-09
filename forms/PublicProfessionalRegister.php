@@ -61,21 +61,21 @@ class PublicProfessionalRegister extends Model
         $userAccount->avatar_url = "https://ui-avatars.com/api/?size=128&name=$this->denomination";
         $userAccount->save();
 
+
         $proUser = new ProfessionalUser();
-        $proUser->user_id = $account->id;
+        $proUser->user_id = $userAccount->account_id;
         $proUser->siren = $this->siren;
         $proUser->denomination = $this->denomination;
         $proUser->code = Utils::generateUUID();
         $proUser->phone = str_replace(' ', '', $this->phone);
-        $proUser->allows_notifications = $this->notifications;
         $proUser->save();
+
 
         $proPublic = new PublicProfessional();
         $proPublic->pro_id = $account->id;
         $proPublic->save();
 
         Application::$app->login($userAccount);
-
         return true;
     }
 
@@ -83,14 +83,14 @@ class PublicProfessionalRegister extends Model
     public function rules(): array
     {
         return [
-            'siren' => [[self::RULE_UNIQUE, 'attribute' => 'siren', 'class' => ProfessionalUser::class], [self::RULE_MAX, 'max' => 9]],
-            'denomination' => [self::RULE_REQUIRED],
+            'siren' => [self::RULE_SIREN],
+            'denomination' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'denomination', 'class' => ProfessionalUser::class]],
             'mail' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'mail', 'class' => UserAccount::class], self::RULE_MAIL],
             'streetname' => [self::RULE_REQUIRED],
-            'streetnumber' => [self::RULE_REQUIRED],
-            'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
+            'streetnumber' => [self::RULE_REQUIRED, self::RULE_NUMBER],
+            'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5], self::RULE_NUMBER],
             'city' => [self::RULE_REQUIRED],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
+            'phone' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class], self::RULE_PHONE],
             'password' => [self::RULE_REQUIRED, self::RULE_PASSWORD],
             'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']]
         ];
@@ -126,8 +126,8 @@ class PublicProfessionalRegister extends Model
             'postaleCode' => '22300',
             'city' => 'Lannion',
             'phone' => '06 01 02 03 04',
-            'password' => '********',
-            'passwordConfirm' => '********'
+            'password' => '************',
+            'passwordConfirm' => '************'
         ];
     }
 }
