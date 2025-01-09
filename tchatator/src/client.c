@@ -22,6 +22,7 @@ PGconn* conn;
 volatile sig_atomic_t running = 1;
 status_t* response;
 int sock;
+user_t connected_user;
 
 void input(char* output)
 {
@@ -49,15 +50,14 @@ void connection_pro()
 
     printf("Email entered: '%s'\n", mail);
 
-    char* temp_token = get_token_by_email(conn, mail);
-    if (temp_token == NULL) {
+    int user_found = db_get_user_by_email(conn, &connected_user, mail);
+
+    if (!user_found) {
         printf("User not found\n");
         return;
     }
-
-    strcpy(token, temp_token);
-    printf("Token: %s\n", token);
-    send_login(sock, token);
+    printf("Token: %s\n", connected_user.api_token);
+    send_login(sock, connected_user.api_token);
     printf("Connected\n");
 }
 
@@ -72,15 +72,14 @@ void connection_client()
     }
 
     printf("Email entered: '%s'\n", mail);
-    char* temp_token = get_token_by_email(conn, mail);
-    if (temp_token == NULL) {
+    int user_found = db_get_user_by_email(conn, &connected_user, mail);
+
+    if (!user_found) {
         printf("User not found\n");
         return;
     }
-
-    strcpy(token, temp_token);
-    printf("Token: %s\n", token);
-    send_login(sock, token);
+    printf("Token: %s\n", connected_user.api_token);
+    send_login(sock, connected_user.api_token);
     printf("Connected\n");
 }
 void display_menu_client()
@@ -145,7 +144,8 @@ int main()
     int sock_ret;
     struct sockaddr_in server_addr;
     int choice;
-    // PGconn* conn;
+    int is_connected = 0;
+    connected_user = NOT_CONNECTED_USER;
 
     config_t* config;
     config = malloc(sizeof(config_t));
@@ -175,45 +175,62 @@ int main()
 
     printf("Connected to server\n");
 
-    // Main menu loop
     while (running) {
 
-        display_choice_login();
+        is_connected = memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0;
 
         if (response != NULL) {
             printf("\nResponse: %d %s\n", response->code, response->message);
         }
 
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-        getchar();
-        switch (choice) {
-        case 1:
-            connection_client();
-            break;
-        case 2:
-            connection_pro();
-            break;
-        case 3:
-            send_login(sock, config->admin_api_token);
-            printf("Admin connected\n");
-        case 4:
-            disconnect(sock);
-            return EXIT_SUCCESS;
-        case 10:
-            response = send_login(sock, "06b8df93cd94c728ef92ad4d8bd8f907513e95f4c10b2858112913b1d86cfae5");
-            break;
-        case 11:
-            response = send_message(sock, "coucousupertoken", "monmessage\nrelou\n", 3);
-            break;
-        default:
-            printf("Invalid choice, please try again.\n");
-            break;
+        if (is_connected) {
+            printf("%s => ", connected_user.email);
         }
+        if (!is_connected) {
+
+            display_choice_login();
+
+            printf("Enter your choice: ");
+            scanf("%d", &choice);
+            getchar();
+
+            switch (choice) {
+            case 1:
+                connection_client();
+                break;
+            case 2:
+                connection_pro();
+                break;
+            case 3:
+                send_login(sock, config->admin_api_token);
+                printf("Admin connected\n");
+            case 4:
+                disconnect(sock);
+                return EXIT_SUCCESS;
+            case 10:
+                response = send_login(sock, "06b8df93cd94c728ef92ad4d8bd8f907513e95f4c10b2858112913b1d86cfae5");
+                break;
+            case 11:
+                response = send_message(sock, "coucousupertoken", "monmessage\nrelou\n", 3);
+                break;
+            default:
+                printf("Invalid choice, please try again.\n");
+                break;
+            }
+        } else {
+            display_menu_client();
+            //     if (1 = 1) {
+            //         display_menu_client();
+            //     } else if () {
+            //         display_menu_pro();
+            //     } else if () {
+            //         display_menu_admin();
+            //     }
+            // }
+        }
+        printf("Bye\n");
+
+        close(sock);
+        return EXIT_SUCCESS;
     }
-
-    printf("Bye\n");
-
-    close(sock);
-    return EXIT_SUCCESS;
 }
