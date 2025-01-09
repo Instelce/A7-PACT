@@ -389,6 +389,7 @@ $latitude = $offer->address()->latitude;
                                 <p><?php echo $userOpinion->comment ?></p>
                             </div>
 
+
                             <!-- Photos -->
                             <?php if (count($userOpinion->photos()) > 0) { ?>
                                 <div class="opinion-card-photos">
@@ -397,6 +398,8 @@ $latitude = $offer->address()->latitude;
                                     <?php } ?>
                                 </div>
                             <?php } ?>
+
+
                         </article>
                     </div>
                 <?php } ?>
