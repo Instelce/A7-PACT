@@ -10,6 +10,8 @@
 
 int log_verbose;
 char log_file_path[CHAR_SIZE];
+char log_client_ip[CHAR_SIZE];
+char log_client_identity[CHAR_SIZE];
 
 // TODO - Add client identity and client IP
 void log_info(char *format, ...) {
@@ -35,7 +37,7 @@ void log_info(char *format, ...) {
         exit(1);
     }
 
-    sprintf(log_line, "%02d-%02d-%d %02d:%02d:%02d %s\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec, message);
+    sprintf(log_line, "%02d-%02d-%d %02d:%02d:%02d %s %s %s\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec, log_client_ip, log_client_identity, message);
     write(fd, log_line, strlen(log_line));
 
     if (log_verbose) {

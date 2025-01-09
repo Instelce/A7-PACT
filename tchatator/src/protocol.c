@@ -1,89 +1,133 @@
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 #include "protocol.h"
 
-int parse_command(char s[], command_t *a) {
-    printf("Enter parse action\n");
+char* format_status(status_t status)
+{
+    char* format = malloc(256);
+    sprintf(format, "%d/%s", status.code, status.message);
+    return format;
+}
 
-    char *name;
+char *format_command(command_t command) {
+    char *format = malloc(1024);
+    command_def_t command_def = get_command_def(command.name);
 
-    char *params_inline;
-    char **params = NULL;
-    char *param_tmp;
-
-    command_def_t *action_def;
-
-    if (!strstr(s, ":")) {
-        return -1;
+    sprintf(format, "%s\n", command.name);
+    for (int i = 0; i < command_def.params_count; i++) {
+        sprintf(format, "%s%s:%s\n", format, command.params[i].name, command.params[i].value);
     }
 
-    name = strtok(s, ":");
-    params_inline = strtok(NULL, ":");
+    return format;
+}
 
-    printf("Params inline: %s\n", params_inline);
+status_t *parse_status(char status_str[]) {
+    status_t *status = malloc(sizeof(status_t));
+    char *code_str = strtok(status_str, "/");
+    char *message = strtok(NULL, "/");
 
-    action_def = get_action_def(name);
+    status->code = atoi(code_str);
+    strcpy(status->message, message);
 
-    if (action_def == NULL) {
-        return -1;
-    }
+    return status;
+}
 
-    params = malloc(1000);
-    if (params == NULL) {
-        return -1;
-    }
-
-    int i = 0;
-    while (i < action_def->params_count)
-    {
-        params[i] = strtok(i == 0 ? params_inline : NULL, ",");
-        if (params[i] == NULL) {
-            free(params);
-            return -1;
+int command_exist(char name[])
+{
+    for (int i = 0; i < COMMANDS_COUNT; i++) {
+        if (strcmp(EXISTING_COMMANDS[i], name) == 0) {
+            return 1;
         }
-        i++;
     }
-
-    strcat(params[i-1], ",");
-    while ((param_tmp = strtok(NULL, ",")) != NULL)
-    {
-        strcat(params[i-1], param_tmp);
-        strcat(params[i-1], ",");
-    }
-    params[i-1][strlen(params[i-1])-1] = '\0';
-
-    for (int i = 0; i < action_def->params_count; i++)
-    {
-        printf("Param %d: %s\n", i, params[i]);
-    }
-
-    printf("Name: %s\n", name);
-
     return 0;
 }
 
-command_def_t * get_action_def(char action_name[]) {
-    int found = 0;
-    int i = 0;
-    command_def_t * action_def = malloc(sizeof(command_def_t));
-    action_def = NULL;
-
-    while (!found && i < sizeof(ACTIONS_DEF) / sizeof(command_def_t))
-    {
-        if (strcmp(ACTIONS_DEF[i].name, action_name) == 0) {
-            action_def = &ACTIONS_DEF[i];
-            found = 1;
+command_def_t get_command_def(char name[]) {
+    for (int i = 0; i < sizeof(COMMANDS_DEFINITIONS) / sizeof(COMMANDS_DEFINITIONS[0]); i++) {
+        if (strcmp(COMMANDS_DEFINITIONS[i].name, name) == 0) {
+            return COMMANDS_DEFINITIONS[i];
         }
-        i++;
     }
-
-    return action_def;
+    return (command_def_t){"", 0};
 }
 
-char * format_status(status_t status) {
-    char *s = malloc(256);
-    sprintf(s, "%d/%s", status.code, status.message);
-    return s;
+char * get_command_param_value(command_t command, char name[]) {
+    command_def_t command_def = get_command_def(command.name);
+    for (int i = 0; i < command_def.params_count; i++) {
+        if (strcmp(command.params[i].name, name) == 0) {
+            return command.params[i].value;
+        }
+    }
+    return "";
+}
+
+command_t create_command(const char *name) {
+    command_t command;
+    command_def_t command_def = get_command_def(name);
+
+    strcpy(command.name, name);
+    command.params = malloc(command_def.params_count * sizeof(command_param_t));
+    command._params_count = 0;
+
+    return command;
+}
+
+void add_command_param(command_t *command, char name[], char value[]) {
+    command_def_t command_def = get_command_def(command->name);
+
+    if (command->_params_count <= command_def.params_count) {
+        strcpy(command->params[command->_params_count].name, name);
+        strcpy(command->params[command->_params_count].value, value);
+        command->_params_count++;
+    }
+}
+
+void request(int sock, char buf[]) {
+    char response[1024];
+    memset(response, 0, sizeof(response));
+
+    if (write(sock, buf, strlen(buf)) < 0) {
+        perror("Error sending message");
+        exit(EXIT_FAILURE);
+    }
+
+    // Wait for the server response
+    if (read(sock, response, sizeof(response)) < 0) {
+        perror("Error receiving response");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("%s\n", response);
+
+    // return parse_status(buf);
+}
+
+void send_message(int sock, char token[], char message[]) {
+    command_t command = create_command(SEND_MESSAGE);
+    char message_len[5];
+    char *buf;
+
+    sprintf(message_len, "%d", strlen(message));
+
+    add_command_param(&command, "token", token);
+    add_command_param(&command, "message-length", message_len);
+    add_command_param(&command, "content", message);
+
+    buf = format_command(command);
+
+    request(sock, buf);
+}
+
+void send_login(int sock, char api_token[]) {
+    command_t command = create_command(LOGIN);
+    char *buf;
+
+    add_command_param(&command, "api-token", api_token);
+
+    buf = format_command(command);
+
+    request(sock, buf);
 }
