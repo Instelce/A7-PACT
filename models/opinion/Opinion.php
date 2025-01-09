@@ -17,11 +17,14 @@ class Opinion extends DBModel
     public bool $read = false;
     public bool $blacklisted = false;
 
-    public int $account_id = 0;
-    public int $offer_id = 0;
+    public int $account_id ;
+    public int $offer_id;
 
     public string $created_at = "";
     public string $updated_at = "";
+
+    public int $nb_likes = 0;
+    public int $nb_dislikes = 0;
 
     public static function tableName(): string
     {
@@ -30,7 +33,7 @@ class Opinion extends DBModel
 
     public function attributes(): array
     {
-        return ['rating', 'title', 'comment', 'visit_date', 'visit_context', 'read', 'blacklisted', 'account_id', 'offer_id'];
+        return ['rating', 'title', 'comment', 'visit_date', 'visit_context', 'read', 'blacklisted', 'account_id', 'offer_id', 'nb_likes', 'nb_dislikes'];
     }
 
     public function rules(): array
@@ -61,6 +64,16 @@ class Opinion extends DBModel
         $photo->photo_url = $photo_url;
         $photo->opinion_id = $this->id;
         $photo->save();
+    }
+
+    public function modifyLikes(int $nb){
+        $this->nb_likes += $nb;
+        $this->update();
+    }
+
+    public function modifyDislikes(int $nb){
+        $this->nb_dislikes += $nb;
+        $this->update();
     }
 
     public function photos()

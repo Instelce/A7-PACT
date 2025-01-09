@@ -22,6 +22,9 @@ class m0021_create_table_opinion
             account_id INT NOT NULL,
             offer_id INT NOT NULL,
             
+            nb_likes INT NOT NULL,
+            nb_dislikes INT NOT NULL,
+            
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             

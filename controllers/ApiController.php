@@ -373,4 +373,32 @@ class ApiController extends Controller
         }
     }
 
+    public function opinionLikes(Request $request, Response $response, $routeParams){
+        $opinionPk = $routeParams['opinion_pk'];
+        $opinion = Opinion::findOneByPk($opinionPk);
+
+        if (!$opinion) {
+            $response->setStatusCode(404);
+            return $response->json(['error' => 'Opinion not found']);
+        }
+
+        $opinion->modifyLikes(1);
+
+        return $response->json([]);
+    }
+
+    public function opinionDislikes(Request $request, Response $response, $routeParams){
+        $opinionPk = $routeParams['opinion_pk'];
+        $opinion = Opinion::findOneByPk($opinionPk);
+
+        if (!$opinion) {
+            $response->setStatusCode(404);
+            return $response->json(['error' => 'Opinion not found']);
+        }
+
+        $opinion->modifyDislikes(1);
+
+        return $response->json([]);
+    }
+
 }
