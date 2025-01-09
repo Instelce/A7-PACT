@@ -25,8 +25,7 @@ int sock;
 
 void input(char* output)
 {
-    fgets(output, sizeof(output), stdin);
-    output[strcspn(output, "\n")] = '\0';
+    scanf("%s", output);
     getchar();
 }
 
@@ -37,11 +36,12 @@ void display_choice_login()
     printf("[3] - connection admin\n");
     printf("[4] - EXIT\n\n");
 }
-void connection()
+
+void connection_pro()
 {
     char mail[CHAR_SIZE], token[API_TOKEN_SIZE] = { 0 };
     printf("Enter your email: ");
-    scanf("%s", mail);
+    input(mail);
 
     if (strcmp(mail, "o") == 0) {
         strcpy(mail, "brehat@gmail.com");
@@ -57,6 +57,30 @@ void connection()
 
     strcpy(token, temp_token);
     printf("Token: %s\n", token);
+    send_login(sock, token);
+    printf("Connected\n");
+}
+
+void connection_client()
+{
+    char mail[CHAR_SIZE], token[API_TOKEN_SIZE] = { 0 };
+    printf("Enter your email: ");
+    input(mail);
+
+    if (strcmp(mail, "o") == 0) {
+        strcpy(mail, "DavidJohnson151@gmail.com");
+    }
+
+    printf("Email entered: '%s'\n", mail);
+    char* temp_token = get_token_by_email(conn, mail);
+    if (temp_token == NULL) {
+        printf("User not found\n");
+        return;
+    }
+
+    strcpy(token, temp_token);
+    printf("Token: %s\n", token);
+    send_login(sock, token);
     printf("Connected\n");
 }
 void display_menu_client()
@@ -161,10 +185,10 @@ int main()
         getchar();
         switch (choice) {
         case 1:
-            connection();
+            connection_client();
             break;
         case 2:
-            connection();
+            connection_pro();
             break;
         case 3:
             send_login(sock, config->admin_api_token);
