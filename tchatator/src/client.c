@@ -9,29 +9,82 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
+#include "config.h"
+#include "database.h"
 #include "protocol.h"
 #include "types.h"
+#include "utils.h"
 
 #define SERVER_PORT 4242
 #define BUFFER_SIZE 1024
 
+PGconn* conn;
 volatile sig_atomic_t running = 1;
-status_t *response;
+status_t* response;
 int sock;
 
-void display_menu()
-{
-    printf("[1] Send message\n");
-    printf("[2] Connection\n");
-    printf("[3] Exit\n");
-
-    printf("[4] Test\n");
-}
-
-void input(char *output)
+void input(char* output)
 {
     fgets(output, sizeof(output), stdin);
     output[strcspn(output, "\n")] = '\0';
+    getchar();
+}
+
+void display_choice_login()
+{
+    printf("[1] - connection client\n");
+    printf("[2] - connection pro\n");
+    printf("[3] - connection admin\n");
+    printf("[4] - EXIT\n\n");
+}
+void connection()
+{
+    char mail[CHAR_SIZE], token[API_TOKEN_SIZE] = { 0 };
+    printf("Enter your email: ");
+    scanf("%s", mail);
+
+    if (strcmp(mail, "o") == 0) {
+        strcpy(mail, "brehat@gmail.com");
+    }
+
+    printf("Email entered: '%s'\n", mail);
+
+    char* temp_token = get_token_by_email(conn, mail);
+    if (temp_token == NULL) {
+        printf("User not found\n");
+        return;
+    }
+
+    strcpy(token, temp_token);
+    printf("Token: %s\n", token);
+    printf("Connected\n");
+}
+void display_menu_client()
+{
+    printf("[1] - send a message\n");
+    printf("[2] - display unread messages\n");
+    printf("[3] - modify a message\n");
+    printf("[4] - delete a message\n");
+    printf("[5] - display messages history\n");
+    printf("[6] - EXIT\n\n");
+}
+
+void display_menu_pro()
+{
+    printf("[1] - send a message\n");
+    printf("[2] - display unread messages\n");
+    printf("[3] - modify a message\n");
+    printf("[4] - delete a message\n");
+    printf("[5] - display messages history\n");
+    printf("[6] - EXIT\n\n");
+}
+
+void display_menu_admin()
+{
+    printf("[1] - send message\n");
+    printf("[2] - block message\n");
+    printf("[3] - ban user\n");
+    printf("[4] - EXIT\n\n");
 }
 
 void menu_message(int sock)
@@ -48,23 +101,14 @@ void menu_message(int sock)
     send_message(sock, token, message);
 }
 
-void menu_login(int sock)
-{
-    char api_token[CHAR_SIZE];
-
-    printf("Enter your api token: ");
-    input(api_token);
-
-    send_login(sock, api_token);
-}
-
 void disconnect(int sock)
 {
     write(sock, "DISCONNECTED", 12);
     close(sock);
 }
 
-void signal_handler(int sig) {
+void signal_handler(int sig)
+{
     if (sig == SIGINT) {
         disconnect(sock);
         running = 0;
@@ -77,6 +121,15 @@ int main()
     int sock_ret;
     struct sockaddr_in server_addr;
     int choice;
+    // PGconn* conn;
+
+    config_t* config;
+    config = malloc(sizeof(config_t));
+    config_load(config);
+
+    env_load("..");
+
+    db_login(&conn);
 
     signal(SIGINT, signal_handler);
 
@@ -100,23 +153,26 @@ int main()
 
     // Main menu loop
     while (running) {
-        display_menu();
+
+        display_choice_login();
 
         printf("Enter your choice: ");
         scanf("%d", &choice);
-        getchar(); // consume newline
-
+        getchar();
         switch (choice) {
         case 1:
-            menu_message(sock);
+            connection();
             break;
         case 2:
-            menu_login(sock);
+            connection();
             break;
         case 3:
+            send_login(sock, config->admin_api_token);
+            printf("Admin connected\n");
+        case 4:
             disconnect(sock);
             return EXIT_SUCCESS;
-        case 4:
+        case 10:
             send_message(sock, "coucousupertoken", "monmessage\nrelou\n");
             break;
         default:
