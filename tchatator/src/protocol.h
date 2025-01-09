@@ -4,33 +4,13 @@
 #include <sys/socket.h>
 
 #include "types.h"
+#include "database.h"
 
 typedef struct
 {
     int code;
     char message[6];
 } status_t;
-
-typedef struct
-{
-    int sock;
-    pid_t pid;
-    char identity[CHAR_SIZE];
-    char ip[CHAR_SIZE];
-} client_t;
-
-typedef struct
-{
-    int id;
-    char sended_date[DATE_CHAR_SIZE];
-    char modified_date[DATE_CHAR_SIZE];
-    int sender_id;
-    int receiver_id;
-    int deleted;
-    int received;
-    int sended;
-    char content[1000];
-} message_t;
 
 typedef struct
 {
@@ -79,6 +59,8 @@ static const command_def_t COMMANDS_DEFINITIONS[] = {
 };
 
 static const int COMMANDS_COUNT = 4;
+
+static const user_t NOT_CONNECTED_USER = {0, "", ""};
 
 
 char *format_status(status_t status);

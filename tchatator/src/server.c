@@ -12,6 +12,9 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
 #include <signal.h>
 #include <sys/wait.h>
 
@@ -30,10 +33,19 @@
 
 #define CLIENT_CAPACITY_INCR 10
 
+typedef struct
+{
+    int sock;
+    pid_t pid;
+    char ip[CHAR_SIZE];
+    user_t user;
+} client_t;
+
 volatile sig_atomic_t running = 1;
 pid_t server_pid;
 int clients_count;
-pid_t* clients_pid;
+int shmid;
+client_t* clients;
 
 // Send status message to the client
 void send_status(int sock, status_t s, char message[]);
@@ -42,44 +54,13 @@ void signal_handler(int sig);
 // Parse string command
 int parse_command(char command_str[], command_t* command);
 
-void add_client_pid(pid_t pid);
-void remove_client_pid(pid_t pid);
+client_t init_client(int sock, pid_t pid, char ip[], user_t user);
+void add_client(int sock, pid_t pid, char ip[], user_t user);
+void remove_client(pid_t pid);
 
 int main(int argc, char* argv[])
 {
-
-    // int options; // claims the options on the command
-
     int options;
-
-    // put ':' in the starting of the
-    // string so that program can
-    // distinguish between '?' and ':'
-
-    while ((options = getopt(argc, argv, ":if:hvc")) != -1) {
-        // getopt_long() permettrait d'avoir des options en mot complet (genre verbose, help, config, et même de décider si plus de paramètres sont nécessaire)
-        switch (options) {
-        case 'h':
-            printf("\nUsage : build server --[options]\nLaunch the server and allows communication between client and professionnal\nOptions :\n--v, verbose     explains what is currently happening, giving more details\n-h, --help      shows help on the command\n-c --config  ");
-
-            // Usage : gcc [options] fichier…
-            // Options :
-            // -pass-exit-codes         Quitter avec le plus grand code d’erreur d’une phase.
-            // --help                   Afficher cette aide.
-            // --target-help            Afficher les options de ligne de commande spécifiques à la cible (y compris les options de l'assembleur et de l'éditeur de liens).
-
-            break;
-        case 'v':
-            printf("option verbose : ON\n");
-            log_verbose = 1;
-            break;
-        case 'c':
-            printf("option config: %c\n", options);
-            break;
-        }
-    }
-
-    log_verbose = 1;
 
     int sock;
     int sock_conn;
@@ -87,11 +68,12 @@ int main(int argc, char* argv[])
     int sock_conn_addr_size;
     struct sockaddr_in sock_addr;
     struct sockaddr_in sock_conn_addr;
-    char client_ip[CHAR_SIZE];
 
     int client_pid;
     int current_clients_capacity;
+    char client_ip[CHAR_SIZE];
 
+    // Current command stuff
     char command_recv[1000];
     int command_recv_len;
     command_t command;
@@ -107,13 +89,39 @@ int main(int argc, char* argv[])
 
     clients_count = 0;
     current_clients_capacity = CLIENT_CAPACITY_INCR;
-    clients_pid = (pid_t*)malloc(current_clients_capacity * sizeof(pid_t));
+    // clients = (client_t*)malloc(current_clients_capacity * sizeof(client_t));
     server_pid = getpid();
 
+    key_t key = ftok("shmfile", 65);
+    shmid = shmget(key, current_clients_capacity * sizeof(client_t), 0666 | IPC_CREAT);
+    clients = (client_t*)shmat(shmid, (void*)0, 0);
+
+    log_verbose = 0;
     config = malloc(sizeof(config_t));
 
     // Handles options (--help, -h, --verbose, --config, -c, ...) with getopt()
-    // ...
+    while ((options = getopt(argc, argv, ":if:hvc")) != -1) {
+        switch (options) {
+        case 'h':
+            printf("\nUsage : server --[options]\n");
+            printf("Launch the server and allows communication between client and professional\n");
+            printf("Options :\n");
+            printf("--v, verbose     explains what is currently happening, giving more details\n");
+            printf("-h, --help       shows help on the command\n");
+            printf("-c, --config     specify the configuration file\n");
+
+            break;
+        case 'v':
+            printf("option verbose : ON\n");
+            log_verbose = 1;
+            break;
+        case 'c':
+            printf("option config: %c\n", options);
+            break;
+        }
+    }
+
+    log_verbose = 1;  // only for dev
 
     // Load env variables
     env_load("..");
@@ -122,7 +130,6 @@ int main(int argc, char* argv[])
     config_load(config);
 
     // Set log settings
-    // log_verbose = 1;  // for now delete when options are available
     strcpy(log_file_path, config->log_file);
 
     // Login to the DB
@@ -182,30 +189,23 @@ int main(int argc, char* argv[])
             log_info("Increase client capacity");
             current_clients_capacity += CLIENT_CAPACITY_INCR;
 
-            clients_pid = (pid_t*)realloc(clients_pid, current_clients_capacity * sizeof(pid_t));
+            clients = (client_t*)realloc(clients, current_clients_capacity * sizeof(client_t));
         }
 
         // Create a new child process
         if ((client_pid = fork()) == 0) {
             close(sock);
 
-            client_t client;
-            client.sock = sock_conn;
-            client.pid = getpid();
-            strcpy(client.identity, ""); // TODO
-            strcpy(client.ip, client_ip);
+            int client_login = 0;
+            client_t client = init_client(sock_conn, getpid(), client_ip, NOT_CONNECTED_USER);
 
             // For log
-            strcpy(log_client_ip, client.ip);
+            strcpy(log_client_ip, client_ip);
 
             // Child loop
             while (1) {
+                memset(command_recv, 0, sizeof(command_recv));
                 command_recv_len = read(sock_conn, command_recv, sizeof(command_recv));
-
-                // Format received string
-                command_recv[command_recv_len] = '\0';
-                trim(command_recv);
-                command_recv_len = strlen(command_recv);
 
                 // Disconnect the client
                 if (strcmp(command_recv, "DISCONNECTED") == 0) {
@@ -224,30 +224,32 @@ int main(int argc, char* argv[])
                     if (strcmp(command.name, LOGIN) == 0) {
                         // For log
                         strcpy(log_client_identity, get_command_param_value(command, "api-token"));
+
+                        send_status(sock_conn, STATUS_OK, "Connexion réussie");
                     } else if (strcmp(command.name, SEND_MESSAGE) == 0) {
+
+                        send_status(sock_conn, STATUS_OK, "Message envoyé");
                     } else if (strcmp(command.name, UPDATE_MESSAGE) == 0) {
                     } else if (strcmp(command.name, DELETE_MESSAGE) == 0) {
                     } else {
                         send_status(sock_conn, STATUS_DENIED, "Action non autorisée");
                     }
                 }
-
-                send_status(sock_conn, STATUS_OK, "Message envoyé");
             }
 
             exit(0);
-        } else if (clients_pid[clients_count - 1] == -1) {
+        } else if (client_pid == -1) {
             perror("Fork");
             abort();
         } else {
             // Add the client pid to the list
-            add_client_pid(client_pid);
+            add_client(sock_conn, client_pid, client_ip, NOT_CONNECTED_USER);
             log_info("New connection with %s (%d)", client_ip, client_pid);
         }
 
         printf("Clients count %d\n", clients_count);
         for (int i = 0; i < clients_count; i++) {
-            printf("Client %d\n", clients_pid[i]);
+            printf("Client %d\n", clients[i]);
         }
     }
 
@@ -283,7 +285,7 @@ void signal_handler(int sig)
             child = waitpid(0, &status, WNOHANG);
             if (child > 0 && WIFEXITED(status) && WEXITSTATUS(status) == 0) {
                 log_info("Child %d succesully quit", (int)child);
-                remove_client_pid(child);
+                remove_client(child);
             } else if (child < 0 && errno == EINTR) {
                 continue;
             } else {
@@ -294,6 +296,8 @@ void signal_handler(int sig)
 
     if (sig == SIGINT || sig == SIGQUIT) {
         running = 0;
+        shmdt(clients);
+        shmctl(shmid, IPC_RMID, NULL);
     }
 
     if (sig == SIGINT && server_pid == self) {
@@ -322,6 +326,7 @@ void signal_handler(int sig)
     }
 
     if (sig == SIGQUIT) {
+        // Kill children
         if (server_pid != self) {
             // printf("Child %d kill itself\n", (int)self);
             _exit(0);
@@ -346,11 +351,14 @@ int parse_command(char command_str[], command_t* command)
 
     memset(line, 0, CHAR_SIZE);
 
+    printf("Command str: %s\n", command_str);
+    printf("Command str len: %d\n", strlen(command_str));
+
+    // Check if the command exist
+    // and get the command name
     while (!is_command_exist)
     {
         c = command_str[i];
-
-        // printf("Char: %c %d\n", c, i);
 
         if (c != '\n') {
             strncat(line, &c, 1);
@@ -367,7 +375,7 @@ int parse_command(char command_str[], command_t* command)
 
             command->params = malloc(command_def.params_count * sizeof(command_param_t));
 
-            printf("Command name: %s\n", command->name);
+            // printf("Command name: %s\n", command->name);
 
             is_command_exist = 1;
 
@@ -377,14 +385,25 @@ int parse_command(char command_str[], command_t* command)
         i++;
     }
 
-    while (param_index < command_def.params_count && i < strlen(command_str)) {
-        c = command_str[i];
+    if (!is_command_exist) {
+        return -1;
+    }
 
-        // printf("Char: %c %d\n", c, i);
+    while (param_index < command_def.params_count) {
+        c = command_str[i];
 
         if (c != '\n') {
             strncat(line, &c, 1);
         } else {
+            // Get all last caracters of command_str
+            if (param_index == command_def.params_count - 1) {
+                while (i < strlen(command_str)) {
+                    c = command_str[i];
+                    strncat(line, &c, 1);
+                    i++;
+                }
+            }
+
             trim(line);
 
             printf("Line: %s\n", line);
@@ -402,18 +421,6 @@ int parse_command(char command_str[], command_t* command)
         i++;
     }
 
-    if (strlen(line) > 0) {
-        trim(line);
-
-        printf("Line: %s\n", line);
-
-        param_name = strtok(line, ":");
-        param_value = strtok(NULL, ":");
-
-        strcpy(command->params[param_index].name, param_name);
-        strcpy(command->params[param_index].value, param_value);
-    }
-
     // for (int i = 0; i < command_def.params_count; i++) {
     //     printf("Param %d: %s %s\n", i, command->params[i].name, command->params[i].value);
     // }
@@ -423,26 +430,40 @@ int parse_command(char command_str[], command_t* command)
     return 0;
 }
 
-void add_client_pid(pid_t pid)
+client_t init_client(int sock, pid_t pid, char ip[], user_t user) {
+    client_t client;
+
+    client.sock = sock;
+    client.pid = pid;
+    strcpy(client.ip, ip);
+    client.user = user;
+
+    return client;
+}
+
+void add_client(int sock, pid_t pid, char ip[], user_t user)
 {
+    client_t client;
+
     // Check if the client is already registered
     for (int i = 0; i < clients_count; i++) {
-        if (clients_pid[i] == pid) {
+        if (clients[i].pid == pid) {
             return;
         }
     }
 
-    clients_pid[clients_count] = pid;
+    client = init_client(sock, pid, ip, user);
+    clients[clients_count] = client;
     clients_count++;
 }
 
-void remove_client_pid(pid_t pid)
+void remove_client(pid_t pid)
 {
     for (int i = 0; i < clients_count; i++) {
-        printf("Client %d\n", clients_pid[i]);
-        if (clients_pid[i] == pid) {
+        printf("Client %d\n", clients[i].user.username);
+        if (clients[i].pid == pid) {
             for (int j = i; j < clients_count - 1; j++) {
-                clients_pid[j] = clients_pid[j + 1];
+                clients[j] = clients[j + 1];
             }
             clients_count--;
             break;
