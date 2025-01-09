@@ -1,22 +1,23 @@
+#include <ctype.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <string.h>
-#include <ctype.h>
+#include <unistd.h>
 
 #include "config.h"
 #include "utils.h"
 
 #define MAX_LINE_SIZE 100
 
-void config_load(config_t *c) {
+void config_load(config_t* c)
+{
     int fd;
     int len;
     char buf;
     char line[MAX_LINE_SIZE];
-    char *var_name;
-    char *var_value;
+    char* var_name;
+    char* var_value;
 
     // Open config file
     fd = open("config", O_RDONLY);
@@ -28,7 +29,7 @@ void config_load(config_t *c) {
             strncat(line, &buf, 1);
         } else {
 
-            // Check if it is not a commented line 
+            // Check if it is not a commented line
             // and which contains a equal
             if (line[0] != '#' && strstr(line, "=")) {
 
@@ -53,6 +54,8 @@ void config_load(config_t *c) {
                     c->max_message_length = atoi(var_value);
                 } else if (strcmp(var_name, "max-message-reception-block") == 0) {
                     c->max_message_reception_block = atoi(var_value);
+                } else if (strcmp(var_name, "admin_api_token") == 0) {
+                    strcpy(c->admin_api_token, var_value);
                 }
             }
 
@@ -67,14 +70,15 @@ void config_load(config_t *c) {
     }
 }
 
-void env_load(char dir_path[]) {
+void env_load(char dir_path[])
+{
     int fd;
     int len;
     char buf;
-    char line[MAX_LINE_SIZE] = {0};
-    char *var_name;
+    char line[MAX_LINE_SIZE] = { 0 };
+    char* var_name;
     char var_value[CHAR_SIZE];
-    char *var_value_tmp;
+    char* var_value_tmp;
     char file_path[CHAR_SIZE];
 
     sprintf(file_path, "%s/.env", dir_path);
@@ -88,8 +92,7 @@ void env_load(char dir_path[]) {
             if (line[0] != '#' && strstr(line, "=")) {
                 var_name = strtok(line, "=");
 
-                while ((var_value_tmp = strtok(NULL, "=")) != NULL)
-                {
+                while ((var_value_tmp = strtok(NULL, "=")) != NULL) {
                     strcat(var_value, var_value_tmp);
                     strcat(var_value, "=");
                 }
