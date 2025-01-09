@@ -25,6 +25,40 @@ $iconsNames = [
     "ferris-wheel",
 ];
 ?>
+<div class="wave">
+    <svg class="waveSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none">
+        <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 
+            58-18 88-18s
+            58 18 88 18 
+            58-18 88-18 
+            58 18 88 18
+            v44h-352z" />
+        </defs>
+        <g class="waves">
+            <use xlink:href="#gentle-wave" x="50" y="0" fill="#FFA800" fill-opacity="1" />
+            <use xlink:href="#gentle-wave" x="50" y="3" fill="#00A2FF" fill-opacity="1" />
+            <use xlink:href="#gentle-wave" x="50" y="6" fill="#0057FF" fill-opacity="1" />
+        </g>
+    </svg>
+    <svg class="waveSvg2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none">
+        <defs>
+            <path id="gentle-wave" d="M-160 44c30 0 
+            58-18 88-18s
+            58 18 88 18 
+            58-18 88-18 
+            58 18 88 18
+            v44h-352z" />
+        </defs>
+        <g class="waves">
+            <use xlink:href="#gentle-wave" x="50" y="0" fill="#FFA800" fill-opacity="1" />
+            <use xlink:href="#gentle-wave" x="50" y="3" fill="#00A2FF" fill-opacity="1" />
+            <use xlink:href="#gentle-wave" x="50" y="6" fill="#0057FF" fill-opacity="1" />
+        </g>
+    </svg>
+</div>
 <!-- Search bar, sort and filter -->
 <div class="flex flex-col mb-4">
     <x-input rounded>
