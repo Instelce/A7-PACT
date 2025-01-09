@@ -23,6 +23,12 @@ typedef struct {
     char api_token[API_TOKEN_SIZE];
 } user_t;
 
+typedef enum {
+    MEMBER,
+    PROFESSIONAL,
+    ADMIN
+} user_type_t;
+
 // Utils functions
 void db_login(PGconn** conn);
 void db_exit(PGconn* conn);
@@ -34,6 +40,7 @@ char* get_token_by_email(PGconn* conn, char email[]);
 int db_get_user(PGconn *conn, user_t *user, int id);
 int db_get_user_by_email(PGconn *conn, user_t *user, char email[]);
 int db_get_user_by_api_token(PGconn *conn, user_t *user, char api_token[]);
+user_type_t db_get_user_type(PGconn *conn, int id);
 
 void db_create_message(PGconn *conn, message_t *message);
 void db_update_message(PGconn *conn, message_t *message);

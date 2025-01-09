@@ -146,10 +146,13 @@ int main(int argc, char* argv[])
     db_login(&conn);
 
     // test db
-    // user_t user;
+    user_t user;
     // user_t user2;
     // printf("Get user\n");
-    // db_get_user(conn, &user, 2);
+    db_get_user(conn, &user, 1);
+    printf("User email : %s\n", user.email);
+    printf("User type : %d\n", db_get_user_type(conn, 1));
+
     // printf("%s %s %d\n", user.email, user.api_token, user.id);
     // db_get_user_by_email(conn, &user2, "rouevictor@gmail.com");
     // printf("%s %d\n", user2.email, user2.id);
@@ -301,7 +304,9 @@ int main(int argc, char* argv[])
 
                             send_status(sock_conn, STATUS_OK, "Message bien reçu et traité");
                         } else if (strcmp(command.name, UPDATE_MESSAGE) == 0) {
+
                         } else if (strcmp(command.name, DELETE_MESSAGE) == 0) {
+                            
                         }
                     } else {
                         send_status(sock_conn, STATUS_DENIED, "Action non autorisée");
