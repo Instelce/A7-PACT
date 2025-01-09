@@ -133,7 +133,16 @@ int main(int argc, char* argv[])
     strcpy(log_file_path, config->log_file);
 
     // Login to the DB
-    db_login(conn);
+    db_login(&conn);
+
+    // test db
+    // user_t user;
+    // user_t user2;
+    // printf("Get user\n");
+    // get_user(conn, &user, 2);
+    // printf("%s %s %d\n", user.email, user.api_token, user.id);
+    // get_user_by_email(conn, &user2, "rouevictor@gmail.com");
+    // printf("%s %d\n", user2.email, user2.id);
 
     log_info("Starting Tchatator");
 
@@ -226,11 +235,15 @@ int main(int argc, char* argv[])
                         strcpy(log_client_identity, get_command_param_value(command, "api-token"));
 
                         send_status(sock_conn, STATUS_OK, "Connexion réussie");
-                    } else if (strcmp(command.name, SEND_MESSAGE) == 0) {
+                    }
 
-                        send_status(sock_conn, STATUS_OK, "Message envoyé");
-                    } else if (strcmp(command.name, UPDATE_MESSAGE) == 0) {
-                    } else if (strcmp(command.name, DELETE_MESSAGE) == 0) {
+                    if (client_login) {
+                        if (strcmp(command.name, SEND_MESSAGE) == 0) {
+
+                            send_status(sock_conn, STATUS_OK, "Message envoyé");
+                        } else if (strcmp(command.name, UPDATE_MESSAGE) == 0) {
+                        } else if (strcmp(command.name, DELETE_MESSAGE) == 0) {
+                        }
                     } else {
                         send_status(sock_conn, STATUS_DENIED, "Action non autorisée");
                     }
@@ -460,7 +473,7 @@ void add_client(int sock, pid_t pid, char ip[], user_t user)
 void remove_client(pid_t pid)
 {
     for (int i = 0; i < clients_count; i++) {
-        printf("Client %d\n", clients[i].user.username);
+        printf("Client %d\n", clients[i].user.email);
         if (clients[i].pid == pid) {
             for (int j = i; j < clients_count - 1; j++) {
                 clients[j] = clients[j + 1];
