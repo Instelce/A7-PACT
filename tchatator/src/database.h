@@ -13,8 +13,7 @@ typedef struct
     int sender_id;
     int receiver_id;
     int deleted;
-    int received;
-    int sended;
+    int seen;
     char content[LARGE_CHAR_SIZE];
 } message_t;
 
@@ -31,8 +30,12 @@ void db_exit(PGconn* conn);
 user_t init_user(int id, char email[], char api_token[]);
 message_t init_message(int sender_id, int receiver_id, char content[]);
 
-int get_user(PGconn* conn, user_t* user, int id);
-int get_user_by_email(PGconn* conn, user_t* user, char email[]);
 char* get_token_by_email(PGconn* conn, char email[]);
+int db_get_user(PGconn *conn, user_t *user, int id);
+int db_get_user_by_email(PGconn *conn, user_t *user, char email[]);
+int db_get_user_by_api_token(PGconn *conn, user_t *user, char api_token[]);
+
+void db_create_message(PGconn *conn, message_t *message);
+void db_update_message(PGconn *conn, message_t *message);
 
 #endif // DATABASE_H

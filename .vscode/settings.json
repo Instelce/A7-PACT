@@ -29,7 +29,12 @@
         "deque": "c",
         "limits": "c",
         "vector": "c",
+<<<<<<< Updated upstream
         "config.h": "c"
+=======
+        "utils.h": "c",
+        "__locale": "c"
+>>>>>>> Stashed changes
     },
     "C_Cpp.clang_format_fallbackStyle": "WebKit"
 }

@@ -91,7 +91,7 @@ void add_command_param(command_t* command, char name[], char value[])
     }
 }
 
-void request(int sock, char buf[])
+status_t* request(int sock, char buf[])
 {
     char response[1024];
     memset(response, 0, sizeof(response));
@@ -107,29 +107,32 @@ void request(int sock, char buf[])
         exit(EXIT_FAILURE);
     }
 
-    printf("%s\n", response);
+    // printf("%s\n", response);
 
-    // return parse_status(buf);
+    return parse_status(response);
 }
 
-void send_message(int sock, char token[], char message[])
+status_t* send_message(int sock, char token[], char message[], int receiver_id)
 {
     command_t command = create_command(SEND_MESSAGE);
-    char message_len[5];
+    char int_convertion[5];
     char* buf;
 
-    sprintf(message_len, "%d", strlen(message));
-
     add_command_param(&command, "token", token);
-    add_command_param(&command, "message-length", message_len);
+
+    sprintf(int_convertion, "%d", strlen(message));
+    add_command_param(&command, "message-length", int_convertion);
+    sprintf(int_convertion, "%d", receiver_id);
+    add_command_param(&command, "receiver-id", int_convertion);
+
     add_command_param(&command, "content", message);
 
     buf = format_command(command);
 
-    request(sock, buf);
+    return request(sock, buf);
 }
 
-void send_login(int sock, char api_token[])
+status_t* send_login(int sock, char api_token[])
 {
     command_t command = create_command(LOGIN);
     char* buf;
@@ -138,5 +141,5 @@ void send_login(int sock, char api_token[])
 
     buf = format_command(command);
 
-    request(sock, buf);
+    return request(sock, buf);
 }
