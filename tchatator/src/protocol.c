@@ -4,17 +4,31 @@
 #include <unistd.h>
 
 #include "protocol.h"
+#include "types.h"
+#include "utils.h"
 
-char* format_status(status_t status)
+char* format_response(response_t response)
 {
-    char* format = malloc(256);
+    char* format = malloc(LARGE_CHAR_SIZE);
+    sprintf(format, "%s\n", format_status(response.status));
+
+    for (int i = 0; i < response.data_list_size; i++) {
+        sprintf(format, "%s%s:%s\n", format, response.data_list[i].name, response.data_list[i].value);
+    }
+
+    return format;
+}
+
+char* format_status(response_status_t status)
+{
+    char* format = malloc(CHAR_SIZE);
     sprintf(format, "%d/%s", status.code, status.message);
     return format;
 }
 
 char* format_command(command_t command)
 {
-    char* format = malloc(1024);
+    char* format = malloc(LARGE_CHAR_SIZE);
     command_def_t command_def = get_command_def(command.name);
 
     sprintf(format, "%s\n", command.name);
@@ -25,9 +39,9 @@ char* format_command(command_t command)
     return format;
 }
 
-status_t* parse_status(char status_str[])
+response_status_t* parse_status(char status_str[])
 {
-    status_t* status = malloc(sizeof(status_t));
+    response_status_t* status = malloc(sizeof(response_status_t));
     char* code_str = strtok(status_str, "/");
     char* message = strtok(NULL, "/");
 
@@ -47,7 +61,7 @@ int command_exist(char name[])
     return 0;
 }
 
-command_def_t get_command_def(char name[])
+command_def_t get_command_def(const char* name)
 {
     for (int i = 0; i < sizeof(COMMANDS_DEFINITIONS) / sizeof(COMMANDS_DEFINITIONS[0]); i++) {
         if (strcmp(COMMANDS_DEFINITIONS[i].name, name) == 0) {
@@ -91,9 +105,9 @@ void add_command_param(command_t* command, char name[], char value[])
     }
 }
 
-status_t* request(int sock, char buf[])
+response_status_t* request(int sock, char buf[])
 {
-    char response[1024];
+    char response[LARGE_CHAR_SIZE];
     memset(response, 0, sizeof(response));
 
     if (write(sock, buf, strlen(buf)) < 0) {
@@ -112,19 +126,14 @@ status_t* request(int sock, char buf[])
     return parse_status(response);
 }
 
-status_t* send_message(int sock, char token[], char message[], int receiver_id)
+response_status_t* send_message(int sock, char token[], char message[], int receiver_id)
 {
     command_t command = create_command(SEND_MESSAGE);
-    char int_convertion[5];
     char* buf;
 
     add_command_param(&command, "token", token);
-
-    sprintf(int_convertion, "%d", strlen(message));
-    add_command_param(&command, "message-length", int_convertion);
-    sprintf(int_convertion, "%d", receiver_id);
-    add_command_param(&command, "receiver-id", int_convertion);
-
+    add_command_param(&command, "message-length", to_string(strlen(message)));
+    add_command_param(&command, "receiver-id", to_string(receiver_id));
     add_command_param(&command, "content", message);
 
     buf = format_command(command);
@@ -132,7 +141,7 @@ status_t* send_message(int sock, char token[], char message[], int receiver_id)
     return request(sock, buf);
 }
 
-status_t* send_login(int sock, char api_token[])
+response_status_t* send_login(int sock, char api_token[])
 {
     command_t command = create_command(LOGIN);
     char* buf;
@@ -142,4 +151,44 @@ status_t* send_login(int sock, char api_token[])
     buf = format_command(command);
 
     return request(sock, buf);
+}
+
+response_status_t* send_uptade_message(int sock, char token[], int message_id, char message[])
+{
+    command_t command = create_command(UPDATE_MESSAGE);
+
+    add_command_param(&command, "token", token);
+    add_command_param(&command, "message-id", to_string(message_id));
+    add_command_param(&command, "message-length", to_string(strlen(message)));
+    add_command_param(&command, "content", message);
+
+    return request(sock, format_command(command));
+}
+
+response_status_t* send_delete_message(int sock, char token[], int message_id)
+{
+    command_t command = create_command(DELETE_MESSAGE);
+
+    add_command_param(&command, "token", token);
+    add_command_param(&command, "message-id", to_string(message_id));
+
+    return request(sock, format_command(command));
+}
+
+response_status_t* send_get_new_message(int sock, char token[])
+{
+    command_t command = create_command(GET_NEW_MESSAGES);
+
+    add_command_param(&command, "token", token);
+
+    return request(sock, format_command(command));
+}
+
+response_status_t* send_is_connected(int sock, int user_id)
+{
+    command_t command = create_command(IS_CONNECTED);
+
+    add_command_param(&command, "user-id", to_string(user_id));
+
+    return request(sock, format_command(command));
 }

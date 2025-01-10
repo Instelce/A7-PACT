@@ -14,7 +14,27 @@ getUser().then(u => {
     // ---------------------------------------------------------------------------------------------- //
 
     if (user) {
+        const socket = new WebSocket('ws://localhost:4242');
 
+        socket.addEventListener("open", () => {
+            console.log('Connected to the server');
+
+            // Send bytes to the server
+            socket.send(Uint8Array.from([0x00, 0x01, 0x02, 0x03, 0x04]));
+            socket.close();
+        });
+
+        socket.addEventListener("message", (event) => {
+            console.log('Message from server ', event.data);
+        });
+
+        socket.addEventListener("close", () => {
+            console.log('Disconnected from the server');
+        });
+
+        socket.addEventListener("error", (error) => {
+            console.log('Error: ', error);
+        });
     }
 });
 // ---------------------------------------------------------------------------------------------- //

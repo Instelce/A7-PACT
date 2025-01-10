@@ -4,8 +4,10 @@
 #include <stdarg.h>
 #include <time.h>
 #include <stdlib.h>
+#include <termios.h>
 
 #include "utils.h"
+#include <unistd.h>
 
 // Generated with ChatGPT
 void trim(char *s) {
@@ -25,6 +27,12 @@ void set_date_now(char *date) {
     struct tm *tm = localtime(&now);
 
     sprintf(date, "%d-%02d-%02d %02d:%02d:%02d", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+}
+
+char* to_string(int num) {
+    char *str = malloc(12);
+    sprintf(str, "%d", num);
+    return str;
 }
 
 void clear_term() {
@@ -71,4 +79,44 @@ void cprintf(color_t color, char *format, ...) {
     va_end(args);
 
     printf("\033[0m");
+}
+
+
+int get_arrow_key()
+{
+    int c = getchar();
+    if (c == 27) { // Escape sequence starts with 27
+        getchar(); // Skip the '['
+        c = getchar(); // Get the actual arrow key code
+        switch (c) {
+        case 'A':
+            return 'U'; // Up arrow
+        case 'B':
+            return 'D'; // Down arrow
+        case 'C':
+            return 'R'; // Right arrow
+        case 'D':
+            return 'L'; // Left arrow
+        }
+    }
+    return c;
+}
+
+// Function to set terminal to raw mode
+void set_raw_mode()
+{
+    struct termios raw;
+
+    tcgetattr(STDIN_FILENO, &raw);
+    raw.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &raw);
+}
+
+// Function to restore terminal to original settings
+void reset_terminal_mode()
+{
+    struct termios original;
+    tcgetattr(STDIN_FILENO, &original);
+    original.c_lflag |= (ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &original);
 }

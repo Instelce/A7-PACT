@@ -2,7 +2,7 @@ CC = cc
 CFLAGS = -Wall
 
 output = bin
-utils = src/database.c src/protocol.c src/log.c src/config.c src/utils.c
+utils = src/database.c src/protocol.c src/log.c src/config.c src/utils.c src/websocket.c src/crypto.c
 
 server: $(utils) src/server.c
 	mkdir -p $(output)

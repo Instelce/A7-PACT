@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <sys/ipc.h>
@@ -30,6 +32,7 @@
 #include "log.h"
 #include "protocol.h"
 #include "utils.h"
+#include "websocket.h"
 
 #define CLIENT_CAPACITY_INCR 10
 
@@ -50,10 +53,11 @@ int* clients_count;
 int shmid_clients;
 int shmid_clients_count;
 
-// Send status message to the client
-void send_status(int sock, status_t s, char message[]);
 // Handle signals (SIGINT, SIGQUIT)
 void signal_handler(int sig);
+// Send status message to the client
+void send_status(int sock, response_status_t s, char message[]);
+void set_sock_timeout(int sock, int timeout_ms);
 // Parse string command
 int parse_command(char command_str[], command_t* command);
 
@@ -63,6 +67,46 @@ void remove_client(pid_t pid);
 client_t get_client(pid_t pid);
 int client_exist(pid_t pid);
 int client_connected(int user_id);
+
+void handle_client_frames(int client_socket)
+{
+    unsigned char buffer[1024];
+    int bytes_received;
+
+    while ((bytes_received = recv(client_socket, buffer, sizeof(buffer), 0)) > 0) {
+        unsigned char opcode = buffer[0] & 0x0F; // Extract opcode
+
+        // printf("Received frame with opcode 0x%02X\n", opcode);
+
+        switch (opcode) {
+        case 0x1: // Text frame
+            // Handle text data
+            printf("Text frame received: %s\n", buffer + 2);
+            break;
+        case 0x2: // Binary frame
+            // Handle binary data
+            printf("Binary frame received.\n");
+            break;
+        case 0x8: // Close frame
+            // Handle close
+            printf("Close frame received. Closing connection.\n");
+            return;
+        case 0x9: // Ping frame
+            // Respond with Pong
+            printf("Ping frame received. Sending Pong.\n");
+            send(client_socket, "\x8A\x00", 2, 0); // Simple pong response
+            break;
+        case 0xA: // Pong frame
+            // Handle Pong response
+            printf("Pong frame received.\n");
+            break;
+        default:
+            // Unknown frame type
+            printf("Unknown frame type received.\n");
+            break;
+        }
+    }
+}
 
 int main(int argc, char* argv[])
 {
@@ -79,6 +123,7 @@ int main(int argc, char* argv[])
     int client_pid;
     int current_clients_max_capacity;
     char client_ip[CHAR_SIZE];
+    int is_ws_client; // bool to know if the client is a websocket client
 
     // Current command stuff
     char command_recv[LARGE_CHAR_SIZE];
@@ -105,6 +150,8 @@ int main(int argc, char* argv[])
     shmid_clients_count = shmget(key_count, sizeof(int), 0666 | IPC_CREAT);
     clients_count = (int*)shmat(shmid_clients_count, (void*)0, 0);
     *clients_count = 0;
+
+    is_ws_client = 0;
 
     log_verbose = 0;
     config = malloc(sizeof(config_t));
@@ -146,12 +193,12 @@ int main(int argc, char* argv[])
     db_login(&conn);
 
     // test db
-    user_t user;
+    // user_t user;
     // user_t user2;
     // printf("Get user\n");
-    db_get_user(conn, &user, 1);
-    printf("User email : %s\n", user.email);
-    printf("User type : %d\n", db_get_user_type(conn, 1));
+    // db_get_user(conn, &user, 1);
+    // printf("User email : %s\n", user.email);
+    // printf("User type : %d\n", db_get_user_type(conn, 1));
 
     // printf("%s %s %d\n", user.email, user.api_token, user.id);
     // db_get_user_by_email(conn, &user2, "rouevictor@gmail.com");
@@ -191,6 +238,8 @@ int main(int argc, char* argv[])
     sock_conn_addr_size = sizeof(sock_conn_addr);
 
     while (running) {
+        is_ws_client = 0;
+
         sock_conn = accept(sock, (struct sockaddr*)&sock_conn_addr, (socklen_t*)&sock_conn_addr_size);
 
         if (sock_conn < 0) {
@@ -198,8 +247,28 @@ int main(int argc, char* argv[])
             exit(1);
         }
 
-        if (!running) {
+        if (!running)
             break;
+
+        // Check if the client is a websocket client
+        handshake_request_t handshake_request;
+        char ws_handshake_request[LARGE_CHAR_SIZE];
+        memset(ws_handshake_request, 0, sizeof(ws_handshake_request));
+
+        set_sock_timeout(sock_conn, 500);
+        recv(sock_conn, ws_handshake_request, sizeof(ws_handshake_request), 0);
+        set_sock_timeout(sock_conn, 0);
+
+        if (is_ws_handshake(ws_handshake_request)) {
+            ws_parse_handshake_request(ws_handshake_request, &handshake_request);
+            is_ws_client = 1;
+
+            // Send handshake response
+            ws_send_handshake(sock_conn, &handshake_request);
+
+            handle_client_frames(sock_conn);
+            ws_send_text_frame(sock_conn, "Coucou le client");
+            // printf("request %s\n", command_recv);
         }
 
         // Retrieve the client ip and port
@@ -212,9 +281,12 @@ int main(int argc, char* argv[])
             log_info("Increase client capacity");
             current_clients_max_capacity += CLIENT_CAPACITY_INCR;
 
-            shmdt(clients);
             shmid_clients = shmget(key, current_clients_max_capacity * sizeof(client_t), 0666 | IPC_CREAT);
-            clients = (client_t*)shmat(shmid_clients, (void*)0, 0);
+
+            client_t* new_clients = (client_t*)shmat(shmid_clients, (void*)0, 0);
+            memcpy(new_clients, clients, (*clients_count) * sizeof(client_t));
+            shmdt(clients);
+            clients = new_clients;
         }
 
         // Create a new child process
@@ -224,6 +296,7 @@ int main(int argc, char* argv[])
             int client_id = *clients_count;
             char api_token[API_TOKEN_SIZE];
             int client_login = 0;
+            message_t message;
 
             // For log
             strcpy(log_client_ip, client_ip);
@@ -235,11 +308,16 @@ int main(int argc, char* argv[])
                 //     printf("C Client %d %s\n", clients[i].ip, clients[i].user.email);
                 // }
 
-                // Wait for a command
+                if (is_ws_client) {
+                    continue;
+                }
+
                 memset(command_recv, 0, sizeof(command_recv));
+
+                // Wait for a client command
                 command_recv_len = recv(sock_conn, command_recv, sizeof(command_recv), 0);
 
-                // printf("Command received: %s\n", command_recv);
+                printf("Command received: %s\n", command_recv);
 
                 if (command_recv_len < 0) {
                     perror("Error reading from socket");
@@ -254,8 +332,10 @@ int main(int argc, char* argv[])
                 command_parsed = parse_command(command_recv, &command);
 
                 if (command_parsed == -1) {
-                    send_status(sock_conn, STATUS_MIS_FORMAT, "Message mal formaté");
-                    log_info("Invalid action received");
+                    if (!is_ws_client) {
+                        send_status(sock_conn, STATUS_MIS_FORMAT, "Message mal formaté");
+                        log_info("Invalid action received");
+                    }
                     continue;
                 } else {
                     log_info("Action received [%s]", command.name);
@@ -282,17 +362,14 @@ int main(int argc, char* argv[])
                         }
                     }
 
-                    // Handle all commands that need to be logged in
                     if (client_login) {
+                        // Check if the token is valid
+                        if (strcmp(get_command_param_value(command, "token"), clients[client_id].user.api_token) != 0) {
+                            send_status(sock_conn, STATUS_UNAUTHORIZED, "Client non identifié");
+                            continue;
+                        }
+                        // Handle all commands that need to be logged in
                         if (strcmp(command.name, SEND_MESSAGE) == 0) {
-                            // Check if the token is valid
-                            if (strcmp(get_command_param_value(command, "token"), clients[client_id].user.api_token) != 0) {
-                                send_status(sock_conn, STATUS_UNAUTHORIZED, ": Client non identifié");
-                                continue;
-                            }
-
-                            message_t message;
-
                             message = init_message(
                                 clients[client_id].user.id,
                                 atoi(get_command_param_value(command, "receiver-id")),
@@ -304,9 +381,18 @@ int main(int argc, char* argv[])
 
                             send_status(sock_conn, STATUS_OK, "Message bien reçu et traité");
                         } else if (strcmp(command.name, UPDATE_MESSAGE) == 0) {
+                            db_get_message(conn, atoi(get_command_param_value(command, "message-id")), &message);
 
+                            strcpy(message.content, get_command_param_value(command, "content"));
+
+                            db_update_message(conn, &message);
+
+                            send_status(sock_conn, STATUS_OK, "Message mis à jour avec succès");
                         } else if (strcmp(command.name, DELETE_MESSAGE) == 0) {
-                            
+                            db_delete_message(conn, atoi(get_command_param_value(command, "message-id")));
+
+                            send_status(sock_conn, STATUS_OK, "Message supprimé avec succès");
+                        } else if (strcmp(command.name, IS_CONNECTED) == 0) {
                         }
                     } else {
                         send_status(sock_conn, STATUS_DENIED, "Action non autorisée");
@@ -321,7 +407,7 @@ int main(int argc, char* argv[])
         } else {
             // Add the client to the list
             add_client(sock_conn, client_pid, client_ip, NOT_CONNECTED_USER);
-            log_info("New connection with %s (%d)", client_ip, client_pid);
+            log_info("New%s connection with %s (%d)", is_ws_client ? " websocket" : "", client_ip, client_pid);
         }
 
         // printf("S Clients count %d\n", *clients_count);
@@ -342,7 +428,7 @@ int main(int argc, char* argv[])
     return EXIT_SUCCESS;
 }
 
-void send_status(int sock, status_t s, char message[])
+void send_status(int sock, response_status_t s, char message[])
 {
     char complete_message[CHAR_SIZE];
 
@@ -414,6 +500,14 @@ void signal_handler(int sig)
             _exit(0);
         }
     }
+}
+
+void set_sock_timeout(int sock, int timeout_ms)
+{
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = timeout_ms;
+    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(struct timeval));
 }
 
 int parse_command(char command_str[], command_t* command)

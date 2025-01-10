@@ -161,6 +161,35 @@ int db_get_user_by_api_token(PGconn* conn, user_t* user, char api_token[])
     return 1;
 }
 
+int db_get_message(PGconn* conn, int message_id, message_t* message) {
+    PGresult* res;
+    char query[256];
+
+    sprintf(query, "SELECT sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE id = %d", message_id);
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Error when fetching message");
+    }
+
+    if (PQntuples(res) == 0) {
+        PQclear(res);
+        return 0;
+    }
+
+    strcpy(message->sended_date, PQgetvalue(res, 0, 0));
+    strcpy(message->modified_date, PQgetvalue(res, 0, 1));
+    message->sender_id = atoi(PQgetvalue(res, 0, 2));
+    message->receiver_id = atoi(PQgetvalue(res, 0, 3));
+    message->deleted = atoi(PQgetvalue(res, 0, 4));
+    message->seen = atoi(PQgetvalue(res, 0, 5));
+    strcpy(message->content, PQgetvalue(res, 0, 6));
+
+    PQclear(res);
+
+    return 1;
+}
+
 void db_create_message(PGconn* conn, message_t* message)
 {
     PGresult* res;
@@ -169,7 +198,11 @@ void db_create_message(PGconn* conn, message_t* message)
     sprintf(query, "INSERT INTO message (sended_date, modified_date, sender_id, receiver_id, deleted, seen, content) VALUES ('%s', '%s', %d, %d, '%s', '%s', '%s')",
         message->sended_date, message->modified_date, message->sender_id, message->receiver_id, db_bool(message->deleted), db_bool(message->seen), message->content);
 
+    // printf("%s\n", query);
+
     res = PQexec(conn, query);
+
+    // printf("%s\n", PQresultErrorMessage(res));
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         db_error(conn, "Error when creating message");
@@ -184,6 +217,8 @@ void db_update_message(PGconn *conn, message_t *message) {
     PGresult *res;
     char query[256];
 
+    set_date_now(message->modified_date);
+
     sprintf(query, "UPDATE message SET modified_date = '%s', deleted = '%s', seen = '%s', content = '%s' WHERE id = %d",
         message->modified_date, db_bool(message->deleted), db_bool(message->seen), message->content, message->id);
 
@@ -191,6 +226,21 @@ void db_update_message(PGconn *conn, message_t *message) {
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         db_error(conn, "Error when updating message");
+    }
+
+    PQclear(res);
+}
+
+void db_delete_message(PGconn* conn, int message_id) {
+    PGresult* res;
+    char query[256];
+
+    sprintf(query, "UPDATE message SET deleted = true WHERE id = %d", message_id);
+
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        db_error(conn, "Error when deleting message");
     }
 
     PQclear(res);
