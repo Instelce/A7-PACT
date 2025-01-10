@@ -12,9 +12,9 @@ $this->jsFile = 'resetPassword';
     <form method="post" id="reset-password" class="form-inputs">
         <input type="hidden" name="token" value="<?php echo $hash; ?>">
         <div class="password-check">
-            <x-input id="new-password">
+            <x-input id="password">
                 <label slot="label">Nouveau mot de passe</label>
-                <input slot="input" name="password" type="password" placeholder="" required>
+                <input slot="input" name="password" type="password" placeholder="************" required>
             </x-input>
             <div class="hidden password-requirements">
                 <p>Le mot de passe doit contenir au moins :</p>
@@ -38,6 +38,10 @@ $this->jsFile = 'resetPassword';
                 </ul>
             </div>
         </div>
+        <x-input id="passwordConfirm">
+            <label slot="label">Confirmez le nouveau mot de passe</label>
+            <input slot="input" name="password" type="password" placeholder="************" required>
+        </x-input>
 
         <button id ="passwordModify" type="submit" class="button w-full gray">Confirmer</button>
     </form>

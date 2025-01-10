@@ -7,7 +7,7 @@ use app\core\form\Form;
 
 $this->title = 'RegisterProfessional';
 $this->jsFile = 'registerProfessional';
-$this->cssFile = "registerPro";
+$this->cssFile = "register-pro";
 
 ?>
 

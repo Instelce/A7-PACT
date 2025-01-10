@@ -285,7 +285,7 @@ class AuthController extends Controller
             $user->reset_password_hash = null;
             $user->password = password_hash($request->getBody()['password'], PASSWORD_DEFAULT);
             $user->update();
-            $response->redirect('/connexion');
+            $response->redirect('/comptes/modification');
         }
 
         return $this->render('auth/reset-password', ['hash' => $hash]);

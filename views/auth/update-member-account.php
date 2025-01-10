@@ -25,10 +25,11 @@ use app\core\Mailer;
                     mon avatar
                 </button>
             </div>
-            <?php $form = \app\core\form\Form::begin('', 'post', '', 'flex flex-col justify-center items-center') ?>
+            <?php $form = \app\core\form\Form::begin('', 'post', '', 'form-w items-start') ?>
             <input type="hidden" name="form-name" value="update-main">
-            <div class="flex flex-col w-full gap-6">
-                <div class="form-inputs flex flex-col gap-1">
+            <div class="form-inputs flex flex-col gap-8 w-full">
+                <div class="flex flex-col w-full">
+                    <h2 class="section-header font-semibold">Données personnelles</h2>
                     <div class="flex gap-4">
                         <?php echo $form->field($model, 'lastname') ?>
                         <?php echo $form->field($model, 'firstname') ?>
@@ -37,14 +38,18 @@ use app\core\Mailer;
                     <?php echo $form->field($model, 'pseudo') ?>
                     <?php echo $form->field($model, 'mail') ?>
                     <?php echo $form->field($model, 'phone')->phoneField() ?>
-                    <div class="flex gap-4">
-                        <div>
+                </div>
+
+                <div class="flex flex-col">
+                    <h2 class="section-header font-semibold">Adresse</h2>
+                    <div class="flex gap-4 on-same-line">
+                        <div class="w-25%">
                             <?php echo $form->field($model, 'streetNumber') ?>
                         </div>
                         <?php echo $form->field($model, 'streetName') ?>
                     </div>
-                    <div class="flex gap-4">
-                        <div>
+                    <div class="flex gap-4 on-same-line">
+                        <div class="w-25%">
                             <?php echo $form->field($model, 'postalCode') ?>
                         </div>
                         <?php echo $form->field($model, 'city') ?>
@@ -104,12 +109,11 @@ use app\core\Mailer;
         </x-tab>
 
         <x-tab-panel role="region" slot="panel">
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 max-w-[700px]">
+                <h2 class="section-header font-semibold">Mot de passe</h2>
                 <form method="post" class="flex">
                     <input type="hidden" name="form-name" value="reset-password">
-                    <button id="passwordModify" type="submit" class="button w-full gray">Modifier le
-                        mot de passe
-                    </button>
+                    <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
                 </form>
                 <!--<button id ="accountDelete" type="submit" class="button danger">Supprimer mon compte</button>-->
             </div>
