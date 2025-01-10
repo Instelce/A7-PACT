@@ -176,6 +176,7 @@ class AuthController extends Controller
 
         if ($request->isPost() && $request->formName() === "update-payment") {
             $paymentForm->loadData($request->getBody());
+            var_dump($paymentForm->validate()); //renvoie false
             if ($paymentForm->passwordMatch() && $paymentForm->validate() && $paymentForm->update()) {
                 Application::$app->session->setFlash('success', "Votre moyen de paiement à bien été modifié !");
                 $response->redirect('/comptes/modification');

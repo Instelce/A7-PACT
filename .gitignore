@@ -4,3 +4,4 @@ vendor
 seeder/env
 html/css/dist
 playground.php
+.vscode

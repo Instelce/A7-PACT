@@ -148,12 +148,12 @@ class ApiController extends Controller
             $order_by[] = 'rating ASC';
             $where[] = ['rating', '0', '>', 'ratingAsc'];
         } else if (in_array('rating_desc', $order_by)) {
-            $order_by = array_diff($order_by, ['rating_desc']);
+            $order_by = array_diff($order_by, arrays: ['rating_desc']);
             $order_by[] = 'rating DESC';
             $where[] = ['rating', '0', '>', 'ratingDesc'];
         }
 
-        $query->select(attrs: ['offer.*', "(CASE WHEN option.type = 'en_relief' THEN 1 ELSE 0 END) as _est_en_relief"])
+        $query->select(attrs: ['offer.*', "(CASE WHEN option.type = 'en_relief' OR option.type = 'a_la_une' THEN 1 ELSE 0 END) as _est_en_relief"])
             ->join(new Address())
             ->joinString("LEFT JOIN subscription ON subscription.offer_id = offer.id")
             ->joinString("LEFT JOIN option ON option.id = subscription.option_id")
@@ -170,34 +170,6 @@ class ApiController extends Controller
                 ]);
 
         }
-
-        // Calculate the average rating
-        // if ($rating) {
-        //     $query->joinString("LEFT JOIN opinion ON opinion.offer_id = offer.id")
-        //         ->group_by(['offer.id'])
-        //         ->having('AVG(opinion.rating) >= ' . $rating);
-        // }
-        // if ($minimumEventDate && $maximumEventDate) {
-
-        //     $query->joinString("JOIN offer_period ON offer.id = offer_period.offer_id")
-        //         ->filters([
-        //             ['offer_period__start_date', "TO_DATE(cast($minimumEventDate, DATE), 'YYYY-MM-DD')", '>='],
-        //             ['offer_period__end_date', "TO_DATE(cast($maximumEventDate, DATE), 'YYYY-MM-DD')", '<='],
-        //         ])
-        //     ;
-        // }
-        // if ($open) {
-        //     $query->joinString("INNER JOIN link_schedule ON link_schedule.offer_id = offer.id")
-        //         ->joinString("INNER JOIN offer_schedule ON offer_schedule.id = link_schedule.schedule_id")
-        //         ->filters([
-        //             ['offer_schedule__opening_hours', 'fermé', '!='],
-        //             ['offer_schedule__closing_hours', 'fermé', '!='],
-        //             ['offer_schedule__opening_hours', date('H:i'), '<='],
-        //             ['offer_schedule__closing_hours', date('H:i'), '>='],
-        //         ])
-        //         ->group_by(['offer.id']);
-        // }
-
         /** @var Offer[] $offers */
         $offers = $query->make();
 
@@ -399,6 +371,34 @@ class ApiController extends Controller
         if ($opinion->update()) {
             return $response->json($opinion->toJson());
         }
+    }
+
+    public function opinionLikes(Request $request, Response $response, $routeParams){
+        $opinionPk = $routeParams['opinion_pk'];
+        $opinion = Opinion::findOneByPk($opinionPk);
+
+        if (!$opinion) {
+            $response->setStatusCode(404);
+            return $response->json(['error' => 'Opinion not found']);
+        }
+
+        $opinion->modifyLikes(1);
+
+        return $response->json([]);
+    }
+
+    public function opinionDislikes(Request $request, Response $response, $routeParams){
+        $opinionPk = $routeParams['opinion_pk'];
+        $opinion = Opinion::findOneByPk($opinionPk);
+
+        if (!$opinion) {
+            $response->setStatusCode(404);
+            return $response->json(['error' => 'Opinion not found']);
+        }
+
+        $opinion->modifyDislikes(1);
+
+        return $response->json([]);
     }
 
 }

@@ -7,8 +7,8 @@ footer {
     justify-content: flex-start;
     align-items: center;
     gap: 2rem;
-
-    background-color: rgb(var(--color-footer),0.2);
+    z-index: 1;
+    background-color: rgb(var(--color-footer), 1);
     font-family: var(--font-text);
     font-size: var(--typescale-d1);
     color: rgb(var(--color-gray-4));
@@ -31,7 +31,7 @@ footer p {
 
 .footer-parts a {
     text-decoration: none;
-    color : rgb(var(--color-black));
+    color: rgb(var(--color-black));
     margin-bottom: .2rem;
 }
 
@@ -60,12 +60,12 @@ footer #logo {
     object-fit: contain;
 }
 
-.footer-conditions > div > div {
+.footer-conditions>div>div {
     display: flex;
     flex-wrap: wrap;
 }
 
-.footer-conditions > div > div a {
+.footer-conditions>div>div a {
     text-decoration: none;
     margin-right: 10px;
 }
@@ -77,7 +77,7 @@ footer #logo {
     order: 1;
 }
 
-.footer-networks a{
+.footer-networks a {
     padding: 10px;
     border: solid 1px rgb(var(--color-gray-2));
     border-radius: 100%;
@@ -111,7 +111,7 @@ footer #logo {
 }
 
 @media (max-width: 1440px) {
-    footer{
+    footer {
         padding: 25px 15%;
     }
 }
@@ -147,7 +147,8 @@ footer #logo {
     }
 
 
-    .footer-trip, .footer-finance {
+    .footer-trip,
+    .footer-finance {
         width: 100%;
         margin-left: 0;
         flex-wrap: wrap;

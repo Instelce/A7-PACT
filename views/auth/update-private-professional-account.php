@@ -3,7 +3,7 @@
 /** @var $paymentForm \app\forms\PaymentForm */
 
 use app\core\Application;
-    use app\models\payment\MeanOfPayment;
+use app\models\payment\MeanOfPayment;
 use app\models\user\professional\PrivateProfessional;
 
 
