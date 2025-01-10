@@ -153,7 +153,6 @@ int main()
 
     // Main menu loop
     while (running) {
-
         display_choice_login();
 
         if (response != NULL) {
@@ -163,6 +162,7 @@ int main()
         printf("Enter your choice: ");
         scanf("%d", &choice);
         getchar();
+
         switch (choice) {
         case 1:
             connection();
