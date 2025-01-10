@@ -1,3 +1,12 @@
+<?php
+/** @var $this \app\core\View */
+
+use app\core\form\Form;
+
+$this->title = 'ResetPassword';
+$this->jsFile = 'resetPassword';
+
+?>
 <div class="form-page form-page-little">
     <h1 class="heading-1">Réinitialisation du mot de passe</h1>
     <form method="post" id="reset-password" class="form-inputs">

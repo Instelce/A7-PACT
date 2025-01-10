@@ -107,8 +107,8 @@ class MemberRegisterForm extends Model
             'postalCode' => '22300',
             'city' => 'Lannion',
             'phone' => '01 23 45 67 89',
-            'passwordConfirm' => '********',
-            //'notifications' => '*******',
+            'passwordConfirm' => '************',
+            'password' => '************',
         ];
     }
 }

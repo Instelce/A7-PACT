@@ -23,8 +23,6 @@ class PrivateProfessionalRegister extends Model
     public const ACCEPT_CONDITIONS = 1;
     public const REFUSE_CONDITIONS = 0;
 
-    public const ACCEPT_NOTIFICATIONS = 1;
-    public const REFUSE_NOTIFICATIONS = 0;
 
     public string $denomination = '';
     public string $siren = '';
@@ -39,7 +37,6 @@ class PrivateProfessionalRegister extends Model
     public string $passwordConfirm = '';
     public int $payment = self::NOPAYMENT;
     public int $conditions = self::REFUSE_CONDITIONS;
-    public int $notifications = self::REFUSE_NOTIFICATIONS;
     public string $titularAccount = '';
     public string $iban = '';
     public string $bic = '';
@@ -54,6 +51,7 @@ class PrivateProfessionalRegister extends Model
         /**
          * @var PrivateProfessional $proPrivate
          */
+
         $account = new Account();
         $account->save();
 
@@ -73,26 +71,27 @@ class PrivateProfessionalRegister extends Model
         $userAccount->save();
 
         $proUser = new ProfessionalUser();
-        $proUser->user_id = $account->id;
+        $proUser->user_id = $userAccount->account_id;
         $proUser->siren = $this->siren;
         $proUser->denomination = $this->denomination;
         $proUser->code = Utils::generateUUID();
         $proUser->phone = str_replace(' ', '', $this->phone);
-        $proUser->allows_notifications = $this->notifications;
         $proUser->save();
 
         $meanOfPayment = new MeanOfPayment();
         $meanOfPayment->save();
+        echo 'ok';
 
-        if('iban' && 'bic' != ''){
+        if ($this->iban != NULL && $this->bic != NULL) {
             $payment = new RibMeanOfPayment();
             $payment->id = $meanOfPayment->payment_id;
             $payment->name = $this->titularAccount;
             $payment->iban = $this->iban;
             $payment->bic = $this->bic;
             $payment->save();
-        }
-        else if ('cardnumber' && 'cryptogram' && 'expirationdate' != '') {
+            echo 'ok2';
+
+        } elseif ($this->cardnumber != NULL && $this->cryptogram != NULL && $this->expirationdate != NULL) {
             $payment = new CbMeanOfPayment();
             $payment->id = $meanOfPayment->payment_id;
             $payment->name = $this->titularCard;
@@ -100,45 +99,52 @@ class PrivateProfessionalRegister extends Model
             $payment->expiration_date = $this->expirationdate;
             $payment->cvv = $this->cryptogram;
             $payment->save();
+            echo 'ok3';
         }
-        else {
-            $payment = new PaypalMeanOfPayment();
-            $payment->id = $meanOfPayment->payment_id;
-            $payment->paypalurl = $this->paypallink;
-            $payment->save();
-        }
+//        else {
+//            $payment = new PaypalMeanOfPayment();
+//            $payment->id = $meanOfPayment->payment_id;
+//            $payment->paypalurl = $this->paypallink;
+//            if (!$payment->validate()) {
+//                return false;
+//            }
+//            $payment->save();
+//        }
 
+        echo "wow";
         $proPrivate = new PrivateProfessional();
         $proPrivate->pro_id = $account->id;
-        $proPrivate->payment_id = $payment->id;
+        $proPrivate->last_veto = date('Y-m-d');
+        $proPrivate->payment_id = $meanOfPayment->id;
         $proPrivate->save();
-
+        echo 'ok4';
 
         Application::$app->login($userAccount);
         return true;
     }
 
 
+
     public function rules(): array
     {
         return [
-            'siren' =>[self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'siren', 'class' => ProfessionalUser::class], [self::RULE_MAX, 'max' => 9]],
-            'denomination' => [self::RULE_REQUIRED],
+            'siren' =>[self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'siren', 'class' => ProfessionalUser::class], self::RULE_SIREN],
+            'denomination' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'denomination', 'class' => ProfessionalUser::class]],
             'mail' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'mail', 'class' => UserAccount::class], self::RULE_MAIL],
-            'streetnumber' => [self::RULE_REQUIRED],
+            'streetnumber' => [self::RULE_REQUIRED, self::RULE_NUMBER],
             'streetname' => [self::RULE_REQUIRED],
-            'postaleCode' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 5]],
+            'postaleCode' => [self::RULE_REQUIRED, self::RULE_POSTAL],
             'city' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
-            'phone' => [self::RULE_REQUIRED, [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
+            'phone' => [self::RULE_REQUIRED, self::RULE_PHONE, [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
             'password' => [self::RULE_REQUIRED, self::RULE_PASSWORD],
             'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
             'titular-account' => [[self::RULE_MAX, 'max' => 255]],
-            'iban' => [[self::RULE_MAX, 'max' => 34], [self::RULE_UNIQUE, 'attribute' => 'iban', 'class' => RibMeanOfPayment::class]],
+            'iban' => [],
             'bic' => [[self::RULE_MAX, 'max' => 11]],
-            'cardnumber' => [[self::RULE_MAX, 'max' => 16], [self::RULE_UNIQUE, 'attribute' => 'card_number', 'class' => CbMeanOfPayment::class]],
-            'titular-card' => [[self::RULE_MAX, 'max' => 255]],
+            'cardnumber' => [],
+            'titular-card' => [],
             'expirationdate' => [self::RULE_EXP_DATE],
-            'cryptogram' => [[self::RULE_MAX, 'max' => 3]]
+            'cryptogram' => [[self::RULE_MAX, 'max' => 3], self::RULE_NUMBER]
         ];
     }
 
@@ -180,8 +186,8 @@ class PrivateProfessionalRegister extends Model
             'postaleCode' => '22300',
             'city' => 'Lannion',
             'phone' => '06 01 02 03 04',
-            'password' => '********',
-            'passwordConfirm' => '********',
+            'password' => '************',
+            'passwordConfirm' => '************',
             'titular-account' => 'Nom entreprise / Nom personne',
             'iban' => 'FR76 XXXX XXXX XXXX XXXX XXXX XXXX XX',
             'bic' => 'vore BIC (optionnel)',
