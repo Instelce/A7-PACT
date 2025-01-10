@@ -47,6 +47,11 @@ class Session
         unset($_SESSION[$key]);
     }
 
+    public function keyExist($key)
+    {
+        return isset($_SESSION[$key]);
+    }
+
     public function __destruct()
     {
         // Iterate over marked to be removed messages

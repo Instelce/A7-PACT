@@ -98,7 +98,7 @@ void menu_message(int sock)
     printf("Enter your message: ");
     input(message);
 
-    send_message(sock, token, message);
+    response = send_message(sock, token, message, 1);
 }
 
 void disconnect(int sock)
@@ -156,6 +156,10 @@ int main()
 
         display_choice_login();
 
+        if (response != NULL) {
+            printf("\nResponse: %d %s\n", response->code, response->message);
+        }
+
         printf("Enter your choice: ");
         scanf("%d", &choice);
         getchar();
@@ -173,7 +177,10 @@ int main()
             disconnect(sock);
             return EXIT_SUCCESS;
         case 10:
-            send_message(sock, "coucousupertoken", "monmessage\nrelou\n");
+            response = send_login(sock, "06b8df93cd94c728ef92ad4d8bd8f907513e95f4c10b2858112913b1d86cfae5");
+            break;
+        case 11:
+            response = send_message(sock, "coucousupertoken", "monmessage\nrelou\n", 3);
             break;
         default:
             printf("Invalid choice, please try again.\n");
