@@ -47,12 +47,19 @@ class Request
         }
 
         if ($this->method() === "post") {
+            $json = file_get_contents('php://input');
+            $data = json_decode($json, true);
+
             foreach ($_POST as $key => $value) {
                 if (is_array($value)) {
                     $body[$key] = filter_input(INPUT_POST, $key, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
                 } else {
                     $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
                 }
+            }
+
+            foreach ($data as $key => $value) {
+                $body[$key] = $value;
             }
         }
 

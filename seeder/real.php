@@ -1514,8 +1514,7 @@ foreach ($offers as $offer) {
         $opinion->visit_context = $contexts[array_rand($contexts)];
         $opinion->visit_date = date('Y-m-d', rand(strtotime($offer->created_at), strtotime('-7 days')));
         $opinion->created_at = date('Y-m-d H:i:s', rand(strtotime($opinion->visit_date), strtotime('-2 days')));
-        $opinion->nb_likes = 0;
-        $opinion->nb_dislikes = 0;
+        $opinion->nb_reports = 0;
         $opinion->save();
         $account_ids[] = $opinion->account_id;
 
