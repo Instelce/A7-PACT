@@ -12,6 +12,8 @@ use app\models\offer\OfferType;
 use app\models\offer\schedule\OfferSchedule;
 use app\models\offer\schedule\LinkSchedule;
 use app\models\opinion\Opinion;
+use app\models\opinion\OpinionDislike;
+use app\models\opinion\OpinionLike;
 use app\models\opinion\OpinionPhoto;
 use app\models\user\MemberUser;
 use app\models\offer\AttractionParkOffer;
@@ -342,6 +344,22 @@ class ApiController extends Controller
                 $data[$i]['photos'][] = $photo->toJson();
             }
 
+            $data[$i]['likes'] = $opinion->likes();
+            $data[$i]['dislikes'] = $opinion->dislikes();
+
+            // Récupérer opinion id
+            if (OpinionLike::findOne(["opinion_id"=>$opinion->id, "account_id"=>Application::$app->user->account_id])){
+                $data[$i]['opinionLiked'] = true;
+            } else {
+                $data[$i]['opinionLiked'] = false;
+            }
+
+            if (OpinionDislike::findOne(["opinion_id"=>$opinion->id, "account_id"=>Application::$app->user->account_id])){
+                $data[$i]['opinionDisliked'] = true;
+            } else {
+                $data[$i]['opinionDisliked'] = false;
+            }
+
             // Read on load
             if ($readOnLoad) {
                 $opinion->read = true;
@@ -374,6 +392,7 @@ class ApiController extends Controller
     }
 
     public function opinionLikes(Request $request, Response $response, $routeParams){
+        $action = $request->getBody()["action"];
         $opinionPk = $routeParams['opinion_pk'];
         $opinion = Opinion::findOneByPk($opinionPk);
 
@@ -382,12 +401,18 @@ class ApiController extends Controller
             return $response->json(['error' => 'Opinion not found']);
         }
 
-        $opinion->modifyLikes(1);
+        if($action == "add"){
+            $opinion -> addLike();
+        }
+        else if($action == "remove"){
+            $opinion->removeLike();
+        }
 
-        return $response->json([]);
+        return $response->json(["action" => $action, "body" => $request->getBody()]);
     }
 
     public function opinionDislikes(Request $request, Response $response, $routeParams){
+        $action = $request->getBody()["action"];
         $opinionPk = $routeParams['opinion_pk'];
         $opinion = Opinion::findOneByPk($opinionPk);
 
@@ -396,9 +421,27 @@ class ApiController extends Controller
             return $response->json(['error' => 'Opinion not found']);
         }
 
-        $opinion->modifyDislikes(1);
+        if($action == "add"){
+            $opinion -> addDislike();
+        }
+        else if($action == "remove"){
+            $opinion->removeDislike();
+        }
+
+        return $response->json(["action" => $action, "body" => $request->getBody()]);
+    }
+
+    public function opinionReports(Request $request, Response $response, $routeParams){
+        $opinionPk = $routeParams['opinion_pk'];
+        $opinion = Opinion::findOneByPk($opinionPk);
+
+        if (!$opinion) {
+            $response->setStatusCode(404);
+            return $response->json(['error' => 'Opinion not found']);
+        }
+
+        $opinion->addReport();
 
         return $response->json([]);
     }
-
 }

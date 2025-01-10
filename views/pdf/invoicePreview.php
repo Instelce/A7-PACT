@@ -269,7 +269,7 @@ $offerPrice = $invoice->activeDays() * $type->price;
                 <tr>
                     <td>Option "<?php echo $sub->option()->french() ?>"</td>
                     <td><?php echo $sub->duration ?> / semaine</td>
-                    <td><?php echo $sub->price() ?></td>
+                    <td><?php echo $sub->price() ?>€</td>
                     <td><?php echo $optionPrice ?> €</td>
                 </tr>
             <?php } ?>
@@ -285,11 +285,11 @@ $offerPrice = $invoice->activeDays() * $type->price;
                 </tr>
                 <tr>
                     <td>Total TVA 20%</td>
-                    <td><?php echo $sousTotal * 0.2 ?> €</td>
+                    <td><?php echo round(($sousTotal * 0.2),2) ?> €</td>
                 </tr>
                 <tr>
-                    <td class="total">TOTAL TTC</td>
-                    <td class="total"><?php echo $sousTotal + $sousTotal*0.2 ?> €</td>
+                    <td class="total">Total TTC</td>
+                    <td class="total"><?php echo round(($sousTotal + $sousTotal*0.2),2) ?> €</td>
                 </tr>
             </table>
         </div>
