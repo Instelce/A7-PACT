@@ -12,8 +12,8 @@
 }
 
 .alert.success {
-    background: rgba(var(--color-success), .3);
-    border: 1px solid rgb(var(--color-success));
+    background: rgba(var(--color-success), .7);
+    border: 1px solid rgb(var(--color-white));
 }
 
 @keyframes alert-disappear {

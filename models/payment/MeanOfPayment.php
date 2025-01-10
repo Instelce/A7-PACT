@@ -15,7 +15,7 @@ class MeanOfPayment extends DBModel
 
     public function attributes(): array
     {
-        return [];
+        return ['id'];
     }
 
     public static function pk(): string

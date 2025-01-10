@@ -18,7 +18,6 @@ abstract class Model
     public const RULE_POSTAL = 'postaleCode';
     public const RULE_PHONE = 'phone';
     public const RULE_NUMBER = 'number';
-
     public array $errors = [];
 
     public function loadData($data)
@@ -86,6 +85,9 @@ abstract class Model
                 if ($rule_name === self::RULE_UNIQUE) {
                     $className = $rule['class'];
                     $uniqueAttribute = $rule['attribute'] ?? $attr;
+                    if($uniqueAttribute === 'phone'){
+                        $value =  str_replace(' ', '', $value);
+                    }
                     $tableName = $className::tableName();
                     $statement = Application::$app->db->prepare("SELECT * FROM $tableName WHERE $uniqueAttribute = :attr");
                     $statement->bindValue(":attr", $value);
@@ -108,9 +110,11 @@ abstract class Model
                     }
                 }
                 if ($rule_name === self::RULE_EXP_DATE) {
-                    $pattern = '/^\d{2}\/\d{2}$/'; // Escaped the '/' character
-                    if (!preg_match($pattern, $value)) {
-                        $this->addErrorForRule($attr, self::RULE_EXP_DATE, $rule);
+                    $pattern = '/^\d{2}\/\d{2}$/';
+                    if($value != NULL){
+                        if (!preg_match($pattern, $value)) {
+                            $this->addErrorForRule($attr, self::RULE_EXP_DATE, $rule);
+                        }
                     }
                 }
                 if ($rule_name === self::RULE_HOUR) {
@@ -127,16 +131,13 @@ abstract class Model
                 }
                 if ($rule_name === self::RULE_SIREN) {
                     $pattern = '/^\d{9}$/';
-                    if (!preg_match($pattern, $value)) {
-                        $this->addErrorForRule($attr, self::RULE_SIREN, $rule);
+                    if($value != NULL){
+                        if (!preg_match($pattern, $value)) {
+                            $this->addErrorForRule($attr, self::RULE_SIREN, $rule);
+                        }
                     }
                 }
-                if ($rule_name === self::RULE_POSTAL) {
-                    $pattern = '/^\d{5}$/';
-                    if (!preg_match($pattern, $value)) {
-                        $this->addErrorForRule($attr, self::RULE_POSTAL, $rule);
-                    }
-                }
+
                 if ($rule_name === self::RULE_PHONE) {
                     $pattern = '/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/';
                     if (!preg_match($pattern, $value)) {
@@ -145,8 +146,10 @@ abstract class Model
                 }
                 if ($rule_name === self::RULE_NUMBER) {
                     $pattern = '/^\d+$/';
-                    if (!preg_match($pattern, $value)) {
-                        $this->addErrorForRule($attr, self::RULE_NUMBER, $rule);
+                    if($value!=NULL){
+                        if (!preg_match($pattern, $value)) {
+                            $this->addErrorForRule($attr, self::RULE_NUMBER, $rule);
+                        }
                     }
                 }
             }

@@ -21,7 +21,7 @@ class PrivateProfessional extends DBModel
 
     public function attributes(): array
     {
-        return ['last_veto', 'payment_id'];
+        return ['pro_id', 'last_veto', 'payment_id'];
     }
 
     public static function pk(): string

@@ -79,7 +79,6 @@ function formatPasswordInput(inputElement, messageElement) {
 
     if (messageElement) {
         inputElement.addEventListener("input", () => {
-            console.log("test");
 
             let value = inputElement.value;
 
@@ -120,6 +119,7 @@ passwordInputs.forEach(container=>{
         print(message);
     })
     input.addEventListener('input', ()=>{
+        print(message);
         formatPasswordInput(input, message);
     })
 })
