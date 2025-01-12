@@ -32,7 +32,7 @@ class Opinion extends DBModel
 
     public function attributes(): array
     {
-        return ['id','rating', 'title', 'comment', 'visit_date', 'visit_context', 'read', 'blacklisted', 'account_id', 'offer_id', 'nb_reports'];
+        return ['rating', 'title', 'comment', 'visit_date', 'visit_context', 'read', 'blacklisted', 'account_id', 'offer_id', 'nb_reports'];
     }
 
     public function rules(): array
