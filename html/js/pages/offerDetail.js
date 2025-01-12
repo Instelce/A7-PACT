@@ -442,8 +442,9 @@ function createOpinionCard(opinion) {
     likeButton.addEventListener("click", () => {
         if (userResponse.error === "Not authenticated") {
             opinionForm.classList.remove('hidden');
+            opinionAddButton.classList.add('hidden');
             window.scrollTo({
-                top: document.querySelector('#opinion-add').offsetTop,
+                top: document.querySelector('#opinion-form').offsetTop - 130,
                 behavior: 'smooth'
             });
         } else {
@@ -475,26 +476,35 @@ function createOpinionCard(opinion) {
 
 
     dislikeButton.addEventListener("click", () => {
-        if(!opinionDisliked){
-            if(opinionLiked){
-                removeLike(opinion.id);
-                likeText.innerHTML = (currentLikes - 1).toString();
-                currentLikes = parseInt(likeText.innerHTML, 10);
-                likeSvg.setAttribute('fill', 'none');
-                opinionLiked = false;
+        if (userResponse.error === "Not authenticated") {
+            opinionForm.classList.remove('hidden');
+            opinionAddButton.classList.add('hidden');
+            window.scrollTo({
+                top: document.querySelector('#opinion-form').offsetTop - 130,
+                behavior: 'smooth'
+            });
+        } else {
+            if(!opinionDisliked){
+                if(opinionLiked){
+                    removeLike(opinion.id);
+                    likeText.innerHTML = (currentLikes - 1).toString();
+                    currentLikes = parseInt(likeText.innerHTML, 10);
+                    likeSvg.setAttribute('fill', 'none');
+                    opinionLiked = false;
+                }
+                addDislike(opinion.id);
+                dislikeText.innerHTML = (currentDislikes + 1).toString();
+                currentDislikes = parseInt(dislikeText.innerHTML, 10);
+                dislikeSvg.setAttribute('fill', 'rgb(255, 59, 48)');
+                opinionDisliked = true;
             }
-            addDislike(opinion.id);
-            dislikeText.innerHTML = (currentDislikes + 1).toString();
-            currentDislikes = parseInt(dislikeText.innerHTML, 10);
-            dislikeSvg.setAttribute('fill', 'rgb(255, 59, 48)');
-            opinionDisliked = true;
-        }
-        else{
-            removeDislike(opinion.id);
-            dislikeText.innerHTML = (currentDislikes - 1).toString();
-            currentDislikes = parseInt(dislikeText.innerHTML, 10);
-            dislikeSvg.setAttribute('fill', 'none');
-            opinionDisliked = false;
+            else{
+                removeDislike(opinion.id);
+                dislikeText.innerHTML = (currentDislikes - 1).toString();
+                currentDislikes = parseInt(dislikeText.innerHTML, 10);
+                dislikeSvg.setAttribute('fill', 'none');
+                opinionDisliked = false;
+            }
         }
     })
 
