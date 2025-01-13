@@ -100,12 +100,6 @@ void connection_client()
 
     printf("Token: %s\n", connected_user.api_token);
     response = send_login(sock, connected_user.api_token);
-
-    if (response->code == 200) {
-        connected_user.type = MEMBER;
-    } else if (response->code == 403) {
-        connected_user = NOT_CONNECTED_USER;
-    }
 }
 
 void write_message(char* message)
@@ -168,81 +162,75 @@ void write_message(char* message)
 void menu_send_message()
 {
     clear_term();
-    char message[LARGE_CHAR_SIZE] = {0};
+    char message[LARGE_CHAR_SIZE] = { 0 };
     menu_t receiver_menu;
     int selected_index = -1;
     int offset = 0;
-    const int limit = 5; // Number of users to display per page
+    const int limit = 5;
     user_list_t receivers;
 
     printf("\nSend a Message\n");
 
-    // Step 1: Compose the message
     printf("Write your message (Ctrl+D to send, Backspace to delete):\n");
     write_message(message);
 
-    printf("\nMessage written:\n%s\n", message);
+    if (connected_user.type == MEMBER) {
+        strcpy(receiver_menu.name, "Select a Professional to Send the Message");
+    } else if (connected_user.type == PROFESSIONAL) {
+        strcpy(receiver_menu.name, "Select a Member to Send the Message");
+    }
 
-    // Step 2: Fetch and display receivers in a paginated manner
     while (1) {
-        // Fetch the next batch of users
+
         if (connected_user.type == MEMBER) {
             receivers = db_get_professionals(conn, offset, limit);
-            strcpy(receiver_menu.name, "Select a Professional to Send the Message");
+
         } else if (connected_user.type == PROFESSIONAL) {
             receivers = db_get_members(conn, offset, limit);
-            strcpy(receiver_menu.name, "Select a Member to Send the Message");
         } else {
             printf("Error: User type not supported for sending messages.\n");
             return;
         }
-
         if (receivers.count == 0) {
             printf("No more users to display.\n");
             break;
         }
-
-        // Populate the menu
-        receiver_menu.actions = malloc((receivers.count + 2) * sizeof(menu_action_t)); // +2 for Prev/Next
+        receiver_menu.actions = malloc((receivers.count + 2) * sizeof(menu_action_t));
         receiver_menu.actions_count = receivers.count + 2;
 
         for (int i = 0; i < receivers.count; i++) {
-            strcpy(receiver_menu.actions[i].name, receivers.users[i].email);
+            strcpy(receiver_menu.actions[i].name, receivers.users[i].name);
             receiver_menu.actions[i].disabled = 0;
-            receiver_menu.actions[i].action = NULL; // Action not required for selection
+            receiver_menu.actions[i].action = NULL;
         }
-
-        // Add navigation actions
+        // add action
         strcpy(receiver_menu.actions[receivers.count].name, "Next Page");
         receiver_menu.actions[receivers.count].disabled = 0;
         receiver_menu.actions[receivers.count].action = NULL;
 
         strcpy(receiver_menu.actions[receivers.count + 1].name, "Previous Page");
-        receiver_menu.actions[receivers.count + 1].disabled = (offset == 0); // Disable if no previous page
+        receiver_menu.actions[receivers.count + 1].disabled = (offset == 0);
         receiver_menu.actions[receivers.count + 1].action = NULL;
 
-        // Display the menu and handle selection
         selected_index = display_menu(receiver_menu);
 
         if (selected_index < receivers.count) {
             int receiver_id = receivers.users[selected_index].id;
 
-            // Send the message
             response = send_message(sock, connected_user.api_token, message, receiver_id);
 
             if (response->code == 200) {
-                printf("Message successfully sent to %s.\n", receivers.users[selected_index].email);
+                printf("Message successfully sent to %s.\n", receivers.users[selected_index].name);
             } else {
                 printf("Failed to send the message. Response: %d %s\n", response->code, response->message);
             }
             free(receiver_menu.actions);
             free(receivers.users);
-            break; // Exit the menu after sending the message
+            break;
         } else if (selected_index == receivers.count) {
-            // Next page
             offset += limit;
         } else if (selected_index == receivers.count + 1 && offset > 0) {
-            // Previous page
+
             offset -= limit;
         }
 
@@ -251,9 +239,9 @@ void menu_send_message()
     }
 }
 void menu_delete_message()
-{
-    int message_id;
-    // display all message sender_id === connecteduser id to choose w arrows
+}
+int message_id;
+// display all message sender_id === connecteduser id to choose w arrows
 }
 void disconnect()
 {
@@ -310,7 +298,7 @@ int main()
         "Send a message", menu_send_message,
         "Display unread messages", empty_action,
         "Modify a message", empty_action,
-        "Delete a message", empty_action,
+        "Delete a message", menu_delete_message,
         "Display messages history", empty_action,
         "Exit", disconnect,
         NULL);
@@ -320,7 +308,7 @@ int main()
         "Send a message", menu_send_message,
         "Display unread messages", empty_action,
         "Modify a message", empty_action,
-        "Delete a message", empty_action,
+        "Delete a message", menu_delete_message,
         "Display messages history", empty_action,
         "Exit", disconnect,
         NULL);
