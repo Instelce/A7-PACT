@@ -26,6 +26,7 @@ class Application
     public Storage $storage;
     public ?UserAccount $user = null;
     public Mailer $mailer;
+    public Notifications $notifications;
 
     /**
      * @var 'visitor'|'member'|'professional'|'admin'
@@ -48,6 +49,7 @@ class Application
         $this->view = new View();
         $this->storage = new Storage();
         $this->mailer = new Mailer();
+        $this->notifications = new Notifications();
 
         // Get the primary key of the user from the session
         $pkValue = $this->session->get('user');
