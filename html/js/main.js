@@ -64,6 +64,23 @@ if (navbar && heightTop) {
     heightTop.style.height = navbar.offsetHeight + 'px';
 }
 
+// Notifications
+const notificationsButton = document.querySelector('.notifications .notifications-icon');
+const notificationsContent = document.querySelector('.notifications .notifications-content');
+
+if (notificationsButton && notificationsContent) {
+    notificationsButton.addEventListener('click', function () {
+        notificationsContent.classList.toggle('open');
+    });
+
+    // Close when click outside
+    document.addEventListener('click', function (e) {
+        if (!notificationsButton.contains(e.target)) {
+            notificationsContent.classList.remove('open');
+        }
+    });
+}
+
 // Avatar
 const avatarButton = document.querySelector('.avatar .image-container');
 const avatarOptions = document.querySelector('.avatar .avatar-options');
