@@ -19,6 +19,10 @@
     background: rgb(var(--color-orange-secondary));
 }
 
+.star.half-fill {
+    background: linear-gradient(to left, rgb(var(--color-gray-1)) 50%, rgb(var(--color-orange-secondary)) 50%);
+}
+
 .star svg {
     position: absolute;
     fill: white;

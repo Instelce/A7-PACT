@@ -212,7 +212,10 @@ function displayOffers(Data) {
                     star.classList.add("star");
                     star.innerHTML = starSVG;
 
-                    if (i < offer.rating) {
+                    if (i < offer.rating && i > offer.rating - 1) {
+                        star.classList.add("half-fill");
+                    }
+                    else if (i < offer.rating) {
                         star.classList.add("fill");
                     }
 

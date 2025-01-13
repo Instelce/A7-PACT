@@ -1,11 +1,11 @@
 import '../photoUpload.js';
-import {getUser} from "../user.js";
+import { getUser } from "../user.js";
 
 let offerId = document.querySelector('#offer-id').value;
 
 let user = null;
 getUser().then(u => {
-   user = u
+    user = u
 
     // ---------------------------------------------------------------------------------------------- //
     // Tchatator socket client that connects to the C server
@@ -150,14 +150,30 @@ if (opinionForm) {
         let stars = ratingChoice.querySelectorAll('.star');
 
         // Add fill class
-        for (let i = 0; i <= rateInput.value - 1; i++) {
-            stars[i].classList.add('fill');
+        for (let i = 0; i < 5; i++) {
+            if (i < rateInput.value && i > rateInput.value - 1) {
+                stars[i].classList.add('half-fill');
+            }
+            else if (i < rateInput.value) {
+                stars[i].classList.add('fill');
+            }
         }
 
         for (let star of stars) {
+            star.addEventListener('mousemove', (event) => {
+                const rect = star.getBoundingClientRect();
+                const mouseX = event.clientX - rect.left;
+                const isLeftHalf = mouseX < rect.width / 2;
+                if (isLeftHalf) {
+                    star.classList.add('left-half');
+                    star.classList.remove('high');
+                } else {
+                    star.classList.remove('left-half');
+                    star.classList.add('high');
+                }
+            });
             star.addEventListener('mouseenter', () => {
                 let index = star.getAttribute('data-index');
-
                 for (let i = 0; i <= index - 1; i++) {
                     stars[i].classList.add('high');
                     stars[i].classList.remove('not-high');
@@ -176,23 +192,37 @@ if (opinionForm) {
                 for (let star of stars) {
                     star.classList.remove('high');
                     star.classList.remove('not-high');
+                    star.classList.remove('left-half');
+
                 }
             });
 
             star.addEventListener('click', () => {
                 rateInput.value = star.getAttribute('data-index');
+                if (star.classList.contains('left-half')) {
+                    rateInput.value = parseFloat(rateInput.value) - 0.5;
+                }
 
                 // Remove all classes
                 for (let star of stars) {
                     star.classList.remove('high');
                     star.classList.remove('not-high');
+                    star.classList.remove('left-half');
                     star.classList.remove('fill');
+                    star.classList.remove('half-fill');
                 }
 
+
                 // Add fill class
-                for (let i = 0; i <= rateInput.value - 1; i++) {
-                    stars[i].classList.add('fill');
+                for (let i = 0; i < 5; i++) {
+                    if (i < rateInput.value && i > rateInput.value - 1) {
+                        stars[i].classList.add('half-fill');
+                    }
+                    else if (i < rateInput.value) {
+                        stars[i].classList.add('fill');
+                    }
                 }
+
             });
         }
     }
@@ -211,29 +241,29 @@ let starSVG = '<svg width=".8rem" height=".8rem" viewBox="0 0 10 11" fill="#000"
     '</svg>';
 
 
-async function addLike(id){
-     await fetch(`/api/opinions/${id}/likes`,
-            {
-                method: 'post',
-                body: JSON.stringify({
-                    action: 'add'
-                })
-            })
-            .then(response => response.json())
-}
-
-async function removeLike(id){
+async function addLike(id) {
     await fetch(`/api/opinions/${id}/likes`,
-            {
-                method: 'post',
-                body: JSON.stringify({
-                    action: 'remove'
-                })
+        {
+            method: 'post',
+            body: JSON.stringify({
+                action: 'add'
             })
-            .then(response => response.json())
+        })
+        .then(response => response.json())
 }
 
-async function addDislike(id){
+async function removeLike(id) {
+    await fetch(`/api/opinions/${id}/likes`,
+        {
+            method: 'post',
+            body: JSON.stringify({
+                action: 'remove'
+            })
+        })
+        .then(response => response.json())
+}
+
+async function addDislike(id) {
     await fetch(`/api/opinions/${id}/dislikes`,
         {
             method: 'post',
@@ -245,7 +275,7 @@ async function addDislike(id){
 }
 
 
-async function removeDislike(id){
+async function removeDislike(id) {
     await fetch(`/api/opinions/${id}/dislikes`,
         {
             method: 'post',
@@ -256,7 +286,7 @@ async function removeDislike(id){
         .then(response => response.json())
 }
 
-async function getReports(id){
+async function getReports(id) {
     await fetch(`/api/opinions/${id}/reports`,
         {
             method: 'post',
@@ -305,12 +335,18 @@ function createOpinionCard(opinion) {
         star.classList.add('star');
         star.innerHTML = starSVG;
 
-        if (i < opinion.rating) {
-            star.classList.add('fill');
+
+        if (i < opinion.rating && i > opinion.rating - 1) {
+            star.classList.add("half-fill");
         }
+        else if (i < opinion.rating) {
+            star.classList.add("fill");
+        }
+
 
         stars.appendChild(star);
     }
+    console.log(opinion.rating);
 
     // Calculate the date
     let date = new Date(opinion.created_at);
@@ -427,11 +463,11 @@ function createOpinionCard(opinion) {
     let opinionLiked = opinion.opinionLiked;
     let opinionDisliked = opinion.opinionDisliked;
 
-    if(opinionLiked){
+    if (opinionLiked) {
         likeSvg.setAttribute('fill', 'rgb(0, 87, 255)');
     }
 
-    if(opinionDisliked){
+    if (opinionDisliked) {
         dislikeSvg.setAttribute('fill', 'rgb(255, 59, 48)');
     }
 
@@ -484,8 +520,8 @@ function createOpinionCard(opinion) {
                 behavior: 'smooth'
             });
         } else {
-            if(!opinionDisliked){
-                if(opinionLiked){
+            if (!opinionDisliked) {
+                if (opinionLiked) {
                     removeLike(opinion.id);
                     likeText.innerHTML = (currentLikes - 1).toString();
                     currentLikes = parseInt(likeText.innerHTML, 10);
@@ -498,7 +534,7 @@ function createOpinionCard(opinion) {
                 dislikeSvg.setAttribute('fill', 'rgb(255, 59, 48)');
                 opinionDisliked = true;
             }
-            else{
+            else {
                 removeDislike(opinion.id);
                 dislikeText.innerHTML = (currentDislikes - 1).toString();
                 currentDislikes = parseInt(dislikeText.innerHTML, 10);
