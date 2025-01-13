@@ -26,7 +26,7 @@ class Offer extends DBModel
     public string $website = '';
     public string $phone_number = '';
     public ?float $minimum_price = null;
-    public int $rating = 0;
+    public float $rating = 0;
 
     /**
      * @var 'activity' | 'attraction_park' | 'restaurant' | 'show' | 'visit'
@@ -144,8 +144,8 @@ class Offer extends DBModel
     public function schedule(): array
     {
         $schedules = [];
-        $associations = LinkSchedule::find(['offer_id'=>$this->id]);
-        foreach($associations as $association){
+        $associations = LinkSchedule::find(['offer_id' => $this->id]);
+        foreach ($associations as $association) {
             $schedules[] = OfferSchedule::findOneByPk($association->schedule_id);
         }
         return $schedules;
@@ -246,10 +246,10 @@ class Offer extends DBModel
             ->filters(['offer_id' => $this->id, 'option__type' => Subscription::A_LA_UNE])->make()) > 0;
     }
 
-    public function rating(): int
+    public function rating(): float
     {
         $opinions = Opinion::find(['offer_id' => $this->id]);
-        return count($opinions) > 0 ? array_sum(array_map(fn($opinion) => $opinion->rating, $opinions)) / count($opinions) : 0;
+        return count($opinions) > 0 ? round(array_sum(array_map(fn($opinion) => $opinion->rating, $opinions)) / count($opinions) * 2) / 2 : 0;
     }
 
     public function addInvoice(): void
@@ -279,9 +279,9 @@ class Offer extends DBModel
             $status = $lastMonthHistories[count($lastMonthHistories) - 1]->switch_to;
         }
 
-//        echo $status;
+        //        echo $status;
 
-//        echo "<pre>";
+        //        echo "<pre>";
         for ($day = 1; $day <= $lastMonthDay; $day++) {
             // Check if the status has change on this day
             $dayHistories = array_filter($histories, fn($history) => date('d', strtotime($history->created_at)) == $day);
@@ -292,13 +292,13 @@ class Offer extends DBModel
                 $status = $lastDayHistory->switch_to;
             }
 
-//            echo $status . "($day)" . PHP_EOL;
+            //            echo $status . "($day)" . PHP_EOL;
 
             if ($status === "online") {
                 $count++;
             }
         }
-//                echo "</pre>";
+        //                echo "</pre>";
 
 
         return $count;
@@ -310,7 +310,7 @@ class Offer extends DBModel
         $histories = OfferStatusHistory::query()->filters(['offer_id' => $this->id])->search(['created_at' => date('Y-m')])->order_by(['created_at'])->make();
         $currentDay = date('d');
         $count = 0;
-//
+        //
 //        echo "<pre>";
 //        var_dump($lastMonthHistories);
 //        echo "</pre>";
@@ -322,9 +322,9 @@ class Offer extends DBModel
             $status = $lastMonthHistories[count($lastMonthHistories) - 1]->switch_to;
         }
 
-//        echo $currentDay;
+        //        echo $currentDay;
 
-//        echo "<pre>";
+        //        echo "<pre>";
         for ($day = 1; $day <= $currentDay; $day++) {
             // Check if the status has change on this day
             $dayHistories = array_filter($histories, fn($history) => date('d', strtotime($history->created_at)) == $day);
@@ -335,13 +335,13 @@ class Offer extends DBModel
                 $status = $lastDayHistory->switch_to;
             }
 
-//            echo $status . "($day)" . PHP_EOL;
+            //            echo $status . "($day)" . PHP_EOL;
 
             if ($status === "online") {
                 $count++;
             }
         }
-//        echo "</pre>";
+        //        echo "</pre>";
 
         return $count;
     }
