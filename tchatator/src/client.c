@@ -2,94 +2,64 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <arpa/inet.h>
+
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+
+#include "protocol.h"
+#include "types.h"
 
 #define SERVER_PORT 4242
 #define BUFFER_SIZE 1024
 
-// Display menu
-void display_menu() {
-    printf("\n====== MENU ======\n");
-    printf("[1] Send Message\n");
-    printf("[2] Login\n");
+status_t *response;
+
+void display_menu()
+{
+    printf("[1] Send message\n");
+    printf("[2] Connection\n");
     printf("[3] Exit\n");
-    printf("==================\n");
-    printf("Enter your choice: ");
 }
 
-// Handle login
-void handle_login(int sock, char *token) {
-    char email[BUFFER_SIZE], password[BUFFER_SIZE], buffer[BUFFER_SIZE];
-
-    printf("Enter your email: ");
-    fgets(email, sizeof(email), stdin);
-    email[strcspn(email, "\n")] = '\0'; // Remove newline
-
-    printf("Enter your password: ");
-    fgets(password, sizeof(password), stdin);
-    password[strcspn(password, "\n")] = '\0'; // Remove newline
-
-    // Build LOGIN command
-    snprintf(buffer, sizeof(buffer), "LOGIN\nmail:%s\npassword:%s\n", email, password);
-
-    // Send command to server
-    if (send(sock, buffer, strlen(buffer), 0) < 0) {
-        perror("Error sending login");
-        return;
-    }
-
-    // Read server response
-    memset(buffer, 0, sizeof(buffer));
-    if (recv(sock, buffer, sizeof(buffer) - 1, 0) < 0) {
-        perror("Error receiving response");
-        return;
-    }
-
-    // Display response
-    printf("Server response: %s\n", buffer);
-
-    // Extract token on success
-    if (strncmp(buffer, "200/OK", 6) == 0) {
-        sscanf(buffer, "200/OK\ntoken:%63s\n", token);
-        printf("Logged in successfully! Token: %s\n", token);
-    } else {
-        printf("Login failed! Please check your credentials.\n");
-    }
+void input(char *output)
+{
+    fgets(output, sizeof(output), stdin);
+    output[strcspn(output, "\n")] = '\0';
 }
 
-void send_message(int sock, const char *token) {
-    char message[BUFFER_SIZE], buffer[BUFFER_SIZE];
+void menu_message(int sock)
+{
+    command_t command = create_command(SEND_MESSAGE);
+    char token[64], message[BUFFER_SIZE], message_len[10], buffer[BUFFER_SIZE];
 
+    printf("Enter your token: ");
+    input(token);
 
-    // if (strlen(token) == 0) {
-    //     printf("You need to login first!\n");
-    //     return;
-    // }
     printf("Enter your message: ");
-    fgets(message, sizeof(message), stdin);
-    message[strcspn(message, "\n")] = '\0'; // Remove newline
+    input(message);
 
-    // Build MSG command
-    snprintf(buffer, sizeof(buffer), "MSG\ntoken:%s\nmessage-length:%lu\ncontent:%s\n", 
-             token, strlen(message), message);
-
-    // Send command to server
-    if (send(sock, buffer, strlen(buffer), 0) < 0) {
-        perror("Error sending message");
-        return;
-    }
-
-    // Read server response
-    memset(buffer, 0, sizeof(buffer));
-    if (recv(sock, buffer, sizeof(buffer) - 1, 0) < 0) {
-        perror("Error receiving response");
-        return;
-    }
-
-    printf("Server response: %s\n", buffer);
+    send_message(sock, token, message);
 }
 
-int main() {
+void menu_login(int sock)
+{
+    char api_token[CHAR_SIZE];
+
+    printf("Enter your api token: ");
+    input(api_token);
+
+    send_login(sock, api_token);
+}
+
+void disconnect(int sock)
+{
+    write(sock, "DISCONNECTED", 12);
+    close(sock);
+}
+
+int main()
+{
     int sock;
     struct sockaddr_in server_addr;
     int choice;
@@ -122,14 +92,13 @@ int main() {
 
         switch (choice) {
         case 1:
-            send_message(sock, token);
+            menu_message(sock);
             break;
         case 2:
-            handle_login(sock, token);
+            menu_login(sock);
             break;
         case 3:
-            printf("Exiting...\n");
-            close(sock);
+            disconnect(sock);
             return EXIT_SUCCESS;
         default:
             printf("Invalid choice, please try again.\n");

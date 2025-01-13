@@ -14,3 +14,17 @@
 ```
 <action-name>:
 ```
+
+
+```
+ligne avec le nom de la commande
+
+nom attributu: valeur
+```
+
+```
+MSG
+token:aznekjnkjrngfkjdfnjgkndfkn
+message-lenght:39
+content:njknaezjknejkanzejkanzkejnazenjkaznejkaznekjaznjkenakjzenkajzenjk
+```
