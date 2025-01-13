@@ -1,69 +1,283 @@
+#include <fcntl.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <termio.h>
 #include <unistd.h>
+
+#include <signal.h>
 
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 
+#include "config.h"
+#include "database.h"
 #include "protocol.h"
 #include "types.h"
+#include "utils.h"
 
 #define SERVER_PORT 4242
-#define BUFFER_SIZE 1024
+#define LINE_WIDTH 80
 
-status_t *response;
+typedef struct {
+    char name[CHAR_SIZE];
+    int disabled;
+    void (*action)();
+} menu_action_t;
 
-void display_menu()
+typedef struct {
+    char name[CHAR_SIZE];
+    menu_action_t* actions;
+    int actions_count;
+} menu_t;
+
+PGconn* conn;
+volatile sig_atomic_t running = 1;
+response_status_t* response;
+int sock;
+user_t connected_user;
+
+// Display a menu and return the index of the selected action
+int display_menu(menu_t menu);
+
+// Create a menu, with a name and a list of actions (name and function)
+// The last action should have a NULL name
+// Example:
+// create_menu(menu, "Main menu", "Action 1", action1, "Action 2", action2, NULL);
+void create_menu(menu_t* menu, char name[], ...);
+
+void menu_add_action(menu_t* menu, char name[], void (*action)());
+
+void input(char* output)
 {
-    printf("[1] Send message\n");
-    printf("[2] Connection\n");
-    printf("[3] Exit\n");
+    scanf("%s", output);
+    getchar();
 }
 
-void input(char *output)
+void connection_pro()
 {
-    fgets(output, sizeof(output), stdin);
-    output[strcspn(output, "\n")] = '\0';
+    char mail[CHAR_SIZE], token[API_TOKEN_SIZE];
+    printf("\n   Enter your email: ");
+    input(mail);
+
+    if (strcmp(mail, "o") == 0) {
+        strcpy(mail, "brehat@gmail.com");
+    }
+
+    printf("Email entered: '%s'\n", mail);
+
+    int user_found = db_get_user_by_email(conn, &connected_user, mail);
+
+    if (!user_found) {
+        printf("User not found\n");
+        return;
+    }
+    printf("Token: %s\n", connected_user.api_token);
+    response = send_login(sock, connected_user.api_token);
 }
 
-void menu_message(int sock)
+void connection_client()
 {
-    command_t command = create_command(SEND_MESSAGE);
-    char token[64], message[BUFFER_SIZE], message_len[10], buffer[BUFFER_SIZE];
+    char mail[CHAR_SIZE], token[API_TOKEN_SIZE];
 
-    printf("Enter your token: ");
-    input(token);
+    printf("\n   Enter your email: ");
+    input(mail);
 
-    printf("Enter your message: ");
-    input(message);
+    if (strcmp(mail, "o") == 0) {
+        strcpy(mail, "eliaz.chesnel@outlook.fr");
+    }
 
-    send_message(sock, token, message);
+    printf("Email entered: '%s'\n", mail);
+    int user_found = db_get_user_by_email(conn, &connected_user, mail);
+
+    if (!user_found) {
+        printf("User not found\n");
+    }
+
+    printf("Token: %s\n", connected_user.api_token);
+    response = send_login(sock, connected_user.api_token);
+
+    if (response->code == 200) {
+        connected_user.type = MEMBER;
+    } else if (response->code == 403) {
+        connected_user = NOT_CONNECTED_USER;
+    }
 }
 
-void menu_login(int sock)
+void write_message(char* message)
 {
-    char api_token[CHAR_SIZE];
+    int index = 0;
+    int line_pos = 0;
+    int line_start[LARGE_CHAR_SIZE / LINE_WIDTH];
+    int line_count = 1;
+    char ch;
 
-    printf("Enter your api token: ");
-    input(api_token);
+    set_raw_mode();
 
-    send_login(sock, api_token);
+    line_start[0] = 0;
+
+    while (1) {
+        ch = getchar();
+
+        if (ch == 4) { // Ctrl+D pour envoyer
+            break;
+        } else if (ch == 127) { // Backspace
+            if (index > 0) {
+                if (message[index - 1] == '\n') {
+                    // Retour à la ligne précédente
+                    if (line_count > 1) {
+                        line_count--;
+                        line_pos = index - line_start[line_count - 1];
+                        printf("\033[F\033[%dC \033[D", line_pos); // Déplacer à la ligne précédente
+                    }
+                } else {
+                    line_pos--;
+                    printf("\b \b"); // Supprime le caractère précédent
+                }
+                index--;
+            }
+        } else if (ch == '\n') { // Retour à la ligne
+            if (line_count < LARGE_CHAR_SIZE / LINE_WIDTH) {
+                message[index++] = ch;
+                line_start[line_count++] = index;
+                printf("\n");
+                line_pos = 0;
+            }
+        } else if (index < LARGE_CHAR_SIZE - 1) { // Saisie normale
+            if (line_pos == LINE_WIDTH) { // Passage automatique à la ligne
+                message[index++] = '\n';
+                line_start[line_count++] = index;
+                printf("\n");
+                line_pos = 0;
+            }
+            message[index++] = ch;
+            putchar(ch); // Affiche le caractère
+            line_pos++;
+        }
+    }
+
+    message[index] = '\0'; // Terminer le message
+
+    reset_terminal_mode();
 }
 
-void disconnect(int sock)
+void menu_send_message()
 {
-    write(sock, "DISCONNECTED", 12);
+    clear_term();
+    char message[LARGE_CHAR_SIZE];
+    int receiver_id = 0;
+    menu_t menu_choose_receiver;
+
+    memset(message, 0, LARGE_CHAR_SIZE);
+
+    cprintf(CYAN, "\nSend a message\n\n");
+    printf("Send with Ctrl+D\n\n");
+
+    printf("Write your message:\n");
+
+    write_message(message);
+
+    printf("\n\nEnter the receiver id: ");
+    scanf("%d", &receiver_id);
+    getchar();
+
+    if (receiver_id == 100) {
+        receiver_id = 8;
+    } else if (receiver_id == 200) {
+        receiver_id = 11;
+    }
+
+    response = send_message(sock, connected_user.api_token, message, receiver_id);
+}
+
+void disconnect()
+{
+    running = 0;
+    send_disconnected(sock);
+    printf("\n   Disconnected\n");
     close(sock);
+}
+
+void signal_handler(int sig)
+{
+    if (sig == SIGINT) {
+        disconnect(sock);
+        running = 0;
+        exit(EXIT_SUCCESS);
+    }
+}
+
+void print_logo()
+{
+    printf("     _______   _           _        _\n");
+    printf("    |__   __| | |         | |      | |\n");
+    printf("       | | ___| |__   __ _| |_ __ _| |_ ___  _ __\n");
+    printf("       | |/ __| '_ \\ / _` | __/ _` | __/ _ \\| '__|\n");
+    printf("       | | (__| | | | (_| | || (_| | || (_) | |\n");
+    printf("       |_|\\___|_| |_|\\__,_|\\__\\__,_|\\__\\___/|_|\n\n");
+}
+
+void empty_action() {
 }
 
 int main()
 {
-    int sock;
+    print_logo();
+    int sock_ret;
     struct sockaddr_in server_addr;
     int choice;
-    char token[64] = ""; 
+    int is_connected = 0;
+    connected_user = NOT_CONNECTED_USER;
+
+    // Create all menus that require a choice
+    menu_t menu_login;
+    create_menu(
+        &menu_login, "Login",
+        "Connection client", connection_client,
+        "Connection pro", connection_pro,
+        "Connection admin", empty_action,
+        "Exit", disconnect,
+        NULL);
+    menu_t menu_client;
+    create_menu(
+        &menu_client, "Client",
+        "Send a message", menu_send_message,
+        "Display unread messages", empty_action,
+        "Modify a message", empty_action,
+        "Delete a message", empty_action,
+        "Display messages history", empty_action,
+        "Exit", disconnect,
+        NULL);
+    menu_t menu_pro;
+    create_menu(
+        &menu_pro, "Professional",
+        "Send a message", menu_send_message,
+        "Display unread messages", empty_action,
+        "Modify a message", empty_action,
+        "Delete a message", empty_action,
+        "Display messages history", empty_action,
+        "Exit", disconnect,
+        NULL);
+    menu_t menu_admin;
+    create_menu(
+        &menu_admin, "Admin",
+        "Send a message", menu_send_message,
+        "Block a message", empty_action,
+        "Ban a user", empty_action,
+        "Exit", disconnect,
+        NULL);
+
+    config_t* config;
+    config = malloc(sizeof(config_t));
+    config_load(config);
+
+    env_load("..");
+
+    db_login(&conn);
+
+    signal(SIGINT, signal_handler);
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("Cannot create socket");
@@ -75,37 +289,154 @@ int main()
     server_addr.sin_port = htons(SERVER_PORT);
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
-    // Connect to server
-    if (connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
-        perror("Cannot connect to the server");
+    if ((sock_ret = connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr))) < 0) {
+        perror("Cannot connect to the server socket");
+        disconnect(sock);
         exit(EXIT_FAILURE);
+    } else {
+        printf("Connected to server !\n");
     }
 
-    printf("Connected to server\n");
+    while (running) {
+        choice = 0;
+        is_connected = memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0;
 
-    // Main loop
-    while (1) {
-        display_menu();
+        // printf("Connected: %d\n", is_connected);
+        // printf("User type: %d\n", connected_user.type);
+        // printf("User name: %s\n", connected_user.name);
 
-        scanf("%d", &choice);
-        getchar();
+        if (is_connected) {
+            if (connected_user.type == UNKNOWN) {
+                db_set_user_type(conn, &connected_user);
+            }
 
-        switch (choice) {
-        case 1:
-            menu_message(sock);
-            break;
-        case 2:
-            menu_login(sock);
-            break;
-        case 3:
-            disconnect(sock);
-            return EXIT_SUCCESS;
-        default:
-            printf("Invalid choice, please try again.\n");
-            break;
+            if (connected_user.type == MEMBER) {
+                choice = display_menu(menu_client);
+                menu_client.actions[choice].action();
+            } else if (connected_user.type == PROFESSIONAL) {
+                choice = display_menu(menu_pro);
+                menu_pro.actions[choice].action();
+            } else if (connected_user.type == ADMIN) {
+                choice = display_menu(menu_admin);
+                menu_admin.actions[choice].action();
+            }
+        } else {
+            choice = display_menu(menu_login);
+            menu_login.actions[choice].action();
         }
     }
 
     close(sock);
     return EXIT_SUCCESS;
+}
+
+// Display a menu and return the index of the selected action
+int display_menu(menu_t menu)
+{
+    int selected = 0;
+    int entered = 0;
+    int key;
+
+    set_raw_mode();
+
+    while (running && !entered) {
+        clear_term();
+
+        printf("\n   %s\n\n", menu.name);
+
+        if (memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0) {
+            cprintf(CYAN, "   Connected as %s\n\n", connected_user.name);
+        }
+
+        for (int i = 0; i < menu.actions_count; i++) {
+            if (menu.actions[i].disabled) {
+                cprintf(GRAY, "○ %s\n", menu.actions[i].name);
+                continue;
+            }
+
+            if (selected == i) {
+                cprintf(CYAN, " ● ");
+            } else {
+                printf(" ○ ");
+            }
+
+            // if (selected == i) {
+            //     cprintf(CYAN, "%s\n", menu.actions[i].name);
+            // } else {
+            // }
+            printf("%s\n", menu.actions[i].name);
+        }
+
+        if (response != NULL) {
+            printf("\nResponse: %d %s\n", response->code, response->message);
+        }
+
+        key = get_arrow_key();
+        switch (key) {
+        case 'U':
+            selected = (selected - 1 + menu.actions_count) % menu.actions_count;
+            break;
+        case 'D':
+            selected = (selected + 1) % menu.actions_count;
+            break;
+        case '\n':
+            entered = 1;
+            break;
+        }
+    }
+
+    reset_terminal_mode();
+
+    return selected;
+}
+
+// Create a menu, with a name and a list of actions (name and function)
+// The last action should have a NULL name
+// Example:
+// create_menu(menu, "Main menu", "Action 1", action1, "Action 2", action2, NULL);
+void create_menu(menu_t* menu, char name[], ...)
+{
+    va_list args;
+    va_start(args, name);
+
+    menu->actions_count = 0;
+    strcpy(menu->name, name);
+
+    while (1) {
+        char* action_name = va_arg(args, char*);
+        printf("Action name: %s\n", action_name);
+
+        if (action_name == NULL) {
+            break;
+        }
+
+        menu->actions_count++;
+    }
+
+    if (menu->actions_count == 0) {
+        menu->actions = NULL;
+        va_end(args);
+        return;
+    }
+
+    menu->actions_count /= 2;
+    menu->actions = malloc((menu->actions_count + 1) * sizeof(menu_action_t));
+
+    va_start(args, name);
+
+    for (int i = 0; i < menu->actions_count; i++) {
+        char* action_name = va_arg(args, char*);
+        menu->actions[i].disabled = 0;
+        strcpy(menu->actions[i].name, action_name);
+        menu->actions[i].action = va_arg(args, void (*)());
+    }
+
+    va_end(args);
+}
+
+void menu_add_action(menu_t* menu, char name[], void (*action)()) {
+    menu->actions[menu->actions_count].disabled = 0;
+    strcpy(menu->actions[menu->actions_count].name, name);
+    menu->actions[menu->actions_count].action = action;
+    menu->actions_count++;
 }

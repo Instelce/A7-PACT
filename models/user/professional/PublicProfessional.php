@@ -15,7 +15,7 @@ class PublicProfessional extends DBModel
 
   public function attributes(): array
   {
-    return [];
+    return ['pro_id'];
   }
 
   public static function pk(): string

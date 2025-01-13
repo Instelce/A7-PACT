@@ -28,9 +28,7 @@ class m0020_create_table_offer_schedule
     public function down()
     {
         $sql = "DROP TABLE offer_schedule CASCADE;
-                DROP TABLE activity_schedule CASCADE;
-                DROP TABLE restaurant_schedule CASCADE;
-                DROP TABLE park_schedule CASCADE;";
+                DROP TABLE link_schedule CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

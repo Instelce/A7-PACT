@@ -1,36 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const switchCondition = document.getElementById("switch-condition-utilisation");
-    const submitButton = document.querySelector("button[type='submit']");
-
-    const updateButtonState = () => {
-        if (switchCondition.checked) {
-            submitButton.disabled = false;
-            submitButton.classList.remove("cursor-not-allowed");
-        } else {
-            submitButton.disabled = true;
-            submitButton.classList.add("cursor-not-allowed");
-        }
-    };
-
-    switchCondition.addEventListener("change", updateButtonState);
-
-    updateButtonState();
-});
-
-const phoneInputs = document.querySelectorAll('input[type="tel"]');
-
-function formatPhoneInput(event) {
-    const input = event.target;
-    let rawValue = input.value.replace(/\D/g, '');
-    rawValue = rawValue.substring(0, 10);
-    const format = rawValue.replace(/(\d{2})(?=\d)/g, '$1 ').trim();
-    input.value = format;
-}
-phoneInputs.forEach((input) => {
-    input.addEventListener('input', formatPhoneInput);
-});
-
-
 function formatPasswordInput(inputElement, messageElement) {
     const letter = messageElement.querySelector(".letter");
     const capital = messageElement.querySelector(".capital");
@@ -75,19 +42,49 @@ function updateRequirement(condition, element) {
     }
 }
 
-function print(messageElement){
+function print(messageElement) {
     messageElement.classList.remove("hidden");
 }
 
 let passwordInputs = document.querySelectorAll(".password-check");
-passwordInputs.forEach(container=>{
+passwordInputs.forEach(container => {
     let input = container.querySelector("input[type='password']");
     let message = container.querySelector(".password-requirements");
-    input.addEventListener('click',()=>{
+    input.addEventListener('click', () => {
         print(message);
     })
-    input.addEventListener('input', ()=>{
+    input.addEventListener('input', () => {
         print(message);
         formatPasswordInput(input, message);
     })
 })
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const passwordInput = document.querySelector("#password input[slot='input']");
+    const passwordConfirmInput = document.querySelector("#passwordConfirm input[slot='input']");
+    const submitButton = document.getElementById("passwordModify");
+
+    function validatePasswords() {
+        const password = passwordInput.value;
+        const passwordConfirm = passwordConfirmInput.value;
+
+        if (password === passwordConfirm) {
+            passwordConfirmInput.setCustomValidity("");
+        } else {
+            passwordConfirmInput.setCustomValidity("Les mots de passe ne correspondent pas.");
+        }
+    }
+
+    passwordInput.addEventListener("input", validatePasswords);
+    passwordConfirmInput.addEventListener("input", validatePasswords);
+
+    // Optionally, disable the submit button until the passwords match
+    document.querySelector("#reset-password").addEventListener("submit", function (event) {
+        if (passwordInput.value !== passwordConfirmInput.value) {
+            event.preventDefault();
+            alert("Les mots de passe ne correspondent pas.");
+        }
+    });
+});

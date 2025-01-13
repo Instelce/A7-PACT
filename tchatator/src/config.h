@@ -11,9 +11,10 @@ typedef struct config {
     int max_messages_per_hours;
     int max_message_length;
     int max_message_reception_block;
+    char admin_api_token[API_TOKEN_SIZE];
 } config_t;
 
-void config_load(config_t *c);
+void config_load(config_t* c);
 
 void env_load(char dir_path[]);
 

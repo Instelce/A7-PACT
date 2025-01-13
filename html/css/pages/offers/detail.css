@@ -1,83 +1,108 @@
 .inlineOfferGap {
-    display: flex; /*Use flex to display in row*/
+    display: flex;
+    /*Use flex to display in row*/
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    gap: 20px; /* Space between items */
-    margin: 5px; /* Margin around the container */
+    gap: 20px;
+    /* Space between items */
+    margin: 5px;
+    /* Margin around the container */
 }
 
 .inline-offer {
-    display: flex; /*Use flex to display in row*/
+    display: flex;
+    /*Use flex to display in row*/
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    gap: .5rem; /* Space between items */
+    gap: .5rem;
+    /* Space between items */
 }
 
 .inlineOfferTop {
-    display: flex; /*Use flex to display in row*/
+    display: flex;
+    /*Use flex to display in row*/
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    width: 100%; /* Full width of the container */
-    justify-content: space-between; /* Space out items evenly */
+    width: 100%;
+    /* Full width of the container */
+    justify-content: space-between;
+    /* Space out items evenly */
 }
 
 .containerAcordeon {
-    display: flex; /*Use flex to display in row*/
+    display: flex;
+    /*Use flex to display in row*/
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    width: 100%; /* Full width of the container */
-    gap: 5px; /* Space between items */
+    width: 100%;
+    /* Full width of the container */
+    gap: 5px;
+    /* Space between items */
 }
 
 .columnOffer {
-    display: flex; /*Use flex to display in column*/
+    display: flex;
+    /*Use flex to display in column*/
     flex-direction: column;
     flex-wrap: wrap;
-    gap: 20px; /* Space between items */
-    font-weight: 550; /* Set font weight */
+    gap: 20px;
+    /* Space between items */
+    font-weight: 550;
+    /* Set font weight */
 }
 
 .paddingOfferDetailed {
-    display: flex; /*Use flex to display in column*/
+    display: flex;
+    /*Use flex to display in column*/
     flex-direction: column;
     flex-wrap: nowrap;
-    align-items: flex-start; /* Align items to the start of the container */
-    gap: 30px; /* Space between items */
+    align-items: flex-start;
+    /* Align items to the start of the container */
+    gap: 30px;
+    /* Space between items */
 }
 
 x-acordeon {
-    width: 100%; /* Full width of the container */
+    width: 100%;
+    /* Full width of the container */
 }
 
 .acordeonSize {
-    width: 100%; /* Full width of the container */
+    width: 100%;
+    /* Full width of the container */
 }
 
 .publication {
-    display: flex; /*Use flex to display in row*/
+    display: flex;
+    /*Use flex to display in row*/
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 5px; /* Space between items */
-    justify-content: flex-end; /* Align items to the end of the container */
+    gap: 5px;
+    /* Space between items */
+    justify-content: flex-end;
+    /* Align items to the end of the container */
     color: rgb(var(--color-gray-4));
     background: white;
     padding: .5rem;
 }
 
 .author {
-    text-decoration: underline; /* Underline the text */
+    text-decoration: underline;
+    /* Underline the text */
 }
 
 .offer-closed {
     color: red;
 }
+
 .offer-closing-soon {
     color: orange;
 }
+
 .offer-open {
     color: green;
 }
@@ -101,9 +126,11 @@ x-acordeon {
     border-radius: var(--radius-medium);
     z-index: 1;
 }
+
 .page-header.touched {
     border-radius: 0 0 var(--radius-medium) var(--radius-medium);
 }
+
 .page-header p {
     margin-top: .25rem;
     margin-bottom: .25rem;
@@ -151,16 +178,23 @@ section {
     display: flex;
     gap: .5rem;
 }
+
 .rating-choice .star {
     width: 3rem;
     height: 3rem;
     transition: background-color .2s;
 }
+
 .rating-choice .star.high {
     background: rgb(var(--color-orange-secondary)) !important;
 }
+
 .rating-choice .star.not-high {
     background: rgb(var(--color-gray-1)) !important;
+}
+
+.rating-choice .star.left-half {
+    background: linear-gradient(to left, rgb(var(--color-gray-1)) 50%, rgb(var(--color-orange-secondary)) 50%) !important;
 }
 
 
@@ -183,7 +217,7 @@ section {
 }
 
 @media only screen and (max-width: 728px) {
-    .important_data{
+    .important_data {
         display: none;
     }
 }

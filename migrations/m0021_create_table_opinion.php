@@ -10,7 +10,7 @@ class m0021_create_table_opinion
         $sql = "CREATE TABLE opinion (
             id SERIAL PRIMARY KEY,
             
-            rating INT NOT NULL,
+            rating FLOAT NOT NULL,
             title VARCHAR(128) NOT NULL,
             comment VARCHAR(255) NOT NULL,
             visit_date DATE NOT NULL,
@@ -22,8 +22,11 @@ class m0021_create_table_opinion
             account_id INT NOT NULL,
             offer_id INT NOT NULL,
             
+            nb_reports INT NOT NULL,
+
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            
             
             FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE,
             FOREIGN KEY (offer_id) REFERENCES offer(id) ON DELETE CASCADE
@@ -34,6 +37,18 @@ class m0021_create_table_opinion
             opinion_id INT NOT NULL,
             
             FOREIGN KEY (opinion_id) REFERENCES opinion(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE opinion_like(
+            opinion_id INT NOT NULL,
+            account_id INT NOT NULL,
+            CONSTRAINT opinion_like_pk PRIMARY KEY(opinion_id, account_id)
+        );
+
+        CREATE TABLE opinion_dislike(
+            opinion_id INT NOT NULL,
+            account_id INT NOT NULL,
+            CONSTRAINT opinion_dislike_pk PRIMARY KEY(opinion_id, account_id)
         );";
         $db->pdo->exec($sql);
     }
@@ -41,7 +56,9 @@ class m0021_create_table_opinion
     public function down()
     {
         $sql = "DROP TABLE opinion CASCADE;
-                DROP TABLE opinion_photo CASCADE;";
+                DROP TABLE opinion_photo CASCADE;
+                DROP TABLE opinion_like CASCADE;
+                DROP TABLE opinion_dislike CASCADE;";
         Application::$app->db->pdo->exec($sql);
     }
 }

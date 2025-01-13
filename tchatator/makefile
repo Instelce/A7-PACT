@@ -2,13 +2,15 @@ CC = cc
 CFLAGS = -Wall
 
 output = bin
-utils = src/database.c src/protocol.c src/log.c src/config.c src/utils.c
+utils = src/database.c src/protocol.c src/log.c src/config.c src/utils.c src/websocket.c src/crypto.c
 
 server: $(utils) src/server.c
+	mkdir -p $(output)
 	$(CC) $^ -o $(output)/server -I/usr/include -L/usr/lib -lpq
 	./$(output)/server
 
 client: $(utils) src/client.c
+	mkdir -p $(output)
 	$(CC) $^ -o $(output)/client -I/usr/include -L/usr/lib -lpq
 	./$(output)/client
 

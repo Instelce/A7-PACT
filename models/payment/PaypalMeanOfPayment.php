@@ -16,7 +16,7 @@ class PaypalMeanOfPayment extends DBModel
 
     public function attributes(): array
     {
-        return ['paypal_url'];
+        return ['id','paypal_url'];
     }
 
     public static function pk(): string

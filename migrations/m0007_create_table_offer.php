@@ -27,7 +27,7 @@ class m0007_create_table_offer
             phone_number VARCHAR(10),
             category VARCHAR(20) NOT NULL,
             minimum_price FLOAT,
-            rating INT NOT NULL DEFAULT 0,
+            rating FLOAT NOT NULL DEFAULT 0,
             
             professional_id INT NOT NULL,
             address_id INT NOT NULL,
