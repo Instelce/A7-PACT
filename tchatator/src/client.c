@@ -38,6 +38,8 @@ volatile sig_atomic_t running = 1;
 response_status_t* response;
 int sock;
 user_t connected_user;
+user_list_t pros;
+user_list_t clients;
 
 // Display a menu and return the index of the selected action
 int display_menu(menu_t menu);
@@ -179,9 +181,8 @@ void menu_send_message()
 
     write_message(message);
 
-    printf("\n\nEnter the receiver id: ");
-    scanf("%d", &receiver_id);
-    getchar();
+    // display all member if u are a pros and all pros if u are a member
+    // we need to choose with arrows the receiver
 
     if (receiver_id == 100) {
         receiver_id = 8;
@@ -192,6 +193,11 @@ void menu_send_message()
     response = send_message(sock, connected_user.api_token, message, receiver_id);
 }
 
+void menu_delete_message()
+{
+    int message_id;
+    // display all message sender_id === connecteduser id to choose w arrows
+}
 void disconnect()
 {
     running = 0;
@@ -211,15 +217,16 @@ void signal_handler(int sig)
 
 void print_logo()
 {
-    printf("     _______   _           _        _\n");
-    printf("    |__   __| | |         | |      | |\n");
-    printf("       | | ___| |__   __ _| |_ __ _| |_ ___  _ __\n");
-    printf("       | |/ __| '_ \\ / _` | __/ _` | __/ _ \\| '__|\n");
-    printf("       | | (__| | | | (_| | || (_| | || (_) | |\n");
-    printf("       |_|\\___|_| |_|\\__,_|\\__\\__,_|\\__\\___/|_|\n\n");
+    cprintf(RED, "     _______   _           _        _\n");
+    cprintf(RED, "    |__   __| | |         | |      | |\n");
+    cprintf(RED, "       | | ___| |__   __ _| |_ __ _| |_ ___  _ __\n");
+    cprintf(RED, "       | |/ __| '_ \\ / _` | __/ _` | __/ _ \\| '__|\n");
+    cprintf(RED, "       | | (__| | | | (_| | || (_| | || (_) | |\n");
+    cprintf(RED, "       |_|\\___|_| |_|\\__,_|\\__\\__,_|\\__\\___/|_|\n\n");
 }
 
-void empty_action() {
+void empty_action()
+{
 }
 
 int main()
@@ -298,6 +305,8 @@ int main()
         printf("Connected to server !\n");
     }
 
+    pros = db_get_professionals(conn, 0, 5);
+    clients = db_get_members(conn, 0, 5);
     while (running) {
         choice = 0;
         is_connected = memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0;
@@ -310,7 +319,6 @@ int main()
             if (connected_user.type == UNKNOWN) {
                 db_set_user_type(conn, &connected_user);
             }
-
             if (connected_user.type == MEMBER) {
                 choice = display_menu(menu_client);
                 menu_client.actions[choice].action();
@@ -435,7 +443,8 @@ void create_menu(menu_t* menu, char name[], ...)
     va_end(args);
 }
 
-void menu_add_action(menu_t* menu, char name[], void (*action)()) {
+void menu_add_action(menu_t* menu, char name[], void (*action)())
+{
     menu->actions[menu->actions_count].disabled = 0;
     strcpy(menu->actions[menu->actions_count].name, name);
     menu->actions[menu->actions_count].action = action;

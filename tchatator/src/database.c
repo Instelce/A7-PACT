@@ -2,8 +2,8 @@
 
 #include <libpq-fe.h>
 #include <stdbool.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
@@ -137,7 +137,6 @@ int db_get_user_by_email(PGconn* conn, user_t* user, char email[])
     return 1;
 }
 
-
 int db_get_user_by_api_token(PGconn* conn, user_t* user, char api_token[])
 {
     PGresult* res;
@@ -163,7 +162,8 @@ int db_get_user_by_api_token(PGconn* conn, user_t* user, char api_token[])
     return 1;
 }
 
-int db_get_message(PGconn* conn, int message_id, message_t* message) {
+int db_get_message(PGconn* conn, int message_id, message_t* message)
+{
     PGresult* res;
     char query[256];
 
@@ -217,8 +217,9 @@ void db_create_message(PGconn* conn, message_t* message)
     PQclear(res);
 }
 
-void db_update_message(PGconn *conn, message_t *message) {
-    PGresult *res;
+void db_update_message(PGconn* conn, message_t* message)
+{
+    PGresult* res;
     char query[256];
 
     set_date_now(message->modified_date);
@@ -235,7 +236,8 @@ void db_update_message(PGconn *conn, message_t *message) {
     PQclear(res);
 }
 
-void db_delete_message(PGconn* conn, int message_id) {
+void db_delete_message(PGconn* conn, int message_id)
+{
     PGresult* res;
     char query[256];
 
@@ -275,8 +277,8 @@ char* get_token_by_email(PGconn* conn, char email[])
     return token;
 }
 
-
-int db_set_user_type(PGconn *conn, user_t *user) {
+int db_set_user_type(PGconn* conn, user_t* user)
+{
     PGresult* res;
     char query[256];
 
@@ -309,4 +311,54 @@ int db_set_user_type(PGconn *conn, user_t *user) {
     }
 
     return 0;
+}
+
+user_list_t db_get_members(PGconn* conn, int offset, int limit)
+{
+    user_list_t user_list;
+    PGresult* res;
+    char query[256];
+    sprintf(query, "SELECT account_id, mail, api_token FROM user_account JOIN member_user ON account_id = user_id LIMIT %d OFFSET %d", limit, offset);
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Error when fetching clients");
+    }
+
+    user_list.count = PQntuples(res);
+    user_list.users = malloc(user_list.count * sizeof(user_t));
+
+    for (int i = 0; i < user_list.count; i++) {
+        user_list.users[i] = init_user(atoi(PQgetvalue(res, i, 0)), PQgetvalue(res, i, 1), PQgetvalue(res, i, 2));
+    }
+
+    PQclear(res);
+
+    return user_list;
+}
+
+user_list_t db_get_professionals(PGconn* conn, int offset, int limit)
+{
+    user_list_t user_list;
+    PGresult* res;
+    char query[256];
+
+    sprintf(query, "SELECT account_id, mail, api_token FROM user_account JOIN professional_user ON account_id = user_id LIMIT %d OFFSET %d", limit, offset);
+
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Error when fetching professionals");
+    }
+
+    user_list.count = PQntuples(res);
+    user_list.users = malloc(user_list.count * sizeof(user_t));
+
+    for (int i = 0; i < user_list.count; i++) {
+        user_list.users[i] = init_user(atoi(PQgetvalue(res, i, 0)), PQgetvalue(res, i, 1), PQgetvalue(res, i, 2));
+    }
+
+    PQclear(res);
+
+    return user_list;
 }
