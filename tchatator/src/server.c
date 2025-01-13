@@ -296,13 +296,11 @@ int main(int argc, char* argv[])
                     // Handle the login command
                     if (strcmp(command.name, LOGIN) == 0 && !client_login) {
                         strcpy(api_token, get_command_param_value(command, "api-token"));
-
-                        printf("API token: %s\n", api_token);
+                        trim(api_token);
+                        api_token[API_TOKEN_SIZE - 1] = '\0';
 
                         user_t tmp_user;
                         int user_found = db_get_user_by_api_token(conn, &tmp_user, api_token);
-
-                        printf("User found: %d\n", user_found);
 
                         if (!user_found) {
                             send_status(sock_conn, STATUS_DENIED, "Accès refusé");

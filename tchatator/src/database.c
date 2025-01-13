@@ -141,11 +141,11 @@ int db_get_user_by_email(PGconn* conn, user_t* user, char email[])
 int db_get_user_by_api_token(PGconn* conn, user_t* user, char api_token[])
 {
     PGresult* res;
-    const char* paramValues[1] = { api_token };
+    char query[256];
 
-    res = PQexecParams(conn,
-        "SELECT account_id, mail, api_token FROM user_account WHERE api_token = $1",
-        1, NULL, paramValues, NULL, NULL, 0);
+    sprintf(query, "SELECT account_id, mail, api_token FROM user_account WHERE api_token = '%s'", api_token);
+
+    res = PQexec(conn, query);
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
         db_error(conn, "Error when fetching user");
