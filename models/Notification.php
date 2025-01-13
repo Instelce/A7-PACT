@@ -6,7 +6,6 @@ use app\core\DBModel;
 class Notification extends DBModel
 {
     public const IS_READ = 1;
-
     public const IS_NOT_READ = 0;
     public int $notif_id = 0;
     public string $send_at = '';

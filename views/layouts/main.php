@@ -69,13 +69,34 @@ use app\core\Application;
                 <i data-lucide="search"></i>
             </a>
 
-            <?php if (Application::$app->isAuthenticated()) { ?>
-                <!-- Avatar -->
-                <div class="avatar">
-                    <div class="image-container">
-                        <img src="<?php echo Application::$app->user->avatar_url ?>"
-                            alt="<?php echo Application::$app->user->mail ?>">
-                    </div>
+        <?php if (Application::$app->isAuthenticated()) { ?>
+            <!-- Notifications -->
+            <div class="notifications">
+                <?php
+                    //if (){
+                ?>
+                <div class="notifications-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+                </div>
+                <?php //} else { ?>
+                <!--<div class="notifications-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-dot"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M13.916 2.314A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.74 7.327A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673 9 9 0 0 1-.585-.665"/><circle cx="18" cy="8" r="3" fill="red" stroke="red"/></svg>
+                </div>-->
+                <?php //} ?>
+
+                <div class="notifications-content">
+                    <a href="#">Notif 1</a>
+                    <a href="#">Notif 1</a>
+
+                </div>
+            </div>
+
+            <!-- Avatar -->
+            <div class="avatar">
+                <div class="image-container">
+                    <img src="<?php echo Application::$app->user->avatar_url ?>"
+                         alt="<?php echo Application::$app->user->mail ?>">
+                </div>
 
                     <div class="avatar-options">
 

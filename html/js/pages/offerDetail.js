@@ -211,27 +211,26 @@ let starSVG = '<svg width=".8rem" height=".8rem" viewBox="0 0 10 11" fill="#000"
     '</svg>';
 
 
-
 async function addLike(id){
-    await fetch(`/api/opinions/${id}/likes`,
-        {
-            method: 'post',
-            body: JSON.stringify({
-                action: 'add'
+     await fetch(`/api/opinions/${id}/likes`,
+            {
+                method: 'post',
+                body: JSON.stringify({
+                    action: 'add'
+                })
             })
-        })
-        .then(response => response.json())
+            .then(response => response.json())
 }
 
 async function removeLike(id){
     await fetch(`/api/opinions/${id}/likes`,
-        {
-            method: 'post',
-            body: JSON.stringify({
-                action: 'remove'
+            {
+                method: 'post',
+                body: JSON.stringify({
+                    action: 'remove'
+                })
             })
-        })
-        .then(response => response.json())
+            .then(response => response.json())
 }
 
 async function addDislike(id){
@@ -290,6 +289,8 @@ loaderButton.addEventListener('click', () => {
 
 // Trigger the loader button
 loaderButton.click();
+
+let userResponse = await getUser();
 
 function createOpinionCard(opinion) {
     let card = document.createElement('article');
@@ -437,52 +438,73 @@ function createOpinionCard(opinion) {
     let currentDislikes = parseInt(dislikeText.innerHTML, 10);
     let currentLikes = parseInt(likeText.innerHTML, 10);
 
-    likeButton.addEventListener("click", () => {
-        console.log(opinion.id, opinionLiked, opinionDisliked)
-        if(!opinionLiked){
-            if(opinionDisliked){
-                removeDislike(opinion.id);
-                dislikeText.innerHTML = (currentDislikes - 1).toString();
-                currentDislikes = parseInt(dislikeText.innerHTML, 10);
-                dislikeSvg.setAttribute('fill', 'none');
-                opinionDisliked = false;
-            }
-            addLike(opinion.id);
-            likeText.innerHTML = (currentLikes + 1).toString();
-            currentLikes = parseInt(likeText.innerHTML, 10);
-            likeSvg.setAttribute('fill', 'rgb(0, 87, 255)');
-            opinionLiked = true;
-        }
-        else{
-            removeLike(opinion.id);
-            likeText.innerHTML = (currentLikes - 1).toString();
-            currentLikes = parseInt(likeText.innerHTML, 10);
-            likeSvg.setAttribute('fill', 'none');
-            opinionLiked = false;
-        }
-    })
 
-    dislikeButton.addEventListener("click", () => {
-        if(!opinionDisliked){
-            if(opinionLiked){
+    likeButton.addEventListener("click", () => {
+        if (userResponse.error === "Not authenticated") {
+            opinionForm.classList.remove('hidden');
+            opinionAddButton.classList.add('hidden');
+            window.scrollTo({
+                top: document.querySelector('#opinion-form').offsetTop - 130,
+                behavior: 'smooth'
+            });
+        } else {
+            console.log(opinion.id, opinionLiked, opinionDisliked);
+            if (!opinionLiked) {
+                // Si l'opinion n'a pas encore été likée
+                if (opinionDisliked) {
+                    removeDislike(opinion.id);
+                    dislikeText.innerHTML = (currentDislikes - 1).toString();
+                    currentDislikes = parseInt(dislikeText.innerHTML, 10);
+                    dislikeSvg.setAttribute('fill', 'none');
+                    opinionDisliked = false;
+                }
+                addLike(opinion.id);
+                likeText.innerHTML = (currentLikes + 1).toString();
+                currentLikes = parseInt(likeText.innerHTML, 10);
+                likeSvg.setAttribute('fill', 'rgb(0, 87, 255)');
+                opinionLiked = true;
+            } else {
+                // Si l'opinion est déjà likée
                 removeLike(opinion.id);
                 likeText.innerHTML = (currentLikes - 1).toString();
                 currentLikes = parseInt(likeText.innerHTML, 10);
                 likeSvg.setAttribute('fill', 'none');
                 opinionLiked = false;
             }
-            addDislike(opinion.id);
-            dislikeText.innerHTML = (currentDislikes + 1).toString();
-            currentDislikes = parseInt(dislikeText.innerHTML, 10);
-            dislikeSvg.setAttribute('fill', 'rgb(255, 59, 48)');
-            opinionDisliked = true;
         }
-        else{
-            removeDislike(opinion.id);
-            dislikeText.innerHTML = (currentDislikes - 1).toString();
-            currentDislikes = parseInt(dislikeText.innerHTML, 10);
-            dislikeSvg.setAttribute('fill', 'none');
-            opinionDisliked = false;
+    });
+
+
+    dislikeButton.addEventListener("click", () => {
+        if (userResponse.error === "Not authenticated") {
+            opinionForm.classList.remove('hidden');
+            opinionAddButton.classList.add('hidden');
+            window.scrollTo({
+                top: document.querySelector('#opinion-form').offsetTop - 130,
+                behavior: 'smooth'
+            });
+        } else {
+            if(!opinionDisliked){
+                if(opinionLiked){
+                    removeLike(opinion.id);
+                    likeText.innerHTML = (currentLikes - 1).toString();
+                    currentLikes = parseInt(likeText.innerHTML, 10);
+                    likeSvg.setAttribute('fill', 'none');
+                    opinionLiked = false;
+                }
+                addDislike(opinion.id);
+                dislikeText.innerHTML = (currentDislikes + 1).toString();
+                currentDislikes = parseInt(dislikeText.innerHTML, 10);
+                dislikeSvg.setAttribute('fill', 'rgb(255, 59, 48)');
+                opinionDisliked = true;
+            }
+            else{
+                removeDislike(opinion.id);
+                dislikeText.innerHTML = (currentDislikes - 1).toString();
+                currentDislikes = parseInt(dislikeText.innerHTML, 10);
+                dislikeSvg.setAttribute('fill', 'none');
+                opinionDisliked = false;
+            }
         }
     })
 

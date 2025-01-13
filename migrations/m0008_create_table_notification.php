@@ -8,6 +8,7 @@ class m0008_create_table_notification
         $db = Application::$app->db;
         $sql = "CREATE TABLE notification (
             id SERIAL PRIMARY KEY,
+            user_id INT NOT NULL,
             send_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             reception_day DATE NOT NULL,
             open_at TIMESTAMP NOT NULL,

@@ -334,7 +334,7 @@ $latitude = $offer->address()->latitude;
             <?php } else { ?>
                 <!-- Sign in reminder if not connected -->
                 <div id="opinion-form" class="flex flex-col gap-4 hidden mb-8">
-                    <p>Connectez-vous pour laisser un avis.</p>
+                    <p>Connectez-vous pour répondre, réagir ou laisser un avis.</p>
                     <a href="/connexion" class="button sm">
                         Se connecter
                     </a>

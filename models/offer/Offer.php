@@ -237,6 +237,8 @@ class Offer extends DBModel
         return count(Opinion::find(['offer_id' => $this->id, 'read' => 0]));
     }
 
+
+
     public function isALaUne()
     {
         return count(Subscription::query()
