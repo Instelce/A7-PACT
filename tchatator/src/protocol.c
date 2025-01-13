@@ -146,6 +146,8 @@ response_status_t* send_login(int sock, char api_token[])
     command_t command = create_command(LOGIN);
     char* buf;
 
+    trim(api_token);
+
     add_command_param(&command, "api-token", api_token);
 
     buf = format_command(command);
@@ -191,4 +193,17 @@ response_status_t* send_is_connected(int sock, int user_id)
     add_command_param(&command, "user-id", to_string(user_id));
 
     return request(sock, format_command(command));
+}
+
+void send_disconnected(int sock) {
+    command_t command = create_command(DISCONNECTED);
+    char buf[LARGE_CHAR_SIZE];
+    memset(buf, 0, sizeof(buf));
+
+    strcpy(buf, format_command(command));
+
+    if (write(sock, buf, strlen(buf)) < 0) {
+        perror("Error sending message");
+        exit(EXIT_FAILURE);
+    }
 }

@@ -62,8 +62,10 @@ user_t init_user(int id, char email[], char api_token[])
     user_t user;
 
     user.id = id;
+    strcpy(user.name, "");
     strcpy(user.email, email);
     strcpy(user.api_token, api_token);
+    user.type = UNKNOWN;
 
     return user;
 }
@@ -139,11 +141,11 @@ int db_get_user_by_email(PGconn* conn, user_t* user, char email[])
 int db_get_user_by_api_token(PGconn* conn, user_t* user, char api_token[])
 {
     PGresult* res;
-    char query[256];
+    const char* paramValues[1] = { api_token };
 
-    sprintf(query, "SELECT account_id, mail, api_token FROM user_account WHERE api_token = '%s'", api_token);
-
-    res = PQexec(conn, query);
+    res = PQexecParams(conn,
+        "SELECT account_id, mail, api_token FROM user_account WHERE api_token = $1",
+        1, NULL, paramValues, NULL, NULL, 0);
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
         db_error(conn, "Error when fetching user");
@@ -207,6 +209,8 @@ void db_create_message(PGconn* conn, message_t* message)
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         db_error(conn, "Error when creating message");
     }
+
+    // printf("Last inserted ID: %d\n", db_last_id(conn, "message"));
 
     message->id = db_last_id(conn, "message");
 
@@ -272,11 +276,11 @@ char* get_token_by_email(PGconn* conn, char email[])
 }
 
 
-user_type_t db_get_user_type(PGconn *conn, int id) {
+int db_set_user_type(PGconn *conn, user_t *user) {
     PGresult* res;
     char query[256];
 
-    sprintf(query, "SELECT user_id FROM member_user WHERE user_id = %d", id);
+    sprintf(query, "SELECT user_id, pseudo FROM member_user WHERE user_id = %d", user->id);
     res = PQexec(conn, query);
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
@@ -284,11 +288,13 @@ user_type_t db_get_user_type(PGconn *conn, int id) {
     }
 
     if (PQntuples(res) == 1) {
+        user->type = MEMBER;
+        strcpy(user->name, PQgetvalue(res, 0, 1));
         PQclear(res);
-        return MEMBER;
+        return 1;
     }
 
-    sprintf(query, "SELECT user_id FROM professional_user WHERE user_id = %d", id);
+    sprintf(query, "SELECT user_id, denomination FROM professional_user WHERE user_id = %d", user->id);
     res = PQexec(conn, query);
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
@@ -296,21 +302,11 @@ user_type_t db_get_user_type(PGconn *conn, int id) {
     }
 
     if (PQntuples(res) == 1) {
+        user->type = PROFESSIONAL;
+        strcpy(user->name, PQgetvalue(res, 0, 1));
         PQclear(res);
-        return PROFESSIONAL;
+        return 1;
     }
 
-    sprintf(query, "SELECT user_id FROM administrator_user WHERE user_id = %d", id);
-    res = PQexec(conn, query);
-
-    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
-        db_error(conn, "Error when fetching user type");
-    }
-
-    if (PQntuples(res) == 1) {
-        PQclear(res);
-        return ADMIN;
-    }
-
-    return -1;
+    return 0;
 }

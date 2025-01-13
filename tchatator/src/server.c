@@ -65,48 +65,8 @@ client_t init_client(int sock, pid_t pid, char ip[], user_t user);
 void add_client(int sock, pid_t pid, char ip[], user_t user);
 void remove_client(pid_t pid);
 client_t get_client(pid_t pid);
-int client_exist(pid_t pid);
+int client_pid_exist(pid_t pid);
 int client_connected(int user_id);
-
-void handle_client_frames(int client_socket)
-{
-    unsigned char buffer[1024];
-    int bytes_received;
-
-    while ((bytes_received = recv(client_socket, buffer, sizeof(buffer), 0)) > 0) {
-        unsigned char opcode = buffer[0] & 0x0F; // Extract opcode
-
-        // printf("Received frame with opcode 0x%02X\n", opcode);
-
-        switch (opcode) {
-        case 0x1: // Text frame
-            // Handle text data
-            printf("Text frame received: %s\n", buffer + 2);
-            break;
-        case 0x2: // Binary frame
-            // Handle binary data
-            printf("Binary frame received.\n");
-            break;
-        case 0x8: // Close frame
-            // Handle close
-            printf("Close frame received. Closing connection.\n");
-            return;
-        case 0x9: // Ping frame
-            // Respond with Pong
-            printf("Ping frame received. Sending Pong.\n");
-            send(client_socket, "\x8A\x00", 2, 0); // Simple pong response
-            break;
-        case 0xA: // Pong frame
-            // Handle Pong response
-            printf("Pong frame received.\n");
-            break;
-        default:
-            // Unknown frame type
-            printf("Unknown frame type received.\n");
-            break;
-        }
-    }
-}
 
 int main(int argc, char* argv[])
 {
@@ -196,9 +156,11 @@ int main(int argc, char* argv[])
     // user_t user;
     // user_t user2;
     // printf("Get user\n");
+    // db_get_user_by_api_token(conn, &user, "42ff94c3c4678cd76cf10fb018d6b904da0b3bc147e02e563d4324ac762f1506");
     // db_get_user(conn, &user, 1);
     // printf("User email : %s\n", user.email);
-    // printf("User type : %d\n", db_get_user_type(conn, 1));
+    // exit(0);
+    // printf("User type : %d\n", db_set_user_type(conn, 1));
 
     // printf("%s %s %d\n", user.email, user.api_token, user.id);
     // db_get_user_by_email(conn, &user2, "rouevictor@gmail.com");
@@ -251,25 +213,23 @@ int main(int argc, char* argv[])
             break;
 
         // Check if the client is a websocket client
-        handshake_request_t handshake_request;
-        char ws_handshake_request[LARGE_CHAR_SIZE];
-        memset(ws_handshake_request, 0, sizeof(ws_handshake_request));
+        // handshake_request_t handshake_request;
+        // char ws_handshake_request[LARGE_CHAR_SIZE];
+        // memset(ws_handshake_request, 0, sizeof(ws_handshake_request));
 
-        set_sock_timeout(sock_conn, 500);
-        recv(sock_conn, ws_handshake_request, sizeof(ws_handshake_request), 0);
-        set_sock_timeout(sock_conn, 0);
+        // set_sock_timeout(sock_conn, 500);
+        // recv(sock_conn, ws_handshake_request, sizeof(ws_handshake_request), 0);
+        // set_sock_timeout(sock_conn, 0);
 
-        if (is_ws_handshake(ws_handshake_request)) {
-            ws_parse_handshake_request(ws_handshake_request, &handshake_request);
-            is_ws_client = 1;
+        // if (is_ws_handshake(ws_handshake_request)) {
+        //     ws_parse_handshake_request(ws_handshake_request, &handshake_request);
+        //     is_ws_client = 1;
 
-            // Send handshake response
-            ws_send_handshake(sock_conn, &handshake_request);
+        //     // Send handshake response
+        //     ws_send_handshake(sock_conn, &handshake_request);
 
-            handle_client_frames(sock_conn);
-            ws_send_text_frame(sock_conn, "Coucou le client");
-            // printf("request %s\n", command_recv);
-        }
+        //     ws_send_text_frame(sock_conn, "Coucou le client");
+        // }
 
         // Retrieve the client ip and port
         client_port = ntohs(sock_conn_addr.sin_port);
@@ -308,53 +268,51 @@ int main(int argc, char* argv[])
                 //     printf("C Client %d %s\n", clients[i].ip, clients[i].user.email);
                 // }
 
-                if (is_ws_client) {
-                    continue;
-                }
-
                 memset(command_recv, 0, sizeof(command_recv));
 
                 // Wait for a client command
                 command_recv_len = recv(sock_conn, command_recv, sizeof(command_recv), 0);
 
-                printf("Command received: %s\n", command_recv);
+                // printf("Command received: %s\n", command_recv);
 
                 if (command_recv_len < 0) {
                     perror("Error reading from socket");
                     exit(1);
                 }
 
-                // Disconnect the client
-                if (strcmp(command_recv, "DISCONNECTED") == 0) {
-                    break;
-                }
-
                 command_parsed = parse_command(command_recv, &command);
 
                 if (command_parsed == -1) {
-                    if (!is_ws_client) {
-                        send_status(sock_conn, STATUS_MIS_FORMAT, "Message mal formaté");
-                        log_info("Invalid action received");
-                    }
-                    continue;
+                    send_status(sock_conn, STATUS_MIS_FORMAT, "Message mal formaté");
+                    log_info("Invalid action received");
                 } else {
                     log_info("Action received [%s]", command.name);
+
+                    // Disconnect the client
+                    if (strcmp(command.name, DISCONNECTED) == 0) {
+                        break;
+                    }
 
                     // Handle the login command
                     if (strcmp(command.name, LOGIN) == 0 && !client_login) {
                         strcpy(api_token, get_command_param_value(command, "api-token"));
 
-                        user_t user;
-                        int user_found = db_get_user_by_api_token(conn, &user, api_token);
+                        printf("API token: %s\n", api_token);
+
+                        user_t tmp_user;
+                        int user_found = db_get_user_by_api_token(conn, &tmp_user, api_token);
+
+                        printf("User found: %d\n", user_found);
 
                         if (!user_found) {
                             send_status(sock_conn, STATUS_DENIED, "Accès refusé");
+                            continue;
                         } else {
                             // For log
-                            strcpy(log_client_identity, user.email);
+                            strcpy(log_client_identity, tmp_user.email);
 
                             client_login = 1;
-                            clients[client_id].user = user;
+                            clients[client_id].user = tmp_user;
 
                             log_info("Client (%d) logged in", getpid());
                             send_status(sock_conn, STATUS_OK, "Accès autorisé");
@@ -393,6 +351,14 @@ int main(int argc, char* argv[])
 
                             send_status(sock_conn, STATUS_OK, "Message supprimé avec succès");
                         } else if (strcmp(command.name, IS_CONNECTED) == 0) {
+                            int user_id = atoi(get_command_param_value(command, "user-id"));
+
+                            if (client_connected(user_id)) {
+                                send_status(sock_conn, STATUS_OK, "Utilisateur connecté");
+                            } else {
+                                send_status(sock_conn, STATUS_DENIED, "Utilisateur non connecté");
+                            }
+                        } else {
                         }
                     } else {
                         send_status(sock_conn, STATUS_DENIED, "Action non autorisée");
@@ -625,8 +591,8 @@ void add_client(int sock, pid_t pid, char ip[], user_t user)
 {
     client_t client;
 
-    if (!client_exist(pid)) {
-        printf("Add client %d\n", *clients_count);
+    if (!client_pid_exist(pid)) {
+        // printf("Add client %d\n", *clients_count);
 
         client = init_client(sock, pid, ip, user);
         clients[*clients_count] = client;
@@ -638,7 +604,7 @@ void remove_client(pid_t pid)
 {
     for (int i = 0; i < *clients_count; i++) {
         if (clients[i].pid == pid) {
-            printf("Remove client %d\n", i);
+            // printf("Remove client %d\n", i);
             for (int j = i; j < *clients_count - 1; j++) {
                 clients[j] = clients[j + 1];
             }
@@ -659,7 +625,7 @@ client_t get_client(pid_t pid)
     return init_client(-1, -1, "", NOT_CONNECTED_USER);
 }
 
-int client_exist(pid_t pid)
+int client_pid_exist(pid_t pid)
 {
     for (int i = 0; i < *clients_count; i++) {
         if (clients[i].pid == pid) {

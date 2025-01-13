@@ -48,6 +48,8 @@ int display_menu(menu_t menu);
 // create_menu(menu, "Main menu", "Action 1", action1, "Action 2", action2, NULL);
 void create_menu(menu_t* menu, char name[], ...);
 
+void menu_add_action(menu_t* menu, char name[], void (*action)());
+
 void input(char* output)
 {
     scanf("%s", output);
@@ -73,7 +75,7 @@ void connection_pro()
         return;
     }
     printf("Token: %s\n", connected_user.api_token);
-    send_login(sock, connected_user.api_token);
+    response = send_login(sock, connected_user.api_token);
 }
 
 void connection_client()
@@ -95,7 +97,13 @@ void connection_client()
     }
 
     printf("Token: %s\n", connected_user.api_token);
-    send_login(sock, connected_user.api_token);
+    response = send_login(sock, connected_user.api_token);
+
+    if (response->code == 200) {
+        connected_user.type = MEMBER;
+    } else if (response->code == 403) {
+        connected_user = NOT_CONNECTED_USER;
+    }
 }
 
 void write_message(char* message)
@@ -158,8 +166,9 @@ void write_message(char* message)
 void menu_send_message()
 {
     clear_term();
-    char message[LARGE_CHAR_SIZE] = {0};
+    char message[LARGE_CHAR_SIZE];
     int receiver_id = 0;
+    menu_t menu_choose_receiver;
 
     memset(message, 0, LARGE_CHAR_SIZE);
 
@@ -170,9 +179,7 @@ void menu_send_message()
 
     write_message(message);
 
-    printf("\nMessage written:\n%s\n", message);
-
-    printf("Enter the receiver id: ");
+    printf("\n\nEnter the receiver id: ");
     scanf("%d", &receiver_id);
     getchar();
 
@@ -182,16 +189,14 @@ void menu_send_message()
         receiver_id = 11;
     }
 
-    printf("coucou");
-
-    send_message(sock, connected_user.api_token, message, receiver_id);
+    response = send_message(sock, connected_user.api_token, message, receiver_id);
 }
 
 void disconnect()
 {
     running = 0;
-    connected_user = NOT_CONNECTED_USER;
-    write(sock, "DISCONNECTED", 12);
+    send_disconnected(sock);
+    printf("\n   Disconnected\n");
     close(sock);
 }
 
@@ -225,7 +230,6 @@ int main()
     int choice;
     int is_connected = 0;
     connected_user = NOT_CONNECTED_USER;
-    user_type_t user_type = UNKNOWN;
 
     // Create all menus that require a choice
     menu_t menu_login;
@@ -298,18 +302,22 @@ int main()
         choice = 0;
         is_connected = memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0;
 
+        // printf("Connected: %d\n", is_connected);
+        // printf("User type: %d\n", connected_user.type);
+        // printf("User name: %s\n", connected_user.name);
+
         if (is_connected) {
-            if (user_type == UNKNOWN) {
-                user_type = db_get_user_type(conn, connected_user.id);
+            if (connected_user.type == UNKNOWN) {
+                db_set_user_type(conn, &connected_user);
             }
 
-            if (user_type == MEMBER) {
+            if (connected_user.type == MEMBER) {
                 choice = display_menu(menu_client);
                 menu_client.actions[choice].action();
-            } else if (user_type == PROFESSIONAL) {
+            } else if (connected_user.type == PROFESSIONAL) {
                 choice = display_menu(menu_pro);
                 menu_pro.actions[choice].action();
-            } else if (user_type == ADMIN) {
+            } else if (connected_user.type == ADMIN) {
                 choice = display_menu(menu_admin);
                 menu_admin.actions[choice].action();
             }
@@ -334,7 +342,13 @@ int display_menu(menu_t menu)
 
     while (running && !entered) {
         clear_term();
+
         printf("\n   %s\n\n", menu.name);
+
+        if (memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0) {
+            cprintf(CYAN, "   Connected as %s\n\n", connected_user.name);
+        }
+
         for (int i = 0; i < menu.actions_count; i++) {
             if (menu.actions[i].disabled) {
                 cprintf(GRAY, "○ %s\n", menu.actions[i].name);
@@ -419,4 +433,11 @@ void create_menu(menu_t* menu, char name[], ...)
     }
 
     va_end(args);
+}
+
+void menu_add_action(menu_t* menu, char name[], void (*action)()) {
+    menu->actions[menu->actions_count].disabled = 0;
+    strcpy(menu->actions[menu->actions_count].name, name);
+    menu->actions[menu->actions_count].action = action;
+    menu->actions_count++;
 }
