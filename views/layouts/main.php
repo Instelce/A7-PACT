@@ -85,8 +85,16 @@ use app\core\Application;
                 <?php //} ?>
 
                 <div class="notifications-content">
-                    <a href="#">Notif 1</a>
-                    <a href="#">Notif 1</a>
+                    <?php if (!empty($notifications)): ?>
+                        <?php foreach ($notifications as $notification): ?>
+                            <div class="notification <?= $notification->is_read ? 'read' : 'unread'; ?>">
+                                <?= htmlspecialchars($notification->content); ?>
+                                <small>Reçu le : <?= htmlspecialchars($notification->send_at); ?></small>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>Aucune notification</p>
+                    <?php endif; ?>
 
                 </div>
             </div>
