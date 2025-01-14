@@ -453,11 +453,11 @@ class ApiController extends Controller
      *
      *
      *
-     *
+     */
     public function notifications(Request $request, Response $response, $routeParams)
     {
 
-        private $notificationModel;
+        //private $notificationModel;
 
         public function __construct()
         {
@@ -511,5 +511,5 @@ class ApiController extends Controller
                 ];
             }
         }
-    }*/
+    }
 }
