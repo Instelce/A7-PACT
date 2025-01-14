@@ -7,14 +7,11 @@
 #include <time.h>
 #include <unistd.h>
 
-
 #include <signal.h>
-
 
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-
 
 #include "config.h"
 #include "database.h"
@@ -22,22 +19,19 @@
 #include "types.h"
 #include "utils.h"
 
-
 #define SERVER_PORT 4242
 #define LINE_WIDTH 80
 
-
 typedef struct {
-   char name[CHAR_SIZE];
-   int disabled;
-   void (*action)();
+    char name[CHAR_SIZE];
+    int disabled;
+    void (*action)();
 } menu_action_t;
 
-
 typedef struct {
-   char name[CHAR_SIZE];
-   menu_action_t* actions;
-   int actions_count;
+    char name[CHAR_SIZE];
+    menu_action_t* actions;
+    int actions_count;
 } menu_t;
 
 volatile sig_atomic_t running = 1;
@@ -53,7 +47,6 @@ char error_message[CHAR_SIZE];
 
 // Display a menu and return the index of the selected action
 int display_menu(menu_t menu);
-
 
 // Create a menu, with a name and a list of actions (name and function)
 // The last action should have a NULL name
@@ -75,10 +68,9 @@ void disconnect();
 
 void input(char* output)
 {
-   scanf("%s", output);
-   getchar();
+    scanf("%s", output);
+    getchar();
 }
-
 
 void connection_pro()
 {
@@ -93,8 +85,7 @@ void connection_pro()
         strcpy(mail, "brehat@gmail.com");
     }
 
-   int user_found = db_get_user_by_email(conn, &connected_user, mail);
-
+    int user_found = db_get_user_by_email(conn, &connected_user, mail);
 
     if (!user_found) {
         set_error("User with the '%s' email does not exist", mail);
@@ -104,16 +95,14 @@ void connection_pro()
     response = send_login(sock, connected_user.api_token);
 }
 
-
 void connection_client()
 {
     display_line();
 
     char mail[CHAR_SIZE], token[API_TOKEN_SIZE];
 
-   printf("\n   Enter your email: ");
-   input(mail);
-
+    printf("\n   Enter your email: ");
+    input(mail);
 
     // For testing
     if (strcmp(mail, "o") == 0) {
@@ -137,67 +126,60 @@ void connection_client()
 
 void write_message(char* message)
 {
-   int index = 0;
-   int line_pos = 0;
-   int line_start[LARGE_CHAR_SIZE / LINE_WIDTH];
-   int line_count = 1;
-   char ch;
+    int index = 0;
+    int line_pos = 0;
+    int line_start[LARGE_CHAR_SIZE / LINE_WIDTH];
+    int line_count = 1;
+    char ch;
 
+    set_raw_mode();
 
-   set_raw_mode();
+    line_start[0] = 0;
 
+    while (1) {
+        ch = getchar();
 
-   line_start[0] = 0;
+        if (ch == 4) { // Ctrl+D pour envoyer
+            break;
+        } else if (ch == 127) { // Backspace
+            if (index > 0) {
+                if (message[index - 1] == '\n') {
+                    // Retour à la ligne précédente
+                    if (line_count > 1) {
+                        line_count--;
+                        line_pos = index - line_start[line_count - 1];
+                        printf("\033[F\033[%dC \033[D", line_pos); // Déplacer à la ligne précédente
+                    }
+                } else {
+                    line_pos--;
+                    printf("\b \b"); // Supprime le caractère précédent
+                }
+                index--;
+            }
+        } else if (ch == '\n') { // Retour à la ligne
+            if (line_count < LARGE_CHAR_SIZE / LINE_WIDTH) {
+                message[index++] = ch;
+                line_start[line_count++] = index;
+                printf("\n");
+                line_pos = 0;
+            }
+        } else if (index < LARGE_CHAR_SIZE - 1) { // Saisie normale
+            if (line_pos == LINE_WIDTH) { // Passage automatique à la ligne
+                message[index++] = '\n';
+                line_start[line_count++] = index;
+                printf("\n");
+                line_pos = 0;
+            }
+            message[index++] = ch;
+            putchar(ch); // Affiche le caractère
+            line_pos++;
+        }
+    }
 
+    message[index] = '\0'; // Terminer le message
 
-   while (1) {
-       ch = getchar();
-
-
-       if (ch == 4) { // Ctrl+D pour envoyer
-           break;
-       } else if (ch == 127) { // Backspace
-           if (index > 0) {
-               if (message[index - 1] == '\n') {
-                   // Retour à la ligne précédente
-                   if (line_count > 1) {
-                       line_count--;
-                       line_pos = index - line_start[line_count - 1];
-                       printf("\033[F\033[%dC \033[D", line_pos); // Déplacer à la ligne précédente
-                   }
-               } else {
-                   line_pos--;
-                   printf("\b \b"); // Supprime le caractère précédent
-               }
-               index--;
-           }
-       } else if (ch == '\n') { // Retour à la ligne
-           if (line_count < LARGE_CHAR_SIZE / LINE_WIDTH) {
-               message[index++] = ch;
-               line_start[line_count++] = index;
-               printf("\n");
-               line_pos = 0;
-           }
-       } else if (index < LARGE_CHAR_SIZE - 1) { // Saisie normale
-           if (line_pos == LINE_WIDTH) { // Passage automatique à la ligne
-               message[index++] = '\n';
-               line_start[line_count++] = index;
-               printf("\n");
-               line_pos = 0;
-           }
-           message[index++] = ch;
-           putchar(ch); // Affiche le caractère
-           line_pos++;
-       }
-   }
-
-
-   message[index] = '\0'; // Terminer le message
-
-
-   reset_terminal_mode();
+    reset_terminal_mode();
 }
-
 
 void menu_send_message()
 {
@@ -260,8 +242,8 @@ void menu_send_message()
 
         selected_index = display_menu(receiver_menu);
 
-       if (selected_index < receivers.count) {
-           int receiver_id = receivers.users[selected_index].id;
+        if (selected_index < receivers.count) {
+            int receiver_id = receivers.users[selected_index].id;
 
             response = send_message(sock, connected_user.api_token, message, receiver_id);
 
@@ -280,9 +262,9 @@ void menu_send_message()
             offset -= limit;
         }
 
-       free(receiver_menu.actions);
-       free(receivers.users);
-   }
+        free(receiver_menu.actions);
+        free(receivers.users);
+    }
 }
 
 // Choose a discussion with a specific user
@@ -308,6 +290,73 @@ void menu_select_discussion()
         discussion_user_id = receiver_user_list.users[selected_index].id;
     }
 }
+// // Display a menu and return the index of the selected action
+// int display_menu(menu_t menu)
+// {
+//     int selected = 0;
+//     int entered = 0;
+//     int key;
+
+//     set_raw_mode();
+//     hide_cursor();
+
+//     while (running && !entered) {
+//         clear_term();
+
+//         style_printf(BOLD, "\n   %s\n\n", menu.name);
+
+//         if (memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0) {
+//             color_printf(CYAN, "   Connected as ");
+//             cs_printf(CYAN, BOLD, "%s\n\n", connected_user.name);
+//         }
+
+//         for (int i = 0; i < menu.actions_count; i++) {
+//             if (menu.actions[i].disabled) {
+//                 color_printf(GRAY, " ○ %s\n", menu.actions[i].name);
+//                 continue;
+//             }
+
+//             if (selected == i) {
+//                 color_printf(CYAN, " ● ");
+//             } else {
+//                 printf(" ○ ");
+//             }
+
+//             // if (selected == i) {
+//             //     color_printf(CYAN, "%s\n", menu.actions[i].name);
+//             // } else {
+//             // }
+//             printf("%s\n", menu.actions[i].name);
+//         }
+
+//         // Show error message
+//         if (strlen(error_message) > 0) {
+//             color_printf(RED, "\n   %s\n", error_message);
+//         }
+
+//         // if (response != NULL) {
+//         //     printf("\nResponse: %d %s\n", response->status.code, response->status.message);
+//         // }
+
+//         key = get_arrow_key();
+//         switch (key) {
+//         case 'U':
+//             selected = (selected - 1 + menu.actions_count) % menu.actions_count;
+//             break;
+//         case 'D':
+//             selected = (selected + 1) % menu.actions_count;
+//             break;
+//         case '\n':
+//             entered = 1;
+//             break;
+//         }
+//     }
+
+//     reset_terminal_mode();
+//     show_cursor();
+
+//     return selected;
+// }
 
 void menu_discussion()
 {
@@ -517,14 +566,13 @@ void disconnect()
     close(sock);
 }
 
-
 void signal_handler(int sig)
 {
-   if (sig == SIGINT) {
-       disconnect(sock);
-       running = 0;
-       exit(EXIT_SUCCESS);
-   }
+    if (sig == SIGINT) {
+        disconnect(sock);
+        running = 0;
+        exit(EXIT_SUCCESS);
+    }
 }
 
 void display_box(color_t color, char title[], int selected)
@@ -799,11 +847,9 @@ void print_logo()
     color_printf(RED, "       |_|\\___|_| |_|\\__,_|\\__\\__,_|\\__\\___/|_|\n\n");
 }
 
-
 void empty_action()
 {
 }
-
 
 int main()
 {
@@ -846,41 +892,33 @@ int main()
         "Disconnect", disconnect,
         NULL);
 
+    config_t* config;
+    config = malloc(sizeof(config_t));
+    config_load(config);
 
-   config_t* config;
-   config = malloc(sizeof(config_t));
-   config_load(config);
+    env_load("..");
 
+    db_login(&conn);
 
-   env_load("..");
+    signal(SIGINT, signal_handler);
 
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        perror("Cannot create socket");
+        exit(EXIT_FAILURE);
+    }
 
-   db_login(&conn);
+    // Configure server address
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(SERVER_PORT);
+    server_addr.sin_addr.s_addr = INADDR_ANY;
 
-
-   signal(SIGINT, signal_handler);
-
-
-   if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-       perror("Cannot create socket");
-       exit(EXIT_FAILURE);
-   }
-
-
-   // Configure server address
-   server_addr.sin_family = AF_INET;
-   server_addr.sin_port = htons(SERVER_PORT);
-   server_addr.sin_addr.s_addr = INADDR_ANY;
-
-
-   if ((sock_ret = connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr))) < 0) {
-       perror("Cannot connect to the server socket");
-       disconnect(sock);
-       exit(EXIT_FAILURE);
-   } else {
-       printf("Connected to server !\n");
-   }
-
+    if ((sock_ret = connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr))) < 0) {
+        perror("Cannot connect to the server socket");
+        disconnect(sock);
+        exit(EXIT_FAILURE);
+    } else {
+        printf("Connected to server !\n");
+    }
 
     pros = db_get_professionals(conn, 0, 5);
     clients = db_get_members(conn, 0, 5);
@@ -892,36 +930,33 @@ int main()
             menu_discussion();
         }
 
-       // printf("Connected: %d\n", is_connected);
-       // printf("User type: %d\n", connected_user.type);
-       // printf("User name: %s\n", connected_user.name);
+        // printf("Connected: %d\n", is_connected);
+        // printf("User type: %d\n", connected_user.type);
+        // printf("User name: %s\n", connected_user.name);
 
+        if (is_connected) {
+            if (connected_user.type == UNKNOWN) {
+                db_set_user_type(conn, &connected_user);
+            }
+            if (connected_user.type == MEMBER) {
+                choice = display_menu(menu_client);
+                menu_client.actions[choice].action();
+            } else if (connected_user.type == PROFESSIONAL) {
+                choice = display_menu(menu_pro);
+                menu_pro.actions[choice].action();
+            } else if (connected_user.type == ADMIN) {
+                choice = display_menu(menu_admin);
+                menu_admin.actions[choice].action();
+            }
+        } else {
+            choice = display_menu(menu_login);
+            menu_login.actions[choice].action();
+        }
+    }
 
-       if (is_connected) {
-           if (connected_user.type == UNKNOWN) {
-               db_set_user_type(conn, &connected_user);
-           }
-           if (connected_user.type == MEMBER) {
-               choice = display_menu(menu_client);
-               menu_client.actions[choice].action();
-           } else if (connected_user.type == PROFESSIONAL) {
-               choice = display_menu(menu_pro);
-               menu_pro.actions[choice].action();
-           } else if (connected_user.type == ADMIN) {
-               choice = display_menu(menu_admin);
-               menu_admin.actions[choice].action();
-           }
-       } else {
-           choice = display_menu(menu_login);
-           menu_login.actions[choice].action();
-       }
-   }
-
-
-   close(sock);
-   return EXIT_SUCCESS;
+    close(sock);
+    return EXIT_SUCCESS;
 }
-
 
 // Display a menu and return the index of the selected action
 int display_menu(menu_t menu)
@@ -982,27 +1017,25 @@ int display_menu(menu_t menu)
         //     printf("\nResponse: %d %s\n", response->status.code, response->status.message);
         // }
 
-       key = get_arrow_key();
-       switch (key) {
-       case 'U':
-           selected = (selected - 1 + menu.actions_count) % menu.actions_count;
-           break;
-       case 'D':
-           selected = (selected + 1) % menu.actions_count;
-           break;
-       case '\n':
-           entered = 1;
-           break;
-       }
-   }
-
+        key = get_arrow_key();
+        switch (key) {
+        case 'U':
+            selected = (selected - 1 + menu.actions_count) % menu.actions_count;
+            break;
+        case 'D':
+            selected = (selected + 1) % menu.actions_count;
+            break;
+        case '\n':
+            entered = 1;
+            break;
+        }
+    }
 
     reset_terminal_mode();
     show_cursor();
 
-   return selected;
+    return selected;
 }
-
 
 // Create a menu, with a name and a list of actions (name and function)
 // The last action should have a NULL name
@@ -1010,50 +1043,42 @@ int display_menu(menu_t menu)
 // create_menu(menu, "Main menu", "Action 1", action1, "Action 2", action2, NULL);
 void create_menu(menu_t* menu, char name[], ...)
 {
-   va_list args;
-   va_start(args, name);
+    va_list args;
+    va_start(args, name);
 
-
-   menu->actions_count = 0;
-   strcpy(menu->name, name);
-
+    menu->actions_count = 0;
+    strcpy(menu->name, name);
 
     while (1) {
         char* action_name = va_arg(args, char*);
         // printf("Action name: %s\n", action_name);
 
-       if (action_name == NULL) {
-           break;
-       }
+        if (action_name == NULL) {
+            break;
+        }
 
+        menu->actions_count++;
+    }
 
-       menu->actions_count++;
-   }
+    if (menu->actions_count == 0) {
+        menu->actions = NULL;
+        va_end(args);
+        return;
+    }
 
+    menu->actions_count /= 2;
+    menu->actions = malloc((menu->actions_count + 1) * sizeof(menu_action_t));
 
-   if (menu->actions_count == 0) {
-       menu->actions = NULL;
-       va_end(args);
-       return;
-   }
+    va_start(args, name);
 
+    for (int i = 0; i < menu->actions_count; i++) {
+        char* action_name = va_arg(args, char*);
+        menu->actions[i].disabled = 0;
+        strcpy(menu->actions[i].name, action_name);
+        menu->actions[i].action = va_arg(args, void (*)());
+    }
 
-   menu->actions_count /= 2;
-   menu->actions = malloc((menu->actions_count + 1) * sizeof(menu_action_t));
-
-
-   va_start(args, name);
-
-
-   for (int i = 0; i < menu->actions_count; i++) {
-       char* action_name = va_arg(args, char*);
-       menu->actions[i].disabled = 0;
-       strcpy(menu->actions[i].name, action_name);
-       menu->actions[i].action = va_arg(args, void (*)());
-   }
-
-
-   va_end(args);
+    va_end(args);
 }
 
 void add_menu_action(menu_t* menu, char name[], void (*action)(), int disabled)
