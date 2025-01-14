@@ -256,9 +256,8 @@ void menu_send_message()
 // Choose a discussion with a specific user
 void menu_select_discussion() {
     user_list_t receiver_user_list = db_get_all_receiver_users_of_user(conn, connected_user.id);
-    menu_t user_menu;
     int selected_index = -1;
-
+    menu_t user_menu;
     user_menu.actions = NULL;
 
     // Setup menu with users
@@ -279,7 +278,19 @@ void menu_select_discussion() {
 }
 
 void menu_discussion() {
+    menu_t menu;
+    int selected_index = -1;
 
+    strcpy(menu.name, "Discussion Menu");
+    menu.actions = NULL;
+
+    add_menu_action(&menu, "Back", NULL, 0);
+
+    selected_index = display_menu(menu);
+
+    if (selected_index == 0) {
+        discussion_user_id = -1;
+    }
 }
 
 void menu_delete_message()
@@ -395,6 +406,7 @@ void menu_display_unread_messages()
         free(messages.messages);
     }
 }
+
 void disconnect()
 {
     running = 0;
@@ -434,6 +446,7 @@ int main()
     int choice;
     int is_connected = 0;
     connected_user = NOT_CONNECTED_USER;
+    discussion_user_id = -1;
 
     // Create all menus that require a choice
     menu_t menu_login;
@@ -449,7 +462,7 @@ int main()
         &menu_client, "Client",
         "Send a message", menu_send_message,
         "Discussions", menu_select_discussion,
-        // "Display unread messages", empty_action,
+        // "Display unread messages", menu_display_unread_messages,
         // "Modify a message", empty_action,
         // "Delete a message", menu_delete_message,
         // "Display messages history", empty_action,
@@ -460,7 +473,7 @@ int main()
         &menu_pro, "Professional",
         "Send a message", menu_send_message,
         "Discussions", menu_select_discussion,
-        // "Display unread messages", empty_action,
+        "Display unread messages", menu_display_unread_messages,
         // "Modify a message", empty_action,
         // "Delete a message", menu_delete_message,
         // "Display messages history", empty_action,
@@ -507,6 +520,10 @@ int main()
     while (running) {
         choice = 0;
         is_connected = memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0;
+
+        if (discussion_user_id != -1) {
+            menu_discussion();
+        }
 
         // printf("Connected: %d\n", is_connected);
         // printf("User type: %d\n", connected_user.type);
