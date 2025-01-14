@@ -60,9 +60,15 @@ $app->router->get('/dashboard/avis', [DashboardController::class, 'avis']);
 $app->router->get('/dashboard/factures', [DashboardController::class, 'invoices']);
 $app->router->get('/factures/<pk:int>', [DashboardController::class, 'invoicesPDF']);
 
-// Auth routes
 $app->router->get('/connexion', [AuthController::class, 'login']);
 $app->router->post('/connexion', [AuthController::class, 'login']);
+$app->router->get('/mdp-oublie', [AuthController::class, 'forgetPassword']);
+$app->router->post('/mdp-oublie', [AuthController::class, 'forgetPassword']);
+$app->router->get('/mail-envoye', [AuthController::class, 'sendMail']);
+$app->router->post('/mail-envoye', [AuthController::class, 'sendMail']);
+
+
+
 $app->router->get('/inscription', [AuthController::class, 'register']);
 $app->router->post('/inscription', [AuthController::class, 'register']);
 $app->router->get('/inscription/professionnel', [AuthController::class, 'registerProfessional']);
