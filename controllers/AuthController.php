@@ -15,6 +15,7 @@ use app\core\Utils;
 use app\forms\LoginForm;
 use app\forms\MemberRegisterForm;
 use app\forms\MemberUpdateForm;
+use app\forms\PasswordForgetForm;
 use app\forms\PaymentForm;
 use app\forms\PrivateProfessionalRegister;
 use app\forms\PrivateProfessionalUpdateForm;
@@ -49,6 +50,45 @@ class AuthController extends Controller
         return $this->render('auth/login', ['model' => $loginForm]);
     }
 
+    public function forgetPassword(Request $request, Response $response)
+    {
+        $form = new PasswordForgetForm();
+
+        if ($request->isPost()) {
+            $mail = Application::$app->session->get('reset-password-email');
+            $form->loadData($request->getBody());
+
+            if ($form->validate()) {
+                Application::$app->session->set('reset-password-email', $form->mail);
+                $form->verify();
+                $response->redirect('/mail-envoye');
+                exit;
+            }
+        }
+
+        return $this->render('auth/password-forget', ['model' => $form]);
+    }
+
+    public function sendMail(Request $request, Response $response)
+    {
+        if ($request->isPost()) {
+            $mail = Application::$app->session->get('reset-password-email');
+
+            if ($mail) {
+                $user = UserAccount::findOne(['mail' => $mail]);
+                if ($user) {
+                    $user->reset_password_hash = Utils::generateHash();
+                    $user->update();
+                    Application::$app->mailer->send($mail, "Modification du mot de passe de $mail", 'reset-password', ['mail' => $mail, 'hash' => $user->reset_password_hash]);
+                    exit;
+                }
+            }
+        }
+        return $this->render('auth/mail-send', ['mail' => $mail]);
+    }
+
+
+
     public function register(Request $request)
     {
         $user = new UserAccount();
@@ -71,6 +111,7 @@ class AuthController extends Controller
             'model' => $user
         ]);
     }
+
 
     public function registerProfessional(Request $request, Response $response)
     {
@@ -285,7 +326,8 @@ class AuthController extends Controller
             $user->reset_password_hash = null;
             $user->password = password_hash($request->getBody()['password'], PASSWORD_DEFAULT);
             $user->update();
-            $response->redirect('/comptes/modification');
+            Application::$app->logout();
+            $response->redirect('/connexion');
         }
 
         return $this->render('auth/reset-password', ['hash' => $hash]);

@@ -20,6 +20,7 @@ $this->title = 'Connexion';
         <div class="form-inputs">
             <?php echo $form->field($model, 'mail') ?>
             <?php echo $form->field($model, 'password')->passwordField() ?>
+            <a href="/mdp-oublie" class="link">Mot de passe oublié</a>
         </div>
         <button type="submit" class="button w-full ">Connexion</button>
     <?php Form::end() ?>
