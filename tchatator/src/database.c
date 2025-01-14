@@ -312,90 +312,150 @@ int db_set_user_type(PGconn* conn, user_t* user)
 
     return 0;
 }
-
 user_list_t db_get_members(PGconn* conn, int offset, int limit)
 {
-   user_list_t user_list;
-   PGresult* res;
-   char query[256];
-   sprintf(query,
-       "SELECT ua.account_id, mu.pseudo, ua.mail, ua.api_token "
-       "FROM user_account ua "
-       "JOIN member_user mu ON ua.account_id = mu.user_id "
-       "LIMIT %d OFFSET %d",
-       limit, offset);
+    user_list_t user_list;
+    PGresult* res;
+    char query[256];
+    sprintf(query,
+        "SELECT ua.account_id, mu.pseudo, ua.mail, ua.api_token "
+        "FROM user_account ua "
+        "JOIN member_user mu ON ua.account_id = mu.user_id "
+        "LIMIT %d OFFSET %d",
+        limit, offset);
 
+    res = PQexec(conn, query);
 
-   res = PQexec(conn, query);
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Error when fetching members");
+    }
 
+    user_list.count = PQntuples(res);
+    user_list.users = malloc(user_list.count * sizeof(user_t));
 
-   if (PQresultStatus(res) != PGRES_TUPLES_OK) {
-       db_error(conn, "Error when fetching members");
-   }
+    for (int i = 0; i < user_list.count; i++) {
+        user_list.users[i] = (user_t) {
+            .id = atoi(PQgetvalue(res, i, 0)),
+            .type = MEMBER,
+        };
+        strcpy(user_list.users[i].name, PQgetvalue(res, i, 1));
+        strcpy(user_list.users[i].email, PQgetvalue(res, i, 2));
+        strcpy(user_list.users[i].api_token, PQgetvalue(res, i, 3));
+    }
 
+    PQclear(res);
 
-   user_list.count = PQntuples(res);
-   user_list.users = malloc(user_list.count * sizeof(user_t));
-
-
-   for (int i = 0; i < user_list.count; i++) {
-       user_list.users[i] = (user_t) {
-           .id = atoi(PQgetvalue(res, i, 0)),
-           .type = MEMBER,
-       };
-       strcpy(user_list.users[i].name, PQgetvalue(res, i, 1));
-       strcpy(user_list.users[i].email, PQgetvalue(res, i, 2));
-       strcpy(user_list.users[i].api_token, PQgetvalue(res, i, 3));
-   }
-
-
-   PQclear(res);
-
-
-   return user_list;
+    return user_list;
 }
-
 
 user_list_t db_get_professionals(PGconn* conn, int offset, int limit)
 {
-   user_list_t user_list;
-   PGresult* res;
-   char query[256];
+    user_list_t user_list;
+    PGresult* res;
+    char query[256];
 
+    sprintf(query,
+        "SELECT ua.account_id, pu.denomination, ua.mail, ua.api_token "
+        "FROM user_account ua "
+        "JOIN professional_user pu ON ua.account_id = pu.user_id "
+        "LIMIT %d OFFSET %d",
+        limit, offset);
 
-   sprintf(query,
-       "SELECT ua.account_id, pu.denomination, ua.mail, ua.api_token "
-       "FROM user_account ua "
-       "JOIN professional_user pu ON ua.account_id = pu.user_id "
-       "LIMIT %d OFFSET %d",
-       limit, offset);
+    res = PQexec(conn, query);
 
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Error when fetching professionals");
+    }
 
-   res = PQexec(conn, query);
+    user_list.count = PQntuples(res);
+    user_list.users = malloc(user_list.count * sizeof(user_t));
 
+    for (int i = 0; i < user_list.count; i++) {
+        user_list.users[i] = (user_t) {
+            .id = atoi(PQgetvalue(res, i, 0)),
+            .type = PROFESSIONAL,
+        };
+        strcpy(user_list.users[i].name, PQgetvalue(res, i, 1));
+        strcpy(user_list.users[i].email, PQgetvalue(res, i, 2));
+        strcpy(user_list.users[i].api_token, PQgetvalue(res, i, 3));
+    }
 
-   if (PQresultStatus(res) != PGRES_TUPLES_OK) {
-       db_error(conn, "Error when fetching professionals");
-   }
+    PQclear(res);
 
+    return user_list;
+}
+message_list_t db_get_messages_by_sender(PGconn* conn, int sender_id, int offset, int limit)
+{
+    message_list_t message_list;
+    PGresult* res;
+    char query[256];
 
-   user_list.count = PQntuples(res);
-   user_list.users = malloc(user_list.count * sizeof(user_t));
+    sprintf(query,
+        "SELECT id, sended_date, modified_date, receiver_id, deleted, seen, content "
+        "FROM message "
+        "WHERE sender_id = %d "
+        "LIMIT %d OFFSET %d",
+        sender_id, limit, offset);
 
+    res = PQexec(conn, query);
 
-   for (int i = 0; i < user_list.count; i++) {
-       user_list.users[i] = (user_t) {
-           .id = atoi(PQgetvalue(res, i, 0)),
-           .type = PROFESSIONAL,
-       };
-       strcpy(user_list.users[i].name, PQgetvalue(res, i, 1));
-       strcpy(user_list.users[i].email, PQgetvalue(res, i, 2));
-       strcpy(user_list.users[i].api_token, PQgetvalue(res, i, 3));
-   }
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Error when fetching messages by sender");
+    }
 
+    message_list.count = PQntuples(res);
+    message_list.messages = malloc(message_list.count * sizeof(message_t));
 
-   PQclear(res);
+    for (int i = 0; i < message_list.count; i++) {
+        message_list.messages[i] = (message_t) {
+            .id = atoi(PQgetvalue(res, i, 0)),
+        };
+        strcpy(message_list.messages[i].sended_date, PQgetvalue(res, i, 1));
+        strcpy(message_list.messages[i].modified_date, PQgetvalue(res, i, 2));
+        message_list.messages[i].receiver_id = atoi(PQgetvalue(res, i, 3));
+        message_list.messages[i].deleted = atoi(PQgetvalue(res, i, 4));
+        message_list.messages[i].seen = atoi(PQgetvalue(res, i, 5));
+        strcpy(message_list.messages[i].content, PQgetvalue(res, i, 6));
+    }
 
+    PQclear(res);
 
-   return user_list;
+    return message_list;
+}
+message_list_t db_get_unread_messages(PGconn* conn, int receiver_id, int offset, int limit)
+{
+    message_list_t message_list;
+    PGresult* res;
+    char query[512];
+
+    sprintf(query,
+        "SELECT id, sended_date, modified_date, sender_id, deleted, seen, content "
+        "FROM message "
+        "WHERE receiver_id = %d AND seen = false AND deleted = false "
+        "ORDER BY sended_date DESC "
+        "LIMIT %d OFFSET %d",
+        receiver_id, limit, offset);
+
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Error when fetching unread messages");
+    }
+
+    message_list.count = PQntuples(res);
+    message_list.messages = malloc(message_list.count * sizeof(message_t));
+
+    for (int i = 0; i < message_list.count; i++) {
+        message_list.messages[i].id = atoi(PQgetvalue(res, i, 0));
+        strcpy(message_list.messages[i].sended_date, PQgetvalue(res, i, 1));
+        strcpy(message_list.messages[i].modified_date, PQgetvalue(res, i, 2));
+        message_list.messages[i].sender_id = atoi(PQgetvalue(res, i, 3));
+        message_list.messages[i].deleted = atoi(PQgetvalue(res, i, 4));
+        message_list.messages[i].seen = atoi(PQgetvalue(res, i, 5));
+        strcpy(message_list.messages[i].content, PQgetvalue(res, i, 6));
+    }
+
+    PQclear(res);
+
+    return message_list;
 }

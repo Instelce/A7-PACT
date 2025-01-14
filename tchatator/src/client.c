@@ -252,8 +252,116 @@ void menu_send_message()
 }
 void menu_delete_message()
 {
-    int message_id;
-    // display all message sender_id === connecteduser id to choose w arrows
+    clear_term();
+    menu_t delete_message_menu;
+    int selected_index = -1;
+    int offset = 0;
+    const int limit = 5;
+    message_list_t messages;
+
+    printf("\nDelete a Message\n");
+    strcpy(delete_message_menu.name, "Select a Message to Delete");
+    while (1) {
+        messages = db_get_messages_by_sender(conn, connected_user.id, offset, limit);
+
+        if (messages.count == 0) {
+            printf("No more messages to display.\n");
+            break;
+        }
+
+        delete_message_menu.actions = malloc((messages.count + 2) * sizeof(menu_action_t));
+        delete_message_menu.actions_count = messages.count + 2;
+
+        for (int i = 0; i < messages.count; i++) {
+            strcpy(delete_message_menu.actions[i].name, messages.messages[i].content);
+        }
+
+        strcpy(delete_message_menu.actions[messages.count].name, "Next Page");
+
+        strcpy(delete_message_menu.actions[messages.count + 1].name, "Previous Page");
+
+        selected_index = display_menu(delete_message_menu);
+
+        if (selected_index < messages.count) {
+            int message_id = messages.messages[selected_index].id;
+
+            response = send_delete_message(sock, connected_user.api_token, message_id);
+
+            if (response->status.code == 200) {
+                printf("Message successfully deleted.\n");
+            } else {
+                printf("Failed to delete the message. Response: %d %s\n", response->status.code, response->status.message);
+            }
+            free(delete_message_menu.actions);
+            free(messages.messages);
+            break;
+        } else if (selected_index == messages.count) {
+
+            offset += limit;
+        } else if (selected_index == messages.count + 1 && offset > 0) {
+            offset -= limit;
+        }
+
+        free(delete_message_menu.actions);
+        free(messages.messages);
+    }
+}
+
+void menu_display_unread_messages()
+{
+    clear_term();
+    menu_t unread_messages_menu;
+    int selected_index = -1;
+    int offset = 0;
+    const int limit = 5;
+    message_list_t messages;
+
+    printf("\nDisplay Unread Messages\n");
+    strcpy(unread_messages_menu.name, "Select a Message to Mark as Read");
+    while (1) {
+        messages = db_get_unread_messages(conn, connected_user.id, offset, limit);
+
+        if (messages.count == 0) {
+            printf("No more messages to display.\n");
+            break;
+        }
+
+        unread_messages_menu.actions = malloc((messages.count + 2) * sizeof(menu_action_t));
+        unread_messages_menu.actions_count = messages.count + 2;
+
+        for (int i = 0; i < messages.count; i++) {
+            strcpy(unread_messages_menu.actions[i].name, messages.messages[i].content);
+        }
+
+        strcpy(unread_messages_menu.actions[messages.count].name, "Next Page");
+
+        strcpy(unread_messages_menu.actions[messages.count + 1].name, "Previous Page");
+
+        selected_index = display_menu(unread_messages_menu);
+
+        if (selected_index < messages.count) {
+            int message_id = messages.messages[selected_index].id;
+
+            response = send_uptade_message(sock, connected_user.api_token, message_id, "seen");
+
+            if (response->status.code == 200) {
+                printf("Message successfully marked as read.\n");
+            } else {
+                printf("Failed to mark the message as read. Response: %d %s\n", response->status.code, response->status.message);
+            }
+            free(unread_messages_menu.actions);
+            free(messages.messages);
+            break;
+        } else if (selected_index == messages.count) {
+
+            offset += limit;
+        } else if (selected_index == messages.count + 1 && offset > 0) {
+            offset -= limit;
+        }
+
+        free(unread_messages_menu.actions);
+        free(messages.messages);
+    }
 }
 void disconnect()
 {
@@ -308,7 +416,7 @@ int main()
     create_menu(
         &menu_client, "Client",
         "Send a message", menu_send_message,
-        "Display unread messages", empty_action,
+        "Display unread messages", menu_display_unread_messages,
         "Modify a message", empty_action,
         "Delete a message", menu_delete_message,
         "Display messages history", empty_action,
@@ -318,7 +426,7 @@ int main()
     create_menu(
         &menu_pro, "Professional",
         "Send a message", menu_send_message,
-        "Display unread messages", empty_action,
+        "Display unread messages", menu_display_unread_messages,
         "Modify a message", empty_action,
         "Delete a message", menu_delete_message,
         "Display messages history", empty_action,
