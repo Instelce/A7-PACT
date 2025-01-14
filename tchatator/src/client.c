@@ -41,6 +41,7 @@ response_t* response;
 user_t connected_user;
 user_list_t pros;
 user_list_t clients;
+int discussion_user_id;
 char error_message[CHAR_SIZE];
 
 // Display a menu and return the index of the selected action
@@ -52,7 +53,7 @@ int display_menu(menu_t menu);
 // create_menu(menu, "Main menu", "Action 1", action1, "Action 2", action2, NULL);
 void create_menu(menu_t* menu, char name[], ...);
 
-void menu_add_action(menu_t* menu, char name[], void (*action)(), int disabled);
+void add_menu_action(menu_t* menu, char name[], void (*action)(), int disabled);
 
 void set_error(char format[], ...);
 
@@ -72,15 +73,13 @@ void connection_pro()
         strcpy(mail, "brehat@gmail.com");
     }
 
-    printf("Email entered: '%s'\n", mail);
-
     int user_found = db_get_user_by_email(conn, &connected_user, mail);
 
     if (!user_found) {
-        printf("User not found\n");
+        set_error("User with the '%s' email does not exist", mail);
         return;
     }
-    printf("Token: %s\n", connected_user.api_token);
+
     response = send_login(sock, connected_user.api_token);
 }
 
@@ -91,6 +90,7 @@ void connection_client()
     printf("\n   Enter your email: ");
     input(mail);
 
+    // For testing
     if (strcmp(mail, "o") == 0) {
         strcpy(mail, "eliaz.chesnel@outlook.fr");
     }
@@ -182,10 +182,11 @@ void menu_send_message()
     printf("Write your message (Ctrl+D to send, Backspace to delete):\n");
     write_message(message);
 
+    // Set menu name
     if (connected_user.type == MEMBER) {
-        strcpy(receiver_menu.name, "Select a Professional to Send the Message");
+        strcpy(receiver_menu.name, "Select the professional recipient of the message");
     } else if (connected_user.type == PROFESSIONAL) {
-        strcpy(receiver_menu.name, "Select a Member to Send the Message");
+        strcpy(receiver_menu.name, "select the member recipient of the message");
     }
 
     while (1) {
@@ -203,25 +204,27 @@ void menu_send_message()
             printf("No more users to display.\n");
             break;
         }
+
         receiver_menu.actions = malloc((receivers.count + 2) * sizeof(menu_action_t));
         receiver_menu.actions_count = receivers.count + 2;
 
         for (int i = 0; i < receivers.count; i++) {
-            menu_add_action(&receiver_menu, receivers.users[i].name, NULL, 0);
-            // strcpy(receiver_menu.actions[i].name, receivers.users[i].name);
-            // receiver_menu.actions[i].disabled = 0;
-            // receiver_menu.actions[i].action = NULL;
+            // add_menu_action(&receiver_menu, receivers.users[i].name, NULL, 0);
+            strcpy(receiver_menu.actions[i].name, receivers.users[i].name);
+            receiver_menu.actions[i].disabled = 0;
+            receiver_menu.actions[i].action = NULL;
         }
-        // add action
-        menu_add_action(&receiver_menu, "Next page", NULL, 0);
-        menu_add_action(&receiver_menu, "Previous page", NULL, offset == 0);
-        // strcpy(receiver_menu.actions[receivers.count].name, "Next Page");
-        // receiver_menu.actions[receivers.count].disabled = 0;
-        // receiver_menu.actions[receivers.count].action = NULL;
 
-        // strcpy(receiver_menu.actions[receivers.count + 1].name, "Previous Page");
-        // receiver_menu.actions[receivers.count + 1].disabled = (offset == 0);
-        // receiver_menu.actions[receivers.count + 1].action = NULL;
+        // Add action for next and previous page
+        // add_menu_action(&receiver_menu, "Next page", NULL, 0);
+        // add_menu_action(&receiver_menu, "Previous page", NULL, offset == 0);
+        strcpy(receiver_menu.actions[receivers.count].name, "Next Page");
+        receiver_menu.actions[receivers.count].disabled = (receivers.count < limit);
+        receiver_menu.actions[receivers.count].action = NULL;
+
+        strcpy(receiver_menu.actions[receivers.count + 1].name, "Previous Page");
+        receiver_menu.actions[receivers.count + 1].disabled = (offset == 0);
+        receiver_menu.actions[receivers.count + 1].action = NULL;
 
         selected_index = display_menu(receiver_menu);
 
@@ -242,7 +245,6 @@ void menu_send_message()
         } else if (selected_index == receivers.count) {
             offset += limit;
         } else if (selected_index == receivers.count + 1 && offset > 0) {
-
             offset -= limit;
         }
 
@@ -250,6 +252,36 @@ void menu_send_message()
         free(receivers.users);
     }
 }
+
+// Choose a discussion with a specific user
+void menu_select_discussion() {
+    user_list_t receiver_user_list = db_get_all_receiver_users_of_user(conn, connected_user.id);
+    menu_t user_menu;
+    int selected_index = -1;
+
+    user_menu.actions = NULL;
+
+    // Setup menu with users
+    strcpy(user_menu.name, "Choose user to discuss with");
+    for (int i = 0; i < receiver_user_list.count; i++)
+    {
+        add_menu_action(&user_menu, receiver_user_list.users[i].email, NULL, 0);
+    }
+
+    add_menu_action(&user_menu, "Back", NULL, 0);
+
+    // Display menu
+    selected_index = display_menu(user_menu);
+
+    if (selected_index < receiver_user_list.count) {
+        discussion_user_id = receiver_user_list.users[selected_index].id;
+    }
+}
+
+void menu_discussion() {
+
+}
+
 void menu_delete_message()
 {
     clear_term();
@@ -410,35 +442,36 @@ int main()
         "Connection client", connection_client,
         "Connection pro", connection_pro,
         "Connection admin", empty_action,
-        "Exit", disconnect,
+        "Disconnect", disconnect,
         NULL);
     menu_t menu_client;
     create_menu(
         &menu_client, "Client",
         "Send a message", menu_send_message,
-        "Display unread messages", menu_display_unread_messages,
-        "Modify a message", empty_action,
-        "Delete a message", menu_delete_message,
-        "Display messages history", empty_action,
-        "Exit", disconnect,
+        "Discussions", menu_select_discussion,
+        // "Display unread messages", empty_action,
+        // "Modify a message", empty_action,
+        // "Delete a message", menu_delete_message,
+        // "Display messages history", empty_action,
+        "Disconnect", disconnect,
         NULL);
     menu_t menu_pro;
     create_menu(
         &menu_pro, "Professional",
         "Send a message", menu_send_message,
-        "Display unread messages", menu_display_unread_messages,
-        "Modify a message", empty_action,
-        "Delete a message", menu_delete_message,
-        "Display messages history", empty_action,
-        "Exit", disconnect,
+        "Discussions", menu_select_discussion,
+        // "Display unread messages", empty_action,
+        // "Modify a message", empty_action,
+        // "Delete a message", menu_delete_message,
+        // "Display messages history", empty_action,
+        "Disconnect", disconnect,
         NULL);
     menu_t menu_admin;
     create_menu(
         &menu_admin, "Admin",
-        "Send a message", menu_send_message,
         "Block a message", empty_action,
         "Ban a user", empty_action,
-        "Exit", disconnect,
+        "Disconnect", disconnect,
         NULL);
 
     config_t* config;
@@ -542,6 +575,7 @@ int display_menu(menu_t menu)
             printf("%s\n", menu.actions[i].name);
         }
 
+        // Show error message
         if (strlen(error_message) > 0) {
             color_printf(RED, "\n   %s\n", error_message);
         }
@@ -584,7 +618,7 @@ void create_menu(menu_t* menu, char name[], ...)
 
     while (1) {
         char* action_name = va_arg(args, char*);
-        printf("Action name: %s\n", action_name);
+        // printf("Action name: %s\n", action_name);
 
         if (action_name == NULL) {
             break;
@@ -614,8 +648,16 @@ void create_menu(menu_t* menu, char name[], ...)
     va_end(args);
 }
 
-void menu_add_action(menu_t* menu, char name[], void (*action)(), int disabled)
+void add_menu_action(menu_t* menu, char name[], void (*action)(), int disabled)
 {
+    // Allocate more space
+    if (menu->actions == NULL) {
+        menu->actions = malloc(sizeof(menu_action_t));
+        menu->actions_count = 0;
+    } else {
+        menu->actions = realloc(menu->actions, (menu->actions_count + 1) * sizeof(menu_action_t));
+    }
+
     menu->actions[menu->actions_count].disabled = disabled;
     strcpy(menu->actions[menu->actions_count].name, name);
     menu->actions[menu->actions_count].action = action;
