@@ -58,6 +58,12 @@ void add_menu_action(menu_t* menu, char name[], void (*action)(), int disabled);
 
 void set_error(char format[], ...);
 
+void goto_print(int x, int y, char format[], ...);
+
+int display_message(message_t message, int align_left, int selected);
+
+void disconnect();
+
 void input(char* output)
 {
     scanf("%s", output);
@@ -280,19 +286,88 @@ void menu_select_discussion()
 
 void menu_discussion()
 {
-    menu_t menu;
-    int selected_index = -1;
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-    strcpy(menu.name, "Discussion Menu");
-    menu.actions = NULL;
+    int message_chunk_size = 5;
+    message_list_t messages_list = db_get_messages_between_users(conn, connected_user.id, discussion_user_id, 0, message_chunk_size);
 
-    add_menu_action(&menu, "Back", NULL, 0);
+    int selected = 0;
+    int entered = 0;
+    int key;
 
-    selected_index = display_menu(menu);
+    set_raw_mode();
+    hide_cursor();
 
-    if (selected_index == 0) {
-        discussion_user_id = -1;
+    while (running && !entered) {
+        clear_term();
+
+        int center_index = selected;
+        int start_index = center_index;
+        int end_index = center_index;
+        int above_height = 0;
+        int below_height = 0;
+
+        while (start_index > 0 && above_height < w.ws_row - 8) {
+            above_height += display_message(messages_list.messages[start_index - 1], 1, 0);
+            if (above_height < w.ws_row - 8) {
+                start_index--;
+            }
+        }
+
+        while (end_index < messages_list.count - 1 && below_height < w.ws_row - 8) {
+            below_height += display_message(messages_list.messages[end_index + 1], 1, 0);
+            if (below_height < w.ws_row - 8) {
+                end_index++;
+            }
+        }
+
+        clear_term();
+        for (int i = start_index; i <= end_index; i++) {
+            display_message(messages_list.messages[i], messages_list.messages[i].sender_id != connected_user.id, i == selected);
+        }
+
+        goto_print(2, w.ws_row - 2, "Selected: %d", selected);
+        goto_print(2, w.ws_row - 1, "Send a message: Ctrl+M");
+        goto_print(2, w.ws_row, "Use arrow keys to navigate, Enter to select, Ctrl+C to quit discussion");
+
+        key = get_arrow_key();
+        switch (key) {
+        case 'U':
+            if (selected > 0) {
+                selected--;
+            }
+            break;
+        case 'D':
+            if (selected < messages_list.count - 1) {
+                selected++;
+            } else {
+                // Load more messages
+                message_list_t new_messages_list = db_get_messages_between_users(conn, connected_user.id, discussion_user_id, messages_list.count, message_chunk_size);
+                if (new_messages_list.count > 0) {
+                    int old_count = messages_list.count;
+                    messages_list.count += new_messages_list.count;
+                    messages_list.messages = realloc(messages_list.messages, messages_list.count * sizeof(message_t));
+                    for (int i = 0; i < new_messages_list.count; i++) {
+                        messages_list.messages[old_count + i] = new_messages_list.messages[i];
+                    }
+                    free(new_messages_list.messages);
+                } else {
+                    if (messages_list.count % message_chunk_size != 0) {
+                        selected = 0;
+                    }
+                }
+            }
+
+            break;
+        case '\n':
+            entered = 1;
+            break;
+        }
     }
+
+    reset_terminal_mode();
+    show_cursor();
 }
 
 void menu_delete_message()
@@ -520,8 +595,9 @@ void goto_print(int x, int y, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    printf("\033[%d;%dH", x, y);
+    printf("\033[%d;%dH", y, x);
     vprintf(format, args);
+    printf("\033[0m");
     va_end(args);
 }
 
@@ -529,9 +605,9 @@ void goto_print(int x, int y, char format[], ...)
 /// @param message
 /// @param align_left if true, align the message to the left, otherwise to the right
 /// @param selected if true, highlight the message
-void display_message(message_t message, int align_left, int selected)
+/// @return int the height of the message
+int display_message(message_t message, int align_left, int selected)
 {
-
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
@@ -568,11 +644,23 @@ void display_message(message_t message, int align_left, int selected)
     int left_space = align_left ? 0 : w.ws_col / 2;
     color_t color = selected ? CYAN : WHITE;
 
-    user_t receiver;
-    db_get_user(conn, &receiver, message.receiver_id);
-    db_set_user_type(conn, &receiver);
+    user_t receiver_user;
+    if (connected_user.id == message.receiver_id) {
+        receiver_user = connected_user;
+    } else {
+        db_get_user(conn, &receiver_user, message.receiver_id);
+        db_set_user_type(conn, &receiver_user);
+    }
 
-    char* sender = connected_user.id == message.sender_id ? "You" : receiver.name;
+    user_t sender_user;
+    if (connected_user.id == message.sender_id) {
+        sender_user = connected_user;
+    } else {
+        db_get_user(conn, &sender_user, message.sender_id);
+        db_set_user_type(conn, &sender_user);
+    }
+
+    char* sender = connected_user.id == message.sender_id ? "You" : sender_user.name;
     char* sended_date = format_date(message.sended_date);
     char* modified_date = format_date(message.modified_date);
 
@@ -630,6 +718,8 @@ void display_message(message_t message, int align_left, int selected)
         }
         printf("\n");
     }
+
+    return height;
 }
 
 void print_logo()
