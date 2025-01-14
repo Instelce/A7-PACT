@@ -11,7 +11,8 @@ typedef enum
     MAGENTA,
     CYAN,
     WHITE,
-    GRAY
+    GRAY,
+    NO_COLOR,
 } color_t;
 
 typedef enum {
