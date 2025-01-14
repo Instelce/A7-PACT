@@ -13,6 +13,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdarg.h>
 
 #include <sys/ipc.h>
 #include <sys/shm.h>
@@ -55,9 +56,14 @@ int shmid_clients_count;
 
 // Handle signals (SIGINT, SIGQUIT)
 void signal_handler(int sig);
+
 // Send status message to the client
-void send_status(int sock, response_status_t s, char message[]);
+// Params at the end are optional, it represents the data to send
+// Example: send_response(sock, STATUS_OK, "name", "Victor", NULL);
+void send_response(int sock, response_status_t status, ...);
+
 void set_sock_timeout(int sock, int timeout_ms);
+
 // Parse string command
 int parse_command(char command_str[], command_t* command);
 
@@ -253,7 +259,7 @@ int main(int argc, char* argv[])
         if ((client_pid = fork()) == 0) {
             close(sock);
 
-            int client_id = *clients_count;
+            int client_id = (*clients_count) - 1;
             char api_token[API_TOKEN_SIZE];
             int client_login = 0;
             message_t message;
@@ -265,7 +271,7 @@ int main(int argc, char* argv[])
             while (1) {
                 // printf("C Clients count %d\n", *clients_count);
                 // for (int i = 0; i < *clients_count; i++) {
-                //     printf("C Client %d %s\n", clients[i].ip, clients[i].user.email);
+                //     printf("C Client (ip: %d) (id: %d) (email:%s)\n", clients[i].ip, clients[i].user.id, clients[i].user.email);
                 // }
 
                 memset(command_recv, 0, sizeof(command_recv));
@@ -283,7 +289,7 @@ int main(int argc, char* argv[])
                 command_parsed = parse_command(command_recv, &command);
 
                 if (command_parsed == -1) {
-                    send_status(sock_conn, STATUS_MIS_FORMAT, "Message mal formaté");
+                    send_response(sock_conn, STATUS_MIS_FORMAT, "message", "Message mal formaté", NULL);
                     log_info("Invalid action received");
                 } else {
                     log_info("Action received [%s]", command.name);
@@ -296,16 +302,20 @@ int main(int argc, char* argv[])
                     // Handle the login command
                     if (strcmp(command.name, LOGIN) == 0 && !client_login) {
                         strcpy(api_token, get_command_param_value(command, "api-token"));
-                        trim(api_token);
-                        api_token[API_TOKEN_SIZE - 1] = '\0';
 
                         user_t tmp_user;
                         int user_found = db_get_user_by_api_token(conn, &tmp_user, api_token);
 
                         if (!user_found) {
-                            send_status(sock_conn, STATUS_DENIED, "Accès refusé");
+                            send_response(sock_conn, STATUS_DENIED, "message", "Accès refusé", NULL);
                             continue;
                         } else {
+                            // Check if the user is already connected
+                            if (client_connected(tmp_user.id)) {
+                                send_response(sock_conn, STATUS_DENIED, "message", "Utilisateur déjà connecté", NULL);
+                                continue;
+                            }
+
                             // For log
                             strcpy(log_client_identity, tmp_user.email);
 
@@ -313,7 +323,7 @@ int main(int argc, char* argv[])
                             clients[client_id].user = tmp_user;
 
                             log_info("Client (%d) logged in", getpid());
-                            send_status(sock_conn, STATUS_OK, "Accès autorisé");
+                            send_response(sock_conn, STATUS_OK, "message", "Accès autorisé", NULL);
                             continue;
                         }
                     }
@@ -321,7 +331,7 @@ int main(int argc, char* argv[])
                     if (client_login) {
                         // Check if the token is valid
                         if (strcmp(get_command_param_value(command, "token"), clients[client_id].user.api_token) != 0) {
-                            send_status(sock_conn, STATUS_UNAUTHORIZED, "Client non identifié");
+                            send_response(sock_conn, STATUS_UNAUTHORIZED, "message", "Client non identifié", NULL);
                             continue;
                         }
                         // Handle all commands that need to be logged in
@@ -335,7 +345,7 @@ int main(int argc, char* argv[])
 
                             log_info("Message (%d) send from %d to %d", message.id, clients[client_id].user.id, message.receiver_id);
 
-                            send_status(sock_conn, STATUS_OK, "Message bien reçu et traité");
+                            send_response(sock_conn, STATUS_OK, "message", "Message bien reçu et traité", NULL);
                         } else if (strcmp(command.name, UPDATE_MESSAGE) == 0) {
                             db_get_message(conn, atoi(get_command_param_value(command, "message-id")), &message);
 
@@ -343,23 +353,23 @@ int main(int argc, char* argv[])
 
                             db_update_message(conn, &message);
 
-                            send_status(sock_conn, STATUS_OK, "Message mis à jour avec succès");
+                            send_response(sock_conn, STATUS_OK, "message", "Message mis à jour avec succès", NULL);
                         } else if (strcmp(command.name, DELETE_MESSAGE) == 0) {
                             db_delete_message(conn, atoi(get_command_param_value(command, "message-id")));
 
-                            send_status(sock_conn, STATUS_OK, "Message supprimé avec succès");
+                            send_response(sock_conn, STATUS_OK, "message", "Message supprimé avec succès", NULL);
                         } else if (strcmp(command.name, IS_CONNECTED) == 0) {
                             int user_id = atoi(get_command_param_value(command, "user-id"));
 
                             if (client_connected(user_id)) {
-                                send_status(sock_conn, STATUS_OK, "Utilisateur connecté");
+                                send_response(sock_conn, STATUS_OK, "message", "Utilisateur connecté", NULL);
                             } else {
-                                send_status(sock_conn, STATUS_DENIED, "Utilisateur non connecté");
+                                send_response(sock_conn, STATUS_DENIED, "message", "Utilisateur non connecté", NULL);
                             }
                         } else {
                         }
                     } else {
-                        send_status(sock_conn, STATUS_DENIED, "Action non autorisée");
+                        send_response(sock_conn, STATUS_DENIED, "message", "Action non autorisée", NULL);
                     }
                 }
             }
@@ -392,13 +402,30 @@ int main(int argc, char* argv[])
     return EXIT_SUCCESS;
 }
 
-void send_status(int sock, response_status_t s, char message[])
+void send_response(int sock, response_status_t status, ...)
 {
-    char complete_message[CHAR_SIZE];
+    char buf[CHAR_SIZE];
+    response_t response = create_response(status);
+    va_list args;
+    char* name;
+    char* value;
 
-    sprintf(complete_message, "%s: %s\n", format_status(s), message);
+    va_start(args, status);
 
-    send(sock, complete_message, strlen(complete_message), 0);
+    while ((name = va_arg(args, char*)) != NULL)
+    {
+        if ((value = va_arg(args, char*)) == NULL) {
+            break;
+        }
+
+        add_response_data(&response, name, value);
+    }
+
+    va_end(args);
+
+    strcpy(buf, format_response(response));
+
+    send(sock, buf, strlen(buf), 0);
 }
 
 void signal_handler(int sig)
@@ -513,13 +540,7 @@ int parse_command(char command_str[], command_t* command)
             }
 
             strcpy(command->name, line);
-
             command_def = get_command_def(command->name);
-
-            command->params = malloc(command_def.params_count * sizeof(command_param_t));
-
-            // printf("Command name: %s\n", command->name);
-
             is_command_exist = 1;
 
             memset(line, 0, CHAR_SIZE);
@@ -532,6 +553,10 @@ int parse_command(char command_str[], command_t* command)
         return -1;
     }
 
+    // Allocate memory for params
+    command->params = malloc(command_def.params_count * sizeof(command_param_t));
+
+    // Parse params
     while (param_index < command_def.params_count) {
         c = command_str[i];
 
