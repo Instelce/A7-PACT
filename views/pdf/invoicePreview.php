@@ -20,17 +20,22 @@ $offerPrice = $invoice->activeDays() * $type->price;
 
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
 
-    <title>Facture <?php echo $pk ?> - <?php echo Utils::monthConversion($invoice->service_date) ?> - <?php echo $offer->title ?></title>
+    <title>Facture <?php echo $pk ?> - <?php echo Utils::monthConversion($invoice->service_date) ?> -
+        <?php echo $offer->title ?>
+    </title>
 
     <style>
         /* Général */
@@ -74,7 +79,8 @@ $offerPrice = $invoice->activeDays() * $type->price;
             background-color: #fff;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: .6rem;
             text-align: left;
@@ -140,7 +146,7 @@ $offerPrice = $invoice->activeDays() * $type->price;
 
         .totals-table td,
         .totals-table th,
-        .totals-table{
+        .totals-table {
             border: none;
         }
 
@@ -208,6 +214,7 @@ $offerPrice = $invoice->activeDays() * $type->price;
         }
     </style>
 </head>
+
 <body>
 
     <header>
@@ -218,61 +225,65 @@ $offerPrice = $invoice->activeDays() * $type->price;
         <span class="badge"><?php echo date('d/m/Y', strtotime($invoice->issue_date)) ?></span>
         <span class="badge"><?php echo $offer->title ?></span>
 
-        <img src="data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents(Application::assets('/images/logoPro.svg'))) ?>" alt="Logo">
+        <img src="data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents(Application::assets('/images/logoPro.svg'))) ?>"
+            alt="Logo">
     </header>
 
     <div>
         <div class="address">
-            <h3>SARL PACT</h3>
+            <h3>SARL a7</h3>
             <p>25, Rue de la Boutade</p>
             <p>22300, Lannion</p>
-            <p>02 96 01 10 51</p>
+            <p>06 26 41 40 41</p>
         </div>
 
         <div class="address address-receiver">
             <h3>FACTURÉ À</h3>
             <p><?php echo $professional->denomination ?></p>
-            <p><?php echo $professionalAddress->number . ' ' . $professionalAddress->street . ' , ' . $professionalAddress->postal_code . ' ' . $professionalAddress->city; ?></p>
+            <p><?php echo $professionalAddress->number . ' ' . $professionalAddress->street . ' , ' . $professionalAddress->postal_code . ' ' . $professionalAddress->city; ?>
+            </p>
             <p>SIREN : <?php echo $professional->siren ?></p>
             <p>Tél : <?php echo $professional->phone ?></p>
         </div>
     </div>
 
     <h2 class="title">
-        Facturation de l'offre <a href="<?php echo $url ?>"><?php echo $offer->title ?></a> du mois de <?php echo Utils::monthConversion($invoice->service_date) ?> <?php echo date('Y', strtotime($invoice->issue_date)); ?>
+        Facturation de l'offre <a href="<?php echo $url ?>"><?php echo $offer->title ?></a> du mois de
+        <?php echo Utils::monthConversion($invoice->service_date) ?>
+        <?php echo date('Y', strtotime($invoice->issue_date)); ?>
     </h2>
 
     <div>
         <table>
             <thead>
-            <tr>
-                <th>Prestations</th>
-                <th>Qté</th>
-                <th>Prix HT</th>
-                <th>Montant</th>
-            </tr>
+                <tr>
+                    <th>Prestations</th>
+                    <th>Qté</th>
+                    <th>Prix HT</th>
+                    <th>Montant</th>
+                </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Offre "<?php echo $type->type ?>"</td>
-                <td><?php echo $invoice->activeDays() ?> / jour</td>
-                <td><?php echo $type->price ?> €</td>
-                <td><?php echo $offerPrice ?> €</td>
-            </tr>
-            <?php foreach ($subscription as $sub) {
-                $optionPrice = $sub->duration * $sub->price();
-
-                $sousTotal = $offerPrice;
-                if($sub){
-                    $sousTotal = $offerPrice + $optionPrice;
-                } ?>
                 <tr>
-                    <td>Option "<?php echo $sub->option()->french() ?>"</td>
-                    <td><?php echo $sub->duration ?> / semaine</td>
-                    <td><?php echo $sub->price() ?>€</td>
-                    <td><?php echo $optionPrice ?> €</td>
+                    <td>Offre "<?php echo $type->type ?>"</td>
+                    <td><?php echo $invoice->activeDays() ?> / jour</td>
+                    <td><?php echo $type->price ?> €</td>
+                    <td><?php echo $offerPrice ?> €</td>
                 </tr>
-            <?php } ?>
+                <?php foreach ($subscription as $sub) {
+                    $optionPrice = $sub->duration * $sub->price();
+
+                    $sousTotal = $offerPrice;
+                    if ($sub) {
+                        $sousTotal = $offerPrice + $optionPrice;
+                    } ?>
+                    <tr>
+                        <td>Option "<?php echo $sub->option()->french() ?>"</td>
+                        <td><?php echo $sub->duration ?> / semaine</td>
+                        <td><?php echo $sub->price() ?>€</td>
+                        <td><?php echo $optionPrice ?> €</td>
+                    </tr>
+                <?php } ?>
 
             </tbody>
         </table>
@@ -285,11 +296,11 @@ $offerPrice = $invoice->activeDays() * $type->price;
                 </tr>
                 <tr>
                     <td>Total TVA 20%</td>
-                    <td><?php echo round(($sousTotal * 0.2),2) ?> €</td>
+                    <td><?php echo round(($sousTotal * 0.2), 2) ?> €</td>
                 </tr>
                 <tr>
                     <td class="total">Total TTC</td>
-                    <td class="total"><?php echo round(($sousTotal + $sousTotal*0.2),2) ?> €</td>
+                    <td class="total"><?php echo round(($sousTotal + $sousTotal * 0.2), 2) ?> €</td>
                 </tr>
             </table>
         </div>
@@ -301,7 +312,8 @@ $offerPrice = $invoice->activeDays() * $type->price;
     <footer>
         <div class="payment-terms">
             <h3>Conditions et modalités de paiement</h3>
-            <p>Le paiement est dû à <?php echo $professional->denomination ?> dans 30 jours à compter de la date de facture.</p>
+            <p>Le paiement est dû à <?php echo $professional->denomination ?> dans 30 jours à compter de la date de
+                facture.</p>
         </div>
 
         <div class="contact">
@@ -311,4 +323,5 @@ $offerPrice = $invoice->activeDays() * $type->price;
         </div>
     </footer>
 </body>
+
 </html>

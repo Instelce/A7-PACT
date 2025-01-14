@@ -51,6 +51,72 @@ response_status_t* parse_status(char status_str[])
     return status;
 }
 
+response_t* parse_response(char response_str[])
+{
+    char* response_str_copy = strdup(response_str);
+    response_t* response = malloc(sizeof(response_t));
+    char* status_str = strtok(response_str_copy, "\n");
+
+    response->status = *parse_status(status_str);
+    response->data_list = NULL;
+    response->data_list_size = 0;
+
+    char* data_start = strstr(response_str, "\n");
+    if (data_start) {
+        data_start += 1;
+    } else {
+        return response;
+    }
+
+    while (data_start && *data_start != '\0') {
+        char* line_end = strstr(data_start, "\n");
+        if (!line_end)
+            break;
+
+        char data_line[LARGE_CHAR_SIZE];
+        strncpy(data_line, data_start, line_end - data_start);
+        data_line[line_end - data_start] = '\0';
+
+        char* name = strtok(data_line, ":");
+        char* value = strtok(NULL, ":");
+
+        add_response_data(response, name, value);
+
+        data_start = line_end + 1;
+    }
+
+    return response;
+}
+
+response_t create_response(response_status_t status)
+{
+    response_t response;
+    response.status = status;
+    response.data_list = NULL;
+    response.data_list_size = 0;
+    return response;
+}
+
+void add_response_data(response_t* response, char name[], char value[])
+{
+    // Allocate more memory
+    response->data_list = realloc(response->data_list, (response->data_list_size + 1) * sizeof(response_data_t));
+
+    strcpy(response->data_list[response->data_list_size].name, name);
+    strcpy(response->data_list[response->data_list_size].value, value);
+    response->data_list_size++;
+}
+
+char* get_response_data(response_t response, char name[])
+{
+    for (int i = 0; i < response.data_list_size; i++) {
+        if (strcmp(response.data_list[i].name, name) == 0) {
+            return response.data_list[i].value;
+        }
+    }
+    return "";
+}
+
 int command_exist(char name[])
 {
     for (int i = 0; i < COMMANDS_COUNT; i++) {
@@ -105,7 +171,7 @@ void add_command_param(command_t* command, char name[], char value[])
     }
 }
 
-response_status_t* request(int sock, char buf[])
+response_t* request(int sock, char buf[])
 {
     char response[LARGE_CHAR_SIZE];
     memset(response, 0, sizeof(response));
@@ -123,10 +189,10 @@ response_status_t* request(int sock, char buf[])
 
     // printf("%s\n", response);
 
-    return parse_status(response);
+    return parse_response(response);
 }
 
-response_status_t* send_message(int sock, char token[], char message[], int receiver_id)
+response_t* send_message(int sock, char token[], char message[], int receiver_id)
 {
     command_t command = create_command(SEND_MESSAGE);
     char* buf;
@@ -141,10 +207,12 @@ response_status_t* send_message(int sock, char token[], char message[], int rece
     return request(sock, buf);
 }
 
-response_status_t* send_login(int sock, char api_token[])
+response_t* send_login(int sock, char api_token[])
 {
     command_t command = create_command(LOGIN);
     char* buf;
+
+    trim(api_token);
 
     add_command_param(&command, "api-token", api_token);
 
@@ -153,7 +221,7 @@ response_status_t* send_login(int sock, char api_token[])
     return request(sock, buf);
 }
 
-response_status_t* send_uptade_message(int sock, char token[], int message_id, char message[])
+response_t* send_uptade_message(int sock, char token[], int message_id, char message[])
 {
     command_t command = create_command(UPDATE_MESSAGE);
 
@@ -165,7 +233,7 @@ response_status_t* send_uptade_message(int sock, char token[], int message_id, c
     return request(sock, format_command(command));
 }
 
-response_status_t* send_delete_message(int sock, char token[], int message_id)
+response_t* send_delete_message(int sock, char token[], int message_id)
 {
     command_t command = create_command(DELETE_MESSAGE);
 
@@ -175,7 +243,7 @@ response_status_t* send_delete_message(int sock, char token[], int message_id)
     return request(sock, format_command(command));
 }
 
-response_status_t* send_get_new_message(int sock, char token[])
+response_t* send_get_new_message(int sock, char token[])
 {
     command_t command = create_command(GET_NEW_MESSAGES);
 
@@ -184,11 +252,25 @@ response_status_t* send_get_new_message(int sock, char token[])
     return request(sock, format_command(command));
 }
 
-response_status_t* send_is_connected(int sock, int user_id)
+response_t* send_is_connected(int sock, int user_id)
 {
     command_t command = create_command(IS_CONNECTED);
 
     add_command_param(&command, "user-id", to_string(user_id));
 
     return request(sock, format_command(command));
+}
+
+void send_disconnected(int sock)
+{
+    command_t command = create_command(DISCONNECTED);
+    char buf[LARGE_CHAR_SIZE];
+    memset(buf, 0, sizeof(buf));
+
+    strcpy(buf, format_command(command));
+
+    if (write(sock, buf, strlen(buf)) < 0) {
+        perror("Error sending message");
+        exit(EXIT_FAILURE);
+    }
 }

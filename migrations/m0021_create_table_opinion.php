@@ -10,7 +10,7 @@ class m0021_create_table_opinion
         $sql = "CREATE TABLE opinion (
             id SERIAL PRIMARY KEY,
             
-            rating INT NOT NULL,
+            rating FLOAT NOT NULL,
             title VARCHAR(128) NOT NULL,
             comment VARCHAR(255) NOT NULL,
             visit_date DATE NOT NULL,
