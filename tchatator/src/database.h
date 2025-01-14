@@ -53,12 +53,14 @@ char* get_token_by_email(PGconn* conn, char email[]);
 int db_get_user(PGconn* conn, user_t* user, int id);
 int db_get_user_by_email(PGconn* conn, user_t* user, char email[]);
 int db_get_user_by_api_token(PGconn* conn, user_t* user, char api_token[]);
-int db_set_user_type(PGconn *conn, user_t *user);
+int db_set_user_type(PGconn* conn, user_t* user);
 
 // Message stuff
 int db_get_message(PGconn* conn, int message_id, message_t* message);
 void db_create_message(PGconn* conn, message_t* message);
 void db_update_message(PGconn* conn, message_t* message);
 void db_delete_message(PGconn* conn, int message_id);
+user_list_t db_get_members(PGconn* conn, int offset, int limit);
+user_list_t db_get_professionals(PGconn* conn, int offset, int limit);
 
 #endif // DATABASE_H

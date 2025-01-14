@@ -195,7 +195,8 @@ response_status_t* send_is_connected(int sock, int user_id)
     return request(sock, format_command(command));
 }
 
-void send_disconnected(int sock) {
+void send_disconnected(int sock)
+{
     command_t command = create_command(DISCONNECTED);
     char buf[LARGE_CHAR_SIZE];
     memset(buf, 0, sizeof(buf));
