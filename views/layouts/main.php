@@ -142,43 +142,22 @@ use app\core\Application;
     </div>
 
     <?php if ($this->waves) { ?>
-        <div class="waves">
-            <!-- Orange wave -->
-            <svg width="100%" height="432" preserveAspectRatio="none" viewBox="0 0 1456 432" fill="none"
-                xmlns="http://www.w3.org/2000/svg" class="orange">
-                <path
-                    d="M453.577 267C265.617 254.436 0 431.5 0 431.5V0H1455.04V369.5C1455.04 369.5 1337.89 299.429 1253.95 285.5C1080.26 256.677 1003.04 442.381 827.317 431.5C668.207 421.648 612.638 277.633 453.577 267Z"
-                    fill="url(#paint0_linear_2930_6089)" />
+        <div class="wave">
+            <svg class="waveSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                 viewBox="0 24 150 28" preserveAspectRatio="none">
                 <defs>
-                    <linearGradient id="paint0_linear_2930_6089" x1="727.52" y1="431.5" x2="727.52" y2="0"
-                        gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#FFD884" stop-opacity="0" />
-                        <stop offset="1" stop-color="#FFC14E" />
-                    </linearGradient>
+                    <path id="gentle-wave" d="M-160 44c30 0
+            58-18 88-18s
+            58 18 88 18
+            58-18 88-18
+            58 18 88 18
+            v44h-352z" />
                 </defs>
-            </svg>
-
-            <!-- White wave -->
-            <svg width="100%" height="448" preserveAspectRatio="none" viewBox="0 0 1457 448" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M817.338 447.5C658.227 437.648 602.658 293.633 443.598 283C277.783 271.916 51.532 408.409 0.520264 440.726V0H1456.52V381.252C1425.35 365.868 1315.4 313.354 1243.97 301.5C1070.28 272.677 993.061 458.381 817.338 447.5Z"
-                    fill="white" />
-            </svg>
-
-            <!-- Blue wave -->
-            <svg width="100%" height="432" preserveAspectRatio="none" viewBox="0 0 1456 432" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M453.577 267C265.617 254.436 0 431.5 0 431.5V0H1455.04V369.5C1455.04 369.5 1337.89 299.429 1253.95 285.5C1080.26 256.677 1003.04 442.381 827.317 431.5C668.207 421.648 612.638 277.633 453.577 267Z"
-                    fill="url(#paint0_linear_2930_6091)" />
-                <defs>
-                    <linearGradient id="paint0_linear_2930_6091" x1="727.52" y1="431.5" x2="727.52" y2="0"
-                        gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#00A2FF" stop-opacity="0" />
-                        <stop offset="1" stop-color="#00A2FF" />
-                    </linearGradient>
-                </defs>
+                <g class="waves">
+                    <use xlink:href="#gentle-wave" x="50" y="0" fill="#FFA800" fill-opacity="1" />
+                    <use xlink:href="#gentle-wave" x="50" y="3" fill="#00A2FF" fill-opacity="1" />
+                    <use xlink:href="#gentle-wave" x="50" y="6" fill="#0057FF" fill-opacity="1" />
+                </g>
             </svg>
         </div>
     <?php } ?>
