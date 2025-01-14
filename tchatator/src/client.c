@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <termio.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <signal.h>
@@ -254,7 +255,8 @@ void menu_send_message()
 }
 
 // Choose a discussion with a specific user
-void menu_select_discussion() {
+void menu_select_discussion()
+{
     user_list_t receiver_user_list = db_get_all_receiver_users_of_user(conn, connected_user.id);
     int selected_index = -1;
     menu_t user_menu;
@@ -262,8 +264,7 @@ void menu_select_discussion() {
 
     // Setup menu with users
     strcpy(user_menu.name, "Choose user to discuss with");
-    for (int i = 0; i < receiver_user_list.count; i++)
-    {
+    for (int i = 0; i < receiver_user_list.count; i++) {
         add_menu_action(&user_menu, receiver_user_list.users[i].email, NULL, 0);
     }
 
@@ -277,7 +278,8 @@ void menu_select_discussion() {
     }
 }
 
-void menu_discussion() {
+void menu_discussion()
+{
     menu_t menu;
     int selected_index = -1;
 
@@ -424,6 +426,212 @@ void signal_handler(int sig)
     }
 }
 
+void print_box(int width, int height, color_t color, int align_left)
+{
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    int padding = align_left ? 0 : w.ws_col - width;
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < padding; j++) {
+            printf(" ");
+        }
+        for (int j = 0; j < width; j++) {
+            if (i == 0) {
+                if (j == 0) {
+                    color_printf(color, "╭");
+                } else if (j == width - 1) {
+                    color_printf(color, "╮");
+                } else {
+                    color_printf(color, "─");
+                }
+            } else if (i == height - 1) {
+                if (j == 0) {
+                    color_printf(color, "╰");
+                } else if (j == width - 1) {
+                    color_printf(color, "╯");
+                } else {
+                    color_printf(color, "─");
+                }
+            } else {
+                if (j == 0 || j == width - 1) {
+                    color_printf(color, "│");
+                } else {
+                    color_printf(color, " ");
+                }
+            }
+        }
+        printf("\n");
+    }
+}
+
+/// @brief Format a date to a human readable format
+/// @param date date "YYYY-MM-DD HH:MM:SS"
+char* format_date(char date[])
+{
+    char* formatted_date = malloc(CHAR_SIZE);
+    int min = 0;
+    int hour = 0;
+    int day = 0;
+    int month = 0;
+    int year = 0;
+    int sec = 0;
+
+    time_t now;
+    struct tm tm;
+    time(&now);
+    tm = *localtime(&now);
+
+    sscanf(date, "%d-%d-%d %d:%d:%d", &year, &month, &day, &hour, &min, &sec);
+
+    if (tm.tm_year + 1900 == year && tm.tm_mon + 1 == month && tm.tm_mday == day) {
+        if (tm.tm_hour == hour) {
+            if (tm.tm_min == min) {
+                if (tm.tm_sec == sec) {
+                    strcpy(formatted_date, "il y a quelques secondes");
+                } else {
+                    strcpy(formatted_date, "il y a quelques minutes");
+                }
+            } else {
+                strcpy(formatted_date, "il y a ");
+                if (tm.tm_min - min == 15 || tm.tm_min - min == 30 || tm.tm_min - min == 45) {
+                    strcat(formatted_date, to_string(tm.tm_min - min));
+                    strcat(formatted_date, " min");
+                } else {
+                    strcat(formatted_date, to_string(tm.tm_min - min));
+                    strcat(formatted_date, " min");
+                }
+            }
+        } else {
+            strcpy(formatted_date, "il y a ");
+            strcat(formatted_date, to_string(tm.tm_hour - hour));
+            strcat(formatted_date, " h");
+        }
+    } else {
+        strcpy(formatted_date, "il y a ");
+        strcat(formatted_date, to_string(tm.tm_mday - day));
+        strcat(formatted_date, " jours");
+    }
+
+    return formatted_date;
+}
+
+void goto_print(int x, int y, char format[], ...)
+{
+    va_list args;
+    va_start(args, format);
+    printf("\033[%d;%dH", x, y);
+    vprintf(format, args);
+    va_end(args);
+}
+
+/// @brief Display a card for a message
+/// @param message
+/// @param align_left if true, align the message to the left, otherwise to the right
+/// @param selected if true, highlight the message
+void display_message(message_t message, int align_left, int selected)
+{
+
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+
+    // Estimate the height of the message
+    // And split the message into lines
+    char c;
+    int line_count = 0;
+    char* lines[CHAR_SIZE];
+
+    lines[0] = malloc(CHAR_SIZE);
+    memset(lines[0], 0, CHAR_SIZE);
+
+    // printf("size %d\n", (w.ws_col / 2 - 2));
+
+    for (int i = 0; i < strlen(message.content); i++) {
+        c = message.content[i];
+
+        // printf("c: %c\n", c);
+        // printf("%d\n", strlen(lines[line_count]));
+
+        if (c != '\n') {
+            strncat(lines[line_count], &c, 1);
+        }
+
+        if (c == '\n' || strlen(lines[line_count]) >= (w.ws_col / 2 - 6)) {
+            line_count++;
+            lines[line_count] = malloc(CHAR_SIZE);
+            memset(lines[line_count], 0, CHAR_SIZE);
+        }
+    }
+
+    int width = w.ws_col / 2 - 2;
+    int height = line_count + 8;
+    int left_space = align_left ? 0 : w.ws_col / 2;
+    color_t color = selected ? CYAN : WHITE;
+
+    user_t receiver;
+    db_get_user(conn, &receiver, message.receiver_id);
+    db_set_user_type(conn, &receiver);
+
+    char* sender = connected_user.id == message.sender_id ? "You" : receiver.name;
+    char* sended_date = format_date(message.sended_date);
+    char* modified_date = format_date(message.modified_date);
+
+    int printed_line_count = 0;
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < left_space; j++) {
+            printf(" ");
+        }
+        for (int j = 0; j < width; j++) {
+            if (i == 0) {
+                if (j == 0) {
+                    color_printf(color, "╭");
+                } else if (j == width - 1) {
+                    color_printf(color, "╮");
+                } else {
+                    color_printf(color, "─");
+                }
+            } else if (i == height - 1) {
+                if (j == 0) {
+                    color_printf(color, "╰");
+                } else if (j == width - 1) {
+                    color_printf(color, "╯");
+                } else {
+                    color_printf(color, "─");
+                }
+            } else {
+                if (j == 0 || j == width - 1) {
+                    color_printf(color, "│");
+                } else {
+                    color_printf(color, " ");
+                }
+            }
+
+            if (i == 1 && j == 1) {
+                cs_printf(color, BOLD, "%s", sender);
+                j += strlen(sender);
+            }
+
+            // Show message content
+            if (i == 3 + printed_line_count && j == 1 && printed_line_count <= line_count) {
+                printf("%s", lines[printed_line_count]);
+                j += strlen(lines[printed_line_count]);
+                printed_line_count++;
+            }
+
+            if (i == 5 + line_count && j == 1) {
+                color_printf(color, "Envoyé %s", sended_date);
+                j += strlen(sended_date) + 7;
+            }
+            if (i == 6 + line_count && j == 1) {
+                color_printf(color, "Mis à jour %s", sended_date);
+                j += strlen(sended_date) + 11;
+            }
+        }
+        printf("\n");
+    }
+}
+
 void print_logo()
 {
     color_printf(RED, "     _______   _           _        _\n");
@@ -494,6 +702,12 @@ int main()
     env_load("..");
 
     db_login(&conn);
+
+    // test
+    // db_get_user(conn, &connected_user, 2);
+    // display_message((message_t) { .content = "Hello broooazeazeazeazeazeazeo\nsuper\nookokoko", .receiver_id = 4, .sender_id = 2, .sended_date = "2021-06-01 12:00:00", .modified_date = "2021-06-01 12:00:12" }, 0, 0);
+    // display_message((message_t) { .content = "Hello", .receiver_id = 3, .sender_id = 1, .sended_date = "2021-06-01 12:00:00", .modified_date = "2021-06-01 12:00:12" }, 1, 1);
+    // exit(0);
 
     signal(SIGINT, signal_handler);
 
