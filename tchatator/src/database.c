@@ -325,7 +325,21 @@ user_list_t db_get_members(PGconn* conn, int offset, int limit)
         limit, offset);
 
     res = PQexec(conn, query);
+    user_list_t user_list;
+    PGresult* res;
+    char query[256];
+    sprintf(query,
+        "SELECT ua.account_id, mu.pseudo, ua.mail, ua.api_token "
+        "FROM user_account ua "
+        "JOIN member_user mu ON ua.account_id = mu.user_id "
+        "LIMIT %d OFFSET %d",
+        limit, offset);
 
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Error when fetching members");
+    }
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
         db_error(conn, "Error when fetching members");
     }
@@ -333,6 +347,15 @@ user_list_t db_get_members(PGconn* conn, int offset, int limit)
     user_list.count = PQntuples(res);
     user_list.users = malloc(user_list.count * sizeof(user_t));
 
+    for (int i = 0; i < user_list.count; i++) {
+        user_list.users[i] = (user_t) {
+            .id = atoi(PQgetvalue(res, i, 0)),
+            .type = MEMBER,
+        };
+        strcpy(user_list.users[i].name, PQgetvalue(res, i, 1));
+        strcpy(user_list.users[i].email, PQgetvalue(res, i, 2));
+        strcpy(user_list.users[i].api_token, PQgetvalue(res, i, 3));
+    }
     for (int i = 0; i < user_list.count; i++) {
         user_list.users[i] = (user_t) {
             .id = atoi(PQgetvalue(res, i, 0)),
@@ -361,6 +384,13 @@ user_list_t db_get_professionals(PGconn* conn, int offset, int limit)
         "LIMIT %d OFFSET %d",
         limit, offset);
 
+    sprintf(query,
+        "SELECT ua.account_id, pu.denomination, ua.mail, ua.api_token "
+        "FROM user_account ua "
+        "JOIN professional_user pu ON ua.account_id = pu.user_id "
+        "LIMIT %d OFFSET %d",
+        limit, offset);
+
     res = PQexec(conn, query);
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
@@ -370,6 +400,15 @@ user_list_t db_get_professionals(PGconn* conn, int offset, int limit)
     user_list.count = PQntuples(res);
     user_list.users = malloc(user_list.count * sizeof(user_t));
 
+    for (int i = 0; i < user_list.count; i++) {
+        user_list.users[i] = (user_t) {
+            .id = atoi(PQgetvalue(res, i, 0)),
+            .type = PROFESSIONAL,
+        };
+        strcpy(user_list.users[i].name, PQgetvalue(res, i, 1));
+        strcpy(user_list.users[i].email, PQgetvalue(res, i, 2));
+        strcpy(user_list.users[i].api_token, PQgetvalue(res, i, 3));
+    }
     for (int i = 0; i < user_list.count; i++) {
         user_list.users[i] = (user_t) {
             .id = atoi(PQgetvalue(res, i, 0)),

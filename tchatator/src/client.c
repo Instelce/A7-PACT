@@ -33,13 +33,15 @@ typedef struct {
     int actions_count;
 } menu_t;
 
-PGconn* conn;
 volatile sig_atomic_t running = 1;
-response_status_t* response;
+
 int sock;
+PGconn* conn;
+response_t* response;
 user_t connected_user;
 user_list_t pros;
 user_list_t clients;
+char error_message[CHAR_SIZE];
 
 // Display a menu and return the index of the selected action
 int display_menu(menu_t menu);
@@ -50,7 +52,9 @@ int display_menu(menu_t menu);
 // create_menu(menu, "Main menu", "Action 1", action1, "Action 2", action2, NULL);
 void create_menu(menu_t* menu, char name[], ...);
 
-void menu_add_action(menu_t* menu, char name[], void (*action)());
+void menu_add_action(menu_t* menu, char name[], void (*action)(), int disabled);
+
+void set_error(char format[], ...);
 
 void input(char* output)
 {
@@ -91,15 +95,19 @@ void connection_client()
         strcpy(mail, "eliaz.chesnel@outlook.fr");
     }
 
-    printf("Email entered: '%s'\n", mail);
     int user_found = db_get_user_by_email(conn, &connected_user, mail);
 
     if (!user_found) {
-        printf("User not found\n");
+        set_error("User with the '%s' email does not exist", mail);
+        return;
     }
 
-    printf("Token: %s\n", connected_user.api_token);
     response = send_login(sock, connected_user.api_token);
+
+    if (response->status.code == 403) {
+        connected_user = NOT_CONNECTED_USER;
+        set_error(get_response_data(*response, "message"));
+    }
 }
 
 void write_message(char* message)
@@ -163,16 +171,24 @@ void menu_send_message()
 {
     clear_term();
     char message[LARGE_CHAR_SIZE] = { 0 };
+    char message[LARGE_CHAR_SIZE] = { 0 };
     menu_t receiver_menu;
     int selected_index = -1;
     int offset = 0;
     const int limit = 5;
+    const int limit = 5;
     user_list_t receivers;
 
-    printf("\nSend a Message\n");
+    printf("\nSend a Message\n\n");
 
     printf("Write your message (Ctrl+D to send, Backspace to delete):\n");
     write_message(message);
+
+    if (connected_user.type == MEMBER) {
+        strcpy(receiver_menu.name, "Select a Professional to Send the Message");
+    } else if (connected_user.type == PROFESSIONAL) {
+        strcpy(receiver_menu.name, "Select a Member to Send the Message");
+    }
 
     if (connected_user.type == MEMBER) {
         strcpy(receiver_menu.name, "Select a Professional to Send the Message");
@@ -196,21 +212,25 @@ void menu_send_message()
             break;
         }
         receiver_menu.actions = malloc((receivers.count + 2) * sizeof(menu_action_t));
+        receiver_menu.actions = malloc((receivers.count + 2) * sizeof(menu_action_t));
         receiver_menu.actions_count = receivers.count + 2;
 
         for (int i = 0; i < receivers.count; i++) {
-            strcpy(receiver_menu.actions[i].name, receivers.users[i].name);
-            receiver_menu.actions[i].disabled = 0;
-            receiver_menu.actions[i].action = NULL;
+            menu_add_action(&receiver_menu, receivers.users[i].name, NULL, 0);
+            // strcpy(receiver_menu.actions[i].name, receivers.users[i].name);
+            // receiver_menu.actions[i].disabled = 0;
+            // receiver_menu.actions[i].action = NULL;
         }
         // add action
-        strcpy(receiver_menu.actions[receivers.count].name, "Next Page");
-        receiver_menu.actions[receivers.count].disabled = 0;
-        receiver_menu.actions[receivers.count].action = NULL;
+        menu_add_action(&receiver_menu, "Next page", NULL, 0);
+        menu_add_action(&receiver_menu, "Previous page", NULL, offset == 0);
+        // strcpy(receiver_menu.actions[receivers.count].name, "Next Page");
+        // receiver_menu.actions[receivers.count].disabled = 0;
+        // receiver_menu.actions[receivers.count].action = NULL;
 
-        strcpy(receiver_menu.actions[receivers.count + 1].name, "Previous Page");
-        receiver_menu.actions[receivers.count + 1].disabled = (offset == 0);
-        receiver_menu.actions[receivers.count + 1].action = NULL;
+        // strcpy(receiver_menu.actions[receivers.count + 1].name, "Previous Page");
+        // receiver_menu.actions[receivers.count + 1].disabled = (offset == 0);
+        // receiver_menu.actions[receivers.count + 1].action = NULL;
 
         selected_index = display_menu(receiver_menu);
 
@@ -219,13 +239,15 @@ void menu_send_message()
 
             response = send_message(sock, connected_user.api_token, message, receiver_id);
 
-            if (response->code == 200) {
+            if (response->status.code == 200) {
                 printf("Message successfully sent to %s.\n", receivers.users[selected_index].name);
             } else {
-                printf("Failed to send the message. Response: %d %s\n", response->code, response->message);
+                printf("Failed to send the message. Response: %d %s\n", response->status.code, response->status.message);
             }
+
             free(receiver_menu.actions);
             free(receivers.users);
+            break;
             break;
         } else if (selected_index == receivers.count) {
             offset += limit;
@@ -262,12 +284,12 @@ void signal_handler(int sig)
 
 void print_logo()
 {
-    cprintf(RED, "     _______   _           _        _\n");
-    cprintf(RED, "    |__   __| | |         | |      | |\n");
-    cprintf(RED, "       | | ___| |__   __ _| |_ __ _| |_ ___  _ __\n");
-    cprintf(RED, "       | |/ __| '_ \\ / _` | __/ _` | __/ _ \\| '__|\n");
-    cprintf(RED, "       | | (__| | | | (_| | || (_| | || (_) | |\n");
-    cprintf(RED, "       |_|\\___|_| |_|\\__,_|\\__\\__,_|\\__\\___/|_|\n\n");
+    color_printf(RED, "     _______   _           _        _\n");
+    color_printf(RED, "    |__   __| | |         | |      | |\n");
+    color_printf(RED, "       | | ___| |__   __ _| |_ __ _| |_ ___  _ __\n");
+    color_printf(RED, "       | |/ __| '_ \\ / _` | __/ _` | __/ _ \\| '__|\n");
+    color_printf(RED, "       | | (__| | | | (_| | || (_| | || (_) | |\n");
+    color_printf(RED, "       |_|\\___|_| |_|\\__,_|\\__\\__,_|\\__\\___/|_|\n\n");
 }
 
 void empty_action()
@@ -299,6 +321,7 @@ int main()
         "Display unread messages", empty_action,
         "Modify a message", empty_action,
         "Delete a message", menu_delete_message,
+        "Delete a message", menu_delete_message,
         "Display messages history", empty_action,
         "Exit", disconnect,
         NULL);
@@ -308,6 +331,7 @@ int main()
         "Send a message", menu_send_message,
         "Display unread messages", empty_action,
         "Modify a message", empty_action,
+        "Delete a message", menu_delete_message,
         "Delete a message", menu_delete_message,
         "Display messages history", empty_action,
         "Exit", disconnect,
@@ -391,38 +415,44 @@ int display_menu(menu_t menu)
     int key;
 
     set_raw_mode();
+    hide_cursor();
 
     while (running && !entered) {
         clear_term();
 
-        printf("\n   %s\n\n", menu.name);
+        style_printf(BOLD, "\n   %s\n\n", menu.name);
 
         if (memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0) {
-            cprintf(CYAN, "   Connected as %s\n\n", connected_user.name);
+            color_printf(CYAN, "   Connected as ");
+            cs_printf(CYAN, BOLD, "%s\n\n", connected_user.name);
         }
 
         for (int i = 0; i < menu.actions_count; i++) {
             if (menu.actions[i].disabled) {
-                cprintf(GRAY, "○ %s\n", menu.actions[i].name);
+                color_printf(GRAY, " ○ %s\n", menu.actions[i].name);
                 continue;
             }
 
             if (selected == i) {
-                cprintf(CYAN, " ● ");
+                color_printf(CYAN, " ● ");
             } else {
                 printf(" ○ ");
             }
 
             // if (selected == i) {
-            //     cprintf(CYAN, "%s\n", menu.actions[i].name);
+            //     color_printf(CYAN, "%s\n", menu.actions[i].name);
             // } else {
             // }
             printf("%s\n", menu.actions[i].name);
         }
 
-        if (response != NULL) {
-            printf("\nResponse: %d %s\n", response->code, response->message);
+        if (strlen(error_message) > 0) {
+            color_printf(RED, "\n   %s\n", error_message);
         }
+
+        // if (response != NULL) {
+        //     printf("\nResponse: %d %s\n", response->status.code, response->status.message);
+        // }
 
         key = get_arrow_key();
         switch (key) {
@@ -439,6 +469,7 @@ int display_menu(menu_t menu)
     }
 
     reset_terminal_mode();
+    show_cursor();
 
     return selected;
 }
@@ -487,10 +518,18 @@ void create_menu(menu_t* menu, char name[], ...)
     va_end(args);
 }
 
-void menu_add_action(menu_t* menu, char name[], void (*action)())
+void menu_add_action(menu_t* menu, char name[], void (*action)(), int disabled)
 {
-    menu->actions[menu->actions_count].disabled = 0;
+    menu->actions[menu->actions_count].disabled = disabled;
     strcpy(menu->actions[menu->actions_count].name, name);
     menu->actions[menu->actions_count].action = action;
     menu->actions_count++;
+}
+
+void set_error(char format[], ...)
+{
+    va_list args;
+    va_start(args, format);
+    vsprintf(error_message, format, args);
+    va_end(args);
 }
