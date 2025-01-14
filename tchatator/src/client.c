@@ -239,9 +239,9 @@ void menu_send_message()
     }
 }
 void menu_delete_message()
-}
-int message_id;
-// display all message sender_id === connecteduser id to choose w arrows
+{
+    int message_id;
+    // display all message sender_id === connecteduser id to choose w arrows
 }
 void disconnect()
 {
