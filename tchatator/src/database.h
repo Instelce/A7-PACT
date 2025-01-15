@@ -37,6 +37,10 @@ typedef struct {
     user_t* users;
     int count;
 } user_list_t;
+typedef struct {
+    message_t* messages;
+    int count;
+} message_list_t;
 
 static const user_t NOT_CONNECTED_USER = { 0, "", "", "", UNKNOWN };
 
@@ -62,5 +66,7 @@ void db_update_message(PGconn* conn, message_t* message);
 void db_delete_message(PGconn* conn, int message_id);
 user_list_t db_get_members(PGconn* conn, int offset, int limit);
 user_list_t db_get_professionals(PGconn* conn, int offset, int limit);
+message_list_t db_get_messages_by_sender(PGconn* conn, int sender_id, int offset, int limit);
+message_list_t db_get_unread_messages(PGconn* conn, int receiver_id, int offset, int limit);
 
 #endif // DATABASE_H

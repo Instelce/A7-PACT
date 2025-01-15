@@ -42,8 +42,8 @@ void log_info(char *format, ...) {
     write(fd, log_line, strlen(log_line));
 
     if (log_verbose) {
-        cprintf(GRAY, "%02d-%02d-%d %02d:%02d:%02d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
-        cprintf(CYAN, " %s %s", log_client_ip, log_client_identity);
+        color_printf(GRAY, "%02d-%02d-%d %02d:%02d:%02d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
+        color_printf(CYAN, " %s %s", log_client_ip, log_client_identity);
         printf(" %s\n", message);
     }
 }
