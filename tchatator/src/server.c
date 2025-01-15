@@ -33,9 +33,12 @@
 #include "log.h"
 #include "protocol.h"
 #include "utils.h"
-#include "websocket.h"
 
 #define CLIENT_CAPACITY_INCR 10
+
+// -------------------------------------------------------------------------
+// Structure
+// -------------------------------------------------------------------------
 
 typedef struct
 {
@@ -45,26 +48,32 @@ typedef struct
     user_t user;
 } client_t;
 
+
+// -------------------------------------------------------------------------
+// Global variables
+// -------------------------------------------------------------------------
+
 volatile sig_atomic_t running = 1;
 
 pid_t server_pid;
 
+// All connected clients, it's shared between the server and the children
+// with shared memory
 client_t* clients;
+// Count of clients, same as clients, it's shared with shared memory
 int* clients_count;
+// Shared memory id for clients
 int shmid_clients;
+// Shared memory id for clients count
 int shmid_clients_count;
 
-// Handle signals (SIGINT, SIGQUIT)
+// -------------------------------------------------------------------------
+// Functions signatures
+// -------------------------------------------------------------------------
+
 void signal_handler(int sig);
-
-// Send status message to the client
-// Params at the end are optional, it represents the data to send
-// Example: send_response(sock, STATUS_OK, "name", "Victor", NULL);
 void send_response(int sock, response_status_t status, ...);
-
 void set_sock_timeout(int sock, int timeout_ms);
-
-// Parse string command
 int parse_command(char command_str[], command_t* command);
 
 client_t init_client(int sock, pid_t pid, char ip[], user_t user);
@@ -74,10 +83,16 @@ client_t get_client(pid_t pid);
 int client_pid_exist(pid_t pid);
 int client_connected(int user_id);
 
+
+// -------------------------------------------------------------------------
+// Main
+// -------------------------------------------------------------------------
+
 int main(int argc, char* argv[])
 {
     int options;
 
+    // Sockets
     int sock;
     int sock_conn;
     int sock_ret;
@@ -85,11 +100,11 @@ int main(int argc, char* argv[])
     struct sockaddr_in sock_addr;
     struct sockaddr_in sock_conn_addr;
 
+    // Client
     int client_port;
     int client_pid;
     int current_clients_max_capacity;
     char client_ip[CHAR_SIZE];
-    int is_ws_client; // bool to know if the client is a websocket client
 
     // Current command stuff
     char command_recv[LARGE_CHAR_SIZE];
@@ -108,6 +123,7 @@ int main(int argc, char* argv[])
     server_pid = getpid();
     current_clients_max_capacity = CLIENT_CAPACITY_INCR;
 
+    // Setup shared memory for clients and clients count
     key_t key = ftok(".", 65);
     shmid_clients = shmget(key, current_clients_max_capacity * sizeof(client_t), 0666 | IPC_CREAT);
     clients = (client_t*)shmat(shmid_clients, (void*)0, 0);
@@ -117,12 +133,11 @@ int main(int argc, char* argv[])
     clients_count = (int*)shmat(shmid_clients_count, (void*)0, 0);
     *clients_count = 0;
 
-    is_ws_client = 0;
-
+    // Setup log and config
     log_verbose = 0;
     config = malloc(sizeof(config_t));
 
-    // Handles options (--help, -h, --verbose, --config, -c, ...) with getopt()
+    // Handles options (--help, -h, --verbose, --config, -c, ...)
     while ((options = getopt(argc, argv, ":if:hvc")) != -1) {
         switch (options) {
         case 'h':
@@ -177,7 +192,7 @@ int main(int argc, char* argv[])
     // Setup the socket
     sock = socket(AF_INET, SOCK_STREAM, 0);
 
-    // Remove the 'Address already in use' pb
+    // Remove the 'Address already in use' problem
     int reuse = 1;
     setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(int));
 
@@ -205,9 +220,8 @@ int main(int argc, char* argv[])
 
     sock_conn_addr_size = sizeof(sock_conn_addr);
 
+    // Start the server loop
     while (running) {
-        is_ws_client = 0;
-
         sock_conn = accept(sock, (struct sockaddr*)&sock_conn_addr, (socklen_t*)&sock_conn_addr_size);
 
         if (sock_conn < 0) {
@@ -217,25 +231,6 @@ int main(int argc, char* argv[])
 
         if (!running)
             break;
-
-        // Check if the client is a websocket client
-        // handshake_request_t handshake_request;
-        // char ws_handshake_request[LARGE_CHAR_SIZE];
-        // memset(ws_handshake_request, 0, sizeof(ws_handshake_request));
-
-        // set_sock_timeout(sock_conn, 500);
-        // recv(sock_conn, ws_handshake_request, sizeof(ws_handshake_request), 0);
-        // set_sock_timeout(sock_conn, 0);
-
-        // if (is_ws_handshake(ws_handshake_request)) {
-        //     ws_parse_handshake_request(ws_handshake_request, &handshake_request);
-        //     is_ws_client = 1;
-
-        //     // Send handshake response
-        //     ws_send_handshake(sock_conn, &handshake_request);
-
-        //     ws_send_text_frame(sock_conn, "Coucou le client");
-        // }
 
         // Retrieve the client ip and port
         client_port = ntohs(sock_conn_addr.sin_port);
@@ -286,15 +281,18 @@ int main(int argc, char* argv[])
                     exit(1);
                 }
 
+                // Parse command and check if it's valid
                 command_parsed = parse_command(command_recv, &command);
 
-                if (command_parsed == -1) {
+                if (!command_parsed) {
                     send_response(sock_conn, STATUS_MIS_FORMAT, "message", "Message mal formaté", NULL);
                     log_info("Invalid action received");
-                } else {
+                }
+                // Then handle commands logic
+                else {
                     log_info("Action received [%s]", command.name);
 
-                    // Disconnect the client
+                    // Disconnect command
                     if (strcmp(command.name, DISCONNECTED) == 0) {
                         break;
                     }
@@ -379,9 +377,9 @@ int main(int argc, char* argv[])
             perror("Fork");
             abort();
         } else {
-            // Add the client to the list
+            // Add the new client to the list
             add_client(sock_conn, client_pid, client_ip, NOT_CONNECTED_USER);
-            log_info("New%s connection with %s (%d)", is_ws_client ? " websocket" : "", client_ip, client_pid);
+            log_info("New connection with %s (%d)", client_ip, client_pid);
         }
 
         // printf("S Clients count %d\n", *clients_count);
@@ -402,6 +400,21 @@ int main(int argc, char* argv[])
     return EXIT_SUCCESS;
 }
 
+
+// -------------------------------------------------------------------------
+// Functions
+// -------------------------------------------------------------------------
+
+/// @brief Send status message to the client
+/// @param sock client socket
+/// @param status response status
+/// @param ... represents the data to send, the last argument must be NULL
+/// 
+/// Example:
+///
+/// ```
+/// send_response(sock, STATUS_OK, "name", "Victor", NULL);
+/// ```
 void send_response(int sock, response_status_t status, ...)
 {
     char buf[CHAR_SIZE];
@@ -428,6 +441,8 @@ void send_response(int sock, response_status_t status, ...)
     send(sock, buf, strlen(buf), 0);
 }
 
+/// @brief Handle signals (SIGINT, SIGQUIT, SIGCHLD)
+/// @param sig 
 void signal_handler(int sig)
 {
     pid_t self = getpid();

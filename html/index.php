@@ -101,11 +101,13 @@ $app->router->get('/users', [SiteController::class, 'users']);
 // Api routes
 $app->router->get('/api/auth/user', [ApiController::class, 'user']);
 $app->router->get('/api/offers', [ApiController::class, 'offers']);
+$app->router->get('/api/offers/<pk:int>', [ApiController::class, 'offer']);
 $app->router->get('/api/opinions', [ApiController::class, 'opinions']);
 $app->router->post('/api/opinions/<opinion_pk:int>', [ApiController::class, 'opinionUpdate']);
 $app->router->post('/api/opinions/<opinion_pk:int>/likes', [ApiController::class, 'opinionLikes']);
 $app->router->post('/api/opinions/<opinion_pk:int>/dislikes', [ApiController::class, 'opinionDislikes']);
 $app->router->post('/api/opinions/<opinion_pk:int>/reports', [ApiController::class, 'opinionReports']);
+$app->router->get('/api/messages/<receiver_pk:int>', [ApiController::class, 'messages']);
 
 
 $app->router->get('/test/pdf', [SiteController::class, 'testPdf']);

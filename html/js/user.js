@@ -2,7 +2,13 @@
 
 export async function getUser() {
     return fetch('/api/auth/user')
-        .then(response => response.json())
+        .then(response => {
+            if (response.status === 200) {
+                return response.json()
+            } else {
+                return null
+            }
+        })
         .then(data => {
             return data;
         });

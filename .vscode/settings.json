@@ -1,9 +1,9 @@
 {
     "files.associations": {
+        "*.ldtk": "jsonl",
         "*.ndjson": "jsonl",
         "*.dbclient-js": "javascript",
         "*.embeddedhtml": "html",
-        "*.ldtk": "jsonl",
         "*.tcc": "c",
         "fstream": "c",
         "locale": "c",
@@ -29,12 +29,14 @@
         "deque": "c",
         "limits": "c",
         "vector": "c",
-<<<<<<< Updated upstream
-        "config.h": "c"
-=======
-        "utils.h": "c",
-        "__locale": "c"
->>>>>>> Stashed changes
+        "toyws.h": "c",
+        "database.h": "c",
+        "hash_map": "c",
+        "hash_set": "c",
+        "map": "c",
+        "set": "c",
+        "unordered_map": "c",
+        "unordered_set": "c"
     },
-    "C_Cpp.clang_format_fallbackStyle": "WebKit"
+    "C_Cpp.clang_format_fallbackStyle": "WebKit",
 }

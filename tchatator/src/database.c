@@ -548,3 +548,28 @@ message_list_t db_get_unread_messages(PGconn* conn, int receiver_id, int offset,
 
     return message_list;
 }
+
+
+void add_message(message_list_t* messages, message_t message) {
+    if (messages->messages == NULL) {
+        messages->messages = malloc(sizeof(message_t));
+        messages->count = 0;
+    } else {
+        messages->messages = realloc(messages->messages, (messages->count + 1) * sizeof(message_t));
+    }
+
+    messages->messages[messages->count] = message;
+    messages->count++;
+}
+
+void remove_message(message_list_t* messages, int message_id) {
+    for (int i = 0; i < messages->count; i++) {
+        if (messages->messages[i].id == message_id) {
+            for (int j = i; j < messages->count - 1; j++) {
+                messages->messages[j] = messages->messages[j + 1];
+            }
+            messages->count--;
+            break;
+        }
+    }
+}

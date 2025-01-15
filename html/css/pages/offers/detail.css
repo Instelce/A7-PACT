@@ -262,3 +262,35 @@ section {
     transform: rotate(180deg) translateY(-100%);
     transform-origin: top;
 }
+
+
+/* Tchatator interface */
+.chat-container {
+    z-index: 1000;
+    max-width: 400px;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.messages-container .message {
+    background: rgb(var(--color-white));
+    padding: .5rem;
+    border-radius: var(--radius-medium);
+}
+
+.messages-container .message pre {
+    font-size: inherit;
+    font-family: inherit;
+}

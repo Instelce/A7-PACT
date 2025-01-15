@@ -58,6 +58,7 @@ static const char UPDATE_MESSAGE[] = "UPDT_MSG";
 static const char DELETE_MESSAGE[] = "DEL_MSG";
 static const char GET_NEW_MESSAGES[] = "GET_MSGS";
 static const char IS_CONNECTED[] = "IS_CONN";
+static const char NEW_MESSAGE_AVAILABLE[] = "NEW_MSG_AVAILABLE";
 static const char DISCONNECTED[] = "DISCONNECTED";
 
 static const char* EXISTING_COMMANDS[] = {
@@ -67,6 +68,7 @@ static const char* EXISTING_COMMANDS[] = {
     DELETE_MESSAGE,
     GET_NEW_MESSAGES,
     IS_CONNECTED,
+    NEW_MESSAGE_AVAILABLE,
     DISCONNECTED
 };
 
@@ -77,6 +79,7 @@ static const command_def_t COMMANDS_DEFINITIONS[] = {
     { "DEL_MSG", 2 }, // token,message-id
     { "GET_MSGS", 1 }, // token
     { "IS_CONN", 1 }, // user-id
+    { "NEW_MSG_AVAILABLE", 1 }, // token
     { "DISCONNECTED", 0 }
 };
 
