@@ -57,7 +57,7 @@ $app->router->get('/dashboard', function () {
 $app->router->get('/dashboard/offres', [DashboardController::class, 'offers']);
 $app->router->post('/dashboard/offres', [DashboardController::class, 'offers']);
 $app->router->get('/dashboard/avis', [DashboardController::class, 'avis']);
-$app->router->get('/dashboard/message', [DashboardController::class, 'message']);
+$app->router->get('/dashboard/messages', [DashboardController::class, 'message']);
 $app->router->get('/dashboard/factures', [DashboardController::class, 'invoices']);
 $app->router->get('/factures/<pk:int>', [DashboardController::class, 'invoicesPDF']);
 

@@ -1,6 +1,79 @@
-import { getUser } from "../../user.js";
-//get the actual user
-let user = await getUser();
+import {getUser} from "../../user.js";
+import {
+    clientInfoCommand,
+    loginCommand, messageCard, REFRESH_RATE,
+    sendMessageCommand,
+    userInfoCommand
+} from "../../tchatator.js";
+
+let is_writing = false;
+let in_conversation_with = null;
+let recipient_is_writing = false;
+
+let user;
+let recipient_user;
+
+let messageWriter = document.getElementById('message-writer');
+let sendButton = document.querySelector('.send-button');
+let messagesContainer = document.getElementById("message-container");
+
+getUser().then(u => {
+    user = u;
+
+    let socket = new WebSocket('ws://localhost:4242');
+
+    socket.addEventListener("open", () => {
+        console.log('Connected to the server');
+
+        // Send login request
+        socket.send(loginCommand(user.api_token));
+    })
+
+    socket.addEventListener("message", (event) => {
+        let data = JSON.parse(event.data);
+
+        if (data.command === 'USER_INFO') {
+            recipient_is_writing = data.is_writing;
+        }
+        console.log('Recipient is writing: ', recipient_is_writing);
+    })
+
+    setInterval(() => {
+        // Send info to the server about us
+        socket.send(clientInfoCommand(user.api_token, is_writing, in_conversation_with));
+
+        // Get information about recipient
+        if (in_conversation_with) {
+            socket.send(userInfoCommand(user.api_token, in_conversation_with));
+        }
+    }, REFRESH_RATE)
+
+    socket.addEventListener("close", () => {
+        console.log('Disconnected from the server');
+    })
+
+    // Send info when typing in the message writer
+    messageWriter.addEventListener('input', () => {
+        is_writing = messageWriter.value.length > 0;
+    })
+
+    // Send message
+    sendButton.addEventListener('click', () => {
+        if (messageWriter.value !== '') {
+            socket.send(sendMessageCommand(user.api_token, messageWriter.value, in_conversation_with));
+
+            messagesContainer.appendChild(messageCard({
+                content: messageWriter.value,
+                sender_id: user.id,
+                receiver_id: in_conversation_with
+            }, user, recipient_user));
+
+            messageWriter.value = '';
+        }
+    })
+})
+
+
 //function to load the messages
 async function loadMessages(account_id) {
     try {
@@ -34,24 +107,26 @@ async function loadContact() {
 
 //create contacte tabs
 
-async function contactes() {
-    let contactesListe = document.getElementById("contactesListe");
-    let contactes = await loadContact();
-    contactes.forEach(contacte => {
+async function contacts() {
+    let contactsList = document.getElementById("contactesListe");
+    let contacts = await loadContact();
+    contacts.forEach(contacte => {
         let div = document.createElement("div");
         div.id = contacte.account_id;
         div.textContent = contacte.name;
-        contactesListe.appendChild(div);
+        contactsList.appendChild(div);
     });
 
 }
 
-contactes();
+contacts();
 
 //listener for the contactes
 document.getElementById("contactesListe").addEventListener("click", function (event) {
     if (event.target && event.target.nodeName === "DIV") {
         showDiscussion(event.target.id);
+        in_conversation_with = event.target.id;
+        recipient_user = event.target.id;
     }
 });
 
@@ -59,13 +134,12 @@ document.getElementById("contactesListe").addEventListener("click", function (ev
 
 async function showDiscussion(account_id) {
     let messages = await loadMessages(account_id);
-    let discussion = document.getElementById("message-container");
-    discussion.innerHTML = ""; // Clear previous messages
+    messagesContainer.innerHTML = ""; // Clear previous messages
     messages.forEach(message => {
         let messageDiv = document.createElement("div");
         messageDiv.className = "message";
         messageDiv.textContent = message.content;
-        discussion.appendChild(messageDiv);
+        messagesContainer.appendChild(messageDiv);
     });
 }
 

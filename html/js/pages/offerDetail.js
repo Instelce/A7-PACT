@@ -7,21 +7,6 @@ let offerId = document.querySelector('#offer-id').value;
 
 // For socket
 
-function messageCard(message) {
-    return `
-        <div class="message">
-            <div class="message-content">
-                <pre>${message.content}</pre>
-            </div>
-            <button class="delete-message">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg> 
-            </button>
-            <button class="update-message">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
-            </button>
-        </div>
-    `
-}
 
 let offer = null;
 fetch(`/api/offers/${offerId}`)
@@ -33,80 +18,6 @@ fetch(`/api/offers/${offerId}`)
 let user = null;
 getUser().then(u => {
     user = u
-
-    // ---------------------------------------------------------------------------------------------- //
-    // Tchatator socket client that connects to the C server
-    // Host: localhost
-    // Port: 4242
-    // ---------------------------------------------------------------------------------------------- //
-
-    if (user && user.type !== 'professional') {
-        let is_writing_at = null;
-        let in_conversation_with = null;
-
-        let socket;
-        let chatTrigger = document.querySelector('.chat-trigger');
-        let chat = document.querySelector('.chat');
-        let messagesContainer = document.querySelector('.messages-container');
-        let messageContent = document.querySelector('textarea#message-content');
-        let sendButton = document.querySelector('.send-button');
-
-        socket = new WebSocket('ws://localhost:4242');
-
-        socket.addEventListener("open", () => {
-            console.log('Connected to the server');
-
-            // Send login request
-            socket.send(loginCommand(user.api_token));
-        });
-
-        socket.addEventListener("message", (event) => {
-            console.log('Message from server ', event.data);
-        });
-
-        socket.addEventListener("close", () => {
-            console.log('Disconnected from the server');
-        });
-
-        socket.addEventListener("error", (error) => {
-            console.log('Error: ', error);
-        });
-
-        // Send info to the server about us
-        setInterval(() => {
-            socket.send(clientInfoCommand(user.api_token, is_writing_at, in_conversation_with));
-        }, 1000)
-
-        // Toggle chat
-        chatTrigger.addEventListener('click', () => {
-            chat.classList.toggle('hidden');
-        })
-
-        // Send message
-        sendButton.addEventListener('click', () => {
-            if (messageContent.value !== '') {
-                socket.send(sendMessageCommand(user.api_token, messageContent.value, offer.professional_id));
-
-                messagesContainer.innerHTML += messageCard({
-                    content: messageContent.value,
-                    sender_id: user.id,
-                    receiver_id: offer.professional_id
-                });
-
-                messageContent.value = '';
-            }
-        })
-
-        // Load messages at the beginning
-        fetch(`/api/messages/${offer.professional_id}`)
-            .then(r => r.json())
-            .then(messages => {
-                messages.forEach(message => {
-                    messagesContainer.innerHTML += messageCard(message);
-                })
-            })
-
-    }
 });
 
 

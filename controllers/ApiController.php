@@ -471,8 +471,8 @@ class ApiController extends Controller
     public function messages(Request $request, Response $response, $routeParams)
     {
         $receiverPk = $routeParams['receiver_pk'];
-        $messagesSended = Message::find(['receiver_id' => $receiverPk, 'sender_id' => Application::$app->user->account_id, 'deleted' => 'false']);
-        $messagesReceived = Message::find(['receiver_id' => Application::$app->user->account_id, 'sender_id' => $receiverPk, 'deleted' => 'false']);
+        $messagesSended = Message::find(['receiver_id' => $receiverPk, 'sender_id' => Application::$app->user->account_id]);
+        $messagesReceived = Message::find(['receiver_id' => Application::$app->user->account_id, 'sender_id' => $receiverPk]);
 
         $messages = array_merge($messagesSended, $messagesReceived);
         usort($messages, function ($a, $b) {

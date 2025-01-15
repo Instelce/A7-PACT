@@ -7,7 +7,7 @@ import { Tabs } from "./components/tabs/Tabs.js";
 import { Tab } from "./components/tabs/Tab.js";
 import { Panel } from "./components/tabs/Panel.js";
 import "./components/dialog.js";
-
+import "./tchatator.js"
 
 // Do not change
 try {
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Rafraîchir les notifications toutes les 5 secondes
-    setInterval(checkNotification, 5000);
+    setInterval(checkNotification, 20000);
 
     // Vérification initiale
     checkNotification();

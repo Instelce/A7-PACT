@@ -449,8 +449,6 @@ $latitude = $offer->address()->latitude;
             </div>
         </div>
 
-
-
         <?php if (Application::$app->user?->isProfessional() && Application::$app->user->specific()->hasOffer($pk)) { ?>
             <a href="/offres/<?php echo $pk ?>/modification" class="button purple">
                 Modifier l'offre
@@ -458,25 +456,3 @@ $latitude = $offer->address()->latitude;
         <?php } ?>
     </aside>
 </div>
-
-<!-- Tchatator interface -->
-<?php if (Application::$app->userType === 'member') { ?>
-    <div class="chat-container">
-        <button class="chat-trigger button gray only-icon">
-            <i data-lucide="message-circle"></i>
-        </button>
-
-        <div class="chat">
-            <!-- Generated in JS -->
-            <div class="messages-container">
-            </div>
-
-            <label for="message-content" class="hidden">Message</label>
-            <textarea id="message-content" class="message-content" cols="30" rows="5"></textarea>
-            <button class="send-button">
-                <i data-lucide="send"></i>
-            </button>
-        </div>
-    </div>
-<?php } ?>
-

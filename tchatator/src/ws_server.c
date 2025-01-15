@@ -15,7 +15,7 @@
 typedef struct {
     user_t user;
     ws_cli_conn_t conn;
-    int is_writing_to; // user id
+    bool is_writing;
     int in_conversation_with; // user id
 } client_t;
 
@@ -47,6 +47,21 @@ message_list_t get_incoming_messages(user_t user)
     }
 
     return messages;
+}
+
+/**
+ * @brief Check if a user is connected.
+ * 
+ * @param user_id User.
+ */
+int is_user_connected(int user_id)
+{
+    for (int i = 0; i < clients_count; i++) {
+        if (clients[i].user.id == user_id) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 /**
@@ -82,16 +97,20 @@ char* json_message_list(message_list_t list)
  * @brief Send a json object to a client.
  *
  * @param client_conn Client connection.
+ * @param command_name Command that the server responds to.
  * @param ... All the message parameters. Alternate between the key and the value. The last argument must be NULL.
  */
-void send_json(ws_cli_conn_t client_conn, ...)
+void send_json(ws_cli_conn_t client_conn, char command_name[], ...)
 {
     json_object* jobj = json_object_new_object();
     va_list args;
     char* key;
     char* value;
 
-    va_start(args, client_conn);
+    // Add the command
+    json_object_object_add(jobj, "command", json_object_new_string(command_name));
+
+    va_start(args, command_name);
 
     while ((key = va_arg(args, char*)) != NULL) {
         if ((value = va_arg(args, char*)) == NULL) {
@@ -214,7 +233,7 @@ void onmessage(ws_cli_conn_t client_conn,
     client_t* client = get_client_with_conn(client_conn);
     int is_connected = memcmp(&client->user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0;
 
-    printf("Is connected: %d\n", is_connected);
+    // printf("Is connected: %d\n", is_connected);
 
     // Parse the message
     json_object* jobj = parse_message((char*)msg);
@@ -227,7 +246,7 @@ void onmessage(ws_cli_conn_t client_conn,
     }
     const char* cmd = json_object_get_string(jcmd);
 
-    printf("Command: %s\n", cmd);
+    // printf("Command: %s\n", cmd);
 
     // Login command
     if (strcmp(cmd, LOGIN) == 0 && !is_connected) {
@@ -312,6 +331,7 @@ void onmessage(ws_cli_conn_t client_conn,
 			// Update the message
 			strcpy(message.content, content);
 			db_update_message(conn, &message);
+            log_info("Message updated succesfuly: %s", message.content);
 		}
 
 		// Delete message
@@ -339,7 +359,7 @@ void onmessage(ws_cli_conn_t client_conn,
             ws_sendframe_txt(client_conn, json);
         }
 
-        // User information
+        // The client use this command to get information about another user
 		// - user_id
         if (strcmp(cmd, USER_INFO) == 0) {
             // Get user id
@@ -350,15 +370,19 @@ void onmessage(ws_cli_conn_t client_conn,
             }
             int user_id = json_object_get_int(juser_id);
 
+            // printf("User id: %d\n", user_id);
+
             client_t* target_client = get_client_with_user_id(user_id);
 
             if (target_client == NULL) {
-                send_json(client_conn, "connected", "false", NULL);
+                send_json(client_conn, cmd, "connected", "false", NULL);
             } else {
-                char* is_writing = target_client->is_writing_to == client->user.id ? "true" : "false";
+                // printf("Target client: %d %d\n", target_client->user.id, target_client->in_conversation_with);
+                char* is_connect = is_user_connected(user_id) ? "true" : "false";
+                char* is_writing = (target_client->is_writing && target_client->in_conversation_with == client->user.id) ? "true" : "false";
                 char* in_conversation = target_client->in_conversation_with == client->user.id ? "true" : "false";
 
-                send_json(client_conn, "connected", "true", "is_writing", is_writing, "viewed_last_message", in_conversation, NULL);
+                send_json(client_conn, cmd, "connected", is_connect, "is_writing", is_writing, "viewed_last_message", in_conversation, NULL);
             }
         }
 
@@ -366,8 +390,8 @@ void onmessage(ws_cli_conn_t client_conn,
 		if (strcmp(cmd, CLIENT_INFO) == 0) {
 			// Get the client info
 			json_object* jis_writing;
-			if (!json_object_object_get_ex(jobj, "is_writing_at", &jis_writing)) {
-				fprintf(stderr, "Error: is_writing_at not found\n");
+			if (!json_object_object_get_ex(jobj, "is_writing", &jis_writing)) {
+				fprintf(stderr, "Error: is_writing not found\n");
 				return;
 			}
 			bool is_writing = json_object_get_boolean(jis_writing);
@@ -377,16 +401,15 @@ void onmessage(ws_cli_conn_t client_conn,
 				fprintf(stderr, "Error: in_conversation_with not found\n");
 				return;
 			}
-			bool in_conversation = json_object_get_boolean(jin_conversation);
 
-			if (is_writing) {
-				client->is_writing_to = client->user.id;
-			} else {
-				client->is_writing_to = -1;
-			}
+			int in_conversation = json_object_get_int(jin_conversation);
+
+            // printf("%d In conversation with: %d\n", client->user.id, in_conversation);
+
+            client->is_writing = is_writing;
 
 			if (in_conversation) {
-				client->in_conversation_with = client->user.id;
+                client->in_conversation_with = in_conversation;
 			} else {
 				client->in_conversation_with = -1;
 			}
@@ -408,7 +431,7 @@ void onmessage(ws_cli_conn_t client_conn,
      *   ws_sendframe_bin()
      *   ws_sendframe_bin_bcast()
      */
-    ws_sendframe_bcast(8080, (char*)msg, size, type);
+    // ws_sendframe_bcast(8080, (char*)msg, size, type);
 }
 
 /**

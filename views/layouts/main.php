@@ -65,11 +65,17 @@ use app\core\Application;
             <?php } ?>
         </div>
         <div class="navbar-right">
-            <a href="/recherche">
+            <a href="/recherche" class="button gray icon-left icon-right no-border">
+                Recherche
                 <i data-lucide="search"></i>
             </a>
 
         <?php if (Application::$app->isAuthenticated()) { ?>
+            <button class="chat-trigger button gray icon-left icon-right no-border">
+                <span>Messages</span>
+                <i data-lucide="message-circle"></i>
+            </button>
+
             <!-- Notifications -->
             <div class="notification">
                 <div class="notification-icon">
@@ -147,6 +153,48 @@ use app\core\Application;
                     <use xlink:href="#gentle-wave" x="50" y="6" fill="#0057FF" fill-opacity="1" />
                 </g>
             </svg>
+        </div>
+    <?php } ?>
+
+
+    <!-- Tchatator member client -->
+    <?php if (Application::$app->userType === 'member') { ?>
+        <div class="chat-container top-navbar">
+
+            <!-- All conversations -->
+            <div class="chat-page conversations-page">
+                <header>
+                    <h2>Vos conversations</h2>
+                </header>
+
+                <!-- Generated in JS -->
+                <div class="conversations-gen">
+                </div>
+            </div>
+
+            <!-- All messages with a user -->
+            <div class="chat-page messages-page !hidden">
+                <header>
+                    <h2>Message</h2>
+                </header>
+
+                <!-- Generated in JS -->
+                <div class="messages-container">
+                </div>
+
+                <!-- Writing indicator -->
+                <div class="writing-indicator !hidden">
+                    <p>En train d'écrire...</p>
+                </div>
+
+                <div class="chat-bottom">
+                    <label for="message-writer" class="hidden">Message</label>
+                    <textarea id="message-writer" class="message-writer" cols="30" rows="3"></textarea>
+                    <button class="send-button">
+                        <i data-lucide="send"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     <?php } ?>
 
