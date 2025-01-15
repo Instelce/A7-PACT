@@ -23,7 +23,7 @@ class Notification extends DBModel
 
     public function attributes(): array
     {
-        return ['send_at', 'reception_day', 'open_at', 'read', 'content', 'user_id'];
+        return ['send_at', 'reception_day', 'open_at', 'is_read', 'content', 'user_id'];
     }
 
     public static function pk(): string
@@ -36,6 +36,7 @@ class Notification extends DBModel
         return [
             'reception_day' => [self::RULE_REQUIRED, self::RULE_DATE],
             'open_at' => [self::RULE_REQUIRED],
+            'send_at' => [self::RULE_REQUIRED],
             'is_read' => [self::RULE_REQUIRED],
             'content' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
             'user_id' => [self::RULE_REQUIRED],
