@@ -1,9 +1,10 @@
 {
     "files.associations": {
-        "*.ldtk": "jsonl",
+        "*.sqlbook": "sql",
         "*.ndjson": "jsonl",
         "*.dbclient-js": "javascript",
         "*.embeddedhtml": "html",
+        "*.ldtk": "jsonl",
         "*.tcc": "c",
         "fstream": "c",
         "locale": "c",
@@ -36,7 +37,9 @@
         "map": "c",
         "set": "c",
         "unordered_map": "c",
-        "unordered_set": "c"
+        "unordered_set": "c",
+        "utils.h": "c",
+        "protocol.h": "c"
     },
     "C_Cpp.clang_format_fallbackStyle": "WebKit",
 }

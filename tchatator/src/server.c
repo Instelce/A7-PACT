@@ -7,13 +7,13 @@
 //
 
 #include <errno.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
-#include <stdarg.h>
 
 #include <sys/ipc.h>
 #include <sys/shm.h>
@@ -48,7 +48,6 @@ typedef struct
     user_t user;
 } client_t;
 
-
 // -------------------------------------------------------------------------
 // Global variables
 // -------------------------------------------------------------------------
@@ -82,7 +81,6 @@ void remove_client(pid_t pid);
 client_t get_client(pid_t pid);
 int client_pid_exist(pid_t pid);
 int client_connected(int user_id);
-
 
 // -------------------------------------------------------------------------
 // Main
@@ -345,6 +343,7 @@ int main(int argc, char* argv[])
 
                             send_response(sock_conn, STATUS_OK, "message", "Message bien reçu et traité", NULL);
                         } else if (strcmp(command.name, UPDATE_MESSAGE) == 0) {
+                            printf("on rentre\n");
                             db_get_message(conn, atoi(get_command_param_value(command, "message-id")), &message);
 
                             strcpy(message.content, get_command_param_value(command, "content"));
@@ -400,7 +399,6 @@ int main(int argc, char* argv[])
     return EXIT_SUCCESS;
 }
 
-
 // -------------------------------------------------------------------------
 // Functions
 // -------------------------------------------------------------------------
@@ -409,7 +407,7 @@ int main(int argc, char* argv[])
 /// @param sock client socket
 /// @param status response status
 /// @param ... represents the data to send, the last argument must be NULL
-/// 
+///
 /// Example:
 ///
 /// ```
@@ -425,8 +423,7 @@ void send_response(int sock, response_status_t status, ...)
 
     va_start(args, status);
 
-    while ((name = va_arg(args, char*)) != NULL)
-    {
+    while ((name = va_arg(args, char*)) != NULL) {
         if ((value = va_arg(args, char*)) == NULL) {
             break;
         }
@@ -442,7 +439,7 @@ void send_response(int sock, response_status_t status, ...)
 }
 
 /// @brief Handle signals (SIGINT, SIGQUIT, SIGCHLD)
-/// @param sig 
+/// @param sig
 void signal_handler(int sig)
 {
     pid_t self = getpid();
@@ -610,7 +607,7 @@ int parse_command(char command_str[], command_t* command)
 
     // printf("Exit parse action\n");
 
-    return 0;
+    return is_command_exist;
 }
 
 client_t init_client(int sock, pid_t pid, char ip[], user_t user)

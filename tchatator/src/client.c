@@ -1,3 +1,4 @@
+
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -65,6 +66,8 @@ int display_message(message_t message, int align_left, int selected);
 void display_line();
 
 void disconnect();
+
+void menu_delete_and_update(message_t m);
 
 void input(char* output)
 {
@@ -368,6 +371,7 @@ void menu_discussion()
             break;
         case '\n':
             entered = 1;
+            menu_delete_and_update(messages_list.messages[selected]);
             break;
         }
     }
@@ -376,63 +380,75 @@ void menu_discussion()
     show_cursor();
 }
 
-void menu_delete_message()
+void menu_delete_and_update(message_t m)
 {
-    clear_term();
-    menu_t delete_message_menu;
-    int selected_index = -1;
-    int offset = 0;
-    const int limit = 5;
-    message_list_t messages;
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-    printf("\nDelete a Message\n");
-    strcpy(delete_message_menu.name, "Select a Message to Delete");
-    while (1) {
-        messages = db_get_messages_by_sender(conn, connected_user.id, offset, limit);
+    int selected = 0;
+    int entered = 0;
+    int key;
 
-        if (messages.count == 0) {
-            printf("No more messages to display.\n");
-            break;
-        }
+    set_raw_mode();
+    hide_cursor();
+    while (running && !entered) {
+        clear_term();
+        display_message(m, 1, 1);
 
-        delete_message_menu.actions = malloc((messages.count + 2) * sizeof(menu_action_t));
-        delete_message_menu.actions_count = messages.count + 2;
+        style_printf(BOLD, "\n   Delete or Update Message");
 
-        for (int i = 0; i < messages.count; i++) {
-            strcpy(delete_message_menu.actions[i].name, messages.messages[i].content);
-        }
+        display_line();
 
-        strcpy(delete_message_menu.actions[messages.count].name, "Next Page");
+        char* options[] = { "Delete", "Update", "Cancel" };
+        int options_count = 3;
 
-        strcpy(delete_message_menu.actions[messages.count + 1].name, "Previous Page");
-
-        selected_index = display_menu(delete_message_menu);
-
-        if (selected_index < messages.count) {
-            int message_id = messages.messages[selected_index].id;
-
-            response = send_delete_message(sock, connected_user.api_token, message_id);
-
-            if (response->status.code == 200) {
-                printf("Message successfully deleted.\n");
+        for (int i = 0; i < options_count; i++) {
+            if (selected == i) {
+                color_printf(CYAN, "   ● ");
             } else {
-                printf("Failed to delete the message. Response: %d %s\n", response->status.code, response->status.message);
+                printf("   ○ ");
             }
-            free(delete_message_menu.actions);
-            free(messages.messages);
-            break;
-        } else if (selected_index == messages.count) {
 
-            offset += limit;
-        } else if (selected_index == messages.count + 1 && offset > 0) {
-            offset -= limit;
+            printf("%s\n", options[i]);
         }
 
-        free(delete_message_menu.actions);
-        free(messages.messages);
+        key = get_arrow_key();
+        switch (key) {
+        case 'U':
+            selected = (selected - 1 + options_count) % options_count;
+            break;
+        case 'D':
+            selected = (selected + 1) % options_count;
+            break;
+        case '\n':
+            entered = 1;
+            break;
+        }
+    }
+
+    reset_terminal_mode();
+    show_cursor();
+
+    if (selected == 0) {
+        response = send_delete_message(sock, &connected_user.api_token, m.id);
+        if (response->status.code == 200) {
+            printf("Message successfully deleted.\n");
+        } else {
+            printf("Failed to delete the message. Response: %d %s\n", response->status.code, response->status.message);
+        }
+    } else if (selected == 1) {
+        char new_content[LARGE_CHAR_SIZE] = { 0 };
+        cs_printf(NO_COLOR, BOLD, "Write the new content of the message:\n");
+        write_message(new_content);
+
+        response = send_uptade_message(sock, &connected_user.api_token, m.id, &new_content);
+        if (response->status.code == 200) {
+            printf("Message successfully updated.\n");
+        } else {
+            printf("Failed to update the message. Response: %d %s\n", response->status.code, response->status.message);
+        }
     }
 }
-
 void menu_display_unread_messages()
 {
     clear_term();
