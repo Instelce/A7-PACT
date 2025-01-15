@@ -58,14 +58,6 @@ void add_menu_action(menu_t* menu, char name[], void (*action)(), int disabled);
 
 void set_error(char format[], ...);
 
-void goto_print(int x, int y, char format[], ...);
-
-int display_message(message_t message, int align_left, int selected);
-
-void display_line();
-
-void disconnect();
-
 void input(char* output)
 {
     scanf("%s", output);
@@ -74,11 +66,8 @@ void input(char* output)
 
 void connection_pro()
 {
-    printf("\n");
-    display_line();
-
     char mail[CHAR_SIZE], token[API_TOKEN_SIZE];
-    printf("   Enter your email: ");
+    printf("\n   Enter your email: ");
     input(mail);
 
     if (strcmp(mail, "o") == 0) {
@@ -97,8 +86,6 @@ void connection_pro()
 
 void connection_client()
 {
-    display_line();
-
     char mail[CHAR_SIZE], token[API_TOKEN_SIZE];
 
     printf("\n   Enter your email: ");
@@ -360,88 +347,19 @@ void menu_select_discussion()
 
 void menu_discussion()
 {
-    struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    menu_t menu;
+    int selected_index = -1;
 
-    int message_chunk_size = 5;
-    message_list_t messages_list = db_get_messages_between_users(conn, connected_user.id, discussion_user_id, 0, message_chunk_size);
+    strcpy(menu.name, "Discussion Menu");
+    menu.actions = NULL;
 
-    int selected = 0;
-    int entered = 0;
-    int key;
+    add_menu_action(&menu, "Back", NULL, 0);
 
-    set_raw_mode();
-    hide_cursor();
+    selected_index = display_menu(menu);
 
-    while (running && !entered) {
-        clear_term();
-
-        int center_index = selected;
-        int start_index = center_index;
-        int end_index = center_index;
-        int above_height = 0;
-        int below_height = 0;
-
-        while (start_index > 0 && above_height < w.ws_row - 8) {
-            above_height += display_message(messages_list.messages[start_index - 1], 1, 0);
-            if (above_height < w.ws_row - 8) {
-                start_index--;
-            }
-        }
-
-        while (end_index < messages_list.count - 1 && below_height < w.ws_row - 8) {
-            below_height += display_message(messages_list.messages[end_index + 1], 1, 0);
-            if (below_height < w.ws_row - 8) {
-                end_index++;
-            }
-        }
-
-        clear_term();
-        for (int i = start_index; i <= end_index; i++) {
-            display_message(messages_list.messages[i], messages_list.messages[i].sender_id != connected_user.id, i == selected);
-        }
-
-        goto_print(2, w.ws_row - 2, "Selected: %d", selected);
-        goto_print(2, w.ws_row - 1, "Send a message: Ctrl+M");
-        goto_print(2, w.ws_row, "Use arrow keys to navigate, Enter to select, Ctrl+C to quit discussion");
-
-        key = get_arrow_key();
-        switch (key) {
-        case 'U':
-            if (selected > 0) {
-                selected--;
-            }
-            break;
-        case 'D':
-            if (selected < messages_list.count - 1) {
-                selected++;
-            } else {
-                // Load more messages
-                message_list_t new_messages_list = db_get_messages_between_users(conn, connected_user.id, discussion_user_id, messages_list.count, message_chunk_size);
-                if (new_messages_list.count > 0) {
-                    int old_count = messages_list.count;
-                    messages_list.count += new_messages_list.count;
-                    messages_list.messages = realloc(messages_list.messages, messages_list.count * sizeof(message_t));
-                    for (int i = 0; i < new_messages_list.count; i++) {
-                        messages_list.messages[old_count + i] = new_messages_list.messages[i];
-                    }
-                    free(new_messages_list.messages);
-                } else {
-                    if (messages_list.count % message_chunk_size != 0) {
-                        selected = 0;
-                    }
-                }
-            }
-
-            break;
-        case '\n':
-            entered = 1;
-            break;
-        }
+    if (selected_index == 0) {
+        discussion_user_id = -1;
     }
-
-    reset_terminal_mode();
-    show_cursor();
 }
 
 void menu_delete_message()
@@ -562,7 +480,7 @@ void disconnect()
 {
     running = 0;
     send_disconnected(sock);
-    printf("\n   Disconnected, bye bye !\n");
+    printf("\n   Disconnected\n");
     close(sock);
 }
 
@@ -575,20 +493,16 @@ void signal_handler(int sig)
     }
 }
 
-void display_box(color_t color, char title[], int selected)
+void print_box(int width, int height, color_t color, int align_left)
 {
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    // int margin = selected ? 3 : 6;
-    int margin = 6;
-    int width = w.ws_col - margin;
-    int height = 3;
+    int padding = align_left ? 0 : w.ws_col - width;
 
     for (int i = 0; i < height; i++) {
-        for (int j = 0; j < margin / 2; j++) {
+        for (int j = 0; j < padding; j++) {
             printf(" ");
         }
-
         for (int j = 0; j < width; j++) {
             if (i == 0) {
                 if (j == 0) {
@@ -613,46 +527,9 @@ void display_box(color_t color, char title[], int selected)
                     color_printf(color, " ");
                 }
             }
-
-            if (i == height / 2 && j == 1) {
-                if (selected) {
-                    color_printf(color, "%s", title);
-                } else {
-                    printf("%s", title);
-                }
-                j += strlen(title);
-            }
-
-            // Right
-            if (i == 0 && j == width - 2) {
-                color_printf(color, "╖");
-                j++;
-            }
-
-            if (i != 0 && i != height - 1 && j == width - 2) {
-                color_printf(color, "║");
-                j++;
-            }
-
-            if (i == height - 1 && j == width - 2) {
-                color_printf(color, "╜");
-                j++;
-            }
         }
         printf("\n");
     }
-}
-
-void display_line()
-{
-    struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
-    printf("   ");
-    for (int i = 0; i < w.ws_col - 6; i++) {
-        color_printf(GRAY, "╴");
-    }
-    printf("\n\n");
 }
 
 /// @brief Format a date to a human readable format
@@ -710,9 +587,8 @@ void goto_print(int x, int y, char format[], ...)
 {
     va_list args;
     va_start(args, format);
-    printf("\033[%d;%dH", y, x);
+    printf("\033[%d;%dH", x, y);
     vprintf(format, args);
-    printf("\033[0m");
     va_end(args);
 }
 
@@ -720,9 +596,9 @@ void goto_print(int x, int y, char format[], ...)
 /// @param message
 /// @param align_left if true, align the message to the left, otherwise to the right
 /// @param selected if true, highlight the message
-/// @return int the height of the message
-int display_message(message_t message, int align_left, int selected)
+void display_message(message_t message, int align_left, int selected)
 {
+
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
@@ -759,23 +635,11 @@ int display_message(message_t message, int align_left, int selected)
     int left_space = align_left ? 0 : w.ws_col / 2;
     color_t color = selected ? CYAN : WHITE;
 
-    user_t receiver_user;
-    if (connected_user.id == message.receiver_id) {
-        receiver_user = connected_user;
-    } else {
-        db_get_user(conn, &receiver_user, message.receiver_id);
-        db_set_user_type(conn, &receiver_user);
-    }
+    user_t receiver;
+    db_get_user(conn, &receiver, message.receiver_id);
+    db_set_user_type(conn, &receiver);
 
-    user_t sender_user;
-    if (connected_user.id == message.sender_id) {
-        sender_user = connected_user;
-    } else {
-        db_get_user(conn, &sender_user, message.sender_id);
-        db_set_user_type(conn, &sender_user);
-    }
-
-    char* sender = connected_user.id == message.sender_id ? "You" : sender_user.name;
+    char* sender = connected_user.id == message.sender_id ? "You" : receiver.name;
     char* sended_date = format_date(message.sended_date);
     char* modified_date = format_date(message.modified_date);
 
@@ -833,8 +697,6 @@ int display_message(message_t message, int align_left, int selected)
         }
         printf("\n");
     }
-
-    return height;
 }
 
 void print_logo()
@@ -875,6 +737,10 @@ int main()
         &menu_client, "Client",
         "Send a message", menu_send_message,
         "Discussions", menu_select_discussion,
+        // "Display unread messages", menu_display_unread_messages,
+        // "Modify a message", empty_action,
+        // "Delete a message", menu_delete_message,
+        // "Display messages history", empty_action,
         "Disconnect", disconnect,
         NULL);
     menu_t menu_pro;
@@ -882,6 +748,10 @@ int main()
         &menu_pro, "Professional",
         "Send a message", menu_send_message,
         "Discussions", menu_select_discussion,
+        "Display unread messages", menu_display_unread_messages,
+        // "Modify a message", empty_action,
+        // "Delete a message", menu_delete_message,
+        // "Display messages history", empty_action,
         "Disconnect", disconnect,
         NULL);
     menu_t menu_admin;
@@ -899,6 +769,12 @@ int main()
     env_load("..");
 
     db_login(&conn);
+
+    // test
+    // db_get_user(conn, &connected_user, 2);
+    // display_message((message_t) { .content = "Hello broooazeazeazeazeazeazeo\nsuper\nookokoko", .receiver_id = 4, .sender_id = 2, .sended_date = "2021-06-01 12:00:00", .modified_date = "2021-06-01 12:00:12" }, 0, 0);
+    // display_message((message_t) { .content = "Hello", .receiver_id = 3, .sender_id = 1, .sended_date = "2021-06-01 12:00:00", .modified_date = "2021-06-01 12:00:12" }, 1, 1);
+    // exit(0);
 
     signal(SIGINT, signal_handler);
 
@@ -961,9 +837,6 @@ int main()
 // Display a menu and return the index of the selected action
 int display_menu(menu_t menu)
 {
-    struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-
     int selected = 0;
     int entered = 0;
     int key;
@@ -974,38 +847,30 @@ int display_menu(menu_t menu)
     while (running && !entered) {
         clear_term();
 
-        style_printf(BOLD, "\n   %s", menu.name);
+        style_printf(BOLD, "\n   %s\n\n", menu.name);
 
         if (memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0) {
-            for (int i = 0; i < w.ws_col - 6 - 13 - strlen(connected_user.name) - strlen(menu.name); i++) {
-                color_printf(GRAY, " ");
-            }
-            color_printf(CYAN, "Connected as ");
+            color_printf(CYAN, "   Connected as ");
             cs_printf(CYAN, BOLD, "%s\n\n", connected_user.name);
-        } else {
-            printf("\n\n");
         }
 
-        display_line();
-
         for (int i = 0; i < menu.actions_count; i++) {
-            // if (menu.actions[i].disabled) {
-            //     color_printf(GRAY, "   ○ %s\n", menu.actions[i].name);
-            //     continue;
-            // }
+            if (menu.actions[i].disabled) {
+                color_printf(GRAY, " ○ %s\n", menu.actions[i].name);
+                continue;
+            }
 
-            // if (selected == i) {
-            //     color_printf(CYAN, "   ● ");
-            // } else {
-            //     printf("   ○ ");
-            // }
+            if (selected == i) {
+                color_printf(CYAN, " ● ");
+            } else {
+                printf(" ○ ");
+            }
 
             // if (selected == i) {
             //     color_printf(CYAN, "%s\n", menu.actions[i].name);
             // } else {
             // }
-            // printf("%s\n", menu.actions[i].name);
-            display_box(selected == i ? CYAN : GRAY, menu.actions[i].name, selected == i);
+            printf("%s\n", menu.actions[i].name);
         }
 
         // Show error message

@@ -384,6 +384,7 @@ message_list_t db_get_messages_between_users(PGconn* conn, int user1, int user2,
 {
     PGresult* res;
     char query[256];
+    message_list_t message_list;
 
     sprintf(query, "SELECT id, sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE ((sender_id = %d AND receiver_id = %d) OR (sender_id = %d AND receiver_id = %d)) AND deleted = false ORDER BY sended_date DESC LIMIT %d OFFSET %d", user1, user2, user2, user1, limit, offset);
 
