@@ -99,7 +99,8 @@ class DashboardController extends Controller
         return $this->render('/dashboard/factures', ['invoices' => $invoices, 'offers' => $offers, 'subscriptions' => $subscriptions]);
     }
 
-    public function invoicesPDF(Request $request, Response $response, $routeParams){
+    public function invoicesPDF(Request $request, Response $response, $routeParams)
+    {
         $pk = $routeParams['pk'];
         $invoiceId = $routeParams['pk'];
         $invoice = Invoice::findOneByPk($routeParams['pk']);
@@ -133,4 +134,9 @@ class DashboardController extends Controller
             'type' => $type,
         ], $download);
     }
+    public function message(Request $request, Response $response)
+    {
+        return $this->render('/dashboard/message');
+    }
+
 }
