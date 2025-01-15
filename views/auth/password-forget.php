@@ -10,7 +10,7 @@ $this->title = 'Mdp-oublie';
 
 <div class="form-page form-page-little">
     <div class="h-auth">
-        <h1 class="heading-1">Mot de passe oublié</h1>
+        <h1 class="heading-1">Saisissez votre adresse mail</h1>
     </div>
 
     <?php $form = Form::begin('', 'post', '', 'form-w form-l') ?>

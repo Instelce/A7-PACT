@@ -19,9 +19,9 @@ use app\core\Mailer;
         <x-tab-panel role="region" slot="panel">
             <div class="flex flex-row mb-8 items-center">
                 <img class="w-[125px] h-[125px] rounded-full mr-10 object-cover"
-                     src="<?php echo Application::$app->user->avatar_url ?>">
-                <button data-dialog-trigger="avatar-update"
-                        class="dialog-trigger button w-25% gray"><i data-lucide="pen-line"></i>Modifier
+                    src="<?php echo Application::$app->user->avatar_url ?>">
+                <button data-dialog-trigger="avatar-update" class="dialog-trigger button w-25% gray"><i
+                        data-lucide="pen-line"></i>Modifier
                     mon avatar
                 </button>
             </div>
@@ -55,19 +55,20 @@ use app\core\Mailer;
                         <?php echo $form->field($model, 'city') ?>
                     </div>
                 </div>
-<!--                <div class="flex flex-col gap-4">-->
-<!--                    <div class="flex gap-4 items-center">-->
-<!--                        <div class="flex items-center">-->
-<!--                            <input class="switch" type="checkbox" id="switch-notification"-->
-<!--                                   name="notification"-->
-<!--                                   value="1" --><?php //echo $model->notification == 1 ? "checked" : "" ?><!--/>-->
-<!--                            <label class="switch" for="switch-notification"></label>-->
-<!--                        </div>-->
-<!--                        <label for="switch-period" id="switch-period-label">J’autorise l’envoi de-->
-<!--                            notifications concernant-->
-<!--                            la mise en ligne de nouvelles offres et autre</label>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <div class="flex flex-col gap-4">-->
+                <!--                    <div class="flex gap-4 items-center">-->
+                <!--                        <div class="flex items-center">-->
+                <!--                            <input class="switch" type="checkbox" id="switch-notification"-->
+                <!--                                   name="notification"-->
+                <!--                                   value="1" --><?php //echo $model->notification == 1 ? "checked" : "" ?>
+                <!--/>-->
+                <!--                            <label class="switch" for="switch-notification"></label>-->
+                <!--                        </div>-->
+                <!--                        <label for="switch-period" id="switch-period-label">J’autorise l’envoi de-->
+                <!--                            notifications concernant-->
+                <!--                            la mise en ligne de nouvelles offres et autre</label>-->
+                <!--                    </div>-->
+                <!--                </div>-->
 
                 <div class="flex flex-col gap-4 mt-4">
                     <p><?php echo $form->error($model, 'passwordCheck') ?></p>
@@ -113,9 +114,11 @@ use app\core\Mailer;
                 <h2 class="section-header font-semibold">Mot de passe</h2>
                 <form method="post" class="flex">
                     <input type="hidden" name="form-name" value="reset-password">
-                    <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
+                    <button id="passwordModify" type="submit" class="button w-full gray">Modifier le mot de
+                        passe</button>
                 </form>
-                <!--<button id ="accountDelete" type="submit" class="button danger">Supprimer mon compte</button>-->
+                <a href="/comptes/supprimer" id="accountDelete" class="button danger">Supprimer mon
+                    compte</a>
             </div>
         </x-tab-panel>
     </x-tabs>
@@ -140,7 +143,7 @@ use app\core\Mailer;
                     <div class="grid gap-6 py-6">
                         <div class="flex justify-center items-center w-full">
                             <img class="w-[175px] h-[175px] rounded-full object-cover avatar-image"
-                                 src="<?php echo Application::$app->user->avatar_url ?>">
+                                src="<?php echo Application::$app->user->avatar_url ?>">
                         </div>
                         <div class="flex justify-center items-center gap-2 w-full">
                             <label for="file" class="button gray w-[250px]">
@@ -150,8 +153,7 @@ use app\core\Mailer;
                         </div>
                     </div>
                     <div class="on-same-line flex justify-center items-center gap-4 w-full">
-                        <button type="button" class="dialog-close button gray w-[250px]"
-                                id="closePopupAvatar">Annuler
+                        <button type="button" class="dialog-close button gray w-[250px]" id="closePopupAvatar">Annuler
                         </button>
                         <button type="submit" class="button w-[250px]">Enregistrer les
                             modifications

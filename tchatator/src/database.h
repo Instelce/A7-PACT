@@ -74,4 +74,7 @@ message_list_t db_get_unread_messages(PGconn* conn, int receiver_id, int offset,
 message_list_t db_get_messages_between_users(PGconn* conn, int user1, int user2, int offset, int limit);
 user_list_t db_get_all_receiver_users_of_user(PGconn* conn, int user_id);
 
+void add_message(message_list_t* messages, message_t message);
+void remove_message(message_list_t* messages, int message_id);
+
 #endif // DATABASE_H

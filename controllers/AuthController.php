@@ -12,6 +12,7 @@ use app\core\Request;
 use app\core\Response;
 use app\core\Storage;
 use app\core\Utils;
+use app\forms\DeleteForm;
 use app\forms\LoginForm;
 use app\forms\MemberRegisterForm;
 use app\forms\MemberUpdateForm;
@@ -55,11 +56,9 @@ class AuthController extends Controller
         $form = new PasswordForgetForm();
 
         if ($request->isPost()) {
-            $mail = Application::$app->session->get('reset-password-email');
             $form->loadData($request->getBody());
 
             if ($form->validate()) {
-                Application::$app->session->set('reset-password-email', $form->mail);
                 $form->verify();
                 $response->redirect('/mail-envoye');
                 exit;
@@ -80,7 +79,6 @@ class AuthController extends Controller
                     $user->reset_password_hash = Utils::generateHash();
                     $user->update();
                     Application::$app->mailer->send($mail, "Modification du mot de passe de $mail", 'reset-password', ['mail' => $mail, 'hash' => $user->reset_password_hash]);
-                    exit;
                 }
             }
         }
@@ -115,12 +113,12 @@ class AuthController extends Controller
 
     public function registerProfessional(Request $request, Response $response)
     {
-        $proPublic  = new PublicProfessionalRegister();
+        $proPublic = new PublicProfessionalRegister();
         $proPrivate = new PrivateProfessionalRegister();
-        if ($request->isPost() && $request->formName()=="public") {
+        if ($request->isPost() && $request->formName() == "public") {
             $proPublic->loadData($request->getBody());
 
-            if ($proPublic->validate()){
+            if ($proPublic->validate()) {
                 if ($proPublic->register()) {
                     Application::$app->session->setFlash('success', "Bienvenue $proPublic->denomination. Votre compte à bien été crée !");
                     Application::$app->mailer->send($proPublic->mail, "Bienvenue $proPublic->denomination", 'welcome', ['denomination' => $proPublic->denomination]);
@@ -130,11 +128,11 @@ class AuthController extends Controller
             }
         }
 
-        if ($request->isPost() && $request->formName()=="private") {
+        if ($request->isPost() && $request->formName() == "private") {
             $proPrivate->loadData($request->getBody());
 
-            if ($proPrivate->validate()){
-                if($proPrivate->register()) {
+            if ($proPrivate->validate()) {
+                if ($proPrivate->register()) {
                     Application::$app->session->setFlash('success', "Bienvenue $proPrivate->denomination. Votre compte à bien été crée !");
                     Application::$app->mailer->send($proPrivate->mail, "Bienvenue $proPrivate->denomination", 'welcome', ['denomination' => $proPrivate->denomination]);
                     $response->redirect('/dashboard');
@@ -147,17 +145,18 @@ class AuthController extends Controller
     }
 
 
-    public function updatePublicProfessionalAccount(Request $request, Response $response){
+    public function updatePublicProfessionalAccount(Request $request, Response $response)
+    {
 
         $this->setLayout('back-office');
 
-        $form  = new PublicProfessionalUpdateForm();
+        $form = new PublicProfessionalUpdateForm();
 
 
-        if ($request->isPost() && $request->formName()=="update-public") {
+        if ($request->isPost() && $request->formName() == "update-public") {
             $form->loadData($request->getBody());
 
-            if (!array_key_exists('notification', $request->getBody()))  {
+            if (!array_key_exists('notification', $request->getBody())) {
                 $form->notifications = 0;
             }
 
@@ -169,7 +168,7 @@ class AuthController extends Controller
 
         if ($request->isPost() && $request->formName() === "update-avatar") {
             $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
-            Application::$app->user->avatar_url=$avatarPath;
+            Application::$app->user->avatar_url = $avatarPath;
             Application::$app->user->update();
         }
 
@@ -191,15 +190,15 @@ class AuthController extends Controller
     {
         $this->setLayout('back-office');
 
-        $form  = new PrivateProfessionalUpdateForm();
+        $form = new PrivateProfessionalUpdateForm();
 
         $paymentForm = new PaymentForm(Application::$app->user->specific()->specific()->payment_id);
 
 
-        if ($request->isPost() && $request->formName()=="update-private") {
+        if ($request->isPost() && $request->formName() == "update-private") {
             $form->loadData($request->getBody());
 
-            if (!array_key_exists('notification', $request->getBody()))  {
+            if (!array_key_exists('notification', $request->getBody())) {
                 $form->notifications = 0;
             }
 
@@ -211,7 +210,7 @@ class AuthController extends Controller
 
         if ($request->isPost() && $request->formName() === "update-avatar") {
             $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
-            Application::$app->user->avatar_url=$avatarPath;
+            Application::$app->user->avatar_url = $avatarPath;
             Application::$app->user->update();
         }
 
@@ -246,7 +245,7 @@ class AuthController extends Controller
             $form->loadData($request->getBody());
 
             if ($form->validate()) {
-                if($form->register()){
+                if ($form->register()) {
                     Application::$app->session->setFlash('success', "Bienvenue $form->pseudo. Votre compte à bien été crée !");
                     Application::$app->mailer->send($form->mail, "Bienvenue $form->pseudo", 'welcome', ['pseudo' => $form->pseudo]);
                     $response->redirect('/');
@@ -265,7 +264,7 @@ class AuthController extends Controller
         if ($request->isPost() && $request->formName() == "update-main") {
             $form->loadData($request->getBody());
 
-            if (!array_key_exists('notification', $request->getBody()))  {
+            if (!array_key_exists('notification', $request->getBody())) {
                 $form->notification = 0;
             }
 
@@ -281,7 +280,7 @@ class AuthController extends Controller
 
         if ($request->isPost() && $request->formName() == "update-avatar") {
             $avatarPath = Application::$app->storage->saveFile("avatar", "avatar");
-            Application::$app->user->avatar_url=$avatarPath;
+            Application::$app->user->avatar_url = $avatarPath;
             Application::$app->user->update();
         }
 
@@ -300,21 +299,11 @@ class AuthController extends Controller
             $response->redirect('/comptes/modification');
         }
 
-        //////////////////////////////////////////////
-        // Delete account
-        //////////////////////////////////////////////
-
-        /*if ($request->isPost() && $request->formName() === "delete-account") {
-            if ($form->passwordMatch() && $form->validate() && $form->update()) {
-                Application::$app->session->setFlash('success', "Votre compte à bien été modifié !");
-                $response->redirect('/comptes/modification?tab=securite');
-            }
-        }*/
-
         return $this->render('auth/update-member-account', ['model' => $form]);
     }
 
-    public function resetPassword(Request $request, Response $response) {
+    public function resetPassword(Request $request, Response $response)
+    {
         $hash = $request->getBody()['token'];
         $user = UserAccount::findOne(['reset_password_hash' => $hash]);
 
@@ -332,6 +321,24 @@ class AuthController extends Controller
 
         return $this->render('auth/reset-password', ['hash' => $hash]);
     }
+    public function deleteAccount(Request $request, Response $response)
+    {
+        $form = new DeleteForm();
+
+
+        if ($request->isPost()) {
+            $form->loadData($request->getBody());
+            if ($form->validate()) {
+                if ($form->delete()) {
+                    Application::$app->session->setFlash('success', "Votre compte a bien été supprimé");
+                    $response->redirect('/');
+                }
+            }
+        }
+
+
+        return $this->render('auth/delete-account');
+    }
 
     public function logout(Request $request, Response $response)
     {
@@ -340,15 +347,15 @@ class AuthController extends Controller
         $response->redirect('/');
     }
 
-    public function profile(Request $request, Response $response, $routeParams) {
+    public function profile(Request $request, Response $response, $routeParams)
+    {
         $pk = $routeParams['pk'];
         $user = UserAccount::findOneByPk($pk);
 
-        if (!$user)
-        {
+        if (!$user) {
             throw new NotFoundException();
         }
 
-        return $this->render('profile', ['user'=>$user]);
+        return $this->render('profile', ['user' => $user]);
     }
 }

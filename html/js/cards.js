@@ -71,7 +71,7 @@ export function createOpinionCard(opinion, dashboard = false) {
         <!-- Header -->
         <header class="${!opinion.read && dashboard ? "not-read" : ""}">
             <div>
-                <a class="avatar" href="/comptes/${opinion.account_id}">
+                <a class="avatar" ${opinion.user.phone ? `href="/comptes/${opinion.account_id}"` : ''}>
                     <div class="image-container">
                         <img src="${opinion.user.avatar_url}"
                             alt="${opinion.user.pseudo}">
@@ -80,7 +80,7 @@ export function createOpinionCard(opinion, dashboard = false) {
                 
                 <div class="flex flex-col gap-1 justify-center">
                     <div>
-                        <a href="/comptes/${opinion.account_id}" class="user-name">${opinion.user.pseudo}</a>
+                        <a ${opinion.user.phone ? `href="/comptes/${opinion.account_id}"` : ''} class="user-name">${opinion.user.pseudo}</a>
                         <p class="text-sm text-gray-4">Il y a ${dateText}</p>
                     </div>
                     

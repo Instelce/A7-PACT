@@ -76,7 +76,6 @@ void input(char* output)
 
 void connection_pro()
 {
-    printf("\n");
     display_line();
 
     char mail[CHAR_SIZE], token[API_TOKEN_SIZE];
@@ -103,7 +102,7 @@ void connection_client()
 
     char mail[CHAR_SIZE], token[API_TOKEN_SIZE];
 
-    printf("\n   Enter your email: ");
+    printf("   Enter your email: ");
     input(mail);
 
     // For testing
@@ -718,7 +717,7 @@ void display_line()
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-    printf("   ");
+    printf("\n   ");
     for (int i = 0; i < w.ws_col - 6; i++) {
         color_printf(GRAY, "╴");
     }
@@ -1059,23 +1058,19 @@ int display_menu(menu_t menu)
         display_line();
 
         for (int i = 0; i < menu.actions_count; i++) {
-            // if (menu.actions[i].disabled) {
-            //     color_printf(GRAY, "   ○ %s\n", menu.actions[i].name);
-            //     continue;
-            // }
+            if (menu.actions[i].disabled) {
+                color_printf(GRAY, "   ○ %s\n", menu.actions[i].name);
+                continue;
+            }
 
-            // if (selected == i) {
-            //     color_printf(CYAN, "   ● ");
-            // } else {
-            //     printf("   ○ ");
-            // }
+            if (selected == i) {
+                color_printf(CYAN, "   ● ");
+            } else {
+                printf("   ○ ");
+            }
 
-            // if (selected == i) {
-            //     color_printf(CYAN, "%s\n", menu.actions[i].name);
-            // } else {
-            // }
-            // printf("%s\n", menu.actions[i].name);
-            display_box(selected == i ? CYAN : GRAY, menu.actions[i].name, selected == i);
+            printf("%s\n", menu.actions[i].name);
+            // display_box(selected == i ? CYAN : GRAY, menu.actions[i].name, selected == i);
         }
 
         // Show error message

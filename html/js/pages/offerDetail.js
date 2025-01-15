@@ -1,7 +1,41 @@
 import '../photoUpload.js';
-import { getUser } from "../user.js";
+import {getUser} from "../user.js";
 
 let offerId = document.querySelector('#offer-id').value;
+
+// For socket
+function loginCommand(token) {
+    return JSON.stringify({
+        command: "LOGIN",
+        token: token,
+    })
+}
+
+function sendMessageCommand(token, message, receiverId) {
+    return JSON.stringify({
+        command: "SEND_MSG",
+        token: token,
+        content: message,
+        receiver: receiverId
+    })
+}
+
+function messageCard(message) {
+    return `
+        <div class="message">
+            <div class="message-content">
+                <pre>${message.content}</pre>
+            </div>
+        </div>
+    `
+}
+
+let offer = null;
+fetch(`/api/offers/${offerId}`)
+    .then(r => r.json())
+    .then(data => {
+        offer = data;
+    })
 
 let user = null;
 getUser().then(u => {
@@ -13,15 +47,23 @@ getUser().then(u => {
     // Port: 4242
     // ---------------------------------------------------------------------------------------------- //
 
-    if (user) {
-        const socket = new WebSocket('ws://localhost:4242');
+    if (user && user.type !== 'professional') {
+        let socket;
+        let chatTrigger = document.querySelector('.chat-trigger');
+        let chat = document.querySelector('.chat');
+        let messagesContainer = document.querySelector('.messages-container');
+        let messageContent = document.querySelector('textarea#message-content');
+        let sendButton = document.querySelector('.send-button');
+
+        socket = new WebSocket('ws://localhost:4242');
 
         socket.addEventListener("open", () => {
             console.log('Connected to the server');
 
-            // Send bytes to the server
-            socket.send(Uint8Array.from([0x00, 0x01, 0x02, 0x03, 0x04]));
-            socket.close();
+            console.log(user)
+
+            // Send login request
+            socket.send(loginCommand(user.api_token));
         });
 
         socket.addEventListener("message", (event) => {
@@ -35,8 +77,41 @@ getUser().then(u => {
         socket.addEventListener("error", (error) => {
             console.log('Error: ', error);
         });
+
+        // Toggle chat
+        chatTrigger.addEventListener('click', () => {
+            chat.classList.toggle('hidden');
+        })
+
+        // Send message
+        sendButton.addEventListener('click', () => {
+            if (messageContent.value !== '') {
+                socket.send(sendMessageCommand(user.api_token, messageContent.value, offer.professional_id));
+
+                messagesContainer.innerHTML += messageCard({
+                    content: messageContent.value,
+                    sender_id: user.id,
+                    receiver_id: offer.professional_id
+                });
+
+                messageContent.value = '';
+            }
+        })
+
+        // Load messages
+        fetch(`/api/messages/${offer.professional_id}`)
+            .then(r => r.json())
+            .then(messages => {
+                messages.forEach(message => {
+                    messagesContainer.innerHTML += messageCard(message);
+                })
+            })
+
     }
 });
+
+
+
 // ---------------------------------------------------------------------------------------------- //
 // Map
 // ---------------------------------------------------------------------------------------------- //
@@ -124,7 +199,6 @@ if (opinionCertification) {
 }
 
 
-
 // ---------------------------------------------------------------------------------------------- //
 // Rating choice
 // ---------------------------------------------------------------------------------------------- //
@@ -153,8 +227,7 @@ if (opinionForm) {
         for (let i = 0; i < 5; i++) {
             if (i < rateInput.value && i > rateInput.value - 1) {
                 stars[i].classList.add('half-fill');
-            }
-            else if (i < rateInput.value) {
+            } else if (i < rateInput.value) {
                 stars[i].classList.add('fill');
             }
         }
@@ -217,8 +290,7 @@ if (opinionForm) {
                 for (let i = 0; i < 5; i++) {
                     if (i < rateInput.value && i > rateInput.value - 1) {
                         stars[i].classList.add('half-fill');
-                    }
-                    else if (i < rateInput.value) {
+                    } else if (i < rateInput.value) {
                         stars[i].classList.add('fill');
                     }
                 }
@@ -293,6 +365,7 @@ async function getReports(id) {
         })
         .then(response => response.json())
 }
+
 loaderButton.addEventListener('click', () => {
     fetch(`/api/opinions?offer_id=${offerId}&limit=5&offset=${offset}`)
         .then(response => response.json())
@@ -338,8 +411,7 @@ function createOpinionCard(opinion) {
 
         if (i < opinion.rating && i > opinion.rating - 1) {
             star.classList.add("half-fill");
-        }
-        else if (i < opinion.rating) {
+        } else if (i < opinion.rating) {
             star.classList.add("fill");
         }
 
@@ -392,7 +464,7 @@ function createOpinionCard(opinion) {
         <header>
             <div class="flex flex-row justify-between w-full">
                 <div>
-                    <a class="avatar" href="/comptes/${opinion.account_id}">
+                    <a class="avatar" ${opinion.user.phone ? `href="/comptes/${opinion.account_id}"` : ''}">
                         <div class="image-container">
                             <img src="${opinion.user.avatar_url}"
                                 alt="${opinion.user.pseudo}">
@@ -401,7 +473,7 @@ function createOpinionCard(opinion) {
                     
                     <div class="flex flex-col gap-1 justify-center">
                         <div>
-                            <a href="/comptes/${opinion.account_id}" class="user-name">${opinion.user.pseudo}</a>
+                            <a ${opinion.user.phone ? `href="/comptes/${opinion.account_id}"` : ''} class="user-name">${opinion.user.pseudo}</a>
                             <p class="text-sm text-gray-4">Il y a ${dateText}</p>
                         </div>
                         
@@ -533,8 +605,7 @@ function createOpinionCard(opinion) {
                 currentDislikes = parseInt(dislikeText.innerHTML, 10);
                 dislikeSvg.setAttribute('fill', 'rgb(255, 59, 48)');
                 opinionDisliked = true;
-            }
-            else {
+            } else {
                 removeDislike(opinion.id);
                 dislikeText.innerHTML = (currentDislikes - 1).toString();
                 currentDislikes = parseInt(dislikeText.innerHTML, 10);

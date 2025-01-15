@@ -22,12 +22,6 @@ class AnonymousAccount extends DBModel
     return 'account_id';
   }
 
-  public function save(): true
-  {
-
-      return true;
-  }
-
   public function rules(): array
   {
     return [
@@ -37,6 +31,6 @@ class AnonymousAccount extends DBModel
 
   public function account(): Account
   {
-      return Account::findOne(['id' => $this->account_id]);
+    return Account::findOne(['id' => $this->account_id]);
   }
 }
