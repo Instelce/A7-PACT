@@ -35,9 +35,9 @@ clean:
 	rm -f $(output)/*
 
 server-vic: $(utils) src/server.c
-	$(CC) $(CFLAGS) $^ -o $(output)/server
+	$(CC) $^ -o $(output)/server -I/usr/include/postgresql -L/usr/lib/x86_64-linux-gnu -lpq
 	./$(output)/server
 
 client-vic: $(utils) src/client.c
-	$(CC) $(CFLAGS) $^ -o $(output)/client
+	$(CC) $^ -o $(output)/client -I/usr/include/postgresql -L/usr/lib/x86_64-linux-gnu -lpq
 	./$(output)/client
