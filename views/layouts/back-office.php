@@ -47,7 +47,6 @@ use app\models\account\UserAccount;
     </svg>
 </div>
 
-
 <!-- Navbar -->
 <nav class="navbar">
     <div class="navbar-left">
