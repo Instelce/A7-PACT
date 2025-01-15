@@ -107,10 +107,13 @@ $app->router->post('/api/opinions/<opinion_pk:int>', [ApiController::class, 'opi
 $app->router->post('/api/opinions/<opinion_pk:int>/likes', [ApiController::class, 'opinionLikes']);
 $app->router->post('/api/opinions/<opinion_pk:int>/dislikes', [ApiController::class, 'opinionDislikes']);
 $app->router->post('/api/opinions/<opinion_pk:int>/reports', [ApiController::class, 'opinionReports']);
+<<<<<<< Updated upstream
 $app->router->get('/api/messages/<receiver_pk:int>', [ApiController::class, 'messages']);
+=======
+$app->router->get('/api/notifications', [ApiController::class, 'notifications']);
+>>>>>>> Stashed changes
 
-
-$app->router->get('/test/pdf', [SiteController::class, 'testPdf']);
+$app->router->post('/test/pdf', [SiteController::class, 'testPdf']);
 
 
 $app->run();

@@ -8,7 +8,11 @@ use app\core\Request;
 use app\core\Response;
 use app\models\account\AnonymousAccount;
 use app\models\account\UserAccount;
+<<<<<<< Updated upstream
 use app\models\Message;
+=======
+use app\models\Notification;
+>>>>>>> Stashed changes
 use app\models\offer\Offer;
 use app\models\offer\OfferType;
 use app\models\offer\schedule\OfferSchedule;
@@ -489,8 +493,9 @@ class ApiController extends Controller
      *
      *
      */
-    public function notifications(Request $request, Response $response, $routeParams)
+    public function notifications(Request $request, Response $response)
     {
+<<<<<<< Updated upstream
 
         //private $notificationModel;
 
@@ -546,5 +551,9 @@ class ApiController extends Controller
 //                ];
 //            }
 //        }
+=======
+       $nofications = Notification::find(['user_id' => Application::$app->user->account_id]);
+       return $this->json($nofications);
+>>>>>>> Stashed changes
     }
 }
