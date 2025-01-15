@@ -6,6 +6,7 @@ use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
 use app\core\Response;
+use app\models\account\AnonymousAccount;
 use app\models\account\UserAccount;
 use app\models\offer\Offer;
 use app\models\offer\OfferType;
@@ -322,14 +323,24 @@ class ApiController extends Controller
         foreach ($opinions as $i => $opinion) {
             $data[$i] = $opinion->toJson();
 
-            // Add user account
-            $data[$i]['user'] = UserAccount::findOneByPk($opinion->account_id)->toJson();
-            unset($data[$i]['user']['password']);
 
-            // And append member user data
-            $member = MemberUser::findOneByPk($opinion->account_id)->toJson();
-            foreach ($member as $key => $value) {
-                $data[$i]['user'][$key] = $value;
+            // Add user account
+
+            if (UserAccount::findOneByPk($opinion->account_id)) {
+                $data[$i]['user'] = UserAccount::findOneByPk($opinion->account_id)->toJson();
+                unset($data[$i]['user']['password']);
+                unset($data[$i]['user']['reset_password_hash']);
+                unset($data[$i]['user']['api_token']);
+                unset($data[$i]['user']['mail']);
+
+                // And append member user data
+                $member = MemberUser::findOneByPk($opinion->account_id)->toJson();
+                foreach ($member as $key => $value) {
+                    $data[$i]['user'][$key] = $value;
+                }
+            } else {
+                $data[$i]['user'] = AnonymousAccount::findOneByPk($opinion->account_id)->toJson();
+                $data[$i]['user']['avatar_url'] = "https://static.vecteezy.com/system/resources/previews/001/840/618/original/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg";
             }
 
             // Add offer data
@@ -348,13 +359,13 @@ class ApiController extends Controller
             $data[$i]['dislikes'] = $opinion->dislikes();
 
             // Récupérer opinion id
-            if (OpinionLike::findOne(["opinion_id"=>$opinion->id, "account_id"=>Application::$app->user->account_id])){
+            if (OpinionLike::findOne(["opinion_id" => $opinion->id, "account_id" => Application::$app->user->account_id])) {
                 $data[$i]['opinionLiked'] = true;
             } else {
                 $data[$i]['opinionLiked'] = false;
             }
 
-            if (OpinionDislike::findOne(["opinion_id"=>$opinion->id, "account_id"=>Application::$app->user->account_id])){
+            if (OpinionDislike::findOne(["opinion_id" => $opinion->id, "account_id" => Application::$app->user->account_id])) {
                 $data[$i]['opinionDisliked'] = true;
             } else {
                 $data[$i]['opinionDisliked'] = false;
@@ -391,7 +402,8 @@ class ApiController extends Controller
         }
     }
 
-    public function opinionLikes(Request $request, Response $response, $routeParams){
+    public function opinionLikes(Request $request, Response $response, $routeParams)
+    {
         $action = $request->getBody()["action"];
         $opinionPk = $routeParams['opinion_pk'];
         $opinion = Opinion::findOneByPk($opinionPk);
@@ -401,17 +413,17 @@ class ApiController extends Controller
             return $response->json(['error' => 'Opinion not found']);
         }
 
-        if($action == "add"){
-            $opinion -> addLike();
-        }
-        else if($action == "remove"){
+        if ($action == "add") {
+            $opinion->addLike();
+        } else if ($action == "remove") {
             $opinion->removeLike();
         }
 
         return $response->json(["action" => $action, "body" => $request->getBody()]);
     }
 
-    public function opinionDislikes(Request $request, Response $response, $routeParams){
+    public function opinionDislikes(Request $request, Response $response, $routeParams)
+    {
         $action = $request->getBody()["action"];
         $opinionPk = $routeParams['opinion_pk'];
         $opinion = Opinion::findOneByPk($opinionPk);
@@ -421,17 +433,17 @@ class ApiController extends Controller
             return $response->json(['error' => 'Opinion not found']);
         }
 
-        if($action == "add"){
-            $opinion -> addDislike();
-        }
-        else if($action == "remove"){
+        if ($action == "add") {
+            $opinion->addDislike();
+        } else if ($action == "remove") {
             $opinion->removeDislike();
         }
 
         return $response->json(["action" => $action, "body" => $request->getBody()]);
     }
 
-    public function opinionReports(Request $request, Response $response, $routeParams){
+    public function opinionReports(Request $request, Response $response, $routeParams)
+    {
         $opinionPk = $routeParams['opinion_pk'];
         $opinion = Opinion::findOneByPk($opinionPk);
 
