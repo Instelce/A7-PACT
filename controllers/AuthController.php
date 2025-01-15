@@ -55,11 +55,9 @@ class AuthController extends Controller
         $form = new PasswordForgetForm();
 
         if ($request->isPost()) {
-            $mail = Application::$app->session->get('reset-password-email');
             $form->loadData($request->getBody());
 
             if ($form->validate()) {
-                Application::$app->session->set('reset-password-email', $form->mail);
                 $form->verify();
                 $response->redirect('/mail-envoye');
                 exit;
@@ -80,7 +78,6 @@ class AuthController extends Controller
                     $user->reset_password_hash = Utils::generateHash();
                     $user->update();
                     Application::$app->mailer->send($mail, "Modification du mot de passe de $mail", 'reset-password', ['mail' => $mail, 'hash' => $user->reset_password_hash]);
-                    exit;
                 }
             }
         }

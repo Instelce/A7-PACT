@@ -40,7 +40,7 @@ class Opinion extends DBModel
         return [
             'rating' => [self::RULE_REQUIRED],
             'title' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 128]],
-            'comment' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
+            'comment' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 1024]],
             'visit_date' => [self::RULE_REQUIRED],
             'visit_context' => [self::RULE_REQUIRED],
         ];
