@@ -78,6 +78,9 @@ char* get_color_code(color_t color)
     case GRAY:
         color_code = "\033[0;90m";
         break;
+    case NO_COLOR:
+        color_code = "\033[0m";
+        break;
     }
 }
 

@@ -13,7 +13,7 @@ $this->waves = true;
 ?>
 
 
-<main class="homeDisplay">
+<main class="homeDisplay mt-[20%]">
     <div class="homeDisplayDiv w-full">
         <h1 class="heading-1">
             Découvrez
