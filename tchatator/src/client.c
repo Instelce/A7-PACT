@@ -1,3 +1,4 @@
+
 #include <fcntl.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -66,7 +67,7 @@ void display_line();
 
 void disconnect();
 
-void menu_delete_update(message_t message);
+void menu_delete_and_update(message_t m);
 
 void input(char* output)
 {
@@ -291,73 +292,6 @@ void menu_select_discussion()
         discussion_user_id = receiver_user_list.users[selected_index].id;
     }
 }
-// // Display a menu and return the index of the selected action
-// int display_menu(menu_t menu)
-// {
-//     int selected = 0;
-//     int entered = 0;
-//     int key;
-
-//     set_raw_mode();
-//     hide_cursor();
-
-//     while (running && !entered) {
-//         clear_term();
-
-//         style_printf(BOLD, "\n   %s\n\n", menu.name);
-
-//         if (memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0) {
-//             color_printf(CYAN, "   Connected as ");
-//             cs_printf(CYAN, BOLD, "%s\n\n", connected_user.name);
-//         }
-
-//         for (int i = 0; i < menu.actions_count; i++) {
-//             if (menu.actions[i].disabled) {
-//                 color_printf(GRAY, " ○ %s\n", menu.actions[i].name);
-//                 continue;
-//             }
-
-//             if (selected == i) {
-//                 color_printf(CYAN, " ● ");
-//             } else {
-//                 printf(" ○ ");
-//             }
-
-//             // if (selected == i) {
-//             //     color_printf(CYAN, "%s\n", menu.actions[i].name);
-//             // } else {
-//             // }
-//             printf("%s\n", menu.actions[i].name);
-//         }
-
-//         // Show error message
-//         if (strlen(error_message) > 0) {
-//             color_printf(RED, "\n   %s\n", error_message);
-//         }
-
-//         // if (response != NULL) {
-//         //     printf("\nResponse: %d %s\n", response->status.code, response->status.message);
-//         // }
-
-//         key = get_arrow_key();
-//         switch (key) {
-//         case 'U':
-//             selected = (selected - 1 + menu.actions_count) % menu.actions_count;
-//             break;
-//         case 'D':
-//             selected = (selected + 1) % menu.actions_count;
-//             break;
-//         case '\n':
-//             entered = 1;
-//             break;
-//         }
-//     }
-
-//     reset_terminal_mode();
-//     show_cursor();
-
-//     return selected;
-// }
 
 void menu_discussion()
 {
@@ -437,7 +371,7 @@ void menu_discussion()
             break;
         case '\n':
             entered = 1;
-            menu_delete_update(messages_list.messages[selected]);
+            menu_delete_and_update(messages_list.messages[selected]);
             break;
         }
     }
@@ -446,130 +380,75 @@ void menu_discussion()
     show_cursor();
 }
 
-void menu_delete_update(message_t message)
+void menu_delete_and_update(message_t m)
 {
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
     int selected = 0;
+    int entered = 0;
     int key;
 
-    while (running) {
-        set_raw_mode();
-        hide_cursor();
+    set_raw_mode();
+    hide_cursor();
+    while (running && !entered) {
         clear_term();
+        display_message(m, 1, 1);
 
-        display_message(message, 1, 1);
-        goto_print(2, w.ws_row - 4, selected == 0 ? "> Modify Message" : "  Modify Message");
-        goto_print(2, w.ws_row - 2, selected == 1 ? "> Delete Message" : "  Delete Message");
+        style_printf(BOLD, "\n   Delete or Update Message");
+
+        display_line();
+
+        char* options[] = { "Delete", "Update", "Cancel" };
+        int options_count = 3;
+
+        for (int i = 0; i < options_count; i++) {
+            if (selected == i) {
+                color_printf(CYAN, "   ● ");
+            } else {
+                printf("   ○ ");
+            }
+
+            printf("%s\n", options[i]);
+        }
 
         key = get_arrow_key();
         switch (key) {
         case 'U':
-            if (selected > 0) {
-                selected--;
-            }
+            selected = (selected - 1 + options_count) % options_count;
             break;
         case 'D':
-            if (selected < 1) {
-                selected++;
-            }
+            selected = (selected + 1) % options_count;
             break;
         case '\n':
-            if (selected == 0) {
-                clear_term();
-                char new_message[LARGE_CHAR_SIZE] = { 0 };
-                printf("Enter the new message (Ctrl+D to send, Backspace to delete):\n");
-                write_message(new_message);
-
-                response = send_uptade_message(sock, connected_user.api_token, message.id, new_message);
-
-                if (response->status.code == 200) {
-                    printf("Message successfully updated.\n");
-                } else {
-                    printf("Failed to update the message. Response: %d %s\n", response->status.code, response->status.message);
-                }
-            } else if (selected == 1) {
-
-                response = send_delete_message(sock, connected_user.api_token, message.id);
-                if (response->status.code == 200) {
-                    printf("Message successfully deleted.\n");
-                } else {
-                    printf("Failed to delete the message. Response: %d %s\n", response->status.code, response->status.message);
-                }
-                reset_terminal_mode();
-                show_cursor();
-                return;
-            }
+            entered = 1;
             break;
-        case 'C':
-            reset_terminal_mode();
-            show_cursor();
-            return;
         }
     }
 
     reset_terminal_mode();
     show_cursor();
-}
 
-void menu_delete_message()
-{
-    clear_term();
-    menu_t delete_message_menu;
-    int selected_index = -1;
-    int offset = 0;
-    const int limit = 5;
-    message_list_t messages;
-
-    printf("\nDelete a Message\n");
-    strcpy(delete_message_menu.name, "Select a Message to Delete");
-    while (1) {
-        messages = db_get_messages_by_sender(conn, connected_user.id, offset, limit);
-
-        if (messages.count == 0) {
-            printf("No more messages to display.\n");
-            break;
+    if (selected == 0) {
+        response = send_delete_message(sock, &connected_user.api_token, m.id);
+        if (response->status.code == 200) {
+            printf("Message successfully deleted.\n");
+        } else {
+            printf("Failed to delete the message. Response: %d %s\n", response->status.code, response->status.message);
         }
+    } else if (selected == 1) {
+        char new_content[LARGE_CHAR_SIZE] = { 0 };
+        cs_printf(NO_COLOR, BOLD, "Write the new content of the message:\n");
+        write_message(new_content);
 
-        delete_message_menu.actions = malloc((messages.count + 2) * sizeof(menu_action_t));
-        delete_message_menu.actions_count = messages.count + 2;
-
-        for (int i = 0; i < messages.count; i++) {
-            strcpy(delete_message_menu.actions[i].name, messages.messages[i].content);
+        response = send_uptade_message(sock, &connected_user.api_token, m.id, &new_content);
+        if (response->status.code == 200) {
+            printf("Message successfully updated.\n");
+        } else {
+            printf("Failed to update the message. Response: %d %s\n", response->status.code, response->status.message);
         }
-
-        strcpy(delete_message_menu.actions[messages.count].name, "Next Page");
-
-        strcpy(delete_message_menu.actions[messages.count + 1].name, "Previous Page");
-
-        selected_index = display_menu(delete_message_menu);
-
-        if (selected_index < messages.count) {
-            int message_id = messages.messages[selected_index].id;
-
-            response = send_delete_message(sock, connected_user.api_token, message_id);
-
-            if (response->status.code == 200) {
-                printf("Message successfully deleted.\n");
-            } else {
-                printf("Failed to delete the message. Response: %d %s\n", response->status.code, response->status.message);
-            }
-            free(delete_message_menu.actions);
-            free(messages.messages);
-            break;
-        } else if (selected_index == messages.count) {
-
-            offset += limit;
-        } else if (selected_index == messages.count + 1 && offset > 0) {
-            offset -= limit;
-        }
-
-        free(delete_message_menu.actions);
-        free(messages.messages);
     }
 }
-
 void menu_display_unread_messages()
 {
     clear_term();
