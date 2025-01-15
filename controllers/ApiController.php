@@ -556,9 +556,6 @@ class ApiController extends Controller
      *
      * Params :
      *
-     *
-     *
-     *
      */
     public function notifications(Request $request, Response $response)
     {
