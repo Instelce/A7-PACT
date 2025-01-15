@@ -355,15 +355,17 @@ int main(int argc, char* argv[])
                             db_delete_message(conn, atoi(get_command_param_value(command, "message-id")));
 
                             send_response(sock_conn, STATUS_OK, "message", "Message supprimé avec succès", NULL);
-                        } else if (strcmp(command.name, IS_CONNECTED) == 0) {
-                            int user_id = atoi(get_command_param_value(command, "user-id"));
+                        } 
+                        // else if (strcmp(command.name, IS_CONNECTED) == 0) {
+                        //     int user_id = atoi(get_command_param_value(command, "user-id"));
 
-                            if (client_connected(user_id)) {
-                                send_response(sock_conn, STATUS_OK, "message", "Utilisateur connecté", NULL);
-                            } else {
-                                send_response(sock_conn, STATUS_DENIED, "message", "Utilisateur non connecté", NULL);
-                            }
-                        } else {
+                        //     if (client_connected(user_id)) {
+                        //         send_response(sock_conn, STATUS_OK, "message", "Utilisateur connecté", NULL);
+                        //     } else {
+                        //         send_response(sock_conn, STATUS_DENIED, "message", "Utilisateur non connecté", NULL);
+                        //     }
+                        // } 
+                        else {
                         }
                     } else {
                         send_response(sock_conn, STATUS_DENIED, "message", "Action non autorisée", NULL);
@@ -546,6 +548,8 @@ int parse_command(char command_str[], command_t* command)
             strncat(line, &c, 1);
         } else {
             trim(line);
+
+            printf("Line: %s\n", line);
 
             if (!command_exist(line)) {
                 return -1;

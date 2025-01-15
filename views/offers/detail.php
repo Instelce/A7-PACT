@@ -459,8 +459,8 @@ $latitude = $offer->address()->latitude;
     </aside>
 </div>
 
-<?php if (Application::$app->user->isMember()) { ?>
-    <!-- Tchatator interface -->
+<!-- Tchatator interface -->
+<?php if (Application::$app->userType === 'member') { ?>
     <div class="chat-container">
         <button class="chat-trigger button gray only-icon">
             <i data-lucide="message-circle"></i>
@@ -472,7 +472,7 @@ $latitude = $offer->address()->latitude;
             </div>
 
             <label for="message-content" class="hidden">Message</label>
-            <textarea id="message-content" cols="30" rows="5"></textarea>
+            <textarea id="message-content" class="message-content" cols="30" rows="5"></textarea>
             <button class="send-button">
                 <i data-lucide="send"></i>
             </button>

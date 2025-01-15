@@ -562,7 +562,7 @@ class ApiController extends Controller
      */
     public function notifications(Request $request, Response $response)
     {
-        $nofications = Notification::find(['user_id' => Application::$app->user->account_id]);
-        return $this->json($nofications);
+       $nofications = Notification::find(['user_id' => Application::$app->user->account_id]);
+       return $this->json($nofications);
     }
 }
