@@ -71,7 +71,7 @@ void db_update_message(PGconn* conn, message_t* message);
 void db_delete_message(PGconn* conn, int message_id);
 message_list_t db_get_messages_by_sender(PGconn* conn, int sender_id, int offset, int limit);
 message_list_t db_get_unread_messages(PGconn* conn, int receiver_id, int offset, int limit);
-message_list_t db_get_latest_user_messages(PGconn* conn, int user_id, int offset, int limit);
+message_list_t db_get_messages_between_users(PGconn* conn, int user1, int user2, int offset, int limit);
 user_list_t db_get_all_receiver_users_of_user(PGconn* conn, int user_id);
 
 #endif // DATABASE_H

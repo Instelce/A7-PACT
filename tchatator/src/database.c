@@ -197,20 +197,14 @@ void db_create_message(PGconn* conn, message_t* message)
     PGresult* res;
     char query[256];
 
-    sprintf(query, "INSERT INTO message (sended_date, modified_date, sender_id, receiver_id, deleted, seen, content) VALUES ('%s', '%s', %d, %d, '%s', '%s', '%s')",
-        message->sended_date, message->modified_date, message->sender_id, message->receiver_id, db_bool(message->deleted), db_bool(message->seen), message->content);
-
-    // printf("%s\n", query);
+    sprintf(query, "INSERT INTO message (sended_date, modified_date, sender_id, receiver_id, deleted, seen, content) VALUES ('%s', NULL, %d, %d, '%s', '%s', '%s')",
+        message->sended_date, message->sender_id, message->receiver_id, db_bool(message->deleted), db_bool(message->seen), message->content);
 
     res = PQexec(conn, query);
-
-    // printf("%s\n", PQresultErrorMessage(res));
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         db_error(conn, "Error when creating message");
     }
-
-    // printf("Last inserted ID: %d\n", db_last_id(conn, "message"));
 
     message->id = db_last_id(conn, "message");
 
@@ -393,12 +387,12 @@ user_list_t db_get_professionals(PGconn* conn, int offset, int limit)
    return user_list;
 }
 
-message_list_t db_get_latest_user_messages(PGconn* conn, int user_id, int offset, int limit) {
+message_list_t db_get_messages_between_users(PGconn* conn, int user1, int user2, int offset, int limit) {
     PGresult* res;
     message_list_t messages_list;
     char query[CHAR_SIZE];
 
-    sprintf(query, "SELECT id, sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE (sender_id = %d OR receiver_id = %d) AND deleted = false ORDER BY sended_date DESC LIMIT %d OFFSET %d", user_id, user_id, limit, offset);
+    sprintf(query, "SELECT id, sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE ((sender_id = %d AND receiver_id = %d) OR (sender_id = %d AND receiver_id = %d)) AND deleted = false ORDER BY sended_date DESC LIMIT %d OFFSET %d", user1, user2, user2, user1, limit, offset);
 
     res = PQexec(conn, query);
 
