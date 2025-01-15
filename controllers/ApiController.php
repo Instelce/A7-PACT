@@ -457,71 +457,71 @@ class ApiController extends Controller
         return $response->json([]);
     }
 
-    /**
-     * Notifications
-     *
-     * Params :
-     *
-     *
-     *
-     *
-     */
-    public function notifications(Request $request, Response $response, $routeParams)
-    {
-
-        //private $notificationModel;
-
-        public function __construct()
-        {
-            $this->notificationModel = new Notifications();
-        }
-
-        public function createNotification($userId, $content)
-        {
-            try {
-                $this->notificationModel->createNotification($userId, $content);
-                return [
-                    'status' => 'success',
-                    'message' => 'Notification créée avec succès.'
-                ];
-            } catch (\Exception $e) {
-                return [
-                    'status' => 'error',
-                    'message' => 'Erreur : ' . $e->getMessage()
-                ];
-            }
-        }
-
-        public function markAsRead($notificationId)
-        {
-            try {
-                $this->notificationModel->markAsRead($notificationId);
-                return [
-                    'status' => 'success',
-                    'message' => 'Notification marquée comme lue.'
-                ];
-            } catch (\Exception $e) {
-                return [
-                    'status' => 'error',
-                    'message' => 'Erreur : ' . $e->getMessage()
-                ];
-            }
-        }
-
-        public function getUnreadNotifications($userId)
-        {
-            try {
-                $notifications = $this->notificationModel->getUnreadNotifications($userId);
-                return [
-                    'status' => 'success',
-                    'data' => $notifications
-                ];
-            } catch (\Exception $e) {
-                return [
-                    'status' => 'error',
-                    'message' => 'Erreur : ' . $e->getMessage()
-                ];
-            }
-        }
-    }
+//    /**
+//     * Notifications
+//     *
+//     * Params :
+//     *
+//     *
+//     *
+//     *
+//     */
+//    public function notifications(Request $request, Response $response, $routeParams)
+//    {
+//
+//        //private $notificationModel;
+//
+//        public function __construct()
+//        {
+//            $this->notificationModel = new Notifications();
+//        }
+//
+//        public function createNotification($userId, $content)
+//        {
+//            try {
+//                $this->notificationModel->createNotification($userId, $content);
+//                return [
+//                    'status' => 'success',
+//                    'message' => 'Notification créée avec succès.'
+//                ];
+//            } catch (\Exception $e) {
+//                return [
+//                    'status' => 'error',
+//                    'message' => 'Erreur : ' . $e->getMessage()
+//                ];
+//            }
+//        }
+//
+//        public function markAsRead($notificationId)
+//        {
+//            try {
+//                $this->notificationModel->markAsRead($notificationId);
+//                return [
+//                    'status' => 'success',
+//                    'message' => 'Notification marquée comme lue.'
+//                ];
+//            } catch (\Exception $e) {
+//                return [
+//                    'status' => 'error',
+//                    'message' => 'Erreur : ' . $e->getMessage()
+//                ];
+//            }
+//        }
+//
+//        public function getUnreadNotifications($userId)
+//        {
+//            try {
+//                $notifications = $this->notificationModel->getUnreadNotifications($userId);
+//                return [
+//                    'status' => 'success',
+//                    'data' => $notifications
+//                ];
+//            } catch (\Exception $e) {
+//                return [
+//                    'status' => 'error',
+//                    'message' => 'Erreur : ' . $e->getMessage()
+//                ];
+//            }
+//        }
+//    }
 }

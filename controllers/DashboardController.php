@@ -108,12 +108,14 @@ class DashboardController extends Controller
         $user = Application::$app->user;
         $professional = $user->specific();
 
+
         //PROFESSIONAL DATA
         $professionalAddress = Address::findOneByPk($user->address_id);
 
         //PAYMENT DATA
         $subscription = $offer->monthSubscriptions();
         $type = $offer->type();
+
 
         $download = false;
         if ($request->isGet() && $request->getQueryParams('download') === 'true') {
