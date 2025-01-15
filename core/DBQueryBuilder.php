@@ -103,13 +103,11 @@ class DBQueryBuilder
                 if (str_contains($attr, '__')) {
                     $attrName = str_replace('__', '.', $attr);
                     $modelName = implode('', array_map(fn($part) => ucfirst($part), explode('_', explode('__', $attr)[0])));
-
                     return "LOWER($attrName) LIKE :$attr";
                 } else {
-                    if (str_contains($attr, 'created_at')) {
-                        return "LOWER(cast($tableName.$attr as TEXT)) LIKE :$attr";
+                    if (str_contains($attr, 'created_at') || str_contains($attr, 'launch_date')) {
+                        return "LOWER(CAST($tableName.$attr AS TEXT)) LIKE :$attr";
                     }
-
                     return "LOWER($tableName.$attr) LIKE :$attr";
                 }
             }, array_keys($this->search)));

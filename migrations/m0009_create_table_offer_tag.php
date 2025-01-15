@@ -11,7 +11,7 @@ class m0009_create_table_offer_tag
             id SERIAL PRIMARY KEY,
             name VARCHAR(50) NOT NULL
         );
-
+    
         CREATE TABLE offer_is_tagged (
             id SERIAL PRIMARY KEY,
             
