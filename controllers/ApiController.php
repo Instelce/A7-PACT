@@ -8,6 +8,8 @@ use app\core\Request;
 use app\core\Response;
 use app\models\account\AnonymousAccount;
 use app\models\account\UserAccount;
+use app\models\Message;
+use app\models\Notification;
 use app\models\offer\Offer;
 use app\models\offer\OfferType;
 use app\models\offer\schedule\OfferSchedule;
@@ -45,6 +47,7 @@ class ApiController extends Controller
             return $response->json(['error' => 'Not authenticated']);
         }
         $user = Application::$app->user->toJson();
+        $user['type'] = Application::$app->userType;
         unset($user['password']);
         return $response->json($user);
     }
@@ -270,6 +273,13 @@ class ApiController extends Controller
         return $response->json($data);
     }
 
+    public function offer(Request $request, Response $response, $routeParams) {
+        $pk = $routeParams['pk'];
+        $offer = Offer::findOneByPk($pk);
+
+        return $this->json($offer);
+    }
+
     /**
      * Get the opinions of an offer
      *
@@ -457,71 +467,32 @@ class ApiController extends Controller
         return $response->json([]);
     }
 
-//    /**
-//     * Notifications
-//     *
-//     * Params :
-//     *
-//     *
-//     *
-//     *
-//     */
-//    public function notifications(Request $request, Response $response, $routeParams)
-//    {
-//
-//        //private $notificationModel;
-//
-//        public function __construct()
-//        {
-//            $this->notificationModel = new Notifications();
-//        }
-//
-//        public function createNotification($userId, $content)
-//        {
-//            try {
-//                $this->notificationModel->createNotification($userId, $content);
-//                return [
-//                    'status' => 'success',
-//                    'message' => 'Notification créée avec succès.'
-//                ];
-//            } catch (\Exception $e) {
-//                return [
-//                    'status' => 'error',
-//                    'message' => 'Erreur : ' . $e->getMessage()
-//                ];
-//            }
-//        }
-//
-//        public function markAsRead($notificationId)
-//        {
-//            try {
-//                $this->notificationModel->markAsRead($notificationId);
-//                return [
-//                    'status' => 'success',
-//                    'message' => 'Notification marquée comme lue.'
-//                ];
-//            } catch (\Exception $e) {
-//                return [
-//                    'status' => 'error',
-//                    'message' => 'Erreur : ' . $e->getMessage()
-//                ];
-//            }
-//        }
-//
-//        public function getUnreadNotifications($userId)
-//        {
-//            try {
-//                $notifications = $this->notificationModel->getUnreadNotifications($userId);
-//                return [
-//                    'status' => 'success',
-//                    'data' => $notifications
-//                ];
-//            } catch (\Exception $e) {
-//                return [
-//                    'status' => 'error',
-//                    'message' => 'Erreur : ' . $e->getMessage()
-//                ];
-//            }
-//        }
-//    }
+    public function messages(Request $request, Response $response, $routeParams)
+    {
+        $receiverPk = $routeParams['receiver_pk'];
+        $messagesSended = Message::find(['receiver_id' => $receiverPk, 'sender_id' => Application::$app->user->account_id, 'deleted' => 'false']);
+        $messagesReceived = Message::find(['receiver_id' => Application::$app->user->account_id, 'sender_id' => $receiverPk, 'deleted' => 'false']);
+
+        $messages = array_merge($messagesSended, $messagesReceived);
+        usort($messages, function($a, $b) {
+            return $a->sended_date > $b->sended_date;
+        });
+
+        return $this->json($messages);
+    }
+
+    /**
+     * Notifications
+     *
+     * Params :
+     *
+     *
+     *
+     *
+     */
+    public function notifications(Request $request, Response $response)
+    {
+       $nofications = Notification::find(['user_id' => Application::$app->user->account_id]);
+       return $this->json($nofications);
+    }
 }

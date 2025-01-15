@@ -169,7 +169,7 @@
 }
 
 /* Notifications */
-.notifications .notifications-content{
+.notification .notification-container{
     width: fit-content;
     position: absolute;
     overflow: hidden;
@@ -185,7 +185,7 @@
     transition: opacity .2s ease, transform .2s ease;
 }
 
-.notifications .notifications-content::before {
+.notification .notification-container::before {
     content: "";
     position: absolute;
     width: 10px;
@@ -200,13 +200,13 @@
     transform: translateY(-50%) rotate(45deg);
 }
 
-.notifications-content.open{
+.notification-container.open{
     opacity: 1;
     pointer-events: auto;
     transform: translateY(calc(100% + .5rem)) translateX(-75%);
 }
 
-.notifications .notifications-content a {
+.notification .notification-container a {
     width: 100%;
     padding: .8rem 1rem;
 
@@ -220,8 +220,12 @@
     transition: background-color .2s ease;
 }
 
-.notifications .notifications-icon{
+.notification .notification-icon{
     cursor: pointer;
+}
+
+.hidden{
+    display: none;
 }
 
 /* Avatar */

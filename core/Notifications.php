@@ -26,7 +26,7 @@ class Notifications
 
     public function getUnreadNotifications($userId)
     {
-        $notification = Notification::find()->where(['read' => false])->andWhere(['user_id' => $userId])->all();
+        $notification = Notification::find()->where(['is_read' => false])->andWhere(['user_id' => $userId])->all();
         return $notification;
     }
 }

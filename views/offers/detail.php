@@ -458,3 +458,25 @@ $latitude = $offer->address()->latitude;
         <?php } ?>
     </aside>
 </div>
+
+<?php if (Application::$app->user->isMember()) { ?>
+    <!-- Tchatator interface -->
+    <div class="chat-container">
+        <button class="chat-trigger button gray only-icon">
+            <i data-lucide="message-circle"></i>
+        </button>
+
+        <div class="chat">
+            <!-- Generated in JS -->
+            <div class="messages-container">
+            </div>
+
+            <label for="message-content" class="hidden">Message</label>
+            <textarea id="message-content" cols="30" rows="5"></textarea>
+            <button class="send-button">
+                <i data-lucide="send"></i>
+            </button>
+        </div>
+    </div>
+<?php } ?>
+

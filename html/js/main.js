@@ -64,9 +64,92 @@ if (navbar && heightTop) {
     heightTop.style.height = navbar.offsetHeight + 'px';
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // Notifications
-const notificationsButton = document.querySelector('.notifications .notifications-icon');
-const notificationsContent = document.querySelector('.notifications .notifications-content');
+document.addEventListener("DOMContentLoaded", () => {
+    const notificationIcon = document.querySelector('.notification .notification-icon');
+    const notificationContainer = document.querySelector('.notification .notification-container');
+    const iconDefault = document.getElementById("icon-default");
+    const iconAlert = document.getElementById("icon-alert");
+    const notificationApiUrl = "/api/notifications";
+
+    // Fonction pour vérifier les notifications
+    async function checkNotification() {
+        try {
+            const response = await fetch(notificationApiUrl);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.notification && data.notification.length > 0) {
+                iconDefault.classList.add("hidden");
+                iconAlert.classList.remove("hidden");
+            } else {
+                iconDefault.classList.remove("hidden");
+                iconAlert.classList.add("hidden");
+            }
+        } catch (error) {
+            console.error("Erreur:", error);
+        }
+    }
+
+    // Fonction pour charger les notifications
+    async function loadNotification() {
+        try {
+            const response = await fetch(notificationApiUrl);
+            const data = await response.json();
+
+            if (data.notification && data.notification.length > 0) {
+                notificationContainer.innerHTML = data.notification
+                    .map((notif) => `<div>${notif.message}</div>`)
+                    .join("");
+            } else {
+                notificationContainer.innerHTML = "<div><p>Aucune notifications</p></div>";
+            }
+
+            notificationContainer.style.display = "block";
+            iconDefault.classList.remove("hidden");
+            iconAlert.classList.add("hidden");
+        } catch (error) {
+            console.error("Erreur:", error);
+        }
+    }
+
+    // Gérer le clic sur l'icône de notification
+    notificationIcon.addEventListener("click", () => {
+        if (!iconAlert.classList.contains("hidden")) {
+            loadNotification();
+        } else {
+            notificationContainer.innerHTML = "<div><p>Aucune notifications</p></div>";
+            notificationContainer.style.display = "block";
+        }
+    });
+
+    // Cacher le conteneur de notifications quand on clique ailleurs
+    document.addEventListener("click", (event) => {
+        if (!notificationIcon.contains(event.target)) {
+            notificationContainer.style.display = "none";
+        }
+    });
+
+    // Rafraîchir les notifications toutes les 5 secondes
+    setInterval(checkNotification, 5000);
+
+    // Vérification initiale
+    checkNotification();
+});
+
+
+/*const notificationsButton = document.querySelector('.notification .notification-icon');
+const notificationsContent = document.querySelector('.notification .notification-content');
 
 if (notificationsButton && notificationsContent) {
     notificationsButton.addEventListener('click', function () {
@@ -80,6 +163,67 @@ if (notificationsButton && notificationsContent) {
         }
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const notificationsContainer = document.getElementById("notifications-container");
+
+    // Fonction pour récupérer les notifications
+    const fetchNotifications = async () => {
+        try {
+            const response = await fetch("/notifications/fetch");
+            const data = await response.json();
+
+            if (data.status === "success") {
+                renderNotifications(data.notifications);
+            } else {
+                console.error("Erreur lors de la récupération des notifications :", data.message);
+            }
+        } catch (error) {
+            console.error("Erreur réseau :", error);
+        }
+    };
+
+    // Fonction pour afficher les notifications
+    const renderNotifications = (notifications) => {
+        if (notifications.length === 0) {
+            notificationsContainer.innerHTML = `
+                <div class="notifications-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+                </div>
+                <p>Aucune notification</p>
+            `;
+            return;
+        }
+
+        let html = `
+            <div class="notifications-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-dot"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M13.916 2.314A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.74 7.327A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673 9 9 0 0 1-.585-.665"/><circle cx="18" cy="8" r="3" fill="red" stroke="red"/></svg>
+            </div>
+            <div class="notifications-content">
+        `;
+
+        notifications.forEach(notification => {
+            html += `
+                <div class="notification ${notification.is_read ? 'read' : 'unread'}">
+                    ${notification.content}
+                    <small>Reçu le : ${notification.send_at}</small>
+                </div>
+            `;
+        });
+
+        html += `</div>`;
+        notificationsContainer.innerHTML = html;
+    };
+
+    // Actualiser toutes les 5 secondes
+    setInterval(fetchNotifications, 5000);
+});*/
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 // Avatar
 const avatarButton = document.querySelector('.avatar .image-container');
