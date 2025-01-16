@@ -36,6 +36,7 @@ $app->router->get('/', [SiteController::class, 'home']);
 $app->router->post('/', [SiteController::class, 'home']);
 $app->router->get('/storybook', [SiteController::class, 'storybook']);
 $app->router->get('/recherche', [SiteController::class, 'research']);
+$app->router->get('/conditions', [SiteController::class, 'termofuse']);
 
 // Offer routes
 $app->router->get('/offres/creation', [OfferController::class, 'create']);
