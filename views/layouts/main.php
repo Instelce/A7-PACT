@@ -277,11 +277,10 @@ use app\core\Application;
                 <div class="flex flex-col gap-1">
                     <p>@ 2024 PACT Tous droits réservés.</p>
                     <div id="links">
-                        <a class="link small" href="">Conditions d'utilisation</a>
-                        <a class="link small" href="">Confidentialité et
-                            utilisation des cookies</a>
+                        <a class="link small" href="/conditions">Conditions d'utilisation</a>
+                        <a class="link small" href="/mentions">Mentions légales</a>
                         <a class="link small" href="">Plan du site</a>
-                        <a class="link small" href="">Contactez-nous</a>
+                        <a class="link small" href="/conditions">Contactez-nous</a>
                     </div>
                 </div>
             </div>

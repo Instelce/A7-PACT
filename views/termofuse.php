@@ -10,6 +10,7 @@ $titre4 = '####';
 $titre5 = '#####';
 $tiret = '-';
 $grandtiret = '---';
+$parti = '----';
 $ex = '!';
 $cro = "[";
 $lignevide = ' ';
@@ -54,6 +55,12 @@ if (file_exists($markdownFile)) {
             echo "<h1 class=\"heading-1 font-title\">" . trim(substr($ligne, strlen($titre))) . "</h1>\n";
             continue;
         }
+
+        // Traitement des espaces (parties)
+        if (substr($ligne, 0, strlen($parti)) === $parti) {
+            echo "<hr>" . trim(substr($ligne, strlen($parti)));
+            continue;
+        }
     
         // Traitement des espaces (grands tirets)
         if (substr($ligne, 0, strlen($grandtiret)) === $grandtiret) {
@@ -63,9 +70,21 @@ if (file_exists($markdownFile)) {
 
         // Traitement des tirets
         if (substr($ligne, 0, strlen($tiret)) === $tiret) {
-            echo "<li>" . trim(substr($ligne, strlen($tiret))) . "</li>\n";
+            echo "<li>";
+            $ligne = preg_replace_callback(
+                "/\[(.*?)\]\((.*?)\)/",
+                function ($matches) {
+                    $texte = htmlentities($matches[1]);
+                    $lien = htmlentities($matches[2]);
+                    return "<a href='$lien'>$texte</a>";
+                },
+                htmlspecialchars($ligne) // Transformation HTML pour les caractères spéciaux
+            );
+            echo trim(substr($ligne, strlen($tiret))) . "</li>\n";
             continue;
         }
+
+        
     
         // Traitement des liens simples
         if (substr($ligne, 0, strlen($cro)) === $cro) {
