@@ -39,7 +39,8 @@
         "unordered_map": "c",
         "unordered_set": "c",
         "utils.h": "c",
-        "protocol.h": "c"
+        "protocol.h": "c",
+        "string.h": "c"
     },
     "C_Cpp.clang_format_fallbackStyle": "WebKit",
 }
