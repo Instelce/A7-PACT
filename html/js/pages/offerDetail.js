@@ -331,9 +331,15 @@ function createOpinionCard(opinion) {
     console.log(opinion.rating);
 
     // Calculate the date
-    let date = new Date(opinion.created_at);
     let currentDate = new Date();
+
+    let date = new Date(opinion.created_at);
     let diff = currentDate - date;
+
+    let replyDate = new Date(opinion.reply.created_at);
+    let replyDiff = currentDate - replyDate;
+
+
 
     let years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
     let months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
@@ -341,18 +347,44 @@ function createOpinionCard(opinion) {
     let days = Math.floor(diff / (1000 * 60 * 60 * 24));
     let hours = Math.floor(diff / (1000 * 60 * 60));
 
+    let yearsReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24 * 365));
+    let monthsReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24 * 30));
+    let weeksReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24 * 7));
+    let daysReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24));
+    let hoursReply = Math.floor(replyDiff / (1000 * 60 * 60));
+
     let dateText = '';
+
+    let dateReply = '';
 
     if (years > 0) {
         dateText = `${years}a`;
     } else if (months > 0) {
-        dateText = `${months}m`;
+        dateText = `${months}mo`;
     } else if (weeks > 0) {
         dateText = `${weeks}sem`;
     } else if (days > 0) {
         dateText = `${days}j`;
     } else if (hours > 0) {
         dateText = `${hours}h`;
+    }
+
+    let minutesReply = Math.floor(replyDiff / (1000 * 60));
+
+    if (yearsReply > 0) {
+        dateReply = `${yearsReply}a`;
+    } else if (monthsReply > 0) {
+        dateReply = `${monthsReply}mo`;
+    } else if (weeksReply > 0) {
+        dateReply = `${weeksReply}sem`;
+    } else if (daysReply > 0) {
+        dateReply = `${daysReply}j`;
+    } else if (hoursReply > 0) {
+        dateReply = `${hoursReply}h`;
+    } else if (minutesReply > 0) {
+        dateReply = `${minutesReply}min`;
+    } else {
+        dateReply = `moins d'une minute`;
     }
 
     // Photos
@@ -394,14 +426,14 @@ function createOpinionCard(opinion) {
                         </div>
                     </div>
                 </div>
-                <button class="opinion-card button gray border-none spaced flex flex-row gap-1">
+                <button class="report-card button gray spaced flex flex-row gap-1" title="Signaler cet avis">
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>                  
                 </button>
             </div>
             <div class="buttons"></div>
         </header>
         
-        <div class="flex flex-col gap-1 mb-4"> 
+        <div class="flex flex-col gap-1 mb-4">                
             <!-- Title -->
             <h3 class="heading-2 font-title">${opinion.title}</h3>
     
@@ -413,19 +445,56 @@ function createOpinionCard(opinion) {
         
         <div class="flex flex-row gap-2 ">
             <div class="like-button flex flex-row gap-1 items-center">
-                <button class="button gray spaced flex flex-row gap-1" id="opinion-likes">
+                <button class="button gray spaced flex flex-row gap-1" id="opinion-likes" title="Liker l'avis">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-up"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
                 </button>
                 <p>${opinion.likes}</p>
             </div>
 
             <div class="dislike-button flex flex-row gap-1 items-center">
-                <button class="button gray spaced flex flex-row gap-1" id="opinion-dislikes">
+                <button class="button gray spaced flex flex-row gap-1" id="opinion-dislikes" title="Disliker l'avis">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-thumbs-down"> <path d="M17 14V2"/> <path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></svg>                
                 </button>
                 <p>${opinion.dislikes}</p>
             </div>
         </div>
+        
+        <br>
+        <hr class="reply-hr">
+        
+        <div class="reply-text">
+            <svg width="24" height="33" viewBox="0 0 24 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.42653 26.8909L2.83276 26.5994H2.83276L2.42653 26.8909ZM6.3284 29V28.5H6.32768L6.3284 29ZM23.3536 29.3536C23.5488 29.1583 23.5488 28.8417 23.3536 28.6464L20.1716 25.4645C19.9763 25.2692 19.6597 25.2692 19.4645 25.4645C19.2692 25.6597 19.2692 25.9763 19.4645 26.1716L22.2929 29L19.4645 31.8284C19.2692 32.0237 19.2692 32.3403 19.4645 32.5355C19.6597 32.7308 19.9763 32.7308 20.1716 32.5355L23.3536 29.3536ZM1.00767 20.5636L1.50708 20.5879L1.50767 20.5758V20.5636H1.00767ZM2.0203 27.1824C2.85448 28.3449 3.92906 28.9244 4.78714 29.2118C5.21586 29.3553 5.5935 29.4272 5.8664 29.4632C6.0031 29.4813 6.11428 29.4905 6.1934 29.4951C6.23298 29.4975 6.26461 29.4987 6.28748 29.4993C6.29892 29.4996 6.30817 29.4998 6.31514 29.4999C6.31863 29.4999 6.32154 29.5 6.32387 29.5C6.32504 29.5 6.32606 29.5 6.32693 29.5C6.32737 29.5 6.32777 29.5 6.32813 29.5C6.32831 29.5 6.32856 29.5 6.32865 29.5C6.32888 29.5 6.32911 29.5 6.3284 29C6.32768 28.5 6.32789 28.5 6.32809 28.5C6.32814 28.5 6.32833 28.5 6.32844 28.5C6.32866 28.5 6.32884 28.5 6.32899 28.5C6.32928 28.5 6.32943 28.5 6.32945 28.5C6.32947 28.5 6.32894 28.5 6.32787 28.5C6.32571 28.5 6.32139 28.4999 6.31498 28.4997C6.30216 28.4994 6.28105 28.4986 6.25243 28.4969C6.19514 28.4935 6.10808 28.4865 5.9974 28.4718C5.77555 28.4425 5.46196 28.3832 5.10469 28.2635C4.39082 28.0245 3.51446 27.5494 2.83276 26.5994L2.0203 27.1824ZM6.3284 29.5H23V28.5H6.3284V29.5ZM0.507671 0V20.5636H1.50767V0H0.507671ZM1.00767 20.5636C0.508261 20.5394 0.508255 20.5395 0.508249 20.5396C0.508246 20.5397 0.508239 20.5398 0.508232 20.54C0.50822 20.5402 0.508204 20.5405 0.508186 20.5409C0.50815 20.5417 0.508103 20.5427 0.508045 20.544C0.507931 20.5465 0.507776 20.55 0.50759 20.5545C0.507216 20.5634 0.506713 20.5762 0.506143 20.5926C0.505003 20.6254 0.503594 20.6728 0.502413 20.7333C0.500052 20.8544 0.498598 21.0283 0.50205 21.2434C0.508945 21.673 0.535454 22.27 0.614156 22.9406C0.769297 24.2624 1.13553 25.9494 2.0203 27.1824L2.83276 26.5994C2.10059 25.5791 1.75739 24.1025 1.60734 22.824C1.53344 22.1944 1.50842 21.632 1.50192 21.2274C1.49868 21.0253 1.50007 20.8633 1.50222 20.7528C1.5033 20.6976 1.50457 20.6553 1.50554 20.6273C1.50603 20.6133 1.50644 20.6029 1.50672 20.5963C1.50685 20.593 1.50696 20.5906 1.50702 20.5892C1.50705 20.5885 1.50708 20.588 1.50709 20.5878C1.50709 20.5877 1.50709 20.5877 1.50709 20.5877C1.50709 20.5877 1.50709 20.5878 1.50709 20.5878C1.50709 20.5878 1.50708 20.5879 1.00767 20.5636Z" fill="#E1E1E1"/>
+            </svg>
+            <div class="flex flex-col gap-2">
+                <p class="reply-title">Réponse du professionnel &nbsp il y à ${dateReply}</p> 
+                <p class="reply-comment">${opinion.reply.comment}</p>
+            </div>
+        </div>
+      
+        <!-- Formulaire Report -->
+        <div class="dialog-container hide" data-dialog-name="">
+            <div class="dialog w-[50%]">
+                <header class="dialog-header">
+                    <h3 class="dialog-title">Confirmer le signalement</h3>
+                </header>
+    
+                <div class="dialog-content">
+                    <h2>Êtes-vous sûr de vouloir signaler ce commentaire ? </h2></br>
+                    <p>En le signalant, vous signalez qu'il enfreint les règles de notre plateforme.</p></br>
+                    <p>Veuillez noter : Abuser de cette fonctionnalité pour signaler abusivement des commentaires pourrait entraîner des sanctions sur votre compte.</p></br>
+    
+                    <div class="on-same-line grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mt-8">
+                        <button type="button" class="button gray confirm-button">
+                            Confirmer le signalement
+                        </button>
+                        <button type="button" class="button cancel-button">Annuler</button>
+                </div>
+            </div>
+        </div>
+        
+        
+
     `;
 
     // Likes buttons
@@ -525,15 +594,42 @@ function createOpinionCard(opinion) {
         }
     })
 
+    // Manage Replies
+    let replyText = card.querySelector('.reply-text');
+    let replyHr = card.querySelector(".reply-hr");
+
+    if (opinion.reply == false){
+        replyText.classList.add('hide');
+        replyHr.classList.add('hidden');
+    }
+
     // Manage reports
-    let reportButton = card.querySelector(".opinion-card");
+    let reportButton = card.querySelector(".report-card");
     let reportSvg = reportButton.querySelector('svg');
 
     reportButton.addEventListener("click", () => {
-        getReports(opinion.id);
+        const dialog = card.querySelector('.dialog-container');
+        dialog.classList.remove('hide');
+    });
+
+    let cancelButton = card.querySelector('.cancel-button');
+    cancelButton.addEventListener('click', () => {
+        const dialog = card.querySelector('.dialog-container');
+        dialog.classList.add('hide');
+    });
+
+    let confirmButton = card.querySelector('.confirm-button');
+    confirmButton.addEventListener('click', () => {
+        getReports(opinion.id); // Traiter le signalement
         reportSvg.setAttribute('fill', 'red');
         reportSvg.setAttribute('stroke', 'white');
-    })
+
+        reportButton.disabled = true;
+
+        const dialog = card.querySelector('.dialog-container');
+        dialog.classList.add('hide'); // Fermer la fenêtre après confirmation
+    });
+
     return card;
 }
 

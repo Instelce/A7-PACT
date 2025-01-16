@@ -182,6 +182,6 @@ class SiteController extends Controller
 
     public function testPdf()
     {
-        $this->pdf('super-pdf', 'test');
+        return $this->pdf('super-pdf', 'test');
     }
 }

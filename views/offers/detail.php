@@ -63,8 +63,7 @@ $latitude = $offer->address()->latitude;
                 <p>
                     <?php echo $offerData["category"] ?>
                     par
-                    <a href="/comptes/<?php echo $offerData["professionalId"] ?>"
-                        class="underline"><?php echo $offerData["author"] ?></a>
+                    <a href="/comptes/<?php echo $offerData["professionalId"] ?>" class="underline"><?php echo $offerData["author"] ?></a>
                 </p>
                 <!-- <span class="dot"></span> -->
                 <div class="flex gap-3 items-center">
@@ -266,8 +265,7 @@ $latitude = $offer->address()->latitude;
 
                 <!-- Visit context -->
                 <div class="flex flex-col gap-2 mb-2">
-                    <x-select id="opinion-context" name="visit_context" value="<?php echo $opinion->visit_context ?>"
-                        required>
+                    <x-select id="opinion-context" name="visit_context" value="<?php echo $opinion->visit_context ?>" required>
                         <label slot="label">Qui vous accompagnait ?</label>
                         <span slot="trigger">Choisir une option</span>
                         <div slot="options">
@@ -302,6 +300,7 @@ $latitude = $offer->address()->latitude;
                             <p>Faire glisser des fichiers pour les uploader</p>
                             <span class="button gray">Selectionner les fichier à uploader</span>
                         </label>
+
 
                         <!-- Photos -->
                         <div id="photos" class="flex flex-col gap-2">
@@ -358,11 +357,9 @@ $latitude = $offer->address()->latitude;
                                                 alt="<?php echo Application::$app->user->mail ?>">
                                         </div>
                                     </a>
-                                    <a href="/comptes/<?php echo Application::$app->user->account_id ?>"
-                                        class="user-name"><?php echo Application::$app->user->specific()->pseudo ?></a>
-                                    <p class="text-sm text-gray-4">Créer le
-                                        <?php echo Utils::formatDate($userOpinion->created_at) ?>
-                                    </p>
+                                    <a href="/comptes/<?php echo Application::$app->user->account_id ?>" class="user-name"><?php echo Application::$app->user->specific()->pseudo ?></a>
+                                    <p class="text-sm text-gray-4">Créer le <?php echo Utils::formatDate($userOpinion->created_at) ?></p>
+
                                 </div>
 
                                 <div class="buttons">
