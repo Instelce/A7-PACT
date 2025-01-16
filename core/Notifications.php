@@ -13,7 +13,7 @@ class Notifications
         $notification->content = "$content";
         $notification->reception_day = date("Y-m-d");
         $notification->send_at = date("Y-m-d H:i:s");
-        $notification->open_at = date("H:i");
+        $notification->open_at = date("Y-m-d H:i:s");
         $notification->save();
         return $notification;
     }
@@ -23,7 +23,6 @@ class Notifications
         $notification = Notification::findOne($id);
         $notification->is_read = 1;
         $notification->save();
-        return true;
     }
 
     public function getUnreadNotifications($userId)

@@ -55,6 +55,37 @@ class ApiController extends Controller
     }
 
     /**
+     * Get a user by its id
+     */
+    public function userDetail(Request $request, Response $response, $routeParams)
+    {
+        $pk = $routeParams['pk'];
+        $user = UserAccount::findOneByPk($pk)->toJson();
+
+        unset($user['password']);
+        unset($user['reset_password_hash']);
+        unset($user['api_token']);
+
+        // Get user name
+        $member = MemberUser::findOneByPk($pk);
+        if ($member) {
+            $user['name'] = $member->pseudo;
+        } else {
+            $professional = ProfessionalUser::findOneByPk($pk);
+            if ($professional) {
+                $user['name'] = $professional->denomination;
+            } else {
+                $anonymous = AnonymousAccount::findOneByPk($pk);
+                if ($anonymous) {
+                    $user['name'] = $anonymous->pseudo;
+                }
+            }
+        }
+
+        return $response->json($user);
+    }
+
+    /**
      * Get all the offers
      *
      * Params :
@@ -436,7 +467,7 @@ class ApiController extends Controller
         if ($action == "add") {
             $opinion->addLike();
 
-            Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liker votre avis : " . $opinion->title);
+            Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liké votre avis : " . $opinion->title);
 
         } else if ($action == "remove") {
             $opinion->removeLike();
@@ -480,7 +511,8 @@ class ApiController extends Controller
         return $response->json([]);
     }
 
-    public function opinionReply(Request $request, Response $response, $routeParams){
+    public function opinionReply(Request $request, Response $response, $routeParams)
+    {
         $opinionPk = $routeParams['opinion_pk'];
         $opinion = Opinion::findOneByPk($opinionPk);
 
@@ -515,36 +547,48 @@ class ApiController extends Controller
     // Return a list of user id with whom the user has a conversation
     public function conversations(Request $request, Response $response)
     {
+        function findData($message, $account_id, $conversations)
+        {
+            $user = UserAccount::findOneByPk($account_id);
+            if ($user) {
+                $member = MemberUser::findOneByPk($account_id);
+                $professionnal = ProfessionalUser::findOneByPk(pkValue: $account_id);
+                if ($member) {
+                    $conversations[] = [
+                        'account_id' => $account_id,
+                        'name' => $member->pseudo,
+                        'avatar_url' => $user->avatar_url,
+                        'last_message' => $message,
+                    ];
+                } else if ($professionnal) {
+                    $conversations[] = [
+                        'account_id' => $account_id,
+                        'name' => $professionnal->denomination,
+                        'avatar_url' => $user->avatar_url,
+                        'last_message' => $message,
+                    ];
+                } else {
+                    $conversations[] = [
+                        'account_id' => $account_id,
+                        'name' => null,
+                        'avatar_url' => $user->avatar_url,
+                        'last_message' => $message,
+                    ];
+                }
+            }
+            return $conversations;
+        }
+
         $messages = Message::find(['receiver_id' => Application::$app->user->account_id, 'deleted' => 'false']);
         $conversations = [];
+        $last_message = [];
         $i = [];
         foreach ($messages as $message) {
             if (!in_array($message->sender_id, $i)) {
                 $i[] = $message->sender_id;
-                $user = UserAccount::findOneByPk($message->sender_id);
-                if ($user) {
-                    $member = MemberUser::findOneByPk($message->sender_id);
-                    $professionnal = ProfessionalUser::findOneByPk(pkValue: $message->sender_id);
-                    if ($member) {
-                        $conversations[] = [
-                            'account_id' => $message->sender_id,
-                            'name' => $member->pseudo,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    } else if ($professionnal) {
-                        $conversations[] = [
-                            'account_id' => $message->sender_id,
-                            'name' => $professionnal->denomination,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    } else {
-                        $conversations[] = [
-                            'account_id' => $message->sender_id,
-                            'name' => null,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    }
-                }
+                $last_message[$message->sender_id] = $message;
+            } else if ($message->sended_date > $last_message[$message->sender_id]->sended_date) {
+                $last_message[$message->sender_id] = $message;
             }
         }
 
@@ -552,32 +596,23 @@ class ApiController extends Controller
         foreach ($messages as $message) {
             if (!in_array($message->receiver_id, $i)) {
                 $i[] = $message->receiver_id;
-                $user = UserAccount::findOneByPk($message->receiver_id);
-                if ($user) {
-                    $member = MemberUser::findOneByPk($message->receiver_id);
-                    $professionnal = ProfessionalUser::findOneByPk(pkValue: $message->receiver_id);
-                    if ($member) {
-                        $conversations[] = [
-                            'account_id' => $message->receiver_id,
-                            'name' => $member->pseudo,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    } else if ($professionnal) {
-                        $conversations[] = [
-                            'account_id' => $message->receiver_id,
-                            'name' => $professionnal->denomination,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    } else {
-                        $conversations[] = [
-                            'account_id' => $message->receiver_id,
-                            'name' => null,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    }
-                }
+                $last_message[$message->receiver_id] = $message;
+            } else if ($message->sended_date > $last_message[$message->receiver_id]->sended_date) {
+                $last_message[$message->receiver_id] = $message;
             }
         }
+
+        foreach ($last_message as $key => $value) {
+            $conversations = findData($value, $key, $conversations);
+        }
+
+        foreach ($conversations as $key => $value) {
+            unset($conversations[$key]['last_message']->errors);
+        }
+
+        usort($conversations, function ($a, $b) {
+            return $a['last_message']->sended_date < $b['last_message']->sended_date;
+        });
 
         return $response->json($conversations);
     }
@@ -586,6 +621,15 @@ class ApiController extends Controller
     {
         $notifications = Notification::find(['user_id' => Application::$app->user->account_id]);
         return $this->json($notifications);
+    }
+
+    public function notificationRead(Request $request, Response $response)
+    {
+        $notifications = Notification::find(['user_id' => Application::$app->user->account_id]);
+        foreach ($notifications as $notification) {
+            $notification->markAsRead();
+        }
+        return $response->json([]);
     }
 }
 

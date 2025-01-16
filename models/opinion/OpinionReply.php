@@ -24,7 +24,7 @@ class OpinionReply extends DBModel
 
     public function attributes(): array
     {
-        return["comment", "created_at", "opinion_id", 'opinion_reply_id'];
+        return["comment", "created_at", "opinion_id"];
     }
 
     public function rules(): array

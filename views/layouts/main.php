@@ -12,6 +12,7 @@ use app\core\Application;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title><?php echo $this->title ?> | PACT</title>
 
     <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon">
@@ -31,6 +32,8 @@ use app\core\Application;
 
 <body
     class="<?php echo Application::$app->isAuthenticated() ? Application::$app->user->isProfessional() ? 'professional-mode' : '' : '' ?>">
+
+    <input class="app-environment" value="<?php echo $_ENV['APP_ENVIRONMENT'] ?>">
 
     <div class="height-top"></div>
 
@@ -65,13 +68,13 @@ use app\core\Application;
             <?php } ?>
         </div>
         <div class="navbar-right">
-            <a href="/recherche" class="button gray icon-left icon-right no-border">
+            <a href="/recherche" class="button gray icon-left icon-right no-border hidden md:flex">
                 Recherche
                 <i data-lucide="search"></i>
             </a>
 
         <?php if (Application::$app->isAuthenticated()) { ?>
-            <button class="chat-trigger button gray icon-left icon-right no-border">
+            <button class="chat-trigger button gray icon-left icon-right no-border hidden md:flex">
                 <span>Messages</span>
                 <i data-lucide="message-circle"></i>
             </button>
@@ -159,7 +162,7 @@ use app\core\Application;
 
     <!-- Tchatator member client -->
     <?php if (Application::$app->userType === 'member') { ?>
-        <div class="chat-container top-navbar">
+        <div class="chat-container hidden top-navbar">
 
             <!-- All conversations -->
             <div class="chat-page conversations-page">
@@ -175,7 +178,13 @@ use app\core\Application;
             <!-- All messages with a user -->
             <div class="chat-page messages-page !hidden">
                 <header>
-                    <h2>Message</h2>
+                    <div class="recipient-info">
+                        <img src="" alt="" class="recipient-avatar">
+                        <p class="recipient-name"></p>
+                    </div>
+                    <button class="goto-conversations">
+                        <i data-lucide="x"></i>
+                    </button>
                 </header>
 
                 <!-- Generated in JS -->
@@ -223,6 +232,11 @@ use app\core\Application;
             class="<?php echo Application::$app->request->getPath() === "/recherche" ? "active" : "" ?>">
             <i data-lucide="search"></i>
             <span>Recherche</span>
+        </a>
+
+        <a class="chat-trigger">
+            <i data-lucide="message-circle"></i>
+            <span>Messages</span>
         </a>
 
         <!--    <a href="/avis" class="--><?php //echo Application::$app->request->getPath() === "/avis" ? "active" : "" ?>

@@ -12,12 +12,43 @@
 #include "log.h"
 #include "protocol.h"
 
+// ------------------------------------------------------------------
+// Structures
+// ------------------------------------------------------------------
+
+typedef enum {
+    NEW_MESSAGE,
+    MESSAGE_UPDATED,
+    MESSAGE_DELETED,
+    MESSAGE_SEEN,
+} change_type_t;
+
+typedef struct {
+    change_type_t type;
+
+    // User that the change is for
+    int for_user_id;
+    message_t message;
+} change_t;
+
+// Use by the server to store all the changes
+// during is lifetime
+typedef struct {
+    change_t* changes;
+    int count;
+} change_list_t;
+
 typedef struct {
     user_t user;
     ws_cli_conn_t conn;
     bool is_writing;
     int in_conversation_with; // user id
 } client_t;
+
+
+// ------------------------------------------------------------------
+// Global variables
+// ------------------------------------------------------------------
 
 PGconn* conn;
 
@@ -27,6 +58,65 @@ int clients_count;
 
 // All messages received by the server during the session
 message_list_t incoming_messages;
+
+// All changes that the server has to send to the clients
+change_list_t changes;
+
+
+// ------------------------------------------------------------------
+// Functions
+// ------------------------------------------------------------------
+
+/**
+ * @brief Create a new change to the list.
+ */
+void add_change(change_type_t type, int for_user_id, message_t message)
+{
+    changes.changes = realloc(changes.changes, (changes.count + 1) * sizeof(change_t));
+    changes.changes[changes.count] = (change_t) {
+        .type = type,
+        .for_user_id = for_user_id,
+        .message = message,
+    };
+    changes.count++;
+}
+
+/**
+ * @brief Remove a change from the list.
+ */
+void remove_change(change_t* change)
+{
+    for (int i = 0; i < changes.count; i++) {
+        if (memcmp(&changes.changes[i], change, sizeof(change_t)) == 0) {
+            for (int j = i; j < changes.count - 1; j++) {
+                changes.changes[j] = changes.changes[j + 1];
+            }
+            changes.count--;
+            break;
+        }
+    }
+}
+
+/**
+ * @brief Get change for a user.
+ * 
+ * @param user_id User.
+ * @return List of changes.
+ */
+change_list_t get_changes_for_user(int user_id) {
+    change_list_t user_changes;
+    user_changes.count = 0;
+    user_changes.changes = (change_t*)malloc(20 * sizeof(change_t));
+
+    for (int i = 0; i < changes.count; i++) {
+        if (changes.changes[i].for_user_id == user_id) {
+            user_changes.changes[user_changes.count] = changes.changes[i];
+            user_changes.count++;
+        }
+    }
+
+    return user_changes;
+}
 
 /**
  * @brief Get incoming messages for a user.
@@ -50,6 +140,21 @@ message_list_t get_incoming_messages(user_t user)
 }
 
 /**
+ * @brief Remove a message from the incoming messages list.
+ */
+void remove_incoming_message(int message_id) {
+    for (int i = 0; i < incoming_messages.count; i++) {
+        if (incoming_messages.messages[i].id == message_id) {
+            for (int j = i; j < incoming_messages.count - 1; j++) {
+                incoming_messages.messages[j] = incoming_messages.messages[j + 1];
+            }
+            incoming_messages.count--;
+            break;
+        }
+    }
+}
+
+/**
  * @brief Check if a user is connected.
  * 
  * @param user_id User.
@@ -62,6 +167,23 @@ int is_user_connected(int user_id)
         }
     }
     return 0;
+}
+
+/**
+ * @brief Convert a message to a JSON object.
+ */
+json_object* json_message(message_t message) {
+    json_object* jobj = json_object_new_object();
+    json_object_object_add(jobj, "id", json_object_new_int(message.id));
+    json_object_object_add(jobj, "sended_date", json_object_new_string(message.sended_date));
+    json_object_object_add(jobj, "modified_date", json_object_new_string(message.modified_date));
+    json_object_object_add(jobj, "sender_id", json_object_new_int(message.sender_id));
+    json_object_object_add(jobj, "receiver_id", json_object_new_int(message.receiver_id));
+    json_object_object_add(jobj, "deleted", json_object_new_int(message.deleted));
+    json_object_object_add(jobj, "seen", json_object_new_int(message.seen));
+    json_object_object_add(jobj, "content", json_object_new_string(message.content));
+
+    return jobj;
 }
 
 /**
@@ -206,6 +328,17 @@ void onclose(ws_cli_conn_t client_conn)
     char* cli;
     cli = ws_getaddress(client_conn);
     log_info("Connection closed, addr: %s", cli);
+
+    // Remove the client_conn from the list
+    for (int i = 0; i < clients_count; i++) {
+        if (clients[i].conn == client_conn) {
+            for (int j = i; j < clients_count - 1; j++) {
+                clients[j] = clients[j + 1];
+            }
+            clients_count--;
+            break;
+        }
+    }
 }
 
 /**
@@ -303,6 +436,24 @@ void onmessage(ws_cli_conn_t client_conn,
             message_t message;
             message = init_message(client->user.id, atoi(receiver), content);
             db_create_message(conn, &message);
+
+            // Add change if the receiver is connected
+            if (is_user_connected(atoi(receiver))) {
+                add_change(NEW_MESSAGE, atoi(receiver), message);
+            }
+
+            // Send the message data to the sender
+            json_object* jobj = json_object_new_object();
+
+            // Add command name
+            json_object_object_add(jobj, "command", json_object_new_string(SEND_MESSAGE));
+
+            // Add all the message data
+            json_object* jmessage = json_message(message);
+            json_object_object_add(jobj, "message", jmessage);
+
+            // Send the object
+            ws_sendframe_txt(client_conn, json_object_to_json_string(jobj));
         }
 
 		// Update message
@@ -332,6 +483,9 @@ void onmessage(ws_cli_conn_t client_conn,
 			strcpy(message.content, content);
 			db_update_message(conn, &message);
             log_info("Message updated succesfuly: %s", message.content);
+
+            // Add change
+            add_change(MESSAGE_UPDATED, message.receiver_id, message);
 		}
 
 		// Delete message
@@ -345,18 +499,85 @@ void onmessage(ws_cli_conn_t client_conn,
 			}
 			int message_id = json_object_get_int(jmessage_id);
 
+            message_t message;
+            db_get_message(conn, message_id, &message);
+
 			// Delete the message
 			db_delete_message(conn, message_id);
+
+            // Add change
+            add_change(MESSAGE_DELETED, message.receiver_id, message);
 		}
 
-        // New message available
-        // Send all available messages to the client
-        if (strcmp(cmd, NEW_MESSAGE_AVAILABLE) == 0) {
-            message_list_t messages = get_incoming_messages(client->user);
+        // Client check if a change is available
+        // Send an array of changes
+        //
+        // Changes:
+        // - new message
+        // - message updated
+        // - message deleted
+        // - message seen
+        // - new connected user
+        // 
+        if (strcmp(cmd, NEW_CHANGE_AVAILABLE) == 0) {
+            // Create an object
+            json_object* jobj = json_object_new_object();
 
-            // Send the messages
-            char* json = json_message_list(messages);
-            ws_sendframe_txt(client_conn, json);
+            // Add command name
+            json_object_object_add(jobj, "command", json_object_new_string(NEW_CHANGE_AVAILABLE));
+
+            // Create an array
+            json_object* jarray = json_object_new_array();
+
+            // Get the new messages
+            change_list_t user_changes = get_changes_for_user(client->user.id);
+            // message_list_t messages = get_incoming_messages(client->user);
+
+            // Loop changes
+            for (int i = 0; i < user_changes.count; i++) {
+                json_object* jchange = json_object_new_object();
+                change_t change = user_changes.changes[i];
+                json_object* jmessage;
+
+                switch (change.type) {
+                    case NEW_MESSAGE:
+                        json_object_object_add(jchange, "type", json_object_new_string("new_message"));
+
+                        // Add all the message data
+                        jmessage = json_message(change.message);
+                        json_object_object_add(jchange, "message", jmessage);
+
+                        break;
+                    case MESSAGE_UPDATED:
+                        json_object_object_add(jchange, "type", json_object_new_string("message_updated"));
+
+                        // Add all the message data
+                        jmessage = json_message(change.message);
+                        json_object_object_add(jchange, "message", jmessage);
+
+                        break;
+                    case MESSAGE_DELETED:
+                        json_object_object_add(jchange, "type", json_object_new_string("message_deleted"));
+                        json_object_object_add(jchange, "message_id", json_object_new_int(change.message.id));
+                        break;
+                    case MESSAGE_SEEN:
+                        json_object_object_add(jchange, "type", json_object_new_string("message_seen"));
+                        json_object_object_add(jchange, "message_id", json_object_new_int(change.message.id));
+                        break;
+                }
+
+
+                // Remove the change
+                remove_change(&change);
+
+                json_object_array_add(jarray, jchange);
+            }
+
+            // Add the array to the object
+            json_object_object_add(jobj, "changes", jarray);
+
+            // Send the object
+            ws_sendframe_txt(client_conn, json_object_to_json_string(jobj));
         }
 
         // The client use this command to get information about another user
@@ -382,7 +603,7 @@ void onmessage(ws_cli_conn_t client_conn,
                 char* is_writing = (target_client->is_writing && target_client->in_conversation_with == client->user.id) ? "true" : "false";
                 char* in_conversation = target_client->in_conversation_with == client->user.id ? "true" : "false";
 
-                send_json(client_conn, cmd, "connected", is_connect, "is_writing", is_writing, "viewed_last_message", in_conversation, NULL);
+                send_json(client_conn, cmd, "connected", is_connect, "is_writing", is_writing, "in_conversation_with", in_conversation, NULL);
             }
         }
 
@@ -455,6 +676,11 @@ int main(void)
     // Setup clients
     clients = (client_t*)malloc(20 * sizeof(client_t));
     clients_count = 0;
+
+    incoming_messages.messages = NULL;
+    incoming_messages.count = 0;
+    changes.changes = NULL;
+    changes.count = 0;
 
     ws_socket(&(struct ws_server) {
         .host = "0.0.0.0",

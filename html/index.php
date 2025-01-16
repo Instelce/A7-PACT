@@ -36,6 +36,7 @@ $app->router->get('/', [SiteController::class, 'home']);
 $app->router->post('/', [SiteController::class, 'home']);
 $app->router->get('/storybook', [SiteController::class, 'storybook']);
 $app->router->get('/recherche', [SiteController::class, 'research']);
+$app->router->get('/conditions', [SiteController::class, 'termofuse']);
 
 // Offer routes
 $app->router->get('/offres/creation', [OfferController::class, 'create']);
@@ -102,6 +103,7 @@ $app->router->get('/users', [SiteController::class, 'users']);
 
 // Api routes
 $app->router->get('/api/auth/user', [ApiController::class, 'user']);
+$app->router->get('/api/users/<pk:int>', [ApiController::class, 'userDetail']);
 $app->router->get('/api/offers', [ApiController::class, 'offers']);
 $app->router->get('/api/offers/<pk:int>', [ApiController::class, 'offer']);
 $app->router->get('/api/opinions', [ApiController::class, 'opinions']);
@@ -112,6 +114,7 @@ $app->router->post('/api/opinions/<opinion_pk:int>/reports', [ApiController::cla
 $app->router->get('/api/messages/<receiver_pk:int>', [ApiController::class, 'messages']);
 $app->router->get('/api/messages', [ApiController::class, 'conversations']);
 $app->router->get('/api/notifications', [ApiController::class, 'notifications']);
+$app->router->get('/api/read-notifications', [ApiController::class, 'notificationRead']);
 
 $app->router->post('/test/pdf', [SiteController::class, 'testPdf']);
 $app->router->get('/test/pdf', [SiteController::class, 'testPdf']);

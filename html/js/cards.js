@@ -177,7 +177,7 @@ export function createOpinionCard(opinion, dashboard = false) {
         <br>
         
         <!-- Formulaire -->
-        <form id="replyForm" class="reply-form" method="post">
+        ${dashboard ? `<form id="replyForm" class="reply-form" method="post">
             <label for="dataInput">Message</label>
             <input type="hidden" name="form-name" value="add-reply">
             <input type="hidden" name="opinion_id" value="${opinion.id}">
@@ -186,7 +186,7 @@ export function createOpinionCard(opinion, dashboard = false) {
                 Répondre
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-reply"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>            
             </button>      
-        </form>
+        </form>` : ''}
         
         <hr class="reply-hr">
         
@@ -196,23 +196,23 @@ export function createOpinionCard(opinion, dashboard = false) {
             </svg>
             <div class="flex flex-row items-end justify-between gap-4">
                 <div class="flex flex-col gap-2">
-                    <p class="reply-title">Votre réponse &nbsp il y à ${dateReply}</p> 
+                    <p class="reply-title">Réponse &nbsp il y à ${dateReply}</p> 
                     <p class="reply-comment">${opinion.reply.comment}</p>
                 </div>
                 <!-- Delete button -->
-                <form id="deleteReply" class="delete-reply" method="post">
+                ${dashboard ? `<form id="deleteReply" class="delete-reply" method="post">
                     <input type="hidden" name="form-name" value="delete-reply">
                     <input type="hidden" name="opinion_id" value="${opinion.id}">
                     <button class="delete-button button danger only-icon" title="Supprimer votre réponse">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>                    
                     </button>
-                </form>
+                </form>` : ''}
             </div>
         </div>
         
         <!-- Pop-up Report -->
         <div class="dialog-container hide" data-dialog-name="">
-            <div class="dialog w-[50%]">
+            <div class="dialog w-[70%]">
                 <header class="dialog-header">
                     <h3 class="dialog-title">Confirmer le signalement</h3>
                 </header>
@@ -220,13 +220,13 @@ export function createOpinionCard(opinion, dashboard = false) {
                 <div class="dialog-content">
                     <h2>Êtes-vous sûr de vouloir signaler ce commentaire ? </h2></br>
                     <p>En le signalant, vous signalez qu'il enfreint les règles de notre plateforme.</p></br>
-                    <p>Veuillez noter : Abuser de cette fonctionnalité pour signaler abusivement des commentaires pourrait entraîner des sanctions sur votre compte.</p></br>
     
-                    <div class="on-same-line grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mt-8">
+                    <div class="popup-class on-same-line grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mt-8">
                         <button type="button" class="button gray confirm-button" title="Signaler cet avis">
                             Confirmer le signalement
                         </button>
                         <button type="button" class="button cancel-button">Annuler</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -260,18 +260,27 @@ export function createOpinionCard(opinion, dashboard = false) {
         dialog.classList.add('hide'); // Fermer la fenêtre après confirmation
     });
 
+    console.log("content", opinion.reply.content);
+
+
     // Manage reply
     let replyForm = card.querySelector(".reply-form");
-    if (opinion.reply != false){
-        replyForm.classList.add('hide');
-    }
-
     let replyText = card.querySelector('.reply-text');
     let replyHr = card.querySelector(".reply-hr");
-    if (opinion.reply == false){
+
+    if (dashboard) {
+        if (opinion.reply != false) {
+            replyForm.classList.add('hide');
+        }
+    }
+
+    if (opinion.reply == false) {
         replyText.classList.add('hide');
         replyHr.classList.add('hidden');
     }
+
+
+
 
     return card;
 }

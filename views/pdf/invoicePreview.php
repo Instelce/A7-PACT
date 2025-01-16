@@ -270,14 +270,16 @@ $offerPrice = $invoice->activeDays() * $invoice->offer_price;
                     <td><?php echo $invoice->offer_price ?> €</td>
                     <td><?php echo $offerPrice ?> €</td>
                 </tr>
+                <?php
+                    $sousTotal = $offerPrice;
+                ?>
                 <?php foreach ($subscriptions as $sub) {
                     $typeOption = $sub->option()->type;
                     $price = $typeOption == 'en_relief' ? $invoice->en_relief_price : $invoice->a_la_une_price;
                     $optionPrice = $sub->duration * $price;
 
-                    $sousTotal = $offerPrice;
                     if ($sub) {
-                        $sousTotal = $offerPrice + $optionPrice;
+                        $sousTotal += $optionPrice;
                     } ?>
                     <tr>
                         <td>Option "<?php echo $sub->option()->french() ?>"</td>
