@@ -472,7 +472,7 @@ function createOpinionCard(opinion) {
       
         <!-- Formulaire Report -->
         <div class="dialog-container hide" data-dialog-name="">
-            <div class="dialog w-[50%]">
+            <div class="dialog w-[70%]">
                 <header class="dialog-header">
                     <h3 class="dialog-title">Confirmer le signalement</h3>
                 </header>
@@ -480,13 +480,13 @@ function createOpinionCard(opinion) {
                 <div class="dialog-content">
                     <h2>Êtes-vous sûr de vouloir signaler ce commentaire ? </h2></br>
                     <p>En le signalant, vous signalez qu'il enfreint les règles de notre plateforme.</p></br>
-                    <p>Veuillez noter : Abuser de cette fonctionnalité pour signaler abusivement des commentaires pourrait entraîner des sanctions sur votre compte.</p></br>
     
-                    <div class="on-same-line grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mt-8">
+                    <div class="popup-class on-same-line grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mt-8">
                         <button type="button" class="button gray confirm-button">
                             Confirmer le signalement
                         </button>
                         <button type="button" class="button cancel-button">Annuler</button>
+                    </div>
                 </div>
             </div>
         </div>
