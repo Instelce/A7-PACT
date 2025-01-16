@@ -65,89 +65,36 @@ if (navbar && heightTop) {
 }
 
 // Notifications
-document.addEventListener("DOMContentLoaded", () => {
-    const notificationIcon = document.querySelector('.notification .notification-icon');
-    const notificationContainer = document.querySelector('.notification .notification-container');
-    const iconDefault = document.getElementById("icon-default");
-    const iconAlert = document.getElementById("icon-alert");
-    const notificationApiUrl = "/api/notifications";
 
-    // Fonction pour vérifier les notifications
-    async function checkNotification() {
-        try {
-            const response = await fetch(notificationApiUrl);
+const notificationTrigger = document.querySelector('.notification-icon');
+const notificationContainer = document.querySelector('.notification-container');
+const notificationIconAlert = document.getElementById('icon-alert');
+const notificationIconDefault = document.getElementById('icon-default');
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+fetch('/api/notifications').then(response => response.json()).then(notifications => {
+    for (let notification of notifications){
+        console.log(notification);
+        let notificationCard = document.createElement('div');
+        notificationCard.innerHTML = notification.content;
 
-            const data = await response.json();
-
-            if (data.notification && data.notification.length > 0) {
-                iconDefault.classList.add("hidden");
-                iconAlert.classList.remove("hidden");
-            } else {
-                iconDefault.classList.remove("hidden");
-                iconAlert.classList.add("hidden");
-            }
-        } catch (error) {
-            console.error("Erreur:", error);
+        if(!notification.is_read){
+            notificationCard.classList.add('not-read');
         }
+
+        notificationContainer.appendChild(notificationCard);
     }
 
-    // Fonction pour charger les notifications
-    async function loadNotification() {
-        try {
-            const response = await fetch(notificationApiUrl);
-            const data = await response.json();
-
-            if (data.notification && data.notification.length > 0) {
-                notificationContainer.innerHTML = data.notification
-                    .map((notif) => `<div>${notif.message}</div>`)
-                    .join("");
-            } else {
-                notificationContainer.innerHTML = "<div>Aucune notifications</div>";
-            }
-
-            iconDefault.classList.remove("hidden");
-            iconAlert.classList.add("hidden");
-        } catch (error) {
-            console.error("Erreur:", error);
-        }
+    if (notifications.find(n => n.is_read === 0)){
+        notificationIconDefault.classList.add('hidden');
+    } else {
+        notificationIconAlert.classList.add('hidden');
     }
-
-    if (notificationIcon && notificationContainer) {
-        notificationIcon.addEventListener('click', function () {
-            notificationContainer.classList.toggle('open');
-            if (!iconAlert.classList.contains("hidden")) {
-                loadNotification();
-            } else {
-                notificationContainer.innerHTML = "<div><p>Aucune notifications</p></div>";
-                notificationContainer.style.display = "block";
-            }
-        });
-
-        // Close when click outside
-        document.addEventListener('click', function (e) {
-            if (!notificationIcon.contains(e.target)) {
-                notificationContainer.classList.remove('open');
-            }
-        });
-    }
-
-    // Cacher le conteneur de notifications quand on clique ailleurs
-    document.addEventListener("click", (event) => {
-        if (!notificationIcon.contains(event.target)) {
-            notificationContainer.style.display = "none";
-        }
-    });
-
-    // Rafraîchir les notifications toutes les 5 secondes
-    setInterval(checkNotification, 20000);
-
-    // Vérification initiale
-    checkNotification();
 });
+
+notificationTrigger.addEventListener('click', () => {
+    notificationContainer.classList.toggle('open');
+    fetch('/api/read-notifications');
+})
 
 // Avatar
 const avatarButton = document.querySelector('.avatar .image-container');

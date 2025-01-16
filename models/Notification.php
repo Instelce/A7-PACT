@@ -7,7 +7,7 @@ class Notification extends DBModel
 {
     public const IS_READ = 1;
     public const IS_NOT_READ = 0;
-    public int $notif_id = 0;
+    public int $id = 0;
     public string $send_at = '';
     public string $reception_day = '';
     public string $open_at = '';
@@ -28,7 +28,7 @@ class Notification extends DBModel
 
     public static function pk(): string
     {
-        return 'notif_id';
+        return 'id';
     }
 
     public function rules(): array
@@ -41,5 +41,11 @@ class Notification extends DBModel
             'content' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 255]],
             'user_id' => [self::RULE_REQUIRED],
         ];
+    }
+
+    public function markAsRead()
+    {
+        $this->is_read = 1;
+        $this->update();
     }
 }
