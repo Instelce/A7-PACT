@@ -183,5 +183,11 @@ class SiteController extends Controller
     public function testPdf()
     {
         return $this->pdf('super-pdf', 'test');
+
+    }
+
+    public function termofuse()
+    {
+        return $this->render('termofuse');
     }
 }

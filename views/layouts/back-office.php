@@ -213,11 +213,11 @@ use app\models\account\UserAccount;
             <div class="flex flex-col gap-1">
                 <p>@ 2024 PACT Tous droits réservés.</p>
                 <div id="links">
-                    <a class="link small pro" href="">Conditions d'utilisation</a>
-                    <a class="link small pro" href="">Confidentialité et
+                    <a class="link small pro" href="/conditions">Conditions d'utilisation</a>
+                    <a class="link small pro" href="/conditions">Confidentialité et
                         utilisation des cookies</a>
                     <a class="link small pro" href="">Plan du site</a>
-                    <a class="link small pro" href="">Contactez-nous</a>
+                    <a class="link small pro" href="/conditions">Contactez-nous</a>
                 </div>
             </div>
         </div>
