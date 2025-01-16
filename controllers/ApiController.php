@@ -436,7 +436,7 @@ class ApiController extends Controller
         if ($action == "add") {
             $opinion->addLike();
 
-            Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liker votre avis : " . $opinion->title);
+            Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liké votre avis : " . $opinion->title);
 
         } else if ($action == "remove") {
             $opinion->removeLike();
@@ -591,4 +591,14 @@ class ApiController extends Controller
         $notifications = Notification::find(['user_id' => Application::$app->user->account_id]);
         return $this->json($notifications);
     }
+
+    public function notificationRead(Request $request, Response $response)
+    {
+        $notifications = Notification::find(['user_id' => Application::$app->user->account_id]);
+        foreach ($notifications as $notification) {
+            $notification->markAsRead();
+        }
+        return $response->json([]);
+    }
 }
+

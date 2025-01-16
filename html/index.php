@@ -112,6 +112,7 @@ $app->router->post('/api/opinions/<opinion_pk:int>/reports', [ApiController::cla
 $app->router->get('/api/messages/<receiver_pk:int>', [ApiController::class, 'messages']);
 $app->router->get('/api/messages', [ApiController::class, 'conversations']);
 $app->router->get('/api/notifications', [ApiController::class, 'notifications']);
+$app->router->get('/api/read-notifications', [ApiController::class, 'notificationRead']);
 
 $app->router->post('/test/pdf', [SiteController::class, 'testPdf']);
 $app->router->get('/test/pdf', [SiteController::class, 'testPdf']);
