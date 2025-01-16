@@ -113,6 +113,7 @@ class DashboardController extends Controller
         $offers = Offer::find(['professional_id' => Application::$app->user->account_id]);
         $subscriptions = [];
 
+
         foreach ($offers as $offer) {
             $subscription = $offer->subscription();
             if ($subscription) {

@@ -266,7 +266,7 @@ $offerPrice = $invoice->activeDays() * $type->price;
             <tbody>
                 <tr>
                     <td>Offre "<?php echo $type->type ?>"</td>
-                    <td><?php echo $invoice->activeDays() ?> / jour</td>
+                    <td><?php echo $invoice->activeDays() ?> jour</td>
                     <td><?php echo $type->price ?> €</td>
                     <td><?php echo $offerPrice ?> €</td>
                 </tr>
@@ -279,7 +279,7 @@ $offerPrice = $invoice->activeDays() * $type->price;
                     } ?>
                     <tr>
                         <td>Option "<?php echo $sub->option()->french() ?>"</td>
-                        <td><?php echo $sub->duration ?> / semaine</td>
+                        <td><?php echo $sub->duration ?> semaine</td>
                         <td><?php echo $sub->price() ?>€</td>
                         <td><?php echo $optionPrice ?> €</td>
                     </tr>

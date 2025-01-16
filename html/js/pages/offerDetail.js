@@ -328,7 +328,6 @@ function createOpinionCard(opinion) {
 
         stars.appendChild(star);
     }
-    console.log(opinion.rating);
 
     // Calculate the date
     let currentDate = new Date();
@@ -399,7 +398,6 @@ function createOpinionCard(opinion) {
         photoElement.alt = opinion.title;
         photos.appendChild(photoElement);
     }
-    console.log(opinion);
 
     card.innerHTML = `
         <!-- Header -->
@@ -527,7 +525,7 @@ function createOpinionCard(opinion) {
 
 
     likeButton.addEventListener("click", () => {
-        if (userResponse.error === "Not authenticated") {
+        if (userResponse == null) {
             opinionForm.classList.remove('hidden');
             opinionAddButton.classList.add('hidden');
             window.scrollTo({
@@ -535,9 +533,7 @@ function createOpinionCard(opinion) {
                 behavior: 'smooth'
             });
         } else {
-            console.log(opinion.id, opinionLiked, opinionDisliked);
             if (!opinionLiked) {
-                // Si l'opinion n'a pas encore été likée
                 if (opinionDisliked) {
                     removeDislike(opinion.id);
                     dislikeText.innerHTML = (currentDislikes - 1).toString();
@@ -563,7 +559,7 @@ function createOpinionCard(opinion) {
 
 
     dislikeButton.addEventListener("click", () => {
-        if (userResponse.error === "Not authenticated") {
+        if (userResponse == null) {
             opinionForm.classList.remove('hidden');
             opinionAddButton.classList.add('hidden');
             window.scrollTo({
