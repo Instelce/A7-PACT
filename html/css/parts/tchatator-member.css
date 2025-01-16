@@ -14,6 +14,17 @@
     background: rgb(var(--color-white));
 }
 
+@media (max-width: 768px) {
+    .chat-container {
+        height: 100vh;
+        top: 0;
+        width: 100%;
+        min-width: 100%;
+        padding-top: var(--navbar-height);
+        padding-bottom: var(--navbar-height);
+    }
+}
+
 .chat-container .chat-page {
     width: 100%;
     height: 100%;
@@ -24,7 +35,7 @@
 .chat-container header {
     width: 100%;
     padding: 1rem 1.5rem;
-    display: block;
+    display: flex;
     border-bottom: 1px solid rgb(var(--color-gray-1));
 }
 
@@ -64,6 +75,35 @@
     height: 100%;
 }
 
+.messages-page header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.messages-page header .goto-conversations {
+    cursor: pointer;
+    padding: .5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.messages-page header .recipient-info {
+    display: flex;
+    gap: 1rem;
+}
+
+.messages-page header .recipient-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.messages-page header .recipient-avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 1px solid rgb(var(--color-gray-1));
+}
+
 .messages-container {
     height: 100%;
     padding: 0 1rem;
@@ -100,11 +140,12 @@
 }
 
 /* Textarea */
-.chat-container .message-writer {
+.message-writer {
     width: 100%;
     border: 1px solid rgb(var(--color-gray-1));
     border-radius: var(--radius-small);
     padding: .5rem;
+    font-size: inherit;
     font-family: inherit;
 }
 
