@@ -8,15 +8,12 @@ use app\models\opinion\Opinion;
 
 class MemberUser extends DBModel
 {
-    public const NO_NOTIFICATIONS = 0;
-    public const ALLOW_NOTIFICATIONS = 1;
 
     public int $user_id = 0;
     public string $lastname = '';
     public string $firstname = '';
     public string $phone = '';
     public string $pseudo = '';
-    public int $allows_notifications = self::NO_NOTIFICATIONS;
 
     public static function tableName(): string
     {
@@ -25,7 +22,7 @@ class MemberUser extends DBModel
 
     public function attributes(): array
     {
-        return ['user_id', 'lastname', 'firstname', 'phone', 'pseudo', 'allows_notifications'];
+        return ['user_id', 'lastname', 'firstname', 'phone', 'pseudo'];
     }
 
     public static function pk(): string

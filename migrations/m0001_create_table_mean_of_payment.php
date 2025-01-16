@@ -7,8 +7,9 @@ class m0001_create_table_mean_of_payment
     public function up() {
         $db = Application::$app->db;
         $sql = "CREATE TABLE mean_of_payment (
-        id SERIAL PRIMARY KEY
-    );";
+            id SERIAL PRIMARY KEY,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );";
         $db->pdo->exec($sql);
     }
 

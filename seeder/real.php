@@ -136,7 +136,7 @@ foreach ($members as $i => $member) {
     $avatar = "https://avatar.iran.liara.run/public/" . rand(1, 100);
     //    $avatar = "https://ui-avatars.com/api/?size=128&name=" . $member['firstname'] . "+" . $member['lastname'];
     $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id,api_token) VALUES (" . 11 + $i . ", '" . $member['pseudo'] . "@gmail.com', '" . $password . "', '" . $avatar . "', 19,'" . generatedApiKey() . "');");
-    $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (" . 11 + $i . ", '" . $member["firstname"] . "', '" . $member["lastname"] . "', '" . generatePhoneNumber() . "', '" . $member["pseudo"] . "', TRUE);");
+    $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo) VALUES (" . 11 + $i . ", '" . $member["firstname"] . "', '" . $member["lastname"] . "', '" . generatePhoneNumber() . "', '" . $member["pseudo"] . "');");
 }
 
 // ---------------------------------------------------------------------- //
@@ -148,7 +148,7 @@ $db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, e
 
 $db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
 
-$db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo, allows_notifications) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VieilArbre', TRUE);");
+$db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VieilArbre');");
 
 $db->pdo->exec("INSERT INTO professional_user (user_id, code, denomination, siren, phone) VALUES (3, 5462, 'SergeMytho and Co', '986321475', '" . generatePhoneNumber() . "'), (4, 7421, 'Fred port', '365879587', '" . generatePhoneNumber() . "'),(5,8452,'Rance Evasion','789325471', '" . generatePhoneNumber() . "'), (8, 9587, 'Brehat', '986321547', '" . generatePhoneNumber() . "'), (9, 7896, 'Récrée des 3 curés', '325478951', '" . generatePhoneNumber() . "'), (10, 1489, 'La vallée des Saints', '789654268', '" . generatePhoneNumber() . "'), (6, 9635, 'VoyageurGuidé', '879632547', '" . generatePhoneNumber() . "');");
 
@@ -203,7 +203,6 @@ $offre1 = new Offer();
 $offre1->title = "Café des Halles";
 $offre1->summary = "Le Café des Halles est un lieu convivial situé au cœur d'une ville, souvent à proximité d'un marché couvert ou d'une place animée. Ce café est un point de rencontre privilégié pour les habitants et les visiteurs, offrant une atmosphère chaleureuse et accueillante.";
 $offre1->description = 'le Café des Halles se distingue par son ambiance authentique et son cadre pittoresque, souvent proche d\'une halle ou d\'un marché. C\'est un endroit idéal pour faire une pause après une matinée de courses ou pour prendre un café en terrasse tout en observant l\'agitation de la ville. Avec son service amical, c\'est un lieu où l\'on se sent chez soi, que ce soit pour un petit-déjeuner rapide, un déjeuner décontracté, ou un apéritif en soirée.';
-$offre1->likes = 57;
 $offre1->offline = 0;
 $offre1->last_offline_date = null;
 $offre1->offline_days = 0;
@@ -312,7 +311,6 @@ $offre2->summary = 'Voyagez dans le temps et plongez au cœur de la vie gauloise
 $offre2->description = 'Découvrez le Village Gaulois au sein du parc du Radôme et profitez de plus de 20 jeux originaux, distractifs et éducatifs. Apprentissage et divertissement sont les maîtres mots au Village Gaulois.
 Sur place, la restauration est possible à la crêperie du village : "le Menhir Gourmand" !
 Ce village n’est pas celui du célèbre petit Gaulois... C’est un lieu de détente, de culture et de distraction. Mais les habitants du village restent irréductibles car, avec ténacité depuis 25 ans, ils mènent une action de solidarité en direction d’une lointaine région du monde, l’Afrique.';
-$offre2->likes = 420;
 $offre2->offline = 0;
 $offre2->last_offline_date = null;
 $offre2->offline_days = 0;
@@ -389,7 +387,6 @@ $offre3->title = "Promenade en Bateau sur le Canal de la Rance";
 $offre3->summary = 'Découvrez la beauté paisible du canal de la Rance entre Dinan et Saint-Samson-sur-Rance à bord de notre confortable bateau.';
 $offre3->description = 'Avec un petit comité de seulement 10 personnes, profitez d\'une expérience intime et relaxante en naviguant à travers des paysages pittoresques. Parfait pour une escapade tranquille, notre bateau vous offre une perspective unique sur cette région magnifique.
 Nous nous rendrons jusqu\'au Port de Dinan (pas d\'arrêt, pas de débarquement). Lors de notre promenade vous pourrez observer l\'avifaune de la Plaine de Taden et en apprendre plus sur le patrimoine naturel de la Vallée de la Rance. Votre Capitaine vous racontera également des anecdotes historiques sur l\'évolution de la Rance au fil des années.';
-$offre3->likes = 8;
 $offre3->offline = 0;
 $offre3->last_offline_date = null;
 $offre3->offline_days = 0;
@@ -422,7 +419,6 @@ $offre4 = new Offer();
 $offre4->title = "La cachette de Merlin";
 $offre4->summary = 'Voyagez dans le temps et plongez au cœur de la vie gauloise, où vous pourrez découvrir des artisans passionnés, participer à des jeux anciens et vivre une expérience immersive pour toute la famille dans un cadre authentique et amusant.';
 $offre4->description = 'La légende raconte que Merlin, banni du Royaume de Camelot, est venu s\'installer dans ce mystérieux manoir où il éleva avec amour deux enfants prénommés Arthur et Morgane. Aujourd\'hui, le vieux manoir recèle un esprit enchanteur et déborde de surprises !';
-$offre4->likes = 600;
 $offre4->offline = 0;
 $offre4->last_offline_date = null;
 $offre4->offline_days = 0;
@@ -451,7 +447,6 @@ $offre5->title = "Traversée et tour de l'île de Brehat";
 $offre5->summary = 'Embarquez à bord de l’un de nos navires pour une traversée ou un tour de l’île. Naviguez loin du flot touristique au cœur d’une zone NATURA 2000.';
 $offre5->description = 'Profitez de notre formule TOUR DE L’ÎLE pour une balade commentée et animée par des passionnés. Vous pourrez admirer l’île par la mer, ses rochers roses, sa côte sauvage et son patrimoine maritime exceptionnel. Les 96 ilots de l’archipel vous offriront un panorama incroyable.
 A l’issue, vous débarquerez sur l’île de Bréhat pour une visite libre. Le retour s’effectuera avec les traversées directes.';
-$offre5->likes = 4012;
 $offre5->offline = 0;
 $offre5->last_offline_date = null;
 $offre5->offline_days = 0;
@@ -529,7 +524,6 @@ $offre6 = new Offer();
 $offre6->title = "La Récrée des 3 Curés";
 $offre6->summary = 'Amateurs de sensations fortes, venez profiter au plus grand parc d’attractions breton la Récrée des trois curés';
 $offre6->description = 'Plongez dans l’aventure au Parc d’attractions La Récré des Trois Curés à Milizac ! Sur ses 17 hectares, des dizaines d’attractions captivantes attendent petits et grands. Des manèges palpitants aux aires de jeux dédiées aux plus petits, ce lieu offre une évasion totale dans un cadre verdoyant. Adultes, ados et enfants, tous y trouveront leur bonheur pour une journée d’amusement garantie.';
-$offre6->likes = 100841;
 $offre6->offline = 0;
 $offre6->last_offline_date = null;
 $offre6->offline_days = 0;
@@ -604,7 +598,6 @@ $offre7 = new Offer();
 $offre7->title = "Visite guidée de la Cité Corsaire";
 $offre7->summary = 'Plongez au cœur de l’histoire maritime de Saint-Malo avec un guide local passionné.';
 $offre7->description = 'Explorez les remparts, les ruelles pavées et les trésors cachés de Saint-Malo. Votre guide vous racontera les histoires de corsaires, d’explorateurs et de la reconstruction de la ville après la Seconde Guerre mondiale.';
-$offre7->likes = 215;
 $offre7->offline = 0;
 $offre7->last_offline_date = null;
 $offre7->offline_days = 0;
@@ -637,7 +630,6 @@ $offre8 = new Offer();
 $offre8->title = "Balade contée en Forêt de Brocéliande";
 $offre8->summary = 'Plongez dans l’univers des légendes arthuriennes lors d’une balade guidée en Forêt de Brocéliande.';
 $offre8->description = 'Suivez un guide-conteur à travers les lieux emblématiques comme le Val sans Retour, la Fontaine de Jouvence, et le Tombeau de Merlin. Parfait pour les familles et les amateurs de mythes celtiques.';
-$offre8->likes = 789;
 $offre8->offline = 0;
 $offre8->last_offline_date = null;
 $offre8->offline_days = 0;
@@ -670,7 +662,6 @@ $offre9 = new Offer();
 $offre9->title = "Excursion à la Pointe du Raz";
 $offre9->summary = 'Découvrez l’un des sites naturels les plus emblématiques de Bretagne, avec des falaises à couper le souffle et une vue imprenable sur l’Atlantique.';
 $offre9->description = 'Explorez ce site classé Grand Site de France, connu pour ses paysages sauvages et ses sentiers côtiers. Une visite guidée vous permettra de mieux comprendre l’histoire et l’écosystème de ce lieu unique.';
-$offre9->likes = 450;
 $offre9->offline = 0;
 $offre9->last_offline_date = null;
 $offre9->offline_days = 0;
@@ -701,7 +692,6 @@ $offre10 = new Offer();
 $offre10->title = "Croisière découverte du Golfe du Morbihan";
 $offre10->summary = 'Partez à la découverte du Golfe du Morbihan, l’une des plus belles baies du monde, avec ses îles et ses paysages marins exceptionnels.';
 $offre10->description = 'Embarquez pour une croisière commentée à travers les îles du Golfe du Morbihan. Vous aurez l’occasion d’admirer l’Île aux Moines, l’Île d’Arz, et bien d’autres joyaux de cette baie unique.';
-$offre10->likes = 1020;
 $offre10->offline = 0;
 $offre10->last_offline_date = null;
 $offre10->offline_days = 0;
@@ -733,7 +723,6 @@ $offre11 = new Offer();
 $offre11->title = "La Crepe Dantel";
 $offre11->summary = "La crêperie Dantel vous accueille sur le site exceptionnel de la Pointe Saint Mathieu et vous propose un large choix de crêpes blé noir et froment cuisinées avec des produits frais.";
 $offre11->description = 'Située sur le site exceptionnel de la pointe Saint-Mathieu, un peu à l\'écart du phare, la Crêpe Dantel est désormais incontournable. C\'est en toute simplicité, qu\'à l\'heure du déjeuner du goûter ou du repas vous y dégusterez de délicieuses crêpes salées ou sucrées.';
-$offre11->likes = 300;
 $offre11->offline = 0;
 $offre11->last_offline_date = null;
 $offre11->offline_days = 0;
@@ -849,7 +838,6 @@ $offre12 = new Offer();
 $offre12->title = "Basilico";
 $offre12->summary = "Basilico, à Perros-Guirec, offre des pizzas artisanales avec des ingrédients authentiques importés d’Italie pour une expérience italienne unique.";
 $offre12->description = 'Basilico c’est une pizzeria située à Perros-Guirec spécialisée dans la cuisine italienne authentique. Notre priorité est de vous offrir une expérience culinaire unique en utilisant uniquement des produits importés d’Italie. Notre pâte à pizza est préparée selon une recette traditionnelle italienne, en utilisant de la farine italienne de haute qualité, de la levure fraîche et de l’eau pure. Elle est ensuite façonnée à la main pour garantir une texture légère et croustillante. Nous accordons également une grande importance aux ingrédients que nous utilisons pour garnir nos pizzas. Tous nos fromages, comme la mozzarella di bufala, le pecorino ou le parmesan, sont importés d’Italie pour une saveur authentique.';
-$offre12->likes = 569;
 $offre12->offline = 0;
 $offre12->last_offline_date = null;
 $offre12->offline_days = 0;

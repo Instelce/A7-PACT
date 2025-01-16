@@ -170,7 +170,7 @@ $this->cssFile = "register-pro";
                                     Virement bancaire
                                 </div>
                                 <div id="content-payment" class="w-full hidden pb-8">
-                                    <?php echo $form->field($proPrivate, 'titular-account')?>
+                                    <?php echo $form->field($proPrivate, 'titular_account')?>
                                     <?php echo $form->field($proPrivate, 'iban')?>
                                     <?php echo $form->field($proPrivate, 'bic')?>
                                 </div>

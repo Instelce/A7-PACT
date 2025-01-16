@@ -19,7 +19,6 @@ class m0007_create_table_offer
             title VARCHAR(128) NOT NULL,
             summary VARCHAR(384) NOT NULL,
             description VARCHAR(1024) NOT NULL,
-            likes INT DEFAULT 0,
             offline BOOLEAN DEFAULT TRUE,
             view_counter INT DEFAULT 0,
             click_counter INT DEFAULT 0,

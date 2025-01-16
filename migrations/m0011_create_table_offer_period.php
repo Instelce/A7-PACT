@@ -11,7 +11,9 @@ class m0011_create_table_offer_period
             id SERIAL PRIMARY KEY,
             offer_id INT NOT NULL,
             start_date DATE NOT NULL,
-            end_date DATE NOT NULL
+            end_date DATE NOT NULL,
+                          
+            FOREIGN KEY (offer_id) REFERENCES offer(id)
         );
         ";
         $db->pdo->exec($sql);

@@ -21,7 +21,6 @@ class MemberUpdateForm extends Model
     public string $city = '';
     public string $phone = '';
     public string $passwordCheck = '';
-    public int $notification = 0;
     public ?UserAccount $userAccount = null;
     public ?Address $address = null;
     public MemberUser|null|false $memberUser = null;
@@ -47,7 +46,6 @@ class MemberUpdateForm extends Model
             $this->firstname = $this->memberUser->firstname;
             $this->phone = $this->memberUser->phone;
             $this->pseudo = $this->memberUser->pseudo;
-            $this->notification = $this->memberUser->allows_notifications;
         };
     }
 
@@ -67,7 +65,6 @@ class MemberUpdateForm extends Model
         $this->memberUser->firstname = $this->firstname;
         $this->memberUser->phone = str_replace(' ', '', $this->phone);
         $this->memberUser->pseudo = $this->pseudo;
-        $this->memberUser->allows_notifications = $this->notification;
         $this->memberUser->update();
 
         return true;
@@ -115,7 +112,6 @@ class MemberUpdateForm extends Model
             'postalCode' => 'Code postal',
             'city' => 'Ville',
             'phone' => 'Téléphone',
-            'notifications' => 'notifications',
             'passwordCheck' => 'Votre mot de passe',
         ];
     }
