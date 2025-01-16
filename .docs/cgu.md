@@ -118,8 +118,45 @@ Pour toute question relative aux présentes [CGU](https://a7.ventsdouest.dev/ter
 
 - **Email** : [pact@example.com](mailto:pact@example.com)
 - **Adresse** : [25, Rue de la Boutade, 22300 Lannion](https://www.google.com/maps/search/25,+Rue+de+la+Boutade,+22300+Lannion+/@48.7454184,-3.5523111,12z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDExMC4wIKXMDSoASAFQAw%3D%3D).
-- **Téléphone** : +33 2 96 00 00 00
+- **Téléphone** :
 
 #### Service client
 Notre équipe est à votre disposition pour répondre à vos questions du lundi au vendredi, de 9h à 18h.
 
+---
+
+# Conditions Générales de Vente (CGV)
+
+### 1. Objet
+Les présentes Conditions Générales de Vente (CGV) régissent les relations entre :
+- **Le site [Pact](https://a7.ventsdouest.dev/)**, ci-après dénommé "Pact", propriété de [TripEnArvor](), dont le siège social est situé à [25, Rue de la Boutade, 22300 Lannion](https://www.google.com/maps/search/25,+Rue+de+la+Boutade,+22300+Lannion+/@48.7454184,-3.5523111,12z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDExMC4wIKXMDSoASAFQAw%3D%3D).
+- Les utilisateurs, ci-après dénommés "Visiteurs" ou "Membres", utilisant le Site pour rechercher, ou évaluer des prestations touristiques (hébergements, activités, restaurants, etc.).
+
+### 2. Services proposés
+Le Site propose :
+1. Un annuaire des prestataires touristiques.
+2. Des avis et évaluations des services touristiques.
+
+Le Site agit uniquement en tant qu'intermédiaire et n'est pas responsable des prestations réalisées par les tiers.
+
+### 3. Inscription et compte utilisateur
+- L’accès à certains services nécessite la création d’un compte.
+- Les informations fournies doivent être exactes et mises à jour.
+- L’Utilisateur est responsable de l’utilisation de son compte et de la confidentialité de ses identifiants.
+
+### 4. Prix et paiement
+- Les prix affichés sont indiqués en euros (€) et incluent toutes les taxes applicables.
+
+### 5. Droit de rétractation
+Conformément à l'article L221-28 du Code de la consommation, le droit de rétractation ne s’applique pas aux services de réservation d’activités touristiques à date déterminée.
+
+### 6. Responsabilité
+- Le Site n'est pas responsable des prestations réalisées par les tiers.
+- En cas de litige avec un prestataire, l’Utilisateur doit directement s’adresser à ce dernier.
+
+### 7. Avis et commentaires
+- Les avis déposés doivent respecter les règles de courtoisie et ne pas contenir de propos diffamatoires.
+- Le Site se réserve le droit de modérer ou de supprimer tout contenu inapproprié.
+
+### 8. Loi applicable
+Les présentes CGV sont soumises au droit français. En cas de litige, les tribunaux compétents seront ceux du ressort du siège social de l’entreprise.
