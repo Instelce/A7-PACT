@@ -205,20 +205,13 @@ async function loadContacts() {
 
 loadContacts();
 
-// Function to sort the messages
-function sortMessages(messages) {
-    messages.sort((a, b) => {
-        return new Date(a.created_at) - new Date(b.created_at);
-    });
-    return messages;
-}
-
 // Show discussion
 async function showDiscussion(account_id) {
     let messages = await loadMessages(account_id);
     messagesContainer.innerHTML = ""; // Clear previous messages
-    sortMessages(messages);
-
+    console.log(listeContactes);
+    let recipient_user = listeContactes.find(contact => contact.account_id == account_id);
+    console.log(recipient_user_id);
     messages.forEach(message => {
         messagesContainer.appendChild(messageCard(socket, message, user, recipient_user));
     });
