@@ -8,7 +8,7 @@ import {getUser} from "./user.js";
 
 // Member client
 
-export const REFRESH_RATE = 500;
+export const REFRESH_RATE = 2000;
 
 let is_writing = false;
 let in_conversation_with = null;
@@ -30,6 +30,8 @@ let messagesContainer;
 let messageWriter;
 let sendButton;
 let writingIndicator;
+let gotoConversationsButton;
+let contactProfessionalButton = document.querySelector('.contact-professsional');
 
 if (chat) {
     conversationsPage = chat.querySelector('.conversations-page');
@@ -40,6 +42,18 @@ if (chat) {
     messageWriter = chat.querySelector('#message-writer');
     sendButton = chat.querySelector('.send-button');
     writingIndicator = chat.querySelector('.writing-indicator');
+    gotoConversationsButton = chat.querySelector('.goto-conversations');
+
+    if (contactProfessionalButton) {
+
+    }
+} else {
+    if (contactProfessionalButton) {
+        contactProfessionalButton.innerHTML = 'Connectez-vous pour contacter un professionnel';
+        setTimeout(() => {
+            contactProfessionalButton.innerHTML = 'Contacter un professionnel';
+        })
+    }
 }
 
 
@@ -57,13 +71,21 @@ getUser().then(_user => {
         });
 
         socket.addEventListener("message", (event) => {
+            console.log('')
+
             let data = JSON.parse(event.data);
+
+            if (data.command === 'SEND_MSG') {
+                data.message.modified_date = null;
+                messagesContainer.appendChild(messageCard(socket, data.message, user, recipient_user));
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
 
             if (data.command === 'USER_INFO') {
                 console.log(data);
                 recipient_is_writing = data.is_writing ? data.is_writing === 'true' : false;
                 recipient_is_connected = data.connected ? data.connected === 'true' : false;
-                // recipient_present_in_conversation = data.in_conversation_with === user.id;
+                recipient_present_in_conversation = data.in_conversation_with ? data.in_conversation_with === 'true' : false;
 
                 if (recipient_is_writing) {
                     writingIndicator.classList.remove('!hidden');
@@ -72,10 +94,54 @@ getUser().then(_user => {
                 }
             }
 
+            // New message change available
+            if (data.command === 'NEW_CHG_AVAILABLE') {
+                console.log(data)
+
+                if (data.changes.length > 0) {
+                    for (let change of data.changes) {
+                        if (change.type === 'new_message') {
+                            change.message.modified_date = null; // Why ?
+                            messagesContainer.appendChild(messageCard(socket, change.message, user, recipient_user));
+                            // Scroll to the bottom
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
+
+                        if (change.type === 'message_updated') {
+                            let messageCard = messagesContainer.querySelector(`[data-id="${change.message.id}"]`);
+                            let messageContent = messageCard.querySelector('.message-content pre');
+                            messageContent.innerText = change.message.content;
+
+                            // Remove modified text is exists and add it again
+                            let modifiedText = messageCard.querySelector('.modified');
+                            if (modifiedText) {
+                                messageCard.querySelector('.message-content').removeChild(modifiedText);
+                            }
+                            let newModifiedText = document.createElement('small');
+                            newModifiedText.classList.add('modified');
+                            newModifiedText.innerText = 'Modifié il y a ' + formatDate(change.message.modified_date);
+                            messageCard.querySelector('.message-content').appendChild(newModifiedText);
+                        }
+
+                        if (change.type === 'message_deleted') {
+                            let messageCard = messagesContainer.querySelector(`[data-id="${change.message_id}"]`);
+                            let messageContent = messageCard.querySelector('.message-content pre');
+                            messageContent.innerHTML = '<p>Ce message à été supprimé</p>';
+                            messageCard.classList.add('deleted');
+
+                            // Remove modified text is exists
+                            let modifiedText = messageCard.querySelector('.modified');
+                            if (modifiedText) {
+                                messageCard.querySelector('.message-content').removeChild(modifiedText);
+                            }
+                        }
+                    }
+                }
+            }
+
             console.log('Is connected', data.connected);
             console.log('Recipient is writing:', recipient_is_writing);
-            // console.log(data.in_conversation_with)
-            // console.log('Recipient is present in conversation: ', recipient_present_in_conversation);
+            console.log('Recipient is present in conversation: ', recipient_present_in_conversation);
         });
 
         socket.addEventListener("close", () => {
@@ -91,6 +157,7 @@ getUser().then(_user => {
             socket.send(clientInfoCommand(user.api_token, is_writing, in_conversation_with));
             if (in_conversation_with) {
                 socket.send(userInfoCommand(user.api_token, in_conversation_with));
+                socket.send(getChangesCommand(user.api_token));
             }
         }, REFRESH_RATE)
 
@@ -104,13 +171,8 @@ getUser().then(_user => {
             if (messageWriter.value !== '') {
                 socket.send(sendMessageCommand(user.api_token, messageWriter.value, in_conversation_with));
 
-                messagesContainer.appendChild(messageCard({
-                    content: messageWriter.value,
-                    sender_id: user.account_id,
-                    receiver_id: in_conversation_with
-                }));
-
                 messageWriter.value = '';
+                is_writing = false;
             }
         })
 
@@ -121,6 +183,13 @@ getUser().then(_user => {
 
         // Load conversations at the beginning
         loadConversations(conversationsContainer);
+
+        // Go back to the conversations
+        gotoConversationsButton.addEventListener('click', () => {
+            togglePageVisibility();
+            in_conversation_with = null;
+            is_writing = false;
+        })
     }
 })
 
@@ -141,15 +210,19 @@ function loadMessages(receiverId) {
         .then(r => r.json())
         .then(messages => {
             messages.forEach(message => {
-                messagesContainer.appendChild(messageCard(message, user, recipient_user));
+                messagesContainer.appendChild(messageCard(socket, message, user, recipient_user));
             })
+
+            // Scroll to the bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         })
 }
 
-export function messageCard(message, user, recipient_user) {
+export function messageCard(socket, message, user, recipient_user) {
     let sent = message.sender_id === user.account_id;
 
     let card = document.createElement('div');
+    card.setAttribute('data-id', message.id);
 
     // Add classes
     card.classList.add('message');
@@ -161,35 +234,14 @@ export function messageCard(message, user, recipient_user) {
     // Modify date format
     let dateText = '';
     if (message.modified_date) {
-        let diff = new Date() - new Date(message.modified_date);
-
-        let months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
-        let weeks = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
-        let days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        let hours = Math.floor(diff / (1000 * 60 * 60));
-        let minutes = Math.floor(diff / (1000 * 60));
-        let seconds = Math.floor(diff / 1000);
-
-        if (months > 0) {
-            dateText = `${months}mo`;
-        } else if (weeks > 0) {
-            dateText = `${weeks}sem`;
-        } else if (days > 0) {
-            dateText = `${days}j`;
-        } else if (hours > 0) {
-            dateText = `${hours}h`;
-        } else if (minutes > 0) {
-            dateText = `${minutes}min`;
-        } else {
-            dateText = `${seconds}s`;
-        }
+        dateText = formatDate(message.modified_date);
     }
 
     card.innerHTML = `
         <div class="message-content">
             ${!sent ? `<small>${recipient_user.name}</small>` : '<small>Vous</small>'}
             ${message.deleted ? `<p>Ce message à été supprimé</p>` : `<pre>${message.content}</pre>`}
-            ${message.modified_date && !message.deleted ? `<small>Modifié il y a ${dateText}</small>` : ''}
+            ${message.modified_date && !message.deleted ? `<small class="modified">Modifié il y a ${dateText}</small>` : ''}
         </div>
         ${sent ? `<div class="buttons">
             <button class="delete-message">
@@ -211,6 +263,12 @@ export function messageCard(message, user, recipient_user) {
             card.classList.add('deleted');
             messageContent.innerHTML = '<p>Ce message à été supprimé</p>';
             socket.send(deleteMessageCommand(user.api_token, message.id));
+
+            // Remove modified text is exists
+            let modifiedText = card.querySelector('.modified');
+            if (modifiedText) {
+                card.querySelector('.message-content').removeChild(modifiedText);
+            }
         })
 
         // Toggle update form
@@ -227,8 +285,14 @@ export function messageCard(message, user, recipient_user) {
             updateInput.classList.add('update-input');
 
             let updateButton = document.createElement('button');
-            updateButton.textContent = 'Update';
+            updateButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg>';
             updateButton.classList.add('update-button');
+
+            // Remove modified text is exists
+            let modifiedText = card.querySelector('.modified');
+            if (modifiedText) {
+                card.querySelector('.message-content').removeChild(modifiedText);
+            }
 
             updateButton.addEventListener('click', () => {
                 messageContent.innerHTML = updateInput.value;
@@ -238,6 +302,12 @@ export function messageCard(message, user, recipient_user) {
                 card.querySelector('.message-content').removeChild(updateInput);
                 card.querySelector('.message-content').removeChild(updateButton);
                 buttons.classList.remove('!hidden');
+
+                // Add modified text
+                let newModifiedText = document.createElement('small');
+                newModifiedText.classList.add('modified');
+                newModifiedText.innerText = 'Modifié il y a quelques secondes';
+                card.querySelector('.message-content').appendChild(newModifiedText);
             })
 
             card.querySelector('.message-content').appendChild(updateInput);
@@ -254,6 +324,7 @@ function conversationCard(_user) {
     card.innerHTML = `
             <a href="${_user.account_id}">
               <img src="${_user.avatar_url}" alt="profile picture">
+              <span class="connected-badge"></span>
             </a>
             <div class="">
                 <h3>${_user.name}</h3>
@@ -264,9 +335,18 @@ function conversationCard(_user) {
     card.addEventListener('click', () => {
         in_conversation_with = _user.account_id;
         recipient_user = _user;
+
         console.log('In conversation with: ', in_conversation_with);
+
         loadMessages(_user.account_id);
         togglePageVisibility();
+
+        // Set the recipient user
+        let recipientName = document.querySelector('.recipient-name');
+        let recipientAvatar = document.querySelector('.recipient-avatar');
+
+        recipientName.innerText = _user.name;
+        recipientAvatar.src = _user.avatar_url;
     })
 
     return card;
@@ -277,6 +357,33 @@ function togglePageVisibility() {
     messagesPage.classList.toggle('!hidden');
 }
 
+export function formatDate(date) {
+    let dateText = '';
+    let diff = new Date() - new Date(date);
+
+    let months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+    let weeks = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
+    let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    let hours = Math.floor(diff / (1000 * 60 * 60));
+    let minutes = Math.floor(diff / (1000 * 60));
+    let seconds = Math.floor(diff / 1000);
+
+    if (months > 0) {
+        dateText = `${months}mo`;
+    } else if (weeks > 0) {
+        dateText = `${weeks}sem`;
+    } else if (days > 0) {
+        dateText = `${days}j`;
+    } else if (hours > 0) {
+        dateText = `${hours}h`;
+    } else if (minutes > 0) {
+        dateText = `${minutes}min`;
+    } else {
+        dateText = `${seconds}s`;
+    }
+
+    return dateText;
+}
 
 // All function to send request to the server
 
@@ -338,5 +445,13 @@ export function clientInfoCommand(token, isWriting, inConversationWith) {
         token: token,
         is_writing: isWriting,
         in_conversation_with: parseInt(inConversationWith)
+    })
+}
+
+// Get changes
+export function getChangesCommand(token) {
+    return JSON.stringify({
+        command: "NEW_CHG_AVAILABLE",
+        token: token
     })
 }

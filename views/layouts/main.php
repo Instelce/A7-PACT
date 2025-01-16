@@ -175,7 +175,13 @@ use app\core\Application;
             <!-- All messages with a user -->
             <div class="chat-page messages-page !hidden">
                 <header>
-                    <h2>Message</h2>
+                    <div class="recipient-info">
+                        <img src="" alt="" class="recipient-avatar">
+                        <p class="recipient-name"></p>
+                    </div>
+                    <button class="goto-conversations">
+                        <i data-lucide="x"></i>
+                    </button>
                 </header>
 
                 <!-- Generated in JS -->

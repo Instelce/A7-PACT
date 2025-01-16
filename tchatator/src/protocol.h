@@ -56,8 +56,16 @@ static const char LOGIN[] = "LOGIN";
 static const char SEND_MESSAGE[] = "SEND_MSG";
 static const char UPDATE_MESSAGE[] = "UPDT_MSG";
 static const char DELETE_MESSAGE[] = "DEL_MSG";
-static const char NEW_MESSAGE_AVAILABLE[] = "NEW_MSG_AVAILABLE";
 static const char DISCONNECTED[] = "DISCONNECTED";
+
+/// Client check if a change is available
+/// - new message
+/// - message updated
+/// - message deleted
+/// - message seen
+/// - user connected
+static const char NEW_CHANGE_AVAILABLE[] = "NEW_CHG_AVAILABLE";
+
 
 /// Send info for a specific user
 /// - connection status
@@ -75,7 +83,7 @@ static const char* EXISTING_COMMANDS[] = {
     SEND_MESSAGE,
     UPDATE_MESSAGE,
     DELETE_MESSAGE,
-    NEW_MESSAGE_AVAILABLE,
+    NEW_CHANGE_AVAILABLE,
     DISCONNECTED,
     USER_INFO,
     CLIENT_INFO
@@ -86,7 +94,7 @@ static const command_def_t COMMANDS_DEFINITIONS[] = {
     { "SEND_MSG", 4 }, // token,receiver-id,message-length,content
     { "UPDT_MSG", 4 }, // token,message-id,message-length,content
     { "DEL_MSG", 2 }, // token,message-id
-    { "NEW_MSG_AVAILABLE", 1 }, // token
+    { "NEW_CHG_AVAILABLE", 1 }, // token
     { "USER_INFO", 1 }, // token,user_id
     { "CLIENT_INFO", 3 }, // token,is_writing,in_conversation
     { "DISCONNECTED", 0 },

@@ -25,9 +25,14 @@ $this->jsFile = "dashboard/message";
         <!-- Opinions, generated in js file -->
         <div class="messages-container flex flex-col m-0 p-0 h-[65vh] overflow-y-scroll" id="message-container"></div>
 
+        <!-- Writing indicator -->
+        <div class="writing-indicator !hidden">
+            <p>En train d'écrire...</p>
+        </div>
+
         <!-- Just for testing -->
-        <div id="message-writer-container" class="hidden w-full h-[15vh] flex flex-row">
-            <textarea id="message-writer" class="message-writer w-11/12" cols="30" rows="5"></textarea>
+        <div id="message-writer-container" class="hidden w-full h-[15vh] flex flex-row gap-2">
+            <textarea id="message-writer" class="message-writer" cols="30" rows="5"></textarea>
             <button class="send-button w-1/12">
                 <i data-lucide="send"></i>
             </button>
