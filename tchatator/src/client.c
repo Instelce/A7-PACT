@@ -327,12 +327,10 @@ void menu_discussion()
     int entered = 0;
     int key;
 
-    set_raw_mode();
-    hide_cursor();
-
     while (running && !entered) {
         clear_term();
-
+        set_raw_mode();
+        hide_cursor();
         if (selected == -1) {
             for (int i = 0; i < messages_list.count; i++) {
                 if (messages_list.messages[i].sender_id == connected_user.id) {
@@ -340,13 +338,9 @@ void menu_discussion()
                     break;
                 }
             }
-            if (selected == -1) {
-                printf("No messages from you to select.\n");
-                break;
-            }
         }
 
-        int center_index = selected;
+        int center_index = (selected == -1) ? 0 : selected;
         int start_index = center_index;
         int end_index = center_index;
         int above_height = 0;
@@ -369,34 +363,64 @@ void menu_discussion()
         clear_term();
         for (int i = start_index; i <= end_index; i++) {
             int is_own_message = (messages_list.messages[i].sender_id == connected_user.id);
-            display_message(messages_list.messages[i], !is_own_message, (i == selected && is_own_message));
+            display_message(messages_list.messages[i], !is_own_message, (i == selected && selected != -1 && is_own_message));
+        }
+
+        if (selected == -1) {
+            printf("\nYou have not sent any messages in this discussion.\n");
         }
 
         goto_print(2, w.ws_row - 2, "Selected: %d", selected);
-        goto_print(2, w.ws_row - 1, "Send a message: Ctrl+M");
+        goto_print(2, w.ws_row - 1, "Send a message: press m");
         goto_print(2, w.ws_row, "Use arrow keys to navigate, Enter to select, Ctrl+C to quit discussion");
 
         key = get_arrow_key();
         switch (key) {
         case 'U':
-            do {
-                selected = (selected - 1 + messages_list.count) % messages_list.count;
-            } while (messages_list.messages[selected].sender_id != connected_user.id);
+            if (selected != -1) {
+                do {
+                    selected = (selected - 1 + messages_list.count) % messages_list.count;
+                } while (messages_list.messages[selected].sender_id != connected_user.id);
+            }
             break;
 
         case 'D':
-            do {
-                selected = (selected + 1) % messages_list.count;
-            } while (messages_list.messages[selected].sender_id != connected_user.id);
+            if (selected != -1) {
+                do {
+                    selected = (selected + 1) % messages_list.count;
+                } while (messages_list.messages[selected].sender_id != connected_user.id);
+            }
             break;
 
         case '\n':
-            if (messages_list.messages[selected].sender_id == connected_user.id) {
+            if (selected != -1 && messages_list.messages[selected].sender_id == connected_user.id) {
                 entered = 1;
                 menu_delete_and_update(messages_list.messages[selected]);
+            } else if (selected == -1) {
+                printf("\nYou cannot select a message because you have not sent any.\n");
+                printf("\nPress Enter to continue...");
+                getchar();
             } else {
-                printf("You can only select your own messages.\n");
+                printf("\nYou can only select your own messages.\n");
+                printf("\nPress Enter to continue...");
+                getchar();
             }
+            break;
+
+        case 'm':
+            clear_term();
+            char new_message[LARGE_CHAR_SIZE] = { 0 };
+            printf("Write your message (Ctrl+D to send, Backspace to delete):\n");
+            write_message(new_message, 0);
+
+            response = send_message(sock, connected_user.api_token, new_message, discussion_user_id);
+            if (response->status.code == 200) {
+                printf("Message successfully sent.\n");
+            } else {
+                printf("Failed to send the message. Response: %d %s\n", response->status.code, response->status.message);
+            }
+            printf("\nPress Enter to return to the discussion...");
+            getchar();
             break;
 
         case 'C':
