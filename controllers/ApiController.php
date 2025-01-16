@@ -575,10 +575,13 @@ class ApiController extends Controller
             $conversations = findData($value, $key, $conversations);
         }
 
-
         foreach ($conversations as $key => $value) {
             unset($conversations[$key]['last_message']->errors);
         }
+
+        usort($conversations, function ($a, $b) {
+            return $a['last_message']->sended_date < $b['last_message']->sended_date;
+        });
 
         return $response->json($conversations);
     }
@@ -589,4 +592,3 @@ class ApiController extends Controller
         return $this->json($notifications);
     }
 }
-

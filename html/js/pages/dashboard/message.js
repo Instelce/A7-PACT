@@ -181,6 +181,7 @@ async function loadContacts() {
             <img src="${contact.avatar_url}" alt="profile picture">
             <div class="">
                 <h3>${contact.name}</h3>
+                <h6 class="line-clamp-1">${user.account_id == contact.last_message.sender_id ? "vous : " : ""}${contact.last_message.content}</h6>
             </div>
     `;
         card.id = contact.account_id;
@@ -188,7 +189,6 @@ async function loadContacts() {
         // Switch to the conversation with the user
         card.addEventListener('click', () => {
             in_conversation_with = contact.account_id;
-            console.log(contact)
             recipient_user = contact;
 
             console.log('In conversation with: ', in_conversation_with);
@@ -209,9 +209,6 @@ loadContacts();
 async function showDiscussion(account_id) {
     let messages = await loadMessages(account_id);
     messagesContainer.innerHTML = ""; // Clear previous messages
-    console.log(listeContactes);
-    let recipient_user = listeContactes.find(contact => contact.account_id == account_id);
-    console.log(recipient_user_id);
     messages.forEach(message => {
         messagesContainer.appendChild(messageCard(socket, message, user, recipient_user));
     });
