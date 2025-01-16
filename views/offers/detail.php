@@ -224,7 +224,7 @@ $latitude = $offer->address()->latitude;
 
         </div>
 
-        <button class="contact-professsional button gray sm:block md:block lg:hidden mt-6">
+        <button class="contact-professsional button gray sm:block md:block lg:hidden mt-6" data-pro-id="<?php echo $offerData["professionalId"] ?>">
             Contacter le professionnel
         </button>
 
@@ -455,7 +455,7 @@ $latitude = $offer->address()->latitude;
             </a>
         <?php } ?>
 
-        <button class="contact-professsional button gray sm:hidden md:hidden lg:block">
+        <button class="contact-professsional button gray sm:hidden md:hidden lg:block" data-pro-id="<?php echo $offerData["professionalId"] ?>">
             Contacter le professionnel
         </button>
     </aside>

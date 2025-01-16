@@ -437,8 +437,10 @@ void onmessage(ws_cli_conn_t client_conn,
             message = init_message(client->user.id, atoi(receiver), content);
             db_create_message(conn, &message);
 
-            // Add change
-            add_change(NEW_MESSAGE, atoi(receiver), message);
+            // Add change if the receiver is connected
+            if (is_user_connected(atoi(receiver))) {
+                add_change(NEW_MESSAGE, atoi(receiver), message);
+            }
 
             // Send the message data to the sender
             json_object* jobj = json_object_new_object();

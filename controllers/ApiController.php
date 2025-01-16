@@ -55,6 +55,37 @@ class ApiController extends Controller
     }
 
     /**
+     * Get a user by its id
+     */
+    public function userDetail(Request $request, Response $response, $routeParams)
+    {
+        $pk = $routeParams['pk'];
+        $user = UserAccount::findOneByPk($pk)->toJson();
+
+        unset($user['password']);
+        unset($user['reset_password_hash']);
+        unset($user['api_token']);
+
+        // Get user name
+        $member = MemberUser::findOneByPk($pk);
+        if ($member) {
+            $user['name'] = $member->pseudo;
+        } else {
+            $professional = ProfessionalUser::findOneByPk($pk);
+            if ($professional) {
+                $user['name'] = $professional->denomination;
+            } else {
+                $anonymous = AnonymousAccount::findOneByPk($pk);
+                if ($anonymous) {
+                    $user['name'] = $anonymous->pseudo;
+                }
+            }
+        }
+
+        return $response->json($user);
+    }
+
+    /**
      * Get all the offers
      *
      * Params :

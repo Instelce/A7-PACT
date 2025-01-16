@@ -35,6 +35,8 @@ use app\models\account\UserAccount;
 
 <body class="<?php echo Application::$app->user?->isProfessional() ? 'professional-mode' : '' ?>">
 
+<input class="app-environment" value="<?php echo $_ENV['APP_ENVIRONMENT'] ?>">
+
 <div class="height-top"></div>
 
 <!-- Loader -->

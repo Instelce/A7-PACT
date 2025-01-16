@@ -103,6 +103,7 @@ $app->router->get('/users', [SiteController::class, 'users']);
 
 // Api routes
 $app->router->get('/api/auth/user', [ApiController::class, 'user']);
+$app->router->get('/api/users/<pk:int>', [ApiController::class, 'userDetail']);
 $app->router->get('/api/offers', [ApiController::class, 'offers']);
 $app->router->get('/api/offers/<pk:int>', [ApiController::class, 'offer']);
 $app->router->get('/api/opinions', [ApiController::class, 'opinions']);

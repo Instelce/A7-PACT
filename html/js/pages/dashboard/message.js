@@ -6,6 +6,9 @@ import {
     userInfoCommand
 } from "../../tchatator.js";
 
+let appEnv = document.querySelector('input.app-environment').value;
+let domain = window.location.hostname;
+
 let is_writing = false;
 let in_conversation_with = null;
 let recipient_is_writing = false;
@@ -14,7 +17,7 @@ let recipient_present_in_conversation = false;
 let socket;
 
 let user;
-let listeContactes = [];
+let listContacts = [];
 let recipient_user;
 
 let messageWriter = document.getElementById('message-writer');
@@ -25,7 +28,11 @@ let writingIndicator = document.querySelector('.writing-indicator');
 getUser().then(u => {
     user = u;
 
-    socket = new WebSocket('ws://localhost:4242');
+    if (appEnv == 'dev') {
+        socket = new WebSocket(`ws://${domain}:4242`);
+    } else {
+        socket = new WebSocket(`wss://${domain}:4242`);
+    }
 
     socket.addEventListener("open", () => {
         console.log('Connected to the server');
@@ -65,11 +72,56 @@ getUser().then(u => {
             if (data.changes.length > 0) {
                 for (let change of data.changes) {
                     if (change.type === 'new_message') {
-                        console.log("NEW MSG", user, recipient_user);
-                        change.message.modified_date = null;
-                        messagesContainer.appendChild(messageCard(socket, change.message, user, recipient_user));
-                        // Scroll to the bottom
-                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        // Check if the contact exists
+                        let contact = listContacts.find(c => c.account_id === change.message.sender_id);
+
+                        // Add the contact if it doesn't exist
+                        if (!contact) {
+                            fetch(`/api/users/${change.message.sender_id}`)
+                                .then(response => response.json())
+                                .then(user => {
+                                    console.log(user)
+                                    listContacts.push(user);
+
+                                    let card = document.createElement('article');
+                                    card.classList.add('conversation-card');
+                                    card.innerHTML = `
+                                        <img src="${user.avatar_url}" alt="profile picture">
+                                        <div class="">
+                                            <h3>${user.name}</h3>
+                                        </div>
+                                    `;
+
+                                    card.id = user.account_id;
+
+                                    // Add the click event to switch to the conversation
+                                    card.addEventListener('click', () => {
+                                        in_conversation_with = user.account_id;
+                                        recipient_user = user;
+
+                                        console.log('In conversation with: ', in_conversation_with);
+                                        showDiscussion(user.account_id);
+
+                                        // Show message writer container
+                                        document.getElementById('message-writer-container').classList.remove('hidden');
+                                    })
+
+                                    document.getElementById('contactesListe').appendChild(card);
+                                })
+                        } else {
+                            // If exist and not in the conversation set the last message
+                            if (in_conversation_with != change.message.sender_id) {
+                                let lastMessage = document.querySelector(`[id="${change.message.sender_id}"] .last-message`);
+                                lastMessage.innerText = change.message.content;
+                            }
+                        }
+
+                        if (in_conversation_with == change.message.sender_id) {
+                            change.message.modified_date = null;
+                            messagesContainer.appendChild(messageCard(socket, change.message, user, recipient_user));
+                            // Scroll to the bottom
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
                     }
 
                     if (change.type === 'message_updated') {
@@ -111,9 +163,9 @@ getUser().then(u => {
 
     setInterval(() => {
         socket.send(clientInfoCommand(user.api_token, is_writing, in_conversation_with));
+        socket.send(getChangesCommand(user.api_token));
         if (in_conversation_with) {
             socket.send(userInfoCommand(user.api_token, in_conversation_with));
-            socket.send(getChangesCommand(user.api_token));
         }
     }, REFRESH_RATE)
 
@@ -181,7 +233,7 @@ async function loadContacts() {
             <img src="${contact.avatar_url}" alt="profile picture">
             <div class="">
                 <h3>${contact.name}</h3>
-                <h6 class="line-clamp-1">${user.account_id == contact.last_message.sender_id ? "vous : " : ""}${contact.last_message.content}</h6>
+                <h6 class="last-message line-clamp-1">${user.account_id == contact.last_message.sender_id ? "vous : " : ""}${contact.last_message.content}</h6>
             </div>
     `;
         card.id = contact.account_id;
@@ -199,7 +251,7 @@ async function loadContacts() {
         })
 
         contactsList.appendChild(card);
-        listeContactes.push(contact);
+        listContacts.push(contact);
     });
 }
 

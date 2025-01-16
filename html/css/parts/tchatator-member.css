@@ -4,7 +4,7 @@
     height: calc(100vh - var(--navbar-height));
     max-width: 400px;
     min-width: 400px;
-    z-index: 1000;
+    z-index: 500;
     position: fixed;
     bottom: 0;
     right: 0;
@@ -16,7 +16,7 @@
 
 @media (max-width: 768px) {
     .chat-container {
-        height: 100vh;
+        height: 98vh;
         top: 0;
         width: 100%;
         min-width: 100%;
@@ -48,6 +48,7 @@
 .conversation-card {
     width: 100%;
     display: flex;
+    align-items: center;
     gap: 1rem;
     padding: 1rem .5rem;
     border-bottom: 1px solid rgb(var(--color-gray-1));
@@ -89,6 +90,7 @@
 }
 .messages-page header .recipient-info {
     display: flex;
+    align-items: center;
     gap: 1rem;
 }
 
@@ -98,8 +100,8 @@
 }
 
 .messages-page header .recipient-avatar {
-    width: 2rem;
-    height: 2rem;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: 1px solid rgb(var(--color-gray-1));
 }
@@ -116,9 +118,10 @@
 
 .messages-page .chat-bottom {
     padding: 1rem;
+    padding-top: 0;
 
     display: flex;
-    gap: .5rem;
+    gap: 1rem;
 }
 
 /* Writing indicator */
@@ -148,6 +151,9 @@
     font-size: inherit;
     font-family: inherit;
 }
+.message-writer:focus {
+    box-shadow: 0 0 0 2px rgba(var(--color-blue-primary), .5);
+}
 
 /* Message card */
 .messages-container .message {
@@ -168,7 +174,7 @@
     opacity: .8;
     background: rgb(var(--color-gray-1));
 }
-.messages-container .message:not(.deleted):not(.received):hover {
+.messages-container .message:not(.deleted):not(.received):not(:has(input)):hover {
     background: rgba(var(--color-blue-primary), .1);
 }
 .messages-container .message:not(.deleted):not(.received):hover .buttons {
@@ -192,4 +198,26 @@
     gap: .5rem;
 
     transition: opacity .2s;
+}
+
+@media (max-width: 768px) {
+
+    .messages-container .message .buttons {
+        opacity: 1;
+    }
+}
+
+/* Stylize messages container scrollbar */
+.messages-container::-webkit-scrollbar {
+    width: 6px;
+    position: absolute;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-gray-1));
+    border-radius: 10px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+    background: transparent;
 }

@@ -1,5 +1,8 @@
 import {getUser} from "./user.js";
 
+let appEnv = document.querySelector('input.app-environment').value;
+let domain = window.location.hostname;
+
 // ---------------------------------------------------------------------------------------------- //
 // Tchatator socket client that connects to the C server
 // Host: localhost
@@ -18,6 +21,7 @@ let recipient_present_in_conversation = false;
 let user = null;
 let recipient_user = null;
 let socket;
+let contacts = [];
 
 
 // All elements
@@ -37,7 +41,15 @@ if (chat) {
     conversationsPage = chat.querySelector('.conversations-page');
     messagesPage = chat.querySelector('.messages-page');
     conversationsContainer = chat.querySelector('.conversations-gen');
-    chatTrigger = document.querySelector('.chat-trigger');
+    chatTrigger = document.querySelectorAll('.chat-trigger');
+
+    // Check window size
+    if (window.innerWidth < 768) {
+        chatTrigger = chatTrigger[1];
+    } else {
+        chatTrigger = chatTrigger[0];
+    }
+
     messagesContainer = chat.querySelector('.messages-container');
     messageWriter = chat.querySelector('#message-writer');
     sendButton = chat.querySelector('.send-button');
@@ -45,7 +57,31 @@ if (chat) {
     gotoConversationsButton = chat.querySelector('.goto-conversations');
 
     if (contactProfessionalButton) {
+        let professionalId = contactProfessionalButton.getAttribute('data-pro-id');
 
+        contactProfessionalButton.addEventListener('click', () => {
+            in_conversation_with = professionalId;
+
+            fetch(`/api/users/${professionalId}`)
+                .then(r => r.json())
+                .then(professional => {
+                    chat.classList.remove('hidden');
+
+                    recipient_user = professional
+
+                    console.log('In conversation with: ', in_conversation_with);
+
+                    loadMessages(professionalId);
+                    togglePageVisibility();
+
+                    // Set the recipient user
+                    let recipientName = document.querySelector('.recipient-name');
+                    let recipientAvatar = document.querySelector('.recipient-avatar');
+
+                    recipientName.innerText = recipient_user.name;
+                    recipientAvatar.src = recipient_user.avatar_url;
+                })
+        })
     }
 } else {
     if (contactProfessionalButton) {
@@ -61,7 +97,11 @@ getUser().then(_user => {
     user = _user;
 
     if (user && user.type !== 'professional') {
-        socket = new WebSocket('ws://localhost:4242');
+        if (appEnv == 'dev') {
+            socket = new WebSocket(`ws://${domain}:4242`);
+        } else {
+            socket = new WebSocket(`wss://${domain}:4242`);
+        }
 
         socket.addEventListener("open", () => {
             console.log('Connected to the server');
@@ -101,10 +141,19 @@ getUser().then(_user => {
                 if (data.changes.length > 0) {
                     for (let change of data.changes) {
                         if (change.type === 'new_message') {
-                            change.message.modified_date = null; // Why ?
-                            messagesContainer.appendChild(messageCard(socket, change.message, user, recipient_user));
-                            // Scroll to the bottom
-                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                            console.log("NEW MESSAGE", change.message, in_conversation_with);
+                            // If exist and not in the conversation set the last message
+                            if (in_conversation_with != change.message.sender_id) {
+                                let lastMessage = document.querySelector(`[id="${change.message.sender_id}"] .last-message`);
+                                lastMessage.innerText = change.message.content;
+                            }
+
+                            if (in_conversation_with == change.message.sender_id) {
+                                change.message.modified_date = null; // Why ?
+                                messagesContainer.appendChild(messageCard(socket, change.message, user, recipient_user));
+                                // Scroll to the bottom
+                                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                            }
                         }
 
                         if (change.type === 'message_updated') {
@@ -152,12 +201,14 @@ getUser().then(_user => {
             console.log('Error: ', error);
         });
 
-        // Send info to the server about us
         setInterval(() => {
+            // Send info to the server about us
             socket.send(clientInfoCommand(user.api_token, is_writing, in_conversation_with));
+
+            // Get informations
+            socket.send(getChangesCommand(user.api_token));
             if (in_conversation_with) {
                 socket.send(userInfoCommand(user.api_token, in_conversation_with));
-                socket.send(getChangesCommand(user.api_token));
             }
         }, REFRESH_RATE)
 
@@ -173,6 +224,16 @@ getUser().then(_user => {
 
                 messageWriter.value = '';
                 is_writing = false;
+
+                // If the contact doesnt exist
+                if (!contacts.find(contact => contact.account_id === in_conversation_with)) {
+                    fetch(`/api/users/${in_conversation_with}`)
+                        .then(r => r.json())
+                        .then(contact => {
+                            conversationsContainer.appendChild(contactCard(contact));
+                            contacts.push(contact);
+                        })
+                }
             }
         })
 
@@ -198,10 +259,21 @@ function loadConversations() {
         .then(r => r.json())
         .then(users => {
             users.forEach(user => {
-                conversationsContainer.appendChild(conversationCard(user));
+                conversationsContainer.appendChild(contactCard(user));
+                contacts.push(user);
             })
         })
 }
+
+// On start load contacts
+fetch('/api/messages')
+    .then(r => r.json())
+    .then(users => {
+        users.forEach(user => {
+            contacts.push(user);
+        })
+    })
+
 
 function loadMessages(receiverId) {
     messagesContainer.innerHTML = '';
@@ -318,9 +390,10 @@ export function messageCard(socket, message, user, recipient_user) {
     return card;
 }
 
-function conversationCard(_user) {
+function contactCard(_user) {
     let card = document.createElement('article');
     card.classList.add('conversation-card');
+    card.id = _user.account_id;
     card.innerHTML = `
             <a href="${_user.account_id}">
               <img src="${_user.avatar_url}" alt="profile picture">
@@ -328,6 +401,7 @@ function conversationCard(_user) {
             </a>
             <div class="">
                 <h3>${_user.name}</h3>
+                <h6 class="last-message line-clamp-1">${user.account_id == _user.last_message.sender_id ? "Vous : " : ""}${_user.last_message.content}</h6>
             </div>
     `;
 
