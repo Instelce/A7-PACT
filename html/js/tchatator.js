@@ -11,7 +11,7 @@ let domain = window.location.hostname;
 
 // Member client
 
-export const REFRESH_RATE = 2000;
+export const REFRESH_RATE = 100;
 
 let is_writing = false;
 let in_conversation_with = null;
@@ -56,6 +56,7 @@ if (chat) {
     writingIndicator = chat.querySelector('.writing-indicator');
     gotoConversationsButton = chat.querySelector('.goto-conversations');
 
+    // For offer detail page
     if (contactProfessionalButton) {
         let professionalId = contactProfessionalButton.getAttribute('data-pro-id');
 
@@ -83,6 +84,13 @@ if (chat) {
                 })
         })
     }
+
+    // Close chat when clicking outside
+    window.addEventListener('click', (e) => {
+        // if (!chat.contains(e.target) && !chatTrigger.contains(e.target)) {
+        //     chat.classList.add('hidden');
+        // }
+    })
 } else {
     if (contactProfessionalButton) {
         contactProfessionalButton.innerHTML = 'Connectez-vous pour contacter un professionnel';
@@ -119,6 +127,7 @@ getUser().then(_user => {
                 data.message.modified_date = null;
                 messagesContainer.appendChild(messageCard(socket, data.message, user, recipient_user));
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                setLastMessage(data.message.receiver_id, 'Vous : ' + data.message.content);
             }
 
             if (data.command === 'USER_INFO') {
@@ -129,6 +138,7 @@ getUser().then(_user => {
 
                 if (recipient_is_writing) {
                     writingIndicator.classList.remove('!hidden');
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 } else {
                     writingIndicator.classList.add('!hidden');
                 }
@@ -144,8 +154,7 @@ getUser().then(_user => {
                             console.log("NEW MESSAGE", change.message, in_conversation_with);
                             // If exist and not in the conversation set the last message
                             if (in_conversation_with != change.message.sender_id) {
-                                let lastMessage = document.querySelector(`[id="${change.message.sender_id}"] .last-message`);
-                                lastMessage.innerText = change.message.content;
+                                setLastMessage(change.message.sender_id, change.message.content);
                             }
 
                             if (in_conversation_with == change.message.sender_id) {
@@ -281,7 +290,21 @@ function loadMessages(receiverId) {
     fetch(`/api/messages/${receiverId}`)
         .then(r => r.json())
         .then(messages => {
+            let currentDay = null;
             messages.forEach(message => {
+                // Add day separator
+                let messageDate = new Date(message.sended_date);
+                let day = messageDate.getDate();
+
+                if (currentDay !== day) {
+                    let daySeparator = document.createElement('div');
+                    daySeparator.classList.add('day-separator');
+                    daySeparator.innerText = `${day} ${messageDate.toLocaleString('default', { month: 'long' })} ${messageDate.getFullYear()}`;
+                    messagesContainer.appendChild(daySeparator);
+
+                    currentDay = day;
+                }
+
                 messagesContainer.appendChild(messageCard(socket, message, user, recipient_user));
             })
 
@@ -290,7 +313,7 @@ function loadMessages(receiverId) {
         })
 }
 
-export function messageCard(socket, message, user, recipient_user) {
+export function messageCard(socket, message, user, recipient_user, dashboard = false) {
     let sent = message.sender_id === user.account_id;
 
     let card = document.createElement('div');
@@ -301,6 +324,9 @@ export function messageCard(socket, message, user, recipient_user) {
     card.classList.add(sent ? 'sent' : 'received');
     if (message.deleted) {
         card.classList.add('deleted');
+    }
+    if (dashboard) {
+        card.classList.add('dashboard');
     }
 
     // Modify date format
@@ -351,14 +377,19 @@ export function messageCard(socket, message, user, recipient_user) {
             messageContent.innerHTML = '';
             buttons.classList.add('!hidden');
 
+            let updateForm = document.createElement('div');
+            updateForm.classList.add('update-form');
+
             // Add input and update button
-            let updateInput = document.createElement('input');
+            let updateInput = document.createElement('textarea');
             updateInput.value = message.content;
             updateInput.classList.add('update-input');
+            updateForm.appendChild(updateInput);
 
             let updateButton = document.createElement('button');
-            updateButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg>';
+            updateButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check ml-2"><path d="M20 6 9 17l-5-5"/></svg>';
             updateButton.classList.add('update-button');
+            updateForm.appendChild(updateButton);
 
             // Remove modified text is exists
             let modifiedText = card.querySelector('.modified');
@@ -371,8 +402,7 @@ export function messageCard(socket, message, user, recipient_user) {
                 socket.send(updateMessageCommand(user.api_token, message.id, updateInput.value));
 
                 // Remove input and button
-                card.querySelector('.message-content').removeChild(updateInput);
-                card.querySelector('.message-content').removeChild(updateButton);
+                card.querySelector('.message-content').removeChild(updateForm);
                 buttons.classList.remove('!hidden');
 
                 // Add modified text
@@ -382,8 +412,7 @@ export function messageCard(socket, message, user, recipient_user) {
                 card.querySelector('.message-content').appendChild(newModifiedText);
             })
 
-            card.querySelector('.message-content').appendChild(updateInput);
-            card.querySelector('.message-content').appendChild(updateButton);
+            card.querySelector('.message-content').appendChild(updateForm);
         })
     }
 
@@ -426,6 +455,11 @@ function contactCard(_user) {
     return card;
 }
 
+export function setLastMessage(userId, message) {
+    let lastMessage = document.querySelector(`.conversation-card[id="${userId}"] .last-message`);
+    lastMessage.innerText = message;
+}
+
 function togglePageVisibility() {
     conversationsPage.classList.toggle('!hidden');
     messagesPage.classList.toggle('!hidden');
@@ -458,6 +492,7 @@ export function formatDate(date) {
 
     return dateText;
 }
+
 
 // All function to send request to the server
 

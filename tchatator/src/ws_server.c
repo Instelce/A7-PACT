@@ -672,6 +672,7 @@ int main(void)
 
     // Setup database
     db_login(&conn);
+    log_info("Connected to the database %s:%s@%s as %s", getenv("DB_HOST"), getenv("DB_PORT"), getenv("DB_NAME"), getenv("DB_USER"));
 
     // Setup clients
     clients = (client_t*)malloc(20 * sizeof(client_t));

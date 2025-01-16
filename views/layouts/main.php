@@ -193,7 +193,9 @@ use app\core\Application;
 
                 <!-- Writing indicator -->
                 <div class="writing-indicator !hidden">
-                    <p>En train d'écrire...</p>
+                    <span style="--i:1"></span>
+                    <span style="--i:2"></span>
+                    <span style="--i:3"></span>
                 </div>
 
                 <div class="chat-bottom">

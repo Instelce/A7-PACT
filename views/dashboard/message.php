@@ -17,7 +17,7 @@ $this->jsFile = "dashboard/message";
             <h1><?php echo Application::$app->user->specific()->denomination ?></h1>
         </div>
 
-        <div class="flex flex-col gap-1 h-[70vh] overflow-y-scroll" id="contactesListe"></div>
+        <div class="flex flex-col h-[70vh] overflow-y-scroll" id="contactesListe"></div>
     </div>
 
     <!-- Page content -->
@@ -26,8 +26,10 @@ $this->jsFile = "dashboard/message";
         <div class="messages-container flex flex-col m-0 p-0 h-[65vh] overflow-y-scroll" id="message-container"></div>
 
         <!-- Writing indicator -->
-        <div class="writing-indicator !hidden">
-            <p>En train d'écrire...</p>
+        <div class="writing-indicator !hidden !px-0 py-1">
+            <span style="--i:1"></span>
+            <span style="--i:2"></span>
+            <span style="--i:3"></span>
         </div>
 
         <!-- Just for testing -->

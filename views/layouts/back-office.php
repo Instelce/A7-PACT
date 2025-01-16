@@ -80,7 +80,12 @@ use app\models\account\UserAccount;
         <!--            </svg>-->
         <!--        </a>-->
 
-        <a href="/dashboard" class="link pro">Mon dashboard</a>
+        <a href="/dashboard" class="button gray icon-left icon-right no-border">
+            <span>Dashboard</span>
+            <i data-lucide="layout-dashboard"></i>
+        </a>
+
+<!--        <a href="/dashboard" class="link pro">Mon dashboard</a>-->
 
         <?php if (Application::$app->isAuthenticated()) { ?>
             <a href="/dashboard/messages" class="chat-trigger button gray icon-left icon-right no-border">

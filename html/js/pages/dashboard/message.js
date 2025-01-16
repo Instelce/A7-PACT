@@ -2,7 +2,7 @@ import { getUser } from "../../user.js";
 import {
     clientInfoCommand, formatDate, getChangesCommand,
     loginCommand, messageCard, REFRESH_RATE,
-    sendMessageCommand,
+    sendMessageCommand, setLastMessage,
     userInfoCommand
 } from "../../tchatator.js";
 
@@ -48,8 +48,9 @@ getUser().then(u => {
 
         if (data.command === 'SEND_MSG') {
             data.message.modified_date = null;
-            messagesContainer.appendChild(messageCard(socket, data.message, user, recipient_user));
+            messagesContainer.appendChild(messageCard(socket, data.message, user, recipient_user, true));
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            setLastMessage(data.message.receiver_id, 'Vous : ' + data.message.content);
         }
 
         if (data.command === 'USER_INFO') {
@@ -60,6 +61,7 @@ getUser().then(u => {
 
             if (recipient_is_writing) {
                 writingIndicator.classList.remove('!hidden');
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
             } else {
                 writingIndicator.classList.add('!hidden');
             }
@@ -85,10 +87,13 @@ getUser().then(u => {
 
                                     let card = document.createElement('article');
                                     card.classList.add('conversation-card');
+                                    card.classList.add('rounded');
+                                    card.classList.add('dashboard');
                                     card.innerHTML = `
                                         <img src="${user.avatar_url}" alt="profile picture">
                                         <div class="">
                                             <h3>${user.name}</h3>
+                                            <h6 class="last-message line-clamp-1">${change.message.content}</h6>
                                         </div>
                                     `;
 
@@ -110,15 +115,16 @@ getUser().then(u => {
                                 })
                         } else {
                             // If exist and not in the conversation set the last message
-                            if (in_conversation_with != change.message.sender_id) {
-                                let lastMessage = document.querySelector(`[id="${change.message.sender_id}"] .last-message`);
-                                lastMessage.innerText = change.message.content;
-                            }
+                            // if (in_conversation_with != change.message.sender_id) {
+                            //     setLastMessage(change.message.sender_id, change.message.content);
+                            // }
                         }
+
+                        setLastMessage(change.message.sender_id, change.message.content);
 
                         if (in_conversation_with == change.message.sender_id) {
                             change.message.modified_date = null;
-                            messagesContainer.appendChild(messageCard(socket, change.message, user, recipient_user));
+                            messagesContainer.appendChild(messageCard(socket, change.message, user, recipient_user, true));
                             // Scroll to the bottom
                             messagesContainer.scrollTop = messagesContainer.scrollHeight;
                         }
@@ -229,11 +235,13 @@ async function loadContacts() {
     contacts.forEach(contact => {
         let card = document.createElement('article');
         card.classList.add('conversation-card');
+        card.classList.add('rounded');
+        card.classList.add('dashboard');
         card.innerHTML = `
             <img src="${contact.avatar_url}" alt="profile picture">
             <div class="">
                 <h3>${contact.name}</h3>
-                <h6 class="last-message line-clamp-1">${user.account_id == contact.last_message.sender_id ? "vous : " : ""}${contact.last_message.content}</h6>
+                <h6 class="last-message line-clamp-1">${user.account_id == contact.last_message.sender_id ? "Vous : " : ""}${contact.last_message.content}</h6>
             </div>
     `;
         card.id = contact.account_id;
@@ -277,7 +285,7 @@ async function showDiscussion(account_id) {
     let messages = await loadMessages(account_id);
     messagesContainer.innerHTML = ""; // Clear previous messages
     messages.forEach(message => {
-        messagesContainer.appendChild(messageCard(socket, message, user, recipient_user));
+        messagesContainer.appendChild(messageCard(socket, message, user, recipient_user, true));
     });
 
     // Scroll to the bottom

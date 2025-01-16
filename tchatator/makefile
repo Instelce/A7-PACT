@@ -33,7 +33,7 @@ websocket: $(utils) src/ws_server.c
 
 websocket-prod: $(utils) src/ws_server.c
 	mkdir -p $(output)
-	$(CC) $^ -o $(output)/websocket-server -Ilib/wsServer/include -Llib/wsServer -lws -Ilib/json-c -Llib/json-c/ -ljson-c -I/usr/include/postgresql -L/usr/lib/x86_64-linux-gnu -lpq
+	$(CC) $^ -o $(output)/websocket-server -Ilib/wsServer/include -Llib/wsServer -lws -Ilib/json-c -Llib/json-c/ -ljson-c -I/usr/include/postgresql -L/usr/lib/x86_64-linux-gnu -lpq -lpthread
 	./$(output)/websocket-server
 
 clean:
