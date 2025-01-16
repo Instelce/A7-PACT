@@ -119,7 +119,7 @@ char* get_command_param_value(command_t command, char name[]);
 response_t* request(int sock, char buf[]);
 response_t* send_login(int sock, char api_token[]);
 response_t* send_message(int sock, char token[], char message[], int receiver_id);
-response_t* send_uptade_message(int sock, char token[], int message_id, char message[]);
+response_t* send_update_message(int sock, char token[], int message_id, char message[]);
 response_t* send_delete_message(int sock, char token[], int message_id);
 response_t* send_get_new_message(int sock, char token[]);
 void send_disconnected(int sock);

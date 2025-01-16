@@ -221,7 +221,7 @@ response_t* send_login(int sock, char api_token[])
     return request(sock, buf);
 }
 
-response_t* send_uptade_message(int sock, char token[], int message_id, char message[])
+response_t* send_update_message(int sock, char token[], int message_id, char message[])
 {
     command_t command = create_command(UPDATE_MESSAGE);
 
