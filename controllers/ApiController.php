@@ -18,6 +18,7 @@ use app\models\opinion\Opinion;
 use app\models\opinion\OpinionDislike;
 use app\models\opinion\OpinionLike;
 use app\models\opinion\OpinionPhoto;
+use app\models\opinion\OpinionReply;
 use app\models\user\MemberUser;
 use app\models\offer\AttractionParkOffer;
 use app\models\offer\OfferPhoto;
@@ -368,6 +369,13 @@ class ApiController extends Controller
 
             $data[$i]['likes'] = $opinion->likes();
             $data[$i]['dislikes'] = $opinion->dislikes();
+            $reply = OpinionReply::findOne(['opinion_id' => $opinion->id]);
+            if ($reply) {
+                $data[$i]['reply'] = $reply->toJson();
+            } else {
+                $data[$i]['reply'] = false;
+            }
+
 
             // Récupérer opinion id
             if (OpinionLike::findOne(["opinion_id" => $opinion->id, "account_id" => Application::$app->user->account_id])) {
@@ -464,6 +472,21 @@ class ApiController extends Controller
         }
 
         $opinion->addReport();
+
+        return $response->json([]);
+    }
+
+    public function opinionReply(Request $request, Response $response, $routeParams){
+        $opinionPk = $routeParams['opinion_pk'];
+        $opinion = Opinion::findOneByPk($opinionPk);
+
+        if (!$opinion) {
+            $response->setStatusCode(404);
+            return $response->json(['error' => 'Opinion not found']);
+        }
+
+        $opinion->addReply();
+        $opinion->removeReply();
 
         return $response->json([]);
     }
