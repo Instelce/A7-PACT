@@ -6,6 +6,7 @@ use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
 use app\core\Response;
+use app\core\Notifications;
 use app\models\account\AnonymousAccount;
 use app\models\account\UserAccount;
 use app\models\Message;
@@ -434,6 +435,9 @@ class ApiController extends Controller
 
         if ($action == "add") {
             $opinion->addLike();
+
+            Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liker votre avis : " . $opinion->title);
+
         } else if ($action == "remove") {
             $opinion->removeLike();
         }
@@ -486,6 +490,9 @@ class ApiController extends Controller
         }
 
         $opinion->addReply();
+
+        Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a répondu à votre avis : " . $opinion->title);
+
         $opinion->removeReply();
 
         return $response->json([]);
@@ -574,15 +581,11 @@ class ApiController extends Controller
 
         return $response->json($conversations);
     }
-    /**
-     * Notifications
-     *
-     * Params :
-     *
-     */
+
     public function notifications(Request $request, Response $response)
     {
-       $nofications = Notification::find(['user_id' => Application::$app->user->account_id]);
-       return $this->json($nofications);
+        $notifications = Notification::find(['user_id' => Application::$app->user->account_id]);
+        return $this->json($notifications);
     }
 }
+
