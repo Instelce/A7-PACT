@@ -190,4 +190,9 @@ class SiteController extends Controller
     {
         return $this->render('termofuse');
     }
+
+    public function mentions()
+    {
+        return $this->render('mentions');
+    }
 }
