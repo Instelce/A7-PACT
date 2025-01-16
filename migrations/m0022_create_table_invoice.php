@@ -12,6 +12,9 @@ class m0022_create_table_invoice
              issue_date DATE NOT NULL,
              service_date INT NOT NULL,
              due_date DATE NOT NULL,
+             offer_price FLOAT NOT NULL,
+             en_relief_price FLOAT NOT NULL,
+             a_la_une_price FLOAT NOT NULL,
              offer_id INT NOT NULL,   
              FOREIGN KEY (offer_id) REFERENCES offer(id) ON DELETE CASCADE
         );

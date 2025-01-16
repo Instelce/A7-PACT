@@ -12,7 +12,7 @@ class m0021_create_table_opinion
             
             rating FLOAT NOT NULL,
             title VARCHAR(128) NOT NULL,
-            comment VARCHAR(255) NOT NULL,
+            comment VARCHAR(1024) NOT NULL,
             visit_date DATE NOT NULL,
             visit_context VARCHAR(60) NOT NULL,
             

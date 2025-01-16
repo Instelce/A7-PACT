@@ -2,9 +2,13 @@
 
 namespace app\models\payment;
 
+/** @var $subscription  \app\models\offer\Subscription */
+
 use app\core\DBModel;
 use app\models\offer\Offer;
 use app\models\offer\OfferStatusHistory;
+use app\models\offer\OfferType;
+use app\models\offer\Option;
 
 class Invoice extends DBModel
 {
@@ -13,7 +17,19 @@ class Invoice extends DBModel
     // Month number
     public string $service_date = '';
     public string $due_date = '';
+    public float $offer_price = 0.0;
+    public float $en_relief_price = 0.0;
+    public float $a_la_une_price = 0.0;
+
     public int $offer_id = 0;
+
+    public function save(): bool
+    {
+        $this->offer_price = OfferType::findOneByPk(Offer::findOneByPk($this->offer_id)->offer_type_id)->price;
+        $this->a_la_une_price = Option::findOneByPk(2)->price;
+        $this->en_relief_price = Option::findOneByPk(1)->price;
+        return parent::save();
+    }
 
     public function rules(): array
     {
@@ -27,7 +43,7 @@ class Invoice extends DBModel
 
     public function attributes(): array
     {
-        return ['issue_date', 'service_date', 'due_date', 'offer_id'];
+        return ['issue_date', 'service_date', 'due_date', 'offer_price', 'en_relief_price', 'a_la_une_price', 'offer_id'];
     }
 
     public function offer()

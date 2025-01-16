@@ -60,13 +60,16 @@ class AuthController extends Controller
 
             if ($form->validate()) {
                 $form->verify();
+
+                Application::$app->session->set('reset-password-email', $form->mail);
+
                 $response->redirect('/mail-envoye');
                 exit;
             }
         }
-
         return $this->render('auth/password-forget', ['model' => $form]);
     }
+
 
     public function sendMail(Request $request, Response $response)
     {
