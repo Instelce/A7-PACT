@@ -111,6 +111,7 @@ async function loadContact() {
 async function contacts() {
     let contactsList = document.getElementById("contactesListe");
     let contacts = await loadContact();
+
     contacts.forEach(contacte => {
         let card = document.createElement('article');
         card.classList.add('conversation-card');
