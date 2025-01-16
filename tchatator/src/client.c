@@ -46,29 +46,261 @@ user_list_t clients;
 int discussion_user_id;
 char error_message[CHAR_SIZE];
 
-// Display a menu and return the index of the selected action
+/**
+ * @brief Displays a menu and returns the index of the selected action.
+ *
+ * @param menu The menu to display.
+ * @return The index of the selected action.
+ */
 int display_menu(menu_t menu);
 
-// Create a menu, with a name and a list of actions (name and function)
-// The last action should have a NULL name
-// Example:
-// create_menu(menu, "Main menu", "Action 1", action1, "Action 2", action2, NULL);
+/**
+ * @brief Creates a menu with a name and a list of actions (name and function).
+ * The last action must have a NULL name.
+ *
+ * Example:
+ * @code
+ * create_menu(menu, "Main menu", "Action 1", action1, "Action 2", action2, NULL);
+ * @endcode
+ *
+ * @param menu The menu to create.
+ * @param name The name of the menu.
+ * @param ... The list of actions (name and function).
+ */
 void create_menu(menu_t* menu, char name[], ...);
 
+/**
+ * @brief Adds an action to the menu.
+ *
+ * @param menu The menu to add the action to.
+ * @param name The name of the action.
+ * @param action The function associated with the action.
+ * @param disabled Indicates if the action is disabled.
+ */
 void add_menu_action(menu_t* menu, char name[], void (*action)(), int disabled);
 
+/**
+ * @brief Sets an error message.
+ *
+ * @param format The format of the error message.
+ * @param ... The arguments for the error message.
+ */
 void set_error(char format[], ...);
 
+/**
+ * @brief Prints a message at a given position.
+ *
+ * @param x The x position.
+ * @param y The y position.
+ * @param format The format of the message.
+ * @param ... The arguments for the message.
+ */
 void goto_print(int x, int y, char format[], ...);
 
+/**
+ * @brief Displays a message.
+ *
+ * @param message The message to display.
+ * @param align_left Indicates if the message should be left-aligned.
+ * @param selected Indicates if the message is selected.
+ * @return An integer indicating the result of the display.
+ */
 int display_message(message_t message, int align_left, int selected);
 
+/**
+ * @brief Displays a line.
+ */
 void display_line();
 
+/**
+ * @brief Disconnects the user.
+ */
 void disconnect();
 
+/**
+ * @brief Deletes and updates the menu.
+ *
+ * @param m The message associated with the update.
+ */
 void menu_delete_and_update(message_t m);
 
+/**
+ * @brief Sends a message from the menu.
+ */
+void menu_send_message();
+
+/**
+ * @brief Selects a discussion from the menu.
+ */
+void menu_select_discussion();
+
+/**
+ * @brief Handles the discussion menu.
+ */
+void menu_discussion();
+
+/**
+ * @brief Handles client connection.
+ */
+void connection_client();
+
+/**
+ * @brief Handles professional connection.
+ */
+void connection_pro();
+
+/**
+ * @brief Handles signals.
+ *
+ * @param sig The signal to handle.
+ */
+void signal_handler(int sig);
+
+/**
+ * @brief Writes a message with an initial content.
+ *
+ * @param message The message to write.
+ * @param initial_content The initial content of the message.
+ */
+void write_message(char* message, const char* initial_content);
+
+/**
+ * @brief Reads user input.
+ *
+ * @param output The output buffer for the user input.
+ */
+void input(char* output);
+
+/**
+ * @brief Prints the logo.
+ */
+void print_logo();
+
+/**
+ * @brief Displays a box with a title and a color.
+ *
+ * @param color The color of the box.
+ * @param title The title of the box.
+ * @param selected Indicates if the box is selected.
+ */
+void display_box(color_t color, char title[], int selected);
+
+/**
+ * @brief Formats a date string.
+ *
+ * @param date The date string to format.
+ * @return The formatted date string.
+ */
+char* format_date(char date[]);
+
+void empty_action();
+
+int main()
+{
+    print_logo();
+    int sock_ret;
+    struct sockaddr_in server_addr;
+    int choice;
+    int is_connected = 0;
+    connected_user = NOT_CONNECTED_USER;
+    discussion_user_id = -1;
+
+    // Create all menus that require a choice
+    menu_t menu_login;
+    create_menu(
+        &menu_login, "Login",
+        "Connection client", connection_client,
+        "Connection pro", connection_pro,
+        "Connection admin", empty_action,
+        "Disconnect", disconnect,
+        NULL);
+    menu_t menu_client;
+    create_menu(
+        &menu_client, "Client",
+        "Send a message", menu_send_message,
+        "Discussions", menu_select_discussion,
+        "Disconnect", disconnect,
+        NULL);
+    menu_t menu_pro;
+    create_menu(
+        &menu_pro, "Professional",
+        "Send a message", menu_send_message,
+        "Discussions", menu_select_discussion,
+        "Disconnect", disconnect,
+        NULL);
+    menu_t menu_admin;
+    create_menu(
+        &menu_admin, "Admin",
+        "Block a message", empty_action,
+        "Ban a user", empty_action,
+        "Disconnect", disconnect,
+        NULL);
+
+    config_t* config;
+    config = malloc(sizeof(config_t));
+    config_load(config);
+
+    env_load("..");
+
+    db_login(&conn);
+
+    signal(SIGINT, signal_handler);
+
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        perror("Cannot create socket");
+        exit(EXIT_FAILURE);
+    }
+
+    // Configure server address
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(SERVER_PORT);
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+
+    if ((sock_ret = connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr))) < 0) {
+        perror("Cannot connect to the server socket");
+        disconnect(sock);
+        exit(EXIT_FAILURE);
+    } else {
+        printf("Connected to server !\n");
+    }
+
+    pros = db_get_professionals(conn, 0, 5);
+    clients = db_get_members(conn, 0, 5);
+    while (running) {
+        choice = 0;
+        is_connected = memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0;
+
+        if (discussion_user_id != -1) {
+            menu_discussion();
+        }
+
+        // printf("Connected: %d\n", is_connected);
+        // printf("User type: %d\n", connected_user.type);
+        // printf("User name: %s\n", connected_user.name);
+
+        if (is_connected) {
+            if (connected_user.type == UNKNOWN) {
+                db_set_user_type(conn, &connected_user);
+            }
+            if (connected_user.type == MEMBER) {
+                choice = display_menu(menu_client);
+                menu_client.actions[choice].action();
+            } else if (connected_user.type == PROFESSIONAL) {
+                choice = display_menu(menu_pro);
+                menu_pro.actions[choice].action();
+            } else if (connected_user.type == ADMIN) {
+                choice = display_menu(menu_admin);
+                menu_admin.actions[choice].action();
+            }
+        } else {
+            choice = display_menu(menu_login);
+            menu_login.actions[choice].action();
+        }
+    }
+
+    close(sock);
+    return EXIT_SUCCESS;
+}
 void input(char* output)
 {
     scanf("%s", output);
@@ -518,63 +750,6 @@ void menu_delete_and_update(message_t m)
     }
 }
 
-void menu_display_unread_messages()
-{
-    clear_term();
-    menu_t unread_messages_menu;
-    int selected_index = -1;
-    int offset = 0;
-    const int limit = 5;
-    message_list_t messages;
-
-    printf("\nDisplay Unread Messages\n");
-    strcpy(unread_messages_menu.name, "Select a Message to Mark as Read");
-    while (1) {
-        messages = db_get_unread_messages(conn, connected_user.id, offset, limit);
-
-        if (messages.count == 0) {
-            printf("No more messages to display.\n");
-            break;
-        }
-
-        unread_messages_menu.actions = malloc((messages.count + 2) * sizeof(menu_action_t));
-        unread_messages_menu.actions_count = messages.count + 2;
-
-        for (int i = 0; i < messages.count; i++) {
-            strcpy(unread_messages_menu.actions[i].name, messages.messages[i].content);
-        }
-
-        strcpy(unread_messages_menu.actions[messages.count].name, "Next Page");
-
-        strcpy(unread_messages_menu.actions[messages.count + 1].name, "Previous Page");
-
-        selected_index = display_menu(unread_messages_menu);
-
-        if (selected_index < messages.count) {
-            int message_id = messages.messages[selected_index].id;
-
-            response = send_update_message(sock, connected_user.api_token, message_id, "seen");
-
-            if (response->status.code == 200) {
-                printf("Message successfully marked as read.\n");
-            } else {
-                printf("Failed to mark the message as read. Response: %d %s\n", response->status.code, response->status.message);
-            }
-            free(unread_messages_menu.actions);
-            free(messages.messages);
-            break;
-        } else if (selected_index == messages.count) {
-
-            offset += limit;
-        } else if (selected_index == messages.count + 1 && offset > 0) {
-            offset -= limit;
-        }
-
-        free(unread_messages_menu.actions);
-        free(messages.messages);
-    }
-}
-
 void disconnect()
 {
     running = 0;
@@ -866,113 +1041,6 @@ void print_logo()
 
 void empty_action()
 {
-}
-
-int main()
-{
-    print_logo();
-    int sock_ret;
-    struct sockaddr_in server_addr;
-    int choice;
-    int is_connected = 0;
-    connected_user = NOT_CONNECTED_USER;
-    discussion_user_id = -1;
-
-    // Create all menus that require a choice
-    menu_t menu_login;
-    create_menu(
-        &menu_login, "Login",
-        "Connection client", connection_client,
-        "Connection pro", connection_pro,
-        "Connection admin", empty_action,
-        "Disconnect", disconnect,
-        NULL);
-    menu_t menu_client;
-    create_menu(
-        &menu_client, "Client",
-        "Send a message", menu_send_message,
-        "Discussions", menu_select_discussion,
-        "Disconnect", disconnect,
-        NULL);
-    menu_t menu_pro;
-    create_menu(
-        &menu_pro, "Professional",
-        "Send a message", menu_send_message,
-        "Discussions", menu_select_discussion,
-        "Disconnect", disconnect,
-        NULL);
-    menu_t menu_admin;
-    create_menu(
-        &menu_admin, "Admin",
-        "Block a message", empty_action,
-        "Ban a user", empty_action,
-        "Disconnect", disconnect,
-        NULL);
-
-    config_t* config;
-    config = malloc(sizeof(config_t));
-    config_load(config);
-
-    env_load("..");
-
-    db_login(&conn);
-
-    signal(SIGINT, signal_handler);
-
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("Cannot create socket");
-        exit(EXIT_FAILURE);
-    }
-
-    // Configure server address
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(SERVER_PORT);
-    server_addr.sin_addr.s_addr = INADDR_ANY;
-
-    if ((sock_ret = connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr))) < 0) {
-        perror("Cannot connect to the server socket");
-        disconnect(sock);
-        exit(EXIT_FAILURE);
-    } else {
-        printf("Connected to server !\n");
-    }
-
-    pros = db_get_professionals(conn, 0, 5);
-    clients = db_get_members(conn, 0, 5);
-    while (running) {
-        choice = 0;
-        is_connected = memcmp(&connected_user, &NOT_CONNECTED_USER, sizeof(user_t)) != 0;
-
-        if (discussion_user_id != -1) {
-            menu_discussion();
-        }
-
-        // printf("Connected: %d\n", is_connected);
-        // printf("User type: %d\n", connected_user.type);
-        // printf("User name: %s\n", connected_user.name);
-
-        if (is_connected) {
-            if (connected_user.type == UNKNOWN) {
-                db_set_user_type(conn, &connected_user);
-            }
-            if (connected_user.type == MEMBER) {
-                choice = display_menu(menu_client);
-                menu_client.actions[choice].action();
-            } else if (connected_user.type == PROFESSIONAL) {
-                choice = display_menu(menu_pro);
-                menu_pro.actions[choice].action();
-            } else if (connected_user.type == ADMIN) {
-                choice = display_menu(menu_admin);
-                menu_admin.actions[choice].action();
-            }
-        } else {
-            choice = display_menu(menu_login);
-            menu_login.actions[choice].action();
-        }
-    }
-
-    close(sock);
-    return EXIT_SUCCESS;
 }
 
 // Display a menu and return the index of the selected action
