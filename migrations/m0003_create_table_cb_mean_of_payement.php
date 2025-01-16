@@ -8,8 +8,8 @@ class m0003_create_table_cb_mean_of_payement
         $db = Application::$app->db;
         $sql = "CREATE TABLE cb_mean_of_payment (
             payment_id INT PRIMARY KEY,
-            name VARCHAR(50) NOT NULL,
-            card_number VARCHAR(16) NOT NULL,
+            name VARCHAR(64) NOT NULL,
+            card_number VARCHAR(32) NOT NULL,
             expiration_date VARCHAR(8) NOT NULL,
             cvv VARCHAR(3) NOT NULL,
             CONSTRAINT cb_mean_of_payment_fk FOREIGN KEY (payment_id) REFERENCES mean_of_payment (id)

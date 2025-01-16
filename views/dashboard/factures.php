@@ -7,6 +7,7 @@
 
 use app\core\Application;
 use app\core\Utils;
+use app\models\offer\Subscription;
 
 $this->title = "Factures";
 $this->cssFile = "dashboard/factures";
@@ -241,9 +242,24 @@ $notActiveSubscriptions = array_filter($subscriptions, fn($subscription) => !$su
                                             </a>
                                         </div>
                                     </div>
+                                    <?php
+                                        $offerPrice = $invoice->activeDays() * $invoice->offer_price;
+                                        $sousTotal = $offerPrice;
 
+                                        $off = \app\models\offer\Offer::findOneByPk($invoice->offer_id);
+                                        $subscripts = $off->getSubscriptions();
+
+                                        foreach ($subscripts as $sub) {
+                                            $typeOption = $sub->option()->type;
+                                            $price = $typeOption == 'en_relief' ? $invoice->en_relief_price : $invoice->a_la_une_price;
+                                            $optionPrice = $sub->duration * $price;
+                                            if ($sub) {
+                                                $sousTotal += $optionPrice;
+                                            }
+                                        }
+                                    ?>
                                     <div class="flex flex-col gap-2 text-right">
-                                        <p class="heading-1 font-normal font-title"><?php echo $activeDays * $offer->type()->price ?> € <span class="text-sm">HT</span></p>
+                                        <p class="heading-1 font-normal font-title"><?php echo $sousTotal?> € <span class="text-sm">HT</span></p>
                                         <p>pour <span class="underline"><?php echo $activeDays ?> jours</span> en ligne</p>
                                     </div>
                                 </article>

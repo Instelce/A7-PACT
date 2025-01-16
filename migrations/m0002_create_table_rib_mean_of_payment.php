@@ -8,9 +8,9 @@ class m0002_create_table_rib_mean_of_payment
         $db = Application::$app->db;
         $sql = "CREATE TABLE rib_mean_of_payment (
             payment_id INT PRIMARY KEY,
-            name VARCHAR(50) NOT NULL,
-            iban VARCHAR(34) UNIQUE NOT NULL,
-            bic VARCHAR(11) NOT NULL,
+            titular_account VARCHAR(64) NOT NULL,
+            iban VARCHAR(64) UNIQUE NOT NULL,
+            bic VARCHAR(16) NOT NULL,
             CONSTRAINT rib_mean_of_payment_fk FOREIGN KEY (payment_id) REFERENCES mean_of_payment (id) ON DELETE CASCADE
         );";
         $db->pdo->exec($sql);

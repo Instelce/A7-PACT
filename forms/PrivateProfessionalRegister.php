@@ -20,9 +20,6 @@ class PrivateProfessionalRegister extends Model
     public const PAYMENT = 1;
     public const NOPAYMENT = 0;
 
-    public const ACCEPT_CONDITIONS = 1;
-    public const REFUSE_CONDITIONS = 0;
-
 
     public string $denomination = '';
     public string $siren = '';
@@ -36,7 +33,6 @@ class PrivateProfessionalRegister extends Model
     public string $password = '';
     public string $passwordConfirm = '';
     public int $payment = self::NOPAYMENT;
-    public int $conditions = self::REFUSE_CONDITIONS;
     public string $titularAccount = '';
     public string $iban = '';
     public string $bic = '';
@@ -77,23 +73,28 @@ class PrivateProfessionalRegister extends Model
         $proUser->code = Utils::generateUUID();
         $proUser->phone = str_replace(' ', '', $this->phone);
         $proUser->save();
-
+        echo("tes");
         $meanOfPayment = new MeanOfPayment();
         $meanOfPayment->save();
-        echo 'ok';
 
-        if ($this->iban != NULL && $this->bic != NULL) {
+
+        echo($meanOfPayment->id);
+
+        if ($this->iban != NULL) {
             $payment = new RibMeanOfPayment();
-            $payment->id = $meanOfPayment->payment_id;
-            $payment->name = $this->titularAccount;
+            $payment->payment_id = $meanOfPayment->id;
+            echo($this->titularAccount);
+            $payment->titular_account = $this->titularAccount;
             $payment->iban = $this->iban;
             $payment->bic = $this->bic;
+            echo("lets go");
+
             $payment->save();
             echo 'ok2';
 
-        } elseif ($this->cardnumber != NULL && $this->cryptogram != NULL && $this->expirationdate != NULL) {
+        } elseif ($this->cardnumber) {
             $payment = new CbMeanOfPayment();
-            $payment->id = $meanOfPayment->payment_id;
+            $payment->payment_id = $meanOfPayment->id;
             $payment->name = $this->titularCard;
             $payment->card_number = $this->cardnumber;
             $payment->expiration_date = $this->expirationdate;
@@ -139,10 +140,7 @@ class PrivateProfessionalRegister extends Model
             'password' => [self::RULE_REQUIRED, self::RULE_PASSWORD],
             'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
             'titular-account' => [[self::RULE_MAX, 'max' => 255]],
-            'iban' => [],
             'bic' => [[self::RULE_MAX, 'max' => 11]],
-            'cardnumber' => [],
-            'titular-card' => [],
             'expirationdate' => [self::RULE_EXP_DATE],
             'cryptogram' => [[self::RULE_MAX, 'max' => 3], self::RULE_NUMBER]
         ];
@@ -163,8 +161,6 @@ class PrivateProfessionalRegister extends Model
             'password' => 'Mot de passe',
             'passwordConfirm' => 'Confirmez votre mot de passe',
             'payment' => 'Je souhaite de rentrer mes coordonnées bancaires maintenant (possibilité de le faire plus tard)',
-            'conditions' => 'J\'accepte les conditions géénrales d\'utilisation',
-            'notifications' => 'J\'autorise l\'envoi de notifications',
             'titular-account' => 'Titulaire du compte',
             'iban' => 'IBAN',
             'bic' => 'BIC',

@@ -19,7 +19,6 @@ class Offer extends DBModel
     public string $title = '';
     public string $summary = '';
     public string $description = '';
-    public int $likes = 0;
     public int $offline = self::STATUS_OFFLINE;
     public int $view_counter = 0;
     public int $click_counter = 0;
@@ -65,12 +64,12 @@ class Offer extends DBModel
 
     public function attributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price', 'rating'];
+        return ['title', 'summary', 'description', 'offline', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price', 'rating'];
     }
 
     public function updateAttributes(): array
     {
-        return ['title', 'summary', 'description', 'likes', 'offline', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price', 'rating'];
+        return ['title', 'summary', 'description', 'offline', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price', 'rating'];
     }
 
     public function rules(): array
@@ -116,6 +115,11 @@ class Offer extends DBModel
     public function subscription(): false|null|Subscription
     {
         return Subscription::findOne(['offer_id' => $this->id]);
+    }
+
+    public function getSubscriptions():false|null|array
+    {
+        return Subscription::find(['offer_id' => $this->id]);
     }
 
     public function monthSubscriptions(): array

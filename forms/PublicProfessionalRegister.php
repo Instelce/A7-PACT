@@ -16,11 +16,6 @@ class PublicProfessionalRegister extends Model
     public const ASSO = 1;
     public const OTHER = 0;
 
-    public const ACCEPT_CONDITIONS = 1;
-    public const REFUSE_CONDITIONS = 0;
-
-    public const ACCEPT_NOTIFICATIONS = 1;
-    public const REFUSE_NOTIFICATIONS = 0;
     public int $isAsso = self::OTHER;
     public string $siren = '';
     public string $denomination = '';
@@ -33,9 +28,6 @@ class PublicProfessionalRegister extends Model
     public string $phone = '';
     public string $password = '';
     public string $passwordConfirm = '';
-
-    public int $conditions = self::REFUSE_CONDITIONS;
-    public int $notifications = self::REFUSE_NOTIFICATIONS;
 
 
     public function register()

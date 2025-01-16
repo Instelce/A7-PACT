@@ -8,6 +8,8 @@ class MeanOfPayment extends DBModel
 {
     public int $id = 0;
 
+    public string $created_at = '';
+
     public static function tableName(): string
     {
         return 'mean_of_payment';
@@ -15,7 +17,7 @@ class MeanOfPayment extends DBModel
 
     public function attributes(): array
     {
-        return ['id'];
+        return ['created_at'];
     }
 
     public static function pk(): string
@@ -26,7 +28,7 @@ class MeanOfPayment extends DBModel
     public function rules(): array
     {
         return [
-
+            'created_at' => [self::RULE_REQUIRED, self::RULE_DATE]
         ];
 
     }

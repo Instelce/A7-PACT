@@ -22,7 +22,6 @@ class MemberRegisterForm extends Model
     public string $phone = '';
     public string $password = '';
     public string $passwordConfirm = '';
-    public bool $notification = false;
 
     public function register()
     {
@@ -52,7 +51,6 @@ class MemberRegisterForm extends Model
         $member->firstname = $this->firstname;
         $member->phone = str_replace(' ', '', $this->phone);
         $member->pseudo = $this->pseudo;
-        $member->allows_notifications = $this->notification;
         $member->save();
 
         Application::$app->login($user);
