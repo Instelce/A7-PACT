@@ -169,7 +169,7 @@
 }
 
 /* Notifications */
-.notification .notification-container{
+.notification-container{
     width: fit-content;
     position: absolute;
     overflow: hidden;
@@ -185,28 +185,13 @@
     transition: opacity .2s ease, transform .2s ease;
 }
 
-.notification .notification-container::before {
-    content: "";
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-left: 1px solid rgb(var(--color-gray-1));
-    border-top: 1px solid rgb(var(--color-gray-1));
-    background: white;
-    border-radius: 2px;
-    top: 0;
-    right: calc(45px / 2 - 10px / 2);
-    z-index: -1;
-    transform: translateY(-50%) rotate(45deg);
-}
-
 .notification-container.open{
     opacity: 1;
     pointer-events: auto;
     transform: translateY(calc(100% + .5rem)) translateX(-75%);
 }
 
-.notification .notification-container a {
+.notification-container a {
     width: 100%;
     padding: .8rem 1rem;
 

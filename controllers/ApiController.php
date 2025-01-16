@@ -6,6 +6,7 @@ use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
 use app\core\Response;
+use app\core\Notifications;
 use app\models\account\AnonymousAccount;
 use app\models\account\UserAccount;
 use app\models\Message;
@@ -434,6 +435,9 @@ class ApiController extends Controller
 
         if ($action == "add") {
             $opinion->addLike();
+
+            Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liker votre avis : " . $opinion->title);
+
         } else if ($action == "remove") {
             $opinion->removeLike();
         }
@@ -476,7 +480,8 @@ class ApiController extends Controller
         return $response->json([]);
     }
 
-    public function opinionReply(Request $request, Response $response, $routeParams){
+    public function opinionReply(Request $request, Response $response, $routeParams)
+    {
         $opinionPk = $routeParams['opinion_pk'];
         $opinion = Opinion::findOneByPk($opinionPk);
 
@@ -486,6 +491,9 @@ class ApiController extends Controller
         }
 
         $opinion->addReply();
+
+        Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a répondu à votre avis : " . $opinion->title);
+
         $opinion->removeReply();
 
         return $response->json([]);
@@ -508,36 +516,48 @@ class ApiController extends Controller
     // Return a list of user id with whom the user has a conversation
     public function conversations(Request $request, Response $response)
     {
+        function findData($message, $account_id, $conversations)
+        {
+            $user = UserAccount::findOneByPk($account_id);
+            if ($user) {
+                $member = MemberUser::findOneByPk($account_id);
+                $professionnal = ProfessionalUser::findOneByPk(pkValue: $account_id);
+                if ($member) {
+                    $conversations[] = [
+                        'account_id' => $account_id,
+                        'name' => $member->pseudo,
+                        'avatar_url' => $user->avatar_url,
+                        'last_message' => $message,
+                    ];
+                } else if ($professionnal) {
+                    $conversations[] = [
+                        'account_id' => $account_id,
+                        'name' => $professionnal->denomination,
+                        'avatar_url' => $user->avatar_url,
+                        'last_message' => $message,
+                    ];
+                } else {
+                    $conversations[] = [
+                        'account_id' => $account_id,
+                        'name' => null,
+                        'avatar_url' => $user->avatar_url,
+                        'last_message' => $message,
+                    ];
+                }
+            }
+            return $conversations;
+        }
+
         $messages = Message::find(['receiver_id' => Application::$app->user->account_id, 'deleted' => 'false']);
         $conversations = [];
+        $last_message = [];
         $i = [];
         foreach ($messages as $message) {
             if (!in_array($message->sender_id, $i)) {
                 $i[] = $message->sender_id;
-                $user = UserAccount::findOneByPk($message->sender_id);
-                if ($user) {
-                    $member = MemberUser::findOneByPk($message->sender_id);
-                    $professionnal = ProfessionalUser::findOneByPk(pkValue: $message->sender_id);
-                    if ($member) {
-                        $conversations[] = [
-                            'account_id' => $message->sender_id,
-                            'name' => $member->pseudo,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    } else if ($professionnal) {
-                        $conversations[] = [
-                            'account_id' => $message->sender_id,
-                            'name' => $professionnal->denomination,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    } else {
-                        $conversations[] = [
-                            'account_id' => $message->sender_id,
-                            'name' => null,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    }
-                }
+                $last_message[$message->sender_id] = $message;
+            } else if ($message->sended_date > $last_message[$message->sender_id]->sended_date) {
+                $last_message[$message->sender_id] = $message;
             }
         }
 
@@ -545,44 +565,28 @@ class ApiController extends Controller
         foreach ($messages as $message) {
             if (!in_array($message->receiver_id, $i)) {
                 $i[] = $message->receiver_id;
-                $user = UserAccount::findOneByPk($message->receiver_id);
-                if ($user) {
-                    $member = MemberUser::findOneByPk($message->receiver_id);
-                    $professionnal = ProfessionalUser::findOneByPk(pkValue: $message->receiver_id);
-                    if ($member) {
-                        $conversations[] = [
-                            'account_id' => $message->receiver_id,
-                            'name' => $member->pseudo,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    } else if ($professionnal) {
-                        $conversations[] = [
-                            'account_id' => $message->receiver_id,
-                            'name' => $professionnal->denomination,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    } else {
-                        $conversations[] = [
-                            'account_id' => $message->receiver_id,
-                            'name' => null,
-                            'avatar_url' => $user->avatar_url,
-                        ];
-                    }
-                }
+                $last_message[$message->receiver_id] = $message;
+            } else if ($message->sended_date > $last_message[$message->receiver_id]->sended_date) {
+                $last_message[$message->receiver_id] = $message;
             }
+        }
+
+        foreach ($last_message as $key => $value) {
+            $conversations = findData($value, $key, $conversations);
+        }
+
+
+        foreach ($conversations as $key => $value) {
+            unset($conversations[$key]['last_message']->errors);
         }
 
         return $response->json($conversations);
     }
-    /**
-     * Notifications
-     *
-     * Params :
-     *
-     */
+
     public function notifications(Request $request, Response $response)
     {
-       $nofications = Notification::find(['user_id' => Application::$app->user->account_id]);
-       return $this->json($nofications);
+        $notifications = Notification::find(['user_id' => Application::$app->user->account_id]);
+        return $this->json($notifications);
     }
 }
+

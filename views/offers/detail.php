@@ -224,6 +224,9 @@ $latitude = $offer->address()->latitude;
 
         </div>
 
+        <button class="contact-professsional button gray sm:block md:block lg:hidden mt-6">
+            Contacter le professionnel
+        </button>
 
         <!-- ------------------------------------------------------------------- -->
         <!-- Avis                                                                -->
@@ -451,5 +454,9 @@ $latitude = $offer->address()->latitude;
                 Modifier l'offre
             </a>
         <?php } ?>
+
+        <button class="contact-professsional button gray sm:hidden md:hidden lg:block">
+            Contacter le professionnel
+        </button>
     </aside>
 </div>

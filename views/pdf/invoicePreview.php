@@ -5,7 +5,7 @@
 /** @var $user \app\models\account\UserAccount */
 /** @var $professional \app\models\user\professional\ProfessionalUser */
 /** @var $professionalAddress \app\models\Address */
-/** @var $subscription  \app\models\offer\Subscription */
+/** @var $subscriptions  \app\models\offer\Subscription */
 /** @var $type \app\models\offer\OfferType */
 
 
@@ -14,7 +14,7 @@ use app\core\Utils;
 
 $url = $_ENV['DOMAIN'] . '/offres/' . $offer->id;
 
-$offerPrice = $invoice->activeDays() * $type->price;
+$offerPrice = $invoice->activeDays() * $invoice->offer_price;
 
 ?>
 
@@ -266,12 +266,14 @@ $offerPrice = $invoice->activeDays() * $type->price;
             <tbody>
                 <tr>
                     <td>Offre "<?php echo $type->type ?>"</td>
-                    <td><?php echo $invoice->activeDays() ?> jour</td>
-                    <td><?php echo $type->price ?> €</td>
+                    <td><?php echo $invoice->activeDays() ?> jours</td>
+                    <td><?php echo $invoice->offer_price ?> €</td>
                     <td><?php echo $offerPrice ?> €</td>
                 </tr>
-                <?php foreach ($subscription as $sub) {
-                    $optionPrice = $sub->duration * $sub->price();
+                <?php foreach ($subscriptions as $sub) {
+                    $typeOption = $sub->option()->type;
+                    $price = $typeOption == 'en_relief' ? $invoice->en_relief_price : $invoice->a_la_une_price;
+                    $optionPrice = $sub->duration * $price;
 
                     $sousTotal = $offerPrice;
                     if ($sub) {
@@ -279,8 +281,8 @@ $offerPrice = $invoice->activeDays() * $type->price;
                     } ?>
                     <tr>
                         <td>Option "<?php echo $sub->option()->french() ?>"</td>
-                        <td><?php echo $sub->duration ?> semaine</td>
-                        <td><?php echo $sub->price() ?>€</td>
+                        <td><?php echo $sub->duration ?> semaines</td>
+                        <td><?php echo $price ?> €</td>
                         <td><?php echo $optionPrice ?> €</td>
                     </tr>
                 <?php } ?>

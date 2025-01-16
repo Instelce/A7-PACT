@@ -139,7 +139,7 @@ class DashboardController extends Controller
         $professionalAddress = Address::findOneByPk($user->address_id);
 
         //PAYMENT DATA
-        $subscription = $offer->monthSubscriptions();
+        $subscriptions = $offer->monthSubscriptions();
         $type = $offer->type();
 
 
@@ -155,7 +155,7 @@ class DashboardController extends Controller
             'user' => $user,
             'professional' => $professional,
             'professionalAddress' => $professionalAddress,
-            'subscription' => $subscription,
+            'subscriptions' => $subscriptions,
             'type' => $type,
         ], $download);
     }
