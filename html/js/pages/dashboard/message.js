@@ -1,4 +1,4 @@
-import {getUser} from "../../user.js";
+import { getUser } from "../../user.js";
 import {
     clientInfoCommand,
     loginCommand, messageCard, REFRESH_RATE,
@@ -11,7 +11,8 @@ let in_conversation_with = null;
 let recipient_is_writing = false;
 
 let user;
-let recipient_user;
+let listeContactes = [];
+let recipient_user_id;
 
 let messageWriter = document.getElementById('message-writer');
 let sendButton = document.querySelector('.send-button');
@@ -66,7 +67,7 @@ getUser().then(u => {
                 content: messageWriter.value,
                 sender_id: user.id,
                 receiver_id: in_conversation_with
-            }, user, recipient_user));
+            }, user, recipient_user_id));
 
             messageWriter.value = '';
         }
@@ -111,35 +112,57 @@ async function contacts() {
     let contactsList = document.getElementById("contactesListe");
     let contacts = await loadContact();
     contacts.forEach(contacte => {
-        let div = document.createElement("div");
-        div.id = contacte.account_id;
-        div.textContent = contacte.name;
-        contactsList.appendChild(div);
+        let card = document.createElement('article');
+        card.classList.add('conversation-card');
+        card.innerHTML = `
+            <img src="${contacte.avatar_url}" alt="profile picture">
+            <div class="">
+                <h3>${contacte.name}</h3>
+            </div>
+    `;
+        card.id = contacte.account_id;
+        contactsList.appendChild(card);
+        listeContactes.push(contacte);
     });
-
 }
-
 contacts();
+
 
 //listener for the contactes
 document.getElementById("contactesListe").addEventListener("click", function (event) {
-    if (event.target && event.target.nodeName === "DIV") {
-        showDiscussion(event.target.id);
-        in_conversation_with = event.target.id;
-        recipient_user = event.target.id;
+    if (event.target.closest('article')) {
+        let sender = document.getElementById("message-writer-container");
+        sender.classList.remove("hidden");
+        let contactElements = document.querySelectorAll("#contactesListe article");
+        contactElements.forEach(contact => {
+            contact.classList.remove("active");
+        });
+        let selectedContact = event.target.closest('article');
+        selectedContact.classList.add("active");
+        showDiscussion(selectedContact.id);
+        in_conversation_with = selectedContact.id;
+        recipient_user_id = selectedContact.id;
     }
 });
 
-//show discussion
+//function to sort the messages
+function sortMessages(messages) {
+    messages.sort((a, b) => {
+        return new Date(a.created_at) - new Date(b.created_at);
+    });
+    return messages;
+}
 
+//show discussion
 async function showDiscussion(account_id) {
     let messages = await loadMessages(account_id);
     messagesContainer.innerHTML = ""; // Clear previous messages
+    sortMessages(messages);
+    console.log(listeContactes);
+    let recipient_user = listeContactes.find(contact => contact.account_id == account_id);
+    console.log(recipient_user_id);
     messages.forEach(message => {
-        let messageDiv = document.createElement("div");
-        messageDiv.className = "message";
-        messageDiv.textContent = message.content;
-        messagesContainer.appendChild(messageDiv);
+        messagesContainer.appendChild(messageCard(message, user, recipient_user));
     });
 }
 
