@@ -116,20 +116,22 @@ Les présentes CGU sont soumises au droit applicable du pays où le Site est enr
 ### 13. Contact
 Pour toute question relative aux présentes [CGU](https://a7.ventsdouest.dev/termofuse), veuillez nous contacter :
 
-- **Email** : [pact@example.com](mailto:pact@example.com)
-- **Adresse** : [25, Rue de la Boutade, 22300 Lannion](https://www.google.com/maps/search/25,+Rue+de+la+Boutade,+22300+Lannion+/@48.7454184,-3.5523111,12z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDExMC4wIKXMDSoASAFQAw%3D%3D).
-- **Téléphone** :
+- Email : [pact@example.com](mailto:pact@example.com)
+- Adresse : [25, Rue de la Boutade, 22300 Lannion](https://www.google.com/maps/search/25,+Rue+de+la+Boutade,+22300+Lannion+/@48.7454184,-3.5523111,12z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDExMC4wIKXMDSoASAFQAw%3D%3D).
+- Téléphone :
 
-#### Service client
+### Service client
 Notre équipe est à votre disposition pour répondre à vos questions du lundi au vendredi, de 9h à 18h.
 
+---
+----
 ---
 
 # Conditions Générales de Vente (CGV)
 
 ### 1. Objet
 Les présentes Conditions Générales de Vente (CGV) régissent les relations entre :
-- **Le site [Pact](https://a7.ventsdouest.dev/)**, ci-après dénommé "Pact", propriété de [TripEnArvor](), dont le siège social est situé à [25, Rue de la Boutade, 22300 Lannion](https://www.google.com/maps/search/25,+Rue+de+la+Boutade,+22300+Lannion+/@48.7454184,-3.5523111,12z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDExMC4wIKXMDSoASAFQAw%3D%3D).
+- Le site [Pact](https://a7.ventsdouest.dev/), ci-après dénommé "Pact", propriété de [TripEnArvor](), dont le siège social est situé à [25, Rue de la Boutade, 22300 Lannion](https://www.google.com/maps/search/25,+Rue+de+la+Boutade,+22300+Lannion+/@48.7454184,-3.5523111,12z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI1MDExMC4wIKXMDSoASAFQAw%3D%3D).
 - Les utilisateurs, ci-après dénommés "Visiteurs" ou "Membres", utilisant le Site pour rechercher, ou évaluer des prestations touristiques (hébergements, activités, restaurants, etc.).
 
 ### 2. Services proposés
