@@ -57,6 +57,8 @@ $app->router->get('/dashboard', function () {
 $app->router->get('/dashboard/offres', [DashboardController::class, 'offers']);
 $app->router->post('/dashboard/offres', [DashboardController::class, 'offers']);
 $app->router->get('/dashboard/avis', [DashboardController::class, 'avis']);
+$app->router->get('/dashboard/messages', [DashboardController::class, 'message']);
+$app->router->post('/dashboard/avis', [DashboardController::class, 'avis']);
 $app->router->get('/dashboard/factures', [DashboardController::class, 'invoices']);
 $app->router->get('/factures/<pk:int>', [DashboardController::class, 'invoicesPDF']);
 
@@ -108,8 +110,11 @@ $app->router->post('/api/opinions/<opinion_pk:int>/likes', [ApiController::class
 $app->router->post('/api/opinions/<opinion_pk:int>/dislikes', [ApiController::class, 'opinionDislikes']);
 $app->router->post('/api/opinions/<opinion_pk:int>/reports', [ApiController::class, 'opinionReports']);
 $app->router->get('/api/messages/<receiver_pk:int>', [ApiController::class, 'messages']);
+$app->router->get('/api/messages', [ApiController::class, 'conversations']);
 $app->router->get('/api/notifications', [ApiController::class, 'notifications']);
+
 $app->router->post('/test/pdf', [SiteController::class, 'testPdf']);
+$app->router->get('/test/pdf', [SiteController::class, 'testPdf']);
 
 
 $app->run();

@@ -18,6 +18,14 @@
     pointer-events: none;
 }
 
+.dialog-container.hide {
+    display: none;
+}
+
+.dialog-container-delete-reply.hide {
+    display: none;
+}
+
 .dialog {
     max-width: 40%;
     position: relative;

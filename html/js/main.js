@@ -7,7 +7,7 @@ import { Tabs } from "./components/tabs/Tabs.js";
 import { Tab } from "./components/tabs/Tab.js";
 import { Panel } from "./components/tabs/Panel.js";
 import "./components/dialog.js";
-
+import "./tchatator.js"
 
 // Do not change
 try {
@@ -64,12 +64,6 @@ if (navbar && heightTop) {
     heightTop.style.height = navbar.offsetHeight + 'px';
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 // Notifications
 document.addEventListener("DOMContentLoaded", () => {
     const notificationIcon = document.querySelector('.notification .notification-icon');
@@ -112,10 +106,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     .map((notif) => `<div>${notif.message}</div>`)
                     .join("");
             } else {
-                notificationContainer.innerHTML = "<div><p>Aucune notifications</p></div>";
+                notificationContainer.innerHTML = "<div>Aucune notifications</div>";
             }
 
-            notificationContainer.style.display = "block";
             iconDefault.classList.remove("hidden");
             iconAlert.classList.add("hidden");
         } catch (error) {
@@ -123,15 +116,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Gérer le clic sur l'icône de notification
-    notificationIcon.addEventListener("click", () => {
-        if (!iconAlert.classList.contains("hidden")) {
-            loadNotification();
-        } else {
-            notificationContainer.innerHTML = "<div><p>Aucune notifications</p></div>";
-            notificationContainer.style.display = "block";
-        }
-    });
+    if (notificationIcon && notificationContainer) {
+        notificationIcon.addEventListener('click', function () {
+            notificationContainer.classList.toggle('open');
+            if (!iconAlert.classList.contains("hidden")) {
+                loadNotification();
+            } else {
+                notificationContainer.innerHTML = "<div><p>Aucune notifications</p></div>";
+                notificationContainer.style.display = "block";
+            }
+        });
+
+        // Close when click outside
+        document.addEventListener('click', function (e) {
+            if (!notificationIcon.contains(e.target)) {
+                notificationContainer.classList.remove('open');
+            }
+        });
+    }
 
     // Cacher le conteneur de notifications quand on clique ailleurs
     document.addEventListener("click", (event) => {
@@ -141,89 +143,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Rafraîchir les notifications toutes les 5 secondes
-    setInterval(checkNotification, 5000);
+    setInterval(checkNotification, 20000);
 
     // Vérification initiale
     checkNotification();
 });
-
-
-/*const notificationsButton = document.querySelector('.notification .notification-icon');
-const notificationsContent = document.querySelector('.notification .notification-content');
-
-if (notificationsButton && notificationsContent) {
-    notificationsButton.addEventListener('click', function () {
-        notificationsContent.classList.toggle('open');
-    });
-
-    // Close when click outside
-    document.addEventListener('click', function (e) {
-        if (!notificationsButton.contains(e.target)) {
-            notificationsContent.classList.remove('open');
-        }
-    });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const notificationsContainer = document.getElementById("notifications-container");
-
-    // Fonction pour récupérer les notifications
-    const fetchNotifications = async () => {
-        try {
-            const response = await fetch("/notifications/fetch");
-            const data = await response.json();
-
-            if (data.status === "success") {
-                renderNotifications(data.notifications);
-            } else {
-                console.error("Erreur lors de la récupération des notifications :", data.message);
-            }
-        } catch (error) {
-            console.error("Erreur réseau :", error);
-        }
-    };
-
-    // Fonction pour afficher les notifications
-    const renderNotifications = (notifications) => {
-        if (notifications.length === 0) {
-            notificationsContainer.innerHTML = `
-                <div class="notifications-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
-                </div>
-                <p>Aucune notification</p>
-            `;
-            return;
-        }
-
-        let html = `
-            <div class="notifications-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-dot"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M13.916 2.314A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.74 7.327A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673 9 9 0 0 1-.585-.665"/><circle cx="18" cy="8" r="3" fill="red" stroke="red"/></svg>
-            </div>
-            <div class="notifications-content">
-        `;
-
-        notifications.forEach(notification => {
-            html += `
-                <div class="notification ${notification.is_read ? 'read' : 'unread'}">
-                    ${notification.content}
-                    <small>Reçu le : ${notification.send_at}</small>
-                </div>
-            `;
-        });
-
-        html += `</div>`;
-        notificationsContainer.innerHTML = html;
-    };
-
-    // Actualiser toutes les 5 secondes
-    setInterval(fetchNotifications, 5000);
-});*/
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 // Avatar
 const avatarButton = document.querySelector('.avatar .image-container');

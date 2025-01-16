@@ -15,6 +15,8 @@ use app\models\offer\Option;
 use app\models\offer\Subscription;
 use app\models\offer\OfferPhoto;
 use app\models\offer\OfferType;
+use app\models\opinion\Opinion;
+use app\models\opinion\OpinionReply;
 use app\models\payment\Invoice;
 use app\models\user\professional\ProfessionalUser;
 
@@ -80,6 +82,28 @@ class DashboardController extends Controller
 
     public function avis(Request $request, Response $response)
     {
+
+        if ($request->isPost()) {
+            $formName = $request->formName();
+            $body = $request->getBody();
+
+            if ($formName === 'add-reply') {
+                $reply = new OpinionReply();
+                $reply->loadData($body);
+                $reply->created_at = date('Y-m-d H:i:s');
+                if ($reply->save()) {
+                    return $response->redirect('/dashboard/avis');
+                }
+            }
+
+            if ($formName === 'delete-reply'){
+                $opinion = Opinion::findOneByPk($body['opinion_id']);
+                $reply = OpinionReply::findOne(['opinion_id' => $opinion->id]);
+                $reply->destroy();
+                return $response->redirect('/dashboard/avis');
+            }
+        }
+
         return $this->render('/dashboard/avis');
     }
 
@@ -99,7 +123,8 @@ class DashboardController extends Controller
         return $this->render('/dashboard/factures', ['invoices' => $invoices, 'offers' => $offers, 'subscriptions' => $subscriptions]);
     }
 
-    public function invoicesPDF(Request $request, Response $response, $routeParams){
+    public function invoicesPDF(Request $request, Response $response, $routeParams)
+    {
         $pk = $routeParams['pk'];
         $invoiceId = $routeParams['pk'];
         $invoice = Invoice::findOneByPk($routeParams['pk']);
@@ -133,4 +158,9 @@ class DashboardController extends Controller
             'type' => $type,
         ], $download);
     }
+    public function message(Request $request, Response $response)
+    {
+        return $this->render('/dashboard/message');
+    }
+
 }

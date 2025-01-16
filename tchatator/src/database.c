@@ -167,7 +167,7 @@ int db_get_message(PGconn* conn, int message_id, message_t* message)
     PGresult* res;
     char query[256];
 
-    sprintf(query, "SELECT sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE id = %d", message_id);
+    sprintf(query, "SELECT id, sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE id = %d", message_id);
     res = PQexec(conn, query);
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
@@ -179,13 +179,14 @@ int db_get_message(PGconn* conn, int message_id, message_t* message)
         return 0;
     }
 
-    strcpy(message->sended_date, PQgetvalue(res, 0, 0));
-    strcpy(message->modified_date, PQgetvalue(res, 0, 1));
-    message->sender_id = atoi(PQgetvalue(res, 0, 2));
-    message->receiver_id = atoi(PQgetvalue(res, 0, 3));
-    message->deleted = atoi(PQgetvalue(res, 0, 4));
-    message->seen = atoi(PQgetvalue(res, 0, 5));
-    strcpy(message->content, PQgetvalue(res, 0, 6));
+    message->id = atoi(PQgetvalue(res, 0, 0));
+    strcpy(message->sended_date, PQgetvalue(res, 0, 1));
+    strcpy(message->modified_date, PQgetvalue(res, 0, 2));
+    message->sender_id = atoi(PQgetvalue(res, 0, 3));
+    message->receiver_id = atoi(PQgetvalue(res, 0, 4));
+    message->deleted = atoi(PQgetvalue(res, 0, 5));
+    message->seen = atoi(PQgetvalue(res, 0, 6));
+    strcpy(message->content, PQgetvalue(res, 0, 7));
 
     PQclear(res);
 
@@ -218,8 +219,10 @@ void db_update_message(PGconn* conn, message_t* message)
 
     set_date_now(message->modified_date);
 
-    sprintf(query, "UPDATE message SET modified_date = '%s', deleted = '%s', seen = '%s', content = '%s' WHERE id = %d",
+    sprintf(query, "UPDATE message SET modified_date = '%s', deleted = %s, seen = %s, content = '%s' WHERE id = %d",
         message->modified_date, db_bool(message->deleted), db_bool(message->seen), message->content, message->id);
+
+    printf("%s\n", query);
 
     res = PQexec(conn, query);
 

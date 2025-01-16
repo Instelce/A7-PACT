@@ -47,7 +47,6 @@ use app\models\account\UserAccount;
     </svg>
 </div>
 
-
 <!-- Navbar -->
 <nav class="navbar">
     <div class="navbar-left">
@@ -82,6 +81,11 @@ use app\models\account\UserAccount;
         <a href="/dashboard" class="link pro">Mon dashboard</a>
 
         <?php if (Application::$app->isAuthenticated()) { ?>
+            <a href="/dashboard/messages" class="chat-trigger button gray icon-left icon-right no-border">
+                <span>Messages</span>
+                <i data-lucide="message-circle"></i>
+            </a>
+
             <!-- Notifications -->
             <div class="notification">
                 <div class="notification-icon">

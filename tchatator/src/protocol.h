@@ -56,20 +56,29 @@ static const char LOGIN[] = "LOGIN";
 static const char SEND_MESSAGE[] = "SEND_MSG";
 static const char UPDATE_MESSAGE[] = "UPDT_MSG";
 static const char DELETE_MESSAGE[] = "DEL_MSG";
-static const char GET_NEW_MESSAGES[] = "GET_MSGS";
-static const char IS_CONNECTED[] = "IS_CONN";
 static const char NEW_MESSAGE_AVAILABLE[] = "NEW_MSG_AVAILABLE";
 static const char DISCONNECTED[] = "DISCONNECTED";
+
+/// Send info for a specific user
+/// - connection status
+/// - is writing a new message
+/// - viewed last message
+static const char USER_INFO[] = "USER_INFO";
+
+/// Send info to the server
+/// - client is writing a new message to a user
+/// - present in a discussion with a user
+static const char CLIENT_INFO[] = "CLIENT_INFO";
 
 static const char* EXISTING_COMMANDS[] = {
     LOGIN,
     SEND_MESSAGE,
     UPDATE_MESSAGE,
     DELETE_MESSAGE,
-    GET_NEW_MESSAGES,
-    IS_CONNECTED,
     NEW_MESSAGE_AVAILABLE,
-    DISCONNECTED
+    DISCONNECTED,
+    USER_INFO,
+    CLIENT_INFO
 };
 
 static const command_def_t COMMANDS_DEFINITIONS[] = {
@@ -77,10 +86,10 @@ static const command_def_t COMMANDS_DEFINITIONS[] = {
     { "SEND_MSG", 4 }, // token,receiver-id,message-length,content
     { "UPDT_MSG", 4 }, // token,message-id,message-length,content
     { "DEL_MSG", 2 }, // token,message-id
-    { "GET_MSGS", 1 }, // token
-    { "IS_CONN", 1 }, // user-id
     { "NEW_MSG_AVAILABLE", 1 }, // token
-    { "DISCONNECTED", 0 }
+    { "USER_INFO", 1 }, // token,user_id
+    { "CLIENT_INFO", 3 }, // token,is_writing,in_conversation
+    { "DISCONNECTED", 0 },
 };
 
 static const int COMMANDS_COUNT = sizeof(COMMANDS_DEFINITIONS) / sizeof(command_def_t);
@@ -113,7 +122,6 @@ response_t* send_message(int sock, char token[], char message[], int receiver_id
 response_t* send_uptade_message(int sock, char token[], int message_id, char message[]);
 response_t* send_delete_message(int sock, char token[], int message_id);
 response_t* send_get_new_message(int sock, char token[]);
-response_t* send_is_connected(int sock, int user_id);
 void send_disconnected(int sock);
 
 #endif // PROTOCOL_H

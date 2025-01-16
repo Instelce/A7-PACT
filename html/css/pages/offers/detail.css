@@ -264,33 +264,63 @@ section {
 }
 
 
-/* Tchatator interface */
-.chat-container {
-    z-index: 1000;
-    max-width: 400px;
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
 
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: flex-end;
-    gap: 1rem;
+.report-form.hide{
+    display: none;
 }
 
-.messages-container {
+.report-form{
+    width: auto;
+}
+
+
+.reply-form {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: 10px;
+    margin-top: 1rem;
 }
 
-.messages-container .message {
-    background: rgb(var(--color-white));
-    padding: .5rem;
-    border-radius: var(--radius-medium);
+.reply-form textarea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    border-radius: 5px;
+    border: 1px solid rgb(var(--color-gray-2));
 }
 
-.messages-container .message pre {
-    font-size: inherit;
-    font-family: inherit;
+.reply-form.hide {
+    display: none;
+}
+
+.reply-text {
+    margin-left: 30px;
+}
+
+.reply-text div{
+    margin: 20px 0 0 40px;
+}
+
+.reply-hr {
+    border: none;
+    height: 1px;
+    background-color: rgb(var(--color-gray-1));
+}
+
+.reply-text.hide {
+    display: none;
+}
+
+.reply-text svg {
+    position: absolute;
+    height: 33px;
+}
+
+.reply-title {
+    font-size: var(--typescale-d1);
+}
+
+.reply-comment {
+    max-width: 500px;
+    overflow-wrap: break-word;
 }

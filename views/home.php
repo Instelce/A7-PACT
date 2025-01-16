@@ -21,8 +21,8 @@ $this->waves = true;
                 <span style="--i: 0">Lannion</span>
                 <span style="--i: 1">Saint-Brieuc</span>
                 <span style="--i: 2">Plouha</span>
-                <span style="--i: 3">Paimpol</span>
-                <span style="--i: 4">Bréhat</span>
+                <span style="--i: 3">Bréhat</span>
+                <span style="--i: 4">Trébeurden</span>
             </div>
         </h1>
 

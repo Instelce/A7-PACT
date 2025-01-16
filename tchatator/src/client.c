@@ -430,7 +430,7 @@ void menu_delete_and_update(message_t m)
     show_cursor();
 
     if (selected == 0) {
-        response = send_delete_message(sock, &connected_user.api_token, m.id);
+        response = send_delete_message(sock, connected_user.api_token, m.id);
         if (response->status.code == 200) {
             printf("Message successfully deleted.\n");
         } else {
@@ -441,7 +441,7 @@ void menu_delete_and_update(message_t m)
         cs_printf(NO_COLOR, BOLD, "Write the new content of the message:\n");
         write_message(new_content);
 
-        response = send_uptade_message(sock, &connected_user.api_token, m.id, &new_content);
+        response = send_uptade_message(sock, connected_user.api_token, m.id, new_content);
         if (response->status.code == 200) {
             printf("Message successfully updated.\n");
         } else {

@@ -243,24 +243,6 @@ response_t* send_delete_message(int sock, char token[], int message_id)
     return request(sock, format_command(command));
 }
 
-response_t* send_get_new_message(int sock, char token[])
-{
-    command_t command = create_command(GET_NEW_MESSAGES);
-
-    add_command_param(&command, "token", token);
-
-    return request(sock, format_command(command));
-}
-
-response_t* send_is_connected(int sock, int user_id)
-{
-    command_t command = create_command(IS_CONNECTED);
-
-    add_command_param(&command, "user-id", to_string(user_id));
-
-    return request(sock, format_command(command));
-}
-
 void send_disconnected(int sock)
 {
     command_t command = create_command(DISCONNECTED);
