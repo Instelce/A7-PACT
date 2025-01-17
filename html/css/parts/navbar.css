@@ -171,6 +171,7 @@
 /* Notifications */
 .notification-container{
     width: fit-content;
+    padding: .8rem 1rem;
     position: absolute;
     overflow: hidden;
     bottom: 0;
@@ -180,7 +181,7 @@
     background: white;
     pointer-events: none;
     opacity: 0;
-    z-index: 1000;
+    z-index: 0;
 
     transition: opacity .2s ease, transform .2s ease;
 }
@@ -191,7 +192,7 @@
     transform: translateY(calc(100% + .5rem)) translateX(-75%);
 }
 
-.notification-container a {
+.notification .notification-container a {
     width: 100%;
     padding: .8rem 1rem;
 
@@ -207,6 +208,9 @@
 
 .notification .notification-icon{
     cursor: pointer;
+    display: flex;
+    align-content: center;
+    gap: 1rem;
 }
 
 .hidden{

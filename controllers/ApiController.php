@@ -467,7 +467,7 @@ class ApiController extends Controller
         if ($action == "add") {
             $opinion->addLike();
 
-            Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liké votre avis : " . $opinion->title);
+            Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liké votre avis : " . "'$opinion->title'");
 
         } else if ($action == "remove") {
             $opinion->removeLike();
