@@ -326,8 +326,8 @@ $offre2->minimum_price = 15;
 $offre2->created_at = randomOfferDate();
 $offre2->save();
 $offre2->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 1);
-
-
+$offre2->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday + 1 weeks")), 1);
+$offre2->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday + 2 weeks")), 1);
 
 $db->pdo->exec("INSERT INTO attraction_park_offer (offer_id, url_image_park_map, attraction_number, required_age) VALUES (" . $offre2->id . ", 'https://www.village-gaulois.org/wp-content/uploads/2024/05/VILLAGE-GAULOIS-plan.webp', 20, 3);");
 

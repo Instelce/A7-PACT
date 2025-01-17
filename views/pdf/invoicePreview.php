@@ -283,7 +283,7 @@ $offerPrice = $invoice->activeDays() * $invoice->offer_price;
                     } ?>
                     <tr>
                         <td>Option "<?php echo $sub->option()->french() ?>"</td>
-                        <td><?php echo $sub->duration ?> semaines</td>
+                        <td><?php echo $sub->duration ?> semaines du <?php echo date('d/m', strtotime($sub->launch_date)) ?> au <?php echo date('d/m', strtotime($sub->endDate())) ?></td>
                         <td><?php echo $price ?> €</td>
                         <td><?php echo $optionPrice ?> €</td>
                     </tr>
