@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  tchatator:
+    build: .
+    ports:
+      - "4242:4242"
+    container_name: tchatator
+    command: ["./bin/websocket-server"]
+
+networks:
+  sae:
+    external: true

@@ -113,115 +113,121 @@ getUser().then(_user => {
             socket = new WebSocket(`wss://${domain}:4242`);
         }
 
-        socket.addEventListener("open", () => {
-            console.log('Connected to the server');
+        if (socket.readyState === WebSocket.CLOSED) {
+            console.log('Websocket connection failed');
+        } else {
+            console.log('Websocket connection successful');
 
-            // Send login request
-            socket.send(loginCommand(user.api_token));
-        });
+            socket.addEventListener("open", () => {
+                console.log('Connected to the server');
 
-        socket.addEventListener("message", (event) => {
-            console.log('')
+                // Send login request
+                socket.send(loginCommand(user.api_token));
+            });
 
-            let data = JSON.parse(event.data);
+            socket.addEventListener("message", (event) => {
+                console.log('')
 
-            if (data.command === 'SEND_MSG') {
-                data.message.modified_date = null;
-                messagesContainer.appendChild(messageCard(socket, data.message, user, recipient_user));
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                setLastMessage(data.message.receiver_id, 'Vous : ' + data.message.content);
-            }
+                let data = JSON.parse(event.data);
 
-            if (data.command === 'USER_INFO') {
-                console.log(data);
-                recipient_is_writing = data.is_writing ? data.is_writing === 'true' : false;
-                recipient_is_connected = data.connected ? data.connected === 'true' : false;
-                recipient_present_in_conversation = data.in_conversation_with ? data.in_conversation_with === 'true' : false;
-
-                if (recipient_is_writing) {
-                    writingIndicator.classList.remove('!hidden');
+                if (data.command === 'SEND_MSG') {
+                    data.message.modified_date = null;
+                    messagesContainer.appendChild(messageCard(socket, data.message, user, recipient_user));
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                } else {
-                    writingIndicator.classList.add('!hidden');
+                    setLastMessage(data.message.receiver_id, 'Vous : ' + data.message.content);
                 }
-            }
 
-            // New message change available
-            if (data.command === 'NEW_CHG_AVAILABLE') {
-                console.log(data)
+                if (data.command === 'USER_INFO') {
+                    console.log(data);
+                    recipient_is_writing = data.is_writing ? data.is_writing === 'true' : false;
+                    recipient_is_connected = data.connected ? data.connected === 'true' : false;
+                    recipient_present_in_conversation = data.in_conversation_with ? data.in_conversation_with === 'true' : false;
 
-                if (data.changes.length > 0) {
-                    for (let change of data.changes) {
-                        if (change.type === 'new_message') {
-                            console.log("NEW MESSAGE", change.message, in_conversation_with);
-                            // If exist and not in the conversation set the last message
-                            if (in_conversation_with != change.message.sender_id) {
-                                setLastMessage(change.message.sender_id, change.message.content);
+                    if (recipient_is_writing) {
+                        writingIndicator.classList.remove('!hidden');
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    } else {
+                        writingIndicator.classList.add('!hidden');
+                    }
+                }
+
+                // New message change available
+                if (data.command === 'NEW_CHG_AVAILABLE') {
+                    console.log(data)
+
+                    if (data.changes.length > 0) {
+                        for (let change of data.changes) {
+                            if (change.type === 'new_message') {
+                                console.log("NEW MESSAGE", change.message, in_conversation_with);
+                                // If exist and not in the conversation set the last message
+                                if (in_conversation_with != change.message.sender_id) {
+                                    setLastMessage(change.message.sender_id, change.message.content);
+                                }
+
+                                if (in_conversation_with == change.message.sender_id) {
+                                    change.message.modified_date = null; // Why ?
+                                    messagesContainer.appendChild(messageCard(socket, change.message, user, recipient_user));
+                                    // Scroll to the bottom
+                                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                                }
                             }
 
-                            if (in_conversation_with == change.message.sender_id) {
-                                change.message.modified_date = null; // Why ?
-                                messagesContainer.appendChild(messageCard(socket, change.message, user, recipient_user));
-                                // Scroll to the bottom
-                                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                            if (change.type === 'message_updated') {
+                                let messageCard = messagesContainer.querySelector(`[data-id="${change.message.id}"]`);
+                                let messageContent = messageCard.querySelector('.message-content pre');
+                                messageContent.innerText = change.message.content;
+
+                                // Remove modified text is exists and add it again
+                                let modifiedText = messageCard.querySelector('.modified');
+                                if (modifiedText) {
+                                    messageCard.querySelector('.message-content').removeChild(modifiedText);
+                                }
+                                let newModifiedText = document.createElement('small');
+                                newModifiedText.classList.add('modified');
+                                newModifiedText.innerText = 'Modifié il y a ' + formatDate(change.message.modified_date);
+                                messageCard.querySelector('.message-content').appendChild(newModifiedText);
                             }
-                        }
 
-                        if (change.type === 'message_updated') {
-                            let messageCard = messagesContainer.querySelector(`[data-id="${change.message.id}"]`);
-                            let messageContent = messageCard.querySelector('.message-content pre');
-                            messageContent.innerText = change.message.content;
+                            if (change.type === 'message_deleted') {
+                                let messageCard = messagesContainer.querySelector(`[data-id="${change.message_id}"]`);
+                                let messageContent = messageCard.querySelector('.message-content pre');
+                                messageContent.innerHTML = '<p>Ce message à été supprimé</p>';
+                                messageCard.classList.add('deleted');
 
-                            // Remove modified text is exists and add it again
-                            let modifiedText = messageCard.querySelector('.modified');
-                            if (modifiedText) {
-                                messageCard.querySelector('.message-content').removeChild(modifiedText);
-                            }
-                            let newModifiedText = document.createElement('small');
-                            newModifiedText.classList.add('modified');
-                            newModifiedText.innerText = 'Modifié il y a ' + formatDate(change.message.modified_date);
-                            messageCard.querySelector('.message-content').appendChild(newModifiedText);
-                        }
-
-                        if (change.type === 'message_deleted') {
-                            let messageCard = messagesContainer.querySelector(`[data-id="${change.message_id}"]`);
-                            let messageContent = messageCard.querySelector('.message-content pre');
-                            messageContent.innerHTML = '<p>Ce message à été supprimé</p>';
-                            messageCard.classList.add('deleted');
-
-                            // Remove modified text is exists
-                            let modifiedText = messageCard.querySelector('.modified');
-                            if (modifiedText) {
-                                messageCard.querySelector('.message-content').removeChild(modifiedText);
+                                // Remove modified text is exists
+                                let modifiedText = messageCard.querySelector('.modified');
+                                if (modifiedText) {
+                                    messageCard.querySelector('.message-content').removeChild(modifiedText);
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            console.log('Is connected', data.connected);
-            console.log('Recipient is writing:', recipient_is_writing);
-            console.log('Recipient is present in conversation: ', recipient_present_in_conversation);
-        });
+                console.log('Is connected', data.connected);
+                console.log('Recipient is writing:', recipient_is_writing);
+                console.log('Recipient is present in conversation: ', recipient_present_in_conversation);
+            });
 
-        socket.addEventListener("close", () => {
-            console.log('Disconnected from the server');
-        });
+            socket.addEventListener("close", () => {
+                console.log('Disconnected from the server');
+            });
 
-        socket.addEventListener("error", (error) => {
-            console.log('Error: ', error);
-        });
+            socket.addEventListener("error", (error) => {
+                console.log('Error: ', error);
+            });
 
-        setInterval(() => {
-            // Send info to the server about us
-            socket.send(clientInfoCommand(user.api_token, is_writing, in_conversation_with));
+            setInterval(() => {
+                // Send info to the server about us
+                socket.send(clientInfoCommand(user.api_token, is_writing, in_conversation_with));
 
-            // Get informations
-            socket.send(getChangesCommand(user.api_token));
-            if (in_conversation_with) {
-                socket.send(userInfoCommand(user.api_token, in_conversation_with));
-            }
-        }, REFRESH_RATE)
+                // Get informations
+                socket.send(getChangesCommand(user.api_token));
+                if (in_conversation_with) {
+                    socket.send(userInfoCommand(user.api_token, in_conversation_with));
+                }
+            }, REFRESH_RATE)
+        }
 
         // Toggle chat
         chatTrigger.addEventListener('click', () => {
@@ -301,7 +307,7 @@ function loadMessages(receiverId) {
                 if (currentDay !== day) {
                     let daySeparator = document.createElement('div');
                     daySeparator.classList.add('day-separator');
-                    daySeparator.innerText = `${day} ${messageDate.toLocaleString('default', { month: 'long' })} ${messageDate.getFullYear()}`;
+                    daySeparator.innerText = `${day} ${messageDate.toLocaleString('default', {month: 'long'})} ${messageDate.getFullYear()}`;
                     messagesContainer.appendChild(daySeparator);
 
                     currentDay = day;

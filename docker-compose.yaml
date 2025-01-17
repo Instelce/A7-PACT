@@ -10,3 +10,7 @@ services:
             - POSTGRES_DB=pact-dev-db
             - POSTGRES_USER=devuser
             - POSTGRES_PASSWORD=devpassword
+
+networks:
+    sae:
+        external: true

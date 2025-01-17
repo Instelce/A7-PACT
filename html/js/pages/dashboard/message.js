@@ -111,6 +111,7 @@ getUser().then(u => {
                                         document.getElementById('message-writer-container').classList.remove('hidden');
                                     })
 
+                                    document.getElementById('contactesListe').innerHTML = "";
                                     document.getElementById('contactesListe').appendChild(card);
                                 })
                         } else {
@@ -261,6 +262,7 @@ async function loadContacts() {
         contactsList.appendChild(card);
         listContacts.push(contact);
     });
+
     let svgnotfound = document.createElement('div');
     svgnotfound.classList.add('w-48');
     svgnotfound.classList.add('h-48');
