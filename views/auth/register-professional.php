@@ -170,7 +170,7 @@ $this->cssFile = "register-pro";
                                     Virement bancaire
                                 </div>
                                 <div id="content-payment" class="w-full hidden pb-8">
-                                    <?php echo $form->field($proPrivate, 'titular_account')?>
+                                    <?php echo $form->field($proPrivate, 'titularAccount')?>
                                     <?php echo $form->field($proPrivate, 'iban')?>
                                     <?php echo $form->field($proPrivate, 'bic')?>
                                 </div>
@@ -182,7 +182,7 @@ $this->cssFile = "register-pro";
                                     Carte bancaire
                                 </div>
                                 <div id="content-card" class="w-full hidden pb-8">
-                                    <?php echo $form->field($proPrivate, 'titular-card') ?>
+                                    <?php echo $form->field($proPrivate, 'titularCard') ?>
                                     <?php echo $form->field($proPrivate, 'cardnumber') ?>
                                     <div class="flex gap-4">
                                         <?php echo $form->field($proPrivate, 'expirationdate')?>
