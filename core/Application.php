@@ -78,6 +78,7 @@ class Application
             }
 
             if ($this->user && $this->user->isProfessional()) {
+
                 $this->layout = 'back-office';
             }
 

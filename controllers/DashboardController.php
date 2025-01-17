@@ -10,6 +10,7 @@ use app\core\Response;
 use app\middlewares\BackOfficeMiddleware;
 use app\models\account\UserAccount;
 use app\models\Address;
+use app\models\Notification;
 use app\models\offer\Offer;
 use app\models\offer\Option;
 use app\models\offer\Subscription;
@@ -92,6 +93,7 @@ class DashboardController extends Controller
                 $reply->loadData($body);
                 $reply->created_at = date('Y-m-d H:i:s');
                 if ($reply->save()) {
+                    Application::$app->notifications->createNotification($reply->opinion_reply_id, Application::$app->user->specific()->denomination . " a répondu à votre avis : " . $reply->comment);
                     return $response->redirect('/dashboard/avis');
                 }
             }
@@ -164,4 +166,18 @@ class DashboardController extends Controller
         return $this->render('/dashboard/message');
     }
 
+    public function notifications(Request $request, Response $response)
+    {
+        $notifications = Notification::find(['user_id' => Application::$app->user->opinion_reply_id]);
+        return $this->json($notifications);
+    }
+
+    public function notificationRead(Request $request, Response $response)
+    {
+        $notifications = Notification::find(['user_id' => Application::$app->user->opinion_reply_id]);
+        foreach ($notifications as $notification) {
+            $notification->markAsRead();
+        }
+        return $response->json([]);
+    }
 }

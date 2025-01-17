@@ -469,7 +469,11 @@ class ApiController extends Controller
         if ($action == "add") {
             $opinion->addLike();
 
-            Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liké votre avis : " . "'$opinion->title'");
+            if (Application::$app->user->isProfessional()) {
+                Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->denomination . " a liké votre avis : " . "'$opinion->title'");
+            } else {
+                Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liké votre avis : " . "'$opinion->title'");
+            }
 
         } else if ($action == "remove") {
             $opinion->removeLike();
@@ -524,8 +528,6 @@ class ApiController extends Controller
         }
 
         $opinion->addReply();
-
-        Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a répondu à votre avis : " . $opinion->title);
 
         $opinion->removeReply();
 

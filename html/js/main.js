@@ -71,27 +71,29 @@ const notificationContainer = document.querySelector('.notification-container');
 const notificationIconAlert = document.getElementById('icon-alert');
 const notificationIconDefault = document.getElementById('icon-default');
 
-fetch('/api/notifications').then(response => response.json()).then(notifications => {
-    for (let notification of notifications){
-        console.log(notification);
-        let notificationCard = document.createElement('div');
-        notificationCard.innerHTML = notification.content;
+if (notificationContainer){
+    fetch('/api/notifications').then(response => response.json()).then(notifications => {
+        for (let notification of notifications){
+            console.log(notification);
+            let notificationCard = document.createElement('div');
+            notificationCard.classList.add('notification-card');
+            notificationCard.innerHTML = notification.content;
 
-        if(!notification.is_read){
-            notificationCard.classList.add('not-read');
+            if(!notification.is_read){
+                notificationCard.classList.add('not-read');
+            }
+
+            notificationContainer.appendChild(notificationCard);
         }
 
-        notificationContainer.appendChild(notificationCard);
-    }
+        if (notifications.find(n => n.is_read === 0)){
+            notificationIconDefault.classList.add('hidden');
+        } else {
+            notificationIconAlert.classList.add('hidden');
+            notificationContainer.innerHTML = "<div>Vous n'avez pas de notifications</div>";
+        }
+    });
 
-    if (notifications.find(n => n.is_read === 0)){
-        notificationIconDefault.classList.add('hidden');
-    } else {
-        notificationIconAlert.classList.add('hidden');
-    }
-});
-
-if (notificationTrigger && notificationContainer) {
     notificationTrigger.addEventListener('click', () => {
         notificationContainer.classList.toggle('open');
         fetch('/api/read-notifications');
@@ -104,6 +106,7 @@ if (notificationTrigger && notificationContainer) {
         }
     });
 }
+
 
 // Avatar
 const avatarButton = document.querySelector('.avatar .image-container');
