@@ -30,7 +30,7 @@ class CbMeanOfPayment extends DBModel
     public function rules(): array
     {
         return [
-            'titular_card' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 64]],
+            'name' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 64]],
             'card_number' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 16]],
             'expiration_date' => [self::RULE_REQUIRED, self::RULE_EXP_DATE],
             'cvv' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 3]]

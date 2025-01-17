@@ -74,7 +74,7 @@ class PaymentForm extends Model
             'bic' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 11]],
 
             'card_name' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 50]],
-            'card_number' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 16]],
+            'card_number' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 19]],
             'expiration_date' => [self::RULE_REQUIRED, self::RULE_EXP_DATE],
             'cvv' => [self::RULE_REQUIRED, [self::RULE_MAX, 'max' => 3]],
             'passwordCheckPayment' => [self::RULE_REQUIRED]
