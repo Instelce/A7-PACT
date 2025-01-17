@@ -32,7 +32,7 @@ class PrivateProfessionalRegister extends Model
     public string $phone = '';
     public string $password = '';
     public string $passwordConfirm = '';
-    public int $payment = self::NOPAYMENT;
+    public int $asPayment = self::NOPAYMENT;
     public string $titularAccount = '';
     public string $iban = '';
     public string $bic = '';
@@ -40,7 +40,6 @@ class PrivateProfessionalRegister extends Model
     public string $cardnumber = '';
     public string $expirationdate = '';
     public string $cryptogram = '';
-    public string $paypallink = '';
 
     public function register()
     {
@@ -80,17 +79,14 @@ class PrivateProfessionalRegister extends Model
 
         echo($meanOfPayment->id);
 
-        if ($this->iban != NULL) {
+        if ($this->iban) {
             $payment = new RibMeanOfPayment();
             $payment->payment_id = $meanOfPayment->id;
-            echo($this->titularAccount);
-            $payment->titular_account = $this->titularAccount;
+            $payment->name = $this->titularAccount;
             $payment->iban = $this->iban;
             $payment->bic = $this->bic;
-            echo("lets go");
-
             $payment->save();
-            echo 'ok2';
+            $asPayment = self::PAYMENT;
 
         } elseif ($this->cardnumber) {
             $payment = new CbMeanOfPayment();
@@ -100,25 +96,14 @@ class PrivateProfessionalRegister extends Model
             $payment->expiration_date = $this->expirationdate;
             $payment->cvv = $this->cryptogram;
             $payment->save();
-            echo 'ok3';
+            $asPayment = self::PAYMENT;
         }
-//        else {
-//            $payment = new PaypalMeanOfPayment();
-//            $payment->id = $meanOfPayment->payment_id;
-//            $payment->paypalurl = $this->paypallink;
-//            if (!$payment->validate()) {
-//                return false;
-//            }
-//            $payment->save();
-//        }
-
-        echo "wow";
         $proPrivate = new PrivateProfessional();
         $proPrivate->pro_id = $account->id;
         $proPrivate->last_veto = date('Y-m-d');
         $proPrivate->payment_id = $meanOfPayment->id;
         $proPrivate->save();
-        echo 'ok4';
+
 
         Application::$app->login($userAccount);
         return true;
@@ -139,7 +124,7 @@ class PrivateProfessionalRegister extends Model
             'phone' => [self::RULE_REQUIRED, self::RULE_PHONE, [self::RULE_UNIQUE, 'attribute' => 'phone', 'class' => ProfessionalUser::class]],
             'password' => [self::RULE_REQUIRED, self::RULE_PASSWORD],
             'passwordConfirm' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
-            'titular-account' => [[self::RULE_MAX, 'max' => 255]],
+            'titularAccount' => [[self::RULE_MAX, 'max' => 255]],
             'bic' => [[self::RULE_MAX, 'max' => 11]],
             'expirationdate' => [self::RULE_EXP_DATE],
             'cryptogram' => [[self::RULE_MAX, 'max' => 3], self::RULE_NUMBER]
@@ -161,10 +146,10 @@ class PrivateProfessionalRegister extends Model
             'password' => 'Mot de passe',
             'passwordConfirm' => 'Confirmez votre mot de passe',
             'payment' => 'Je souhaite de rentrer mes coordonnées bancaires maintenant (possibilité de le faire plus tard)',
-            'titular-account' => 'Titulaire du compte',
+            'titularAccount' => 'Titulaire du compte',
             'iban' => 'IBAN',
             'bic' => 'BIC',
-            'titular-card' => 'Titulaire de la carte',
+            'titularCard' => 'Titulaire de la carte',
             'cardnumber' => 'Numéro de carte',
             'expirationdate' => 'Date d\'expiration',
             'cryptogram' => 'CVV'
@@ -184,10 +169,10 @@ class PrivateProfessionalRegister extends Model
             'phone' => '06 01 02 03 04',
             'password' => '************',
             'passwordConfirm' => '************',
-            'titular-account' => 'Nom entreprise / Nom personne',
+            'titularAccount' => 'Nom entreprise / Nom personne',
             'iban' => 'FR76 XXXX XXXX XXXX XXXX XXXX XXXX XX',
             'bic' => 'vore BIC (optionnel)',
-            'titular-card' => 'Nom entreprise / Nom personne',
+            'titularCard' => 'Nom entreprise / Nom personne',
             'cardnumber' => 'XXXX XXXX XXXX XXXX',
             'expirationdate' => 'MM/AA',
             'cryptogram' => '000'

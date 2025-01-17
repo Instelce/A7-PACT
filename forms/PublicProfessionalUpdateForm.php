@@ -13,8 +13,6 @@ use app\models\user\professional\PublicProfessional;
 
 class PublicProfessionalUpdateForm extends Model
 {
-    public const ACCEPT_NOTIFICATIONS = 1;
-    public const REFUSE_NOTIFICATIONS = 0;
     public string $siren = '';
     public string $denomination = '';
 
@@ -26,8 +24,6 @@ class PublicProfessionalUpdateForm extends Model
     public string $phone = '';
 
     public string $passwordCheck = '';
-
-    public int $notifications = self::REFUSE_NOTIFICATIONS;
 
     public UserAccount $userAccount;
     public Address $address;

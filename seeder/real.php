@@ -326,8 +326,6 @@ $offre2->minimum_price = 15;
 $offre2->created_at = randomOfferDate();
 $offre2->save();
 $offre2->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 1);
-$offre2->addSubscription("en_relief", date('Y-m-d', strtotime("last Monday")), 2);
-$offre2->addSubscription("a_la_une", date('Y-m-d', strtotime("last Monday")), 1);
 
 
 

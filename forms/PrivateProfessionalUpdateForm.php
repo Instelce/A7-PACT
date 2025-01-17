@@ -16,8 +16,7 @@ use app\core\Utils;
 
 class PrivateProfessionalUpdateForm extends Model
 {
-    public const ACCEPT_NOTIFICATIONS = 1;
-    public const REFUSE_NOTIFICATIONS = 0;
+
 
     public string $denomination = '';
     public string $siren = '';
@@ -29,7 +28,6 @@ class PrivateProfessionalUpdateForm extends Model
     public string $city = '';
     public string $phone = '';
 
-    public int $notifications = self::REFUSE_NOTIFICATIONS;
     public string $passwordCheck = '';
     public ?UserAccount $userAccount = null;
     public ?Address $address = null;
