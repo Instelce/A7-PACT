@@ -87,7 +87,7 @@ $this->cssFile = "register-pro";
                                 <input class="switch" type="checkbox" id="switch-cond-public" name="conditions" />
                                 <label class="switch" for="switch-cond-public"></label>
                             </div>
-                            <label for="switch-period" id="switch-period-label">J'accepte les <a href="" class="link">conditions générales d'utilisation</a></label>
+                            <label for="switch-period" id="switch-period-label">J'accepte les <a target="_blank" href="../../conditions" class="link">conditions générales d'utilisation</a></label>
                         </div>
 
 <!--                        <div class="flex gap-4 items-center">-->
@@ -205,7 +205,7 @@ $this->cssFile = "register-pro";
                                 <input class="switch" type="checkbox" id="switch-cond-private" name="conditions" />
                                 <label class="switch" for="switch-cond-private"></label>
                             </div>
-                            <label for="switch-period" id="switch-period-label2">J'accepte les <a href="" class="link">conditions générales d'utilisation</a></label>
+                            <label for="switch-period" id="switch-period-label2">J'accepte les <a target="_blank" href="../../conditions" class="link">conditions générales d'utilisation</a></label>
                         </div>
                     </div>
                 </div>
