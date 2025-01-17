@@ -664,15 +664,16 @@ void onmessage(ws_cli_conn_t client_conn,
 int main(void)
 {
     // Load environment variables
-    env_load("..");
+    env_load(".");
 
     // Setup log
     log_verbose = 1;
     strcpy(log_file_path, "tchatator.log");
 
     // Setup database
+    log_info("Start connection to the database %s:%s@%s as %s", getenv("DB_HOST"), getenv("DB_PORT"), getenv("DB_NAME"), getenv("DB_USER"));
     db_login(&conn);
-    log_info("Connected to the database %s:%s@%s as %s", getenv("DB_HOST"), getenv("DB_PORT"), getenv("DB_NAME"), getenv("DB_USER"));
+    log_info("Connection to the database established");
 
     // Setup clients
     clients = (client_t*)malloc(20 * sizeof(client_t));

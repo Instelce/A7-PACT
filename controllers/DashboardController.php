@@ -93,7 +93,7 @@ class DashboardController extends Controller
                 $reply->loadData($body);
                 $reply->created_at = date('Y-m-d H:i:s');
                 if ($reply->save()) {
-                    Application::$app->notifications->createNotification($reply->opinion_reply_id, Application::$app->user->specific()->denomination . " a répondu à votre avis : " . $reply->comment);
+                    Application::$app->notifications->createNotification(Opinion::findOneByPk($reply->opinion_id)->account_id, Application::$app->user->specific()->denomination . " a répondu à votre avis : " . "'$reply->comment'");
                     return $response->redirect('/dashboard/avis');
                 }
             }
@@ -168,13 +168,13 @@ class DashboardController extends Controller
 
     public function notifications(Request $request, Response $response)
     {
-        $notifications = Notification::find(['user_id' => Application::$app->user->opinion_reply_id]);
+        $notifications = Notification::find(['user_id' => Application::$app->user->opinion_id]);
         return $this->json($notifications);
     }
 
     public function notificationRead(Request $request, Response $response)
     {
-        $notifications = Notification::find(['user_id' => Application::$app->user->opinion_reply_id]);
+        $notifications = Notification::find(['user_id' => Application::$app->user->opinion_id]);
         foreach ($notifications as $notification) {
             $notification->markAsRead();
         }
