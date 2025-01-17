@@ -91,10 +91,19 @@ fetch('/api/notifications').then(response => response.json()).then(notifications
     }
 });
 
-notificationTrigger.addEventListener('click', () => {
-    notificationContainer.classList.toggle('open');
-    fetch('/api/read-notifications');
-})
+if (notificationTrigger && notificationContainer) {
+    notificationTrigger.addEventListener('click', () => {
+        notificationContainer.classList.toggle('open');
+        fetch('/api/read-notifications');
+    })
+
+    // Close when click outside
+    document.addEventListener('click', (e) => {
+        if (!notificationTrigger.contains(e.target)) {
+            notificationContainer.classList.remove('open');
+        }
+    });
+}
 
 // Avatar
 const avatarButton = document.querySelector('.avatar .image-container');
