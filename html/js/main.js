@@ -107,13 +107,6 @@ if (notificationContainer){
 
             notificationContainer.appendChild(notificationCard);
         }
-
-        if (notifications.find(n => n.is_read === 0)){
-            notificationIconDefault.classList.add('hidden');
-        } else {
-            notificationIconAlert.classList.add('hidden');
-            notificationContainer.innerHTML = "<div>Vous n'avez pas de notifications</div>";
-        }
     });
 
     notificationTrigger.addEventListener('click', () => {
