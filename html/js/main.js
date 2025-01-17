@@ -94,9 +94,32 @@ if (notificationContainer){
         }
     });
 
+    fetch('/dashboard/notifications').then(response => response.json()).then(notifications => {
+        for (let notification of notifications){
+            console.log(notification);
+            let notificationCard = document.createElement('div');
+            notificationCard.classList.add('notification-card');
+            notificationCard.innerHTML = notification.content;
+
+            if(!notification.is_read){
+                notificationCard.classList.add('not-read');
+            }
+
+            notificationContainer.appendChild(notificationCard);
+        }
+
+        if (notifications.find(n => n.is_read === 0)){
+            notificationIconDefault.classList.add('hidden');
+        } else {
+            notificationIconAlert.classList.add('hidden');
+            notificationContainer.innerHTML = "<div>Vous n'avez pas de notifications</div>";
+        }
+    });
+
     notificationTrigger.addEventListener('click', () => {
         notificationContainer.classList.toggle('open');
         fetch('/api/read-notifications');
+        fetch('/dashboard/read-notifications');
     })
 
     // Close when click outside
