@@ -7,7 +7,7 @@ use app\core\DBModel;
 class RibMeanOfPayment extends DBModel
 {
     public int $payment_id = 0;
-    public string $name = '';
+    public string $titular_account = '';
     public string $iban = '';
     public string $bic = '';
 
@@ -18,7 +18,7 @@ class RibMeanOfPayment extends DBModel
 
     public function attributes(): array
     {
-        return ['payment_id', 'name', 'iban', 'bic'];
+        return ['payment_id', 'titular_account', 'iban', 'bic'];
     }
 
     public static function pk(): string

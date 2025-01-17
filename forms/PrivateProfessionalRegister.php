@@ -82,7 +82,7 @@ class PrivateProfessionalRegister extends Model
         if ($this->iban) {
             $payment = new RibMeanOfPayment();
             $payment->payment_id = $meanOfPayment->id;
-            $payment->name = $this->titularAccount;
+            $payment->titular_account = $this->titularAccount;
             $payment->iban = $this->iban;
             $payment->bic = $this->bic;
             $payment->save();
