@@ -27,9 +27,7 @@ class PasswordForgetForm extends Model
          */
         $user = UserAccount::findOne(['mail' => $this->mail]);
 
-        if (!$user) {
-            $this->addError('mail', 'E-mail n\'existe pas');
-        } else {
+        if ($user) {
             $user->reset_password_hash = Utils::generateHash();
             $user->update();
             Application::$app->mailer->send($this->mail, "Modification du mot de passe de $this->mail", 'reset-password', ['mail' => $this->mail, 'hash' => $user->reset_password_hash]);

@@ -311,3 +311,14 @@
     background-color: inherit;
     z-index: -1;
 }
+
+@media (max-width: 768px) {
+    .bgcol {
+        background-color: rgb(var(--color-blue-light)); /* Adaptez la couleur pour plus de contraste */
+        padding: 4vh 0; /* Augmentez légèrement le padding pour améliorer l'espacement */
+    }
+
+    .homeDisplayDiv {
+        gap: 20px; /* Réduisez l'espacement pour optimiser l'utilisation de l'espace */
+    }
+}

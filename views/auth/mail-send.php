@@ -16,7 +16,7 @@ $mail = Application::$app->session->get('reset-password-email');
         </svg>
     </div>
     <div class="flex flex-col gap-2">
-        <div class="flex flex-row gap-2"><p class="text-lg">Un email de réinitialisation de mot de passe a été envoyé a l'adresse <p class="text-lg link"><?php echo htmlspecialchars($mail); ?>.</p></div>
+        <div class="text-lg">Un email de réinitialisation de mot de passe a été envoyé a l'adresse <p class="text-lg link"><?php echo htmlspecialchars($mail); ?></p>.</div>
         <p class="text-lg">Veuillez vérifier votre boîte de réception.</p>
         <form method="post" class="flex flex-row gap-2 items-center">
             <p class="text-lg">Si vous n'avez pas reçu l'email, vous pouvez</p>
