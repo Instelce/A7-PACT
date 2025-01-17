@@ -34,9 +34,6 @@ class Notifications
 
 // Scénarios des notifications :
 //
-// Membre A like membre B
 // Membre commente pro
-// Membre envois message à pro
 // Pro like membre
 // Pro Répond membre
-// Pro envois message à membre

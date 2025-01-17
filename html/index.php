@@ -64,6 +64,7 @@ $app->router->get('/dashboard/messages', [DashboardController::class, 'message']
 $app->router->post('/dashboard/avis', [DashboardController::class, 'avis']);
 $app->router->get('/dashboard/factures', [DashboardController::class, 'invoices']);
 $app->router->get('/factures/<pk:int>', [DashboardController::class, 'invoicesPDF']);
+$app->router->get('/dashboard/read-notifications', [DashboardController::class, 'notificationRead']);
 
 $app->router->get('/connexion', [AuthController::class, 'login']);
 $app->router->post('/connexion', [AuthController::class, 'login']);
