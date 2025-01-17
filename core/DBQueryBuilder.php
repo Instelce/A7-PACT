@@ -17,6 +17,7 @@ class DBQueryBuilder
     public array $group_by = [];
     public ?int $limit = null;
     public ?int $offset = null;
+    public bool $distinct = false;
 
     public ?\PDOStatement $statement;
 
@@ -44,7 +45,7 @@ class DBQueryBuilder
             $select .= ", " . implode(", ", $this->selectCalculated);
         }
 
-        $sql = "SELECT $select FROM $tableName";
+        $sql = "SELECT " . ($this->distinct ? 'DISTINCT ' : '') . $select . " FROM $tableName";
 
         if (!empty($this->joins)) {
             $sql .= " " . implode(" ", $this->joins);
@@ -330,5 +331,11 @@ class DBQueryBuilder
     public function queryString(): string
     {
         return $this->statement ? $this->statement->queryString : '';
+    }
+
+    public function distinct(): DBQueryBuilder
+    {
+        $this->distinct = true;
+        return $this;
     }
 }

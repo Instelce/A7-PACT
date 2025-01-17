@@ -19,9 +19,9 @@ void log_info(char *format, ...) {
     int fd;
     time_t t;
     struct tm tm;
-    char log_line[CHAR_SIZE];
+    char log_line[LARGE_CHAR_SIZE];
     va_list valist;
-    char message[CHAR_SIZE];
+    char message[LARGE_CHAR_SIZE];
 
     // Cook the message with the format args
     va_start(valist, format);

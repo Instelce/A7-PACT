@@ -33,7 +33,7 @@ use app\core\Application;
 <body
     class="<?php echo Application::$app->isAuthenticated() ? Application::$app->user->isProfessional() ? 'professional-mode' : '' : '' ?>">
 
-    <input class="app-environment" value="<?php echo $_ENV['APP_ENVIRONMENT'] ?>">
+    <input type="hidden" class="app-environment" value="<?php echo $_ENV['APP_ENVIRONMENT'] ?>">
 
     <div class="height-top"></div>
 

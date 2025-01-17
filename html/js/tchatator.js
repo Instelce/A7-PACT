@@ -11,7 +11,7 @@ let domain = window.location.hostname;
 
 // Member client
 
-export const REFRESH_RATE = 100;
+export const REFRESH_RATE = 2000;
 
 let is_writing = false;
 let in_conversation_with = null;
@@ -35,7 +35,7 @@ let messageWriter;
 let sendButton;
 let writingIndicator;
 let gotoConversationsButton;
-let contactProfessionalButton = document.querySelector('.contact-professsional');
+let contactProfessionalButton = document.querySelectorAll('.contact-professsional');
 
 if (chat) {
     conversationsPage = chat.querySelector('.conversations-page');
@@ -46,8 +46,10 @@ if (chat) {
     // Check window size
     if (window.innerWidth < 768) {
         chatTrigger = chatTrigger[1];
+        contactProfessionalButton = contactProfessionalButton[0];
     } else {
         chatTrigger = chatTrigger[0];
+        contactProfessionalButton = contactProfessionalButton[1];
     }
 
     messagesContainer = chat.querySelector('.messages-container');

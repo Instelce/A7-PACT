@@ -201,6 +201,7 @@
 /* Message card */
 .messages-container .message {
     width: 80%;
+    max-width: 80%;
     position: relative;
     background: rgb(var(--color-white));
     padding: .5rem;
@@ -237,19 +238,36 @@
     font-size: inherit;
     font-family: inherit;
     margin: .2rem 0;
+    white-space: pre-wrap;
 }
 
 .messages-container .message .buttons {
     position: absolute;
     top: 50%;
-    right: .5rem;
     transform: translateY(-50%);
     opacity: 0;
+    right: 0;
 
     display: flex;
     gap: .5rem;
 
     transition: opacity .2s;
+    background: white;
+    height: 100%;
+    padding: 0 .5rem;
+    padding-left: 1rem;
+    border-radius: var(--radius-small);
+}
+/* Left Gradient */
+.messages-container .message .buttons::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), white);
 }
 
 @media (max-width: 768px) {

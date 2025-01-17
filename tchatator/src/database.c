@@ -198,10 +198,19 @@ void db_create_message(PGconn* conn, message_t* message)
     PGresult* res;
     char query[256];
 
-    sprintf(query, "INSERT INTO message (sended_date, modified_date, sender_id, receiver_id, deleted, seen, content) VALUES ('%s', NULL, %d, %d, '%s', '%s', '%s')",
-        message->sended_date, message->sender_id, message->receiver_id, db_bool(message->deleted), db_bool(message->seen), message->content);
+    char sender_id_str[20], receiver_id_str[20], deleted_str[10], seen_str[10];
+    snprintf(sender_id_str, sizeof(sender_id_str), "%d", message->sender_id);
+    snprintf(receiver_id_str, sizeof(receiver_id_str), "%d", message->receiver_id);
+    snprintf(deleted_str, sizeof(deleted_str), "%d", message->deleted);
+    snprintf(seen_str, sizeof(seen_str), "%d", message->seen);
 
-    res = PQexec(conn, query);
+    const char* paramValues[6] = { message->sended_date, sender_id_str, receiver_id_str, deleted_str, seen_str, message->content };
+    int paramLengths[6] = { 0, 0, 0, 0, 0, 0 };
+    int paramFormats[6] = { 0, 0, 0, 0, 0, 0 };
+
+    res = PQexecParams(conn,
+        "INSERT INTO message (sended_date, modified_date, sender_id, receiver_id, deleted, seen, content) VALUES ($1, NULL, $2, $3, $4, $5, $6)",
+        6, NULL, paramValues, paramLengths, paramFormats, 0);
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         db_error(conn, "Error when creating message");

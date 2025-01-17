@@ -200,6 +200,7 @@ class ApiController extends Controller
             ->offset($offset)
             ->filters($where)
             ->search(['address__city' => $location, 'title' => $q])
+            ->distinct()
             ->order_by($order_by);
 
         if ($rangePrice) {
@@ -303,6 +304,7 @@ class ApiController extends Controller
             $data[$i]['opinion_count'] = $offer->opinionsCount();
             $data[$i]['no_read_opinion_count'] = $offer->noReadOpinions();
         }
+
         return $response->json($data);
     }
 
