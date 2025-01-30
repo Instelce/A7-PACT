@@ -14,6 +14,8 @@ void db_login(PGconn** conn)
 {
     *conn = PQsetdbLogin(getenv("DB_HOST"), getenv("DB_PORT"), NULL, NULL, getenv("DB_NAME"), getenv("DB_USER"), getenv("DB_PASSWORD"));
 
+    // printf("PostgreSQL status: %d\n", PQstatus(*conn));
+
     if (PQstatus(*conn) != CONNECTION_OK) {
         perror("Error when connecting the DB");
         db_exit(*conn);

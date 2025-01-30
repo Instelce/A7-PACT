@@ -10,7 +10,7 @@
 
 #define MAX_LINE_SIZE 100
 
-void config_load(config_t* c)
+void config_load(config_t* c, char* path)
 {
     int fd;
     int len;
@@ -19,8 +19,18 @@ void config_load(config_t* c)
     char* var_name;
     char* var_value;
 
+    if (path == NULL) {
+        path = malloc(6*sizeof(char));
+        strcpy(path, "config");
+    }
+
     // Open config file
-    fd = open("config", O_RDONLY);
+    fd = open(path, O_RDONLY);
+
+    if (fd == -1) {
+        perror("Cannot open config file");
+        exit(EXIT_FAILURE);
+    }
 
     // Read config file character by character
     while ((len = read(fd, &buf, 1)) > 0) {

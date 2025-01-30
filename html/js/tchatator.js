@@ -11,7 +11,7 @@ let domain = window.location.hostname;
 
 // Member client
 
-export const REFRESH_RATE = 2000;
+export const REFRESH_RATE = 100;
 
 let is_writing = false;
 let in_conversation_with = null;
@@ -110,7 +110,7 @@ getUser().then(_user => {
         if (appEnv == 'dev') {
             socket = new WebSocket(`ws://${domain}:4242`);
         } else {
-            socket = new WebSocket(`wss://${domain}:4242`);
+            socket = new WebSocket(`ws://${domain}:4242`);
         }
 
         if (socket.readyState === WebSocket.CLOSED) {

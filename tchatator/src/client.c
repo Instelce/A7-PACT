@@ -23,6 +23,10 @@
 #define SERVER_PORT 4242
 #define LINE_WIDTH 80
 
+// -------------------------------------------------------------------------
+// Structures
+// -------------------------------------------------------------------------
+
 typedef struct {
     char name[CHAR_SIZE];
     int disabled;
@@ -35,6 +39,11 @@ typedef struct {
     int actions_count;
 } menu_t;
 
+
+// -------------------------------------------------------------------------
+// Global variables
+// -------------------------------------------------------------------------
+
 volatile sig_atomic_t running = 1;
 
 int sock;
@@ -45,6 +54,11 @@ user_list_t pros;
 user_list_t clients;
 int discussion_user_id;
 char error_message[CHAR_SIZE];
+
+
+// -------------------------------------------------------------------------
+// Functions signatures
+// -------------------------------------------------------------------------
 
 /**
  * @brief Displays a menu and returns the index of the selected action.
@@ -195,6 +209,11 @@ char* format_date(char date[]);
 
 void empty_action();
 
+
+// -------------------------------------------------------------------------
+// Main
+// -------------------------------------------------------------------------
+
 int main()
 {
     print_logo();
@@ -238,7 +257,7 @@ int main()
 
     config_t* config;
     config = malloc(sizeof(config_t));
-    config_load(config);
+    config_load(config, NULL);
 
     env_load("..");
 
@@ -301,6 +320,12 @@ int main()
     close(sock);
     return EXIT_SUCCESS;
 }
+
+
+// -------------------------------------------------------------------------
+// Functions
+// -------------------------------------------------------------------------
+
 void input(char* output)
 {
     scanf("%s", output);
@@ -602,9 +627,9 @@ void menu_discussion()
             printf("\nYou have not sent any messages in this discussion.\n");
         }
 
-        goto_print(2, w.ws_row - 2, "Selected: %d", selected);
+        // goto_print(2, w.ws_row - 2, "Selected: %d", selected);
         goto_print(2, w.ws_row - 1, "Send a message: press m");
-        goto_print(2, w.ws_row, "Use arrow keys to navigate, Enter to select, Ctrl+C to quit discussion");
+        goto_print(2, w.ws_row, "Use arrow keys to navigate, Enter to update or delete, q to quit discussion");
 
         key = get_arrow_key();
         switch (key) {
@@ -647,7 +672,7 @@ void menu_discussion()
 
             response = send_message(sock, connected_user.api_token, new_message, discussion_user_id);
             if (response->status.code == 200) {
-                printf("Message successfully sent.\n");
+                printf("\n\nMessage successfully sent.\n");
             } else {
                 printf("Failed to send the message. Response: %d %s\n", response->status.code, response->status.message);
             }
@@ -655,7 +680,7 @@ void menu_discussion()
             getchar();
             break;
 
-        case 'C':
+        case 'q':
             entered = 1;
             break;
         }
@@ -969,7 +994,6 @@ int display_message(message_t message, int align_left, int selected)
 
     char* sender = connected_user.id == message.sender_id ? "You" : sender_user.name;
     char* sended_date = format_date(message.sended_date);
-    char* modified_date = format_date(message.modified_date);
 
     int printed_line_count = 0;
 
@@ -1019,8 +1043,11 @@ int display_message(message_t message, int align_left, int selected)
                 j += strlen(sended_date) + 7;
             }
             if (i == 6 + line_count && j == 1) {
-                color_printf(color, "Mis à jour %s", sended_date);
-                j += strlen(sended_date) + 11;
+                if (message.modified_date != NULL) {
+                    char* modified_date = format_date(message.modified_date);
+                    color_printf(color, "Mis à jour %s", modified_date);
+                    j += strlen(modified_date) + 11;
+                }
             }
         }
         printf("\n");

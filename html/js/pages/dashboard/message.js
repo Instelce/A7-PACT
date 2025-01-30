@@ -31,7 +31,7 @@ getUser().then(u => {
     if (appEnv == 'dev') {
         socket = new WebSocket(`ws://${domain}:4242`);
     } else {
-        socket = new WebSocket(`wss://${domain}:4242`);
+        socket = new WebSocket(`ws://${domain}:4242`);
     }
 
     socket.addEventListener("open", () => {

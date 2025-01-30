@@ -1,21 +1,40 @@
+# Configuration file for Tchatator application
 
-# 
+# port: The port number on which the Tchatator server will listen for incoming connections.
+# Default: 4242
+
 port=4242
 
-#
+# log-file: The name of the file where the Tchatator server will write its log messages.
+# Default: tchatator.log
+
 log-file=tchatator.log
 
-# 
+# ban-duration: The duration (in hours) for which a user will be banned after violating the rules.
+# Default: 24
+
 ban-duration=24
 
-# 
+# max-messages-per-minutes: The maximum number of messages a user can send per minute.
+# Default: 12
+
 max-messages-per-minutes=12
+
+# max-messages-per-hours: The maximum number of messages a user can send per hour.
+# Default: 90
+
 max-messages-per-hours=90
 
-#
+# max-message-length: The maximum length (in characters) of a single message.
+# Default: 1000
+
 max-message-length=1000
 
-# 
+# max-message-reception-block: The maximum number of messages that can be received in a single block.
+# Default: 20
+
 max-message-reception-block=20
+
+# admin-api-token: The API token used for administrative access to the Tchatator server.
 
 admin-api-token=0KASTNSNMsHneYiZq6EEdEa7Vb6sRJVPkt98rbIMxVPQIMvNGZPi81JH3uy9mE6c
