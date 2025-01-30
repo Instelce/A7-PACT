@@ -6,7 +6,7 @@ lib_dir = lib
 output = bin
 utils = src/database.c src/protocol.c src/log.c src/config.c src/utils.c
 
-# Install dependencies for websocket server only
+# Install dependencies for WEBSOCKET server only
 # - wsServer : https://github.com/Theldus/wsServer
 # - json-c: https://github.com/json-c/json-c
 deps:
@@ -19,9 +19,17 @@ deps:
 server: $(utils) src/server.c
 	mkdir -p $(output)
 	$(CC) $(CFLAGS) $^ -o $(output)/server
+
+server-dev: $(utils) src/server.c
+	mkdir -p $(output)
+	$(CC) $(CFLAGS) $^ -o $(output)/server
 	./$(output)/server
 
 client: $(utils) src/client.c
+	mkdir -p $(output)
+	$(CC) $(CFLAGS) $^ -o $(output)/client
+
+client-dev: $(utils) src/client.c
 	mkdir -p $(output)
 	$(CC) $(CFLAGS) $^ -o $(output)/client
 	./$(output)/client

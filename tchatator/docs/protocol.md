@@ -1,74 +1,72 @@
 # Protocole
 
-## Description
-Ce fichier définit un protocole de communication client-serveur basé sur des commandes et des réponses échangées via un socket. Le protocole gère l'envoi et la réception de messages, ainsi que la gestion des connexions et des déconnexions.
+Ce fichier définit le protocole de communication de tchatator, qui est utilisé pour le chat de TripEnArvor.
+
+Le protocole est basé sur une architecture client-serveur où le client envoie des commandes au serveur pour effectuer des actions comme l'envoi de messages, la connexion, la déconnexion, etc. Le serveur répond avec un code de statut et des données supplémentaires si nécessaire.
 
 ---
 
-## Fonctionnement du Protocole
+### Les commandes et leurs paramètres
 
-### 1. **Processus Principal**
-1. Le client se connecte au serveur.
-2. Il envoie une commande (par exemple, se connecter avec un `LOGIN`).
-3. Le serveur répond avec un statut et des données.
-4. Le client traite la réponse et effectue les actions nécessaires (afficher un message, demander de nouvelles informations, etc.).
+Le client envoie des commandes au serveur pour réaliser diverses actions. Les commandes sont envoyées sous forme de [chaînes formatées](#format-des-commandes) et incluent des paramètres comme le jeton d'authentification, l'identifiant du destinataire, et le contenu du message.
 
-### 2. **Exemple de Fonctionnement**
+Voici les commandes disponibles :
 
-- **Connexion** : Un client envoie la commande `LOGIN` avec un jeton API. Le serveur répond avec un code 200 si la connexion est réussie.
-- **Envoi de Message** : Le client envoie une commande `SEND_MSG` avec le message et l'identifiant du destinataire. Le serveur confirme l'envoi ou renvoie une erreur si quelque chose ne va pas.
+- `LOGIN` : Authentifie un utilisateur avec un jeton API.
+    - `api-token` : La clé d'API de l'utilisateur.
+- `SEND_MSG` : Envoie un message à un utilisateur.
+    - `token` : Le jeton d'authentification de l'utilisateur.
+    - `recipient-id` : L'identifiant de l'utilisateur destinataire.
+    - `message-length` : La longueur du message.
+    - `content` : Le contenu du message.
+- `UPDT_MSG` : Met à jour un message existant.
+    - `token` : Le jeton d'authentification de l'utilisateur.
+    - `message-id` : L'identifiant du message à mettre à jour.
+    - `content` : Le nouveau contenu du message.
+- `DEL_MSG` : Supprime un message.
+    - `token` : Le jeton d'authentification de l'utilisateur.
+    - `message-id` : L'identifiant du message à supprimer.
+- `DISCONNECTED` : Informe le serveur qu'un client s'est déconnecté.
 
-### 3. **Commandes**
-Le client envoie des commandes au serveur pour réaliser diverses actions. Les commandes sont envoyées sous forme de chaînes formatées et incluent des paramètres comme le jeton d'authentification, l'identifiant du destinataire, et le contenu du message.
+### Format des commandes
 
-Voici quelques commandes disponibles :
 
-- **LOGIN** : Authentifie un utilisateur avec un jeton API.
-- **SEND_MSG** : Envoie un message à un utilisateur.
-- **UPDT_MSG** : Met à jour un message existant.
-- **DEL_MSG** : Supprime un message.
-- **GET_MSGS** : Récupère les nouveaux messages.
-- **IS_CONN** : Vérifie si un utilisateur est connecté.
-- **DISCONNECTED** : Informe le serveur qu'un client s'est déconnecté.
+Les commandes sont envoyées au serveur sous forme de chaînes de caractères. Chaque commande commence par l'identifiant unique de la commande suivi d'un retour à la ligne, puis de paramètres au format clé-valeur (`<clé>:valeur`). Chaque paramètre est séparé par un retour à la ligne.
 
-### 4. **Réponses**
-Après chaque commande envoyée, le serveur renvoie une réponse indiquant le résultat de l'opération. la réponse comprenant :
+Voici par exemple la construction de la commande `LOGIN` :
 
-- **Statut** : Un code de statut (par exemple 200 pour OK ou 403 pour "Accès refusé").
-- **Données supplémentaires** : Des informations additionnelles au format clé-valeur (par exemple, la taille du message envoyé).
+```
+LOGIN
+api-token:bOwvOhMUifIjxAFA1CXI5mcR8pB4lL697FfdXjQvs5bG...
+```
 
-### 5. **Envoi de Commandes et Réception des Réponses**
+Ou encore la commande `SEND_MSG` :
 
-#### Envoi de Commande :
-- Le client crée une commande avec un nom et des paramètres (ex. token, message).
-- La commande est formatée en une chaîne de caractères et envoyée au serveur via un socket.
-
-#### Réception de Réponse :
-- Le serveur répond avec une chaîne de caractères qui inclut un code de statut et, éventuellement, des données supplémentaires.
-- Le client analyse cette réponse pour en extraire les informations pertinentes.
+```
+SEND_MSG
+token:bOwvOhMUifIjxAFA1CXI5mcR8pB4lL697FfdXjQvs5bG...
+recipient-id:42
+message-length:24
+content:Bonjour, comment ça va ?
+```
 
 ---
 
-## Exemple de Commandes
+### Les réponses
 
-#### Connexion :
-```
-response_t* response = send_login(sock, "mon_api_token");
-```
+Après chaque commande envoyée, le serveur renvoie une réponse indiquant le résultat de l'opération. 
 
+La réponse comprend les informations suivantes :
 
-Cette commande envoie un jeton d'authentification pour connecter l'utilisateur.
+- **Statut** : Un [code de statut](#les-codes-de-statut)
+- **Données supplémentaires** : Des informations additionnelles en fonction de la commande reçu au format clé-valeur.
 
+Le format des réponses est similaire à celui des commandes, avec le code de statut en première ligne suivi des données supplémentaires.
 
+#### Les codes de statut
 
-```
-response_t* response = send_message(sock, "mon_token", "Hello World", 123);
-```
-
-Celle-ci envoie le message "Hello World" à l'utilisateur avec l'ID 123.
-
-```
-response_t* response = send_update_message(sock, "mon_token", 456, "Updated message content");
-```
-
-Enfin, celle-ci met à jour le message avec l'ID 456.
+- **200/OK** : La commande a été exécutée avec succès.
+- **403/DENIED** : L'utilisateur n'a pas les permissions nécessaires pour exécuter la commande.
+- **401/UNAUTH** : L'utilisateur n'est pas authentifié.
+- **416/MISFMT** : La commande est mal formatée (voir le [format des commandes](#format-des-commandes)).
+- **426/TOOMRQ** : Le serveur a reçu trop de messages en peu de temps (voir la configuration).

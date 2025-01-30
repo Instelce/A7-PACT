@@ -111,6 +111,7 @@ int main(int argc, char* argv[])
     int command_parsed;
 
     config_t* config;
+    char* config_path;
     PGconn* conn;
 
     // Register signal
@@ -134,36 +135,46 @@ int main(int argc, char* argv[])
     // Setup log and config
     log_verbose = 0;
     config = malloc(sizeof(config_t));
+    config_path = NULL;
 
     // Handles options (--help, -h, --verbose, --config, -c, ...)
-    while ((options = getopt(argc, argv, ":if:hvc")) != -1) {
+    while ((options = getopt(argc, argv, "hvc:")) != -1) {
         switch (options) {
         case 'h':
-            printf("\nUsage : server --[options]\n");
-            printf("Launch the server and allows communication between client and professional\n");
+            printf("Usage : server --[option] | -[option]\n\n");
+            printf("Launch the server and allows communication between client and professional\n\n");
             printf("Options :\n");
-            printf("--v, verbose     explains what is currently happening, giving more details\n");
+            printf("-v,              explains what is currently happening, giving more details, show logs\n");
             printf("-h, --help       shows help on the command\n");
             printf("-c, --config     specify the configuration file\n");
 
-            break;
+            exit(0);
         case 'v':
-            printf("option verbose : ON\n");
             log_verbose = 1;
             break;
         case 'c':
-            printf("option config: %c\n", options);
+            config_path = malloc(sizeof(optarg));
+            strcpy(config_path, optarg);
             break;
+        case '?':
+            switch (optopt) {
+                case 'c':
+                    fprintf(stderr, "L'option -c prend un argument.\n");
+            }
+
+            return 1;
+        default:
+            abort();
         }
     }
 
-    log_verbose = 1; // only for dev
+    // log_verbose = 1; // only for dev
 
     // Load env variables
     env_load("..");
 
     // Initialize config
-    config_load(config);
+    config_load(config, config_path);
 
     // Set log settings
     strcpy(log_file_path, config->log_file);

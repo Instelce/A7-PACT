@@ -90,7 +90,7 @@ static const char* EXISTING_COMMANDS[] = {
 };
 
 static const command_def_t COMMANDS_DEFINITIONS[] = {
-    { "LOGIN", 1 }, // api_token
+    { "LOGIN", 1 }, // api-token
     { "SEND_MSG", 4 }, // token,receiver-id,message-length,content
     { "UPDT_MSG", 4 }, // token,message-id,message-length,content
     { "DEL_MSG", 2 }, // token,message-id

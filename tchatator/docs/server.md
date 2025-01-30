@@ -1,14 +1,26 @@
 # Server
 
-## Dépendances
+Documentation technique du server.
 
-Pour installer les dépendances ([wsServer](https://github.com/Theldus/wsServer)), lancez la commande `make deps`.
+## Configurer
+
+Pour configurer le server, éditez le fichier `config`.
+
+Il faut aussi copiez le fichier `.env.example` en `.env` et l'éditez avec les informations de votre DB.
 
 ## Compiler
 
-Pour compiler lancez la commander `make server`.
-
+Pour compiler lancez simplement la commander `make server`.
 
 ## Exécuter
 
-Pour exécuter le server `./bin/server`.
+Avant d'exécuter le server, assurez-vous que la DB tourne.
+
+Pour exécuter le server lancez : `./bin/server`.
+
+### Paramètres
+
+Le server accepte les paramètres suivants :
+- `-h` : Affiche l'aide.
+- `-v` : Affiche les logs du server.
+- `-c <chemin>` : Chemin du fichier de configuration.

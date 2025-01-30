@@ -14,7 +14,7 @@ typedef struct config {
     char admin_api_token[API_TOKEN_SIZE];
 } config_t;
 
-void config_load(config_t* c);
+void config_load(config_t* c, char* path);
 
 void env_load(char dir_path[]);
 
