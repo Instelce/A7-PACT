@@ -39,7 +39,6 @@ typedef struct {
     int actions_count;
 } menu_t;
 
-
 // -------------------------------------------------------------------------
 // Global variables
 // -------------------------------------------------------------------------
@@ -54,7 +53,6 @@ user_list_t pros;
 user_list_t clients;
 int discussion_user_id;
 char error_message[CHAR_SIZE];
-
 
 // -------------------------------------------------------------------------
 // Functions signatures
@@ -153,6 +151,10 @@ void menu_select_discussion();
  */
 void menu_discussion();
 
+void menu_block_user();
+
+void menu_ban_user();
+
 /**
  * @brief Handles client connection.
  */
@@ -163,6 +165,7 @@ void connection_client();
  */
 void connection_pro();
 
+void connection_admin();
 /**
  * @brief Handles signals.
  *
@@ -209,7 +212,6 @@ char* format_date(char date[]);
 
 void empty_action();
 
-
 // -------------------------------------------------------------------------
 // Main
 // -------------------------------------------------------------------------
@@ -230,7 +232,14 @@ int main()
         &menu_login, "Login",
         "Connection client", connection_client,
         "Connection pro", connection_pro,
-        "Connection admin", empty_action,
+        "Connection admin", connection_admin,
+        "Disconnect", disconnect,
+        NULL);
+    menu_t menu_admin;
+    create_menu(
+        &menu_admin, "Admin",
+        "Block user", menu_block_user,
+        "Ban user", menu_ban_user,
         "Disconnect", disconnect,
         NULL);
     menu_t menu_client;
@@ -245,13 +254,6 @@ int main()
         &menu_pro, "Professional",
         "Send a message", menu_send_message,
         "Discussions", menu_select_discussion,
-        "Disconnect", disconnect,
-        NULL);
-    menu_t menu_admin;
-    create_menu(
-        &menu_admin, "Admin",
-        "Block a message", empty_action,
-        "Ban a user", empty_action,
         "Disconnect", disconnect,
         NULL);
 
@@ -298,6 +300,7 @@ int main()
         // printf("User name: %s\n", connected_user.name);
 
         if (is_connected) {
+
             memset(error_message, 0, sizeof(error_message));
 
             if (connected_user.type == UNKNOWN) {
@@ -306,12 +309,12 @@ int main()
             if (connected_user.type == MEMBER) {
                 choice = display_menu(menu_client);
                 menu_client.actions[choice].action();
-            } else if (connected_user.type == PROFESSIONAL) {
-                choice = display_menu(menu_pro);
-                menu_pro.actions[choice].action();
             } else if (connected_user.type == ADMIN) {
                 choice = display_menu(menu_admin);
                 menu_admin.actions[choice].action();
+            } else if (connected_user.type == PROFESSIONAL) {
+                choice = display_menu(menu_pro);
+                menu_pro.actions[choice].action();
             }
         } else {
             choice = display_menu(menu_login);
@@ -322,7 +325,6 @@ int main()
     close(sock);
     return EXIT_SUCCESS;
 }
-
 
 // -------------------------------------------------------------------------
 // Functions
@@ -382,6 +384,37 @@ void connection_client()
     if (response->status.code == 403) {
         connected_user = NOT_CONNECTED_USER;
         set_error(get_response_data(*response, "message"));
+    }
+}
+
+void connection_admin()
+{
+    display_line();
+
+    char mail[CHAR_SIZE], token[API_TOKEN_SIZE];
+
+    printf("   Enter your email: ");
+    input(mail);
+
+    // For testing
+    if (strcmp(mail, "o") == 0) {
+        strcpy(mail, "rouevictor@gmail.com");
+    }
+
+    int user_found = db_get_user_by_email(conn, &connected_user, mail);
+
+    if (!user_found) {
+        set_error("User with the '%s' email does not exist", mail);
+        return;
+    }
+
+    response = send_login(sock, connected_user.api_token);
+
+    if (response->status.code == 403) {
+        connected_user = NOT_CONNECTED_USER;
+        set_error(get_response_data(*response, "message"));
+    } else {
+        printf("Connexion en tant qu'administrateur réussie.\n");
     }
 }
 
@@ -775,6 +808,139 @@ void menu_delete_and_update(message_t m)
         printf("\nPress Enter to return...");
         getchar();
     }
+}
+
+/// @brief Display the menu to block a user.
+/// @details A professional can block messages from a client who has sent messages to them.
+///          An administrator can block messages from any client for all recipients.
+/// @return void
+void menu_block_user()
+{
+    printf("menu_ban_user called\n"); // Message de débogage
+
+    // clear_term();
+    // menu_t block_menu;
+    // int selected_index = -1;
+    // int offset = 0;
+    // const int limit = 5;
+    // user_list_t users;
+
+    // printf("\nBlock a User\n");
+
+    // strcpy(block_menu.name, "Select a User to Block");
+
+    // while (1) {
+    //     // Récupérer les utilisateurs qui ont envoyé des messages
+    //     users = db_get_users_who_sent_messages(conn);
+
+    //     if (users.count == 0) {
+    //         printf("No users available for blocking.\n");
+    //         break;
+    //     }
+
+    //     // Créer le menu avec les utilisateurs
+    //     block_menu.actions = malloc((users.count + 1) * sizeof(menu_action_t));
+    //     block_menu.actions_count = users.count + 1;
+
+    //     for (int i = 0; i < users.count; i++) {
+    //         add_menu_action(&block_menu, users.users[i].name, NULL, 0);
+    //     }
+
+    //     // Ajouter une option pour annuler
+    //     add_menu_action(&block_menu, "Cancel", NULL, 0);
+
+    //     // Afficher le menu et récupérer le choix de l'utilisateur
+    //     selected_index = display_menu(block_menu);
+
+    //     if (selected_index < users.count) {
+    //         int user_id = users.users[selected_index].id;
+    //         int for_user_id = (connected_user.type == PROFESSIONAL) ? connected_user.id : 0; // 0 = admin bloque globalement
+
+    //         // Envoyer la requête de blocage au serveur
+    //         response = send_block_user(sock, connected_user.api_token, user_id, for_user_id);
+
+    //         if (response->status.code == 200) {
+    //             printf("User %s has been blocked successfully.\n", users.users[selected_index].name);
+    //         } else {
+    //             printf("Failed to block user. Response: %d %s\n", response->status.code, response->status.message);
+    //         }
+
+    //         // Libérer la mémoire
+    //         free(block_menu.actions);
+    //         free(users.users);
+    //         break;
+    //     } else {
+    //         // Annuler l'opération
+    //         free(block_menu.actions);
+    //         free(users.users);
+    //         break;
+    //     }
+    // }
+}
+/// @brief Display the menu to ban a user.
+/// @details An administrator can permanently ban any client.
+
+void menu_ban_user()
+{
+    printf("menu_ban_user called\n"); // Message de débogage
+
+    // clear_term();
+    // menu_t ban_menu;
+    // int selected_index = -1;
+    // int offset = 0;
+    // const int limit = 5;
+    // user_list_t users;
+
+    // printf("\nBan a User\n");
+
+    // strcpy(ban_menu.name, "Select a User to Ban");
+
+    // while (1) {
+    //     // Récupérer les utilisateurs qui ont envoyé des messages
+    //     users = db_get_users_who_sent_messages(conn);
+
+    //     if (users.count == 0) {
+    //         printf("No users available for banning.\n");
+    //         break;
+    //     }
+
+    //     // Créer le menu avec les utilisateurs
+    //     ban_menu.actions = malloc((users.count + 1) * sizeof(menu_action_t));
+    //     ban_menu.actions_count = users.count + 1;
+
+    //     for (int i = 0; i < users.count; i++) {
+    //         add_menu_action(&ban_menu, users.users[i].name, NULL, 0);
+    //     }
+
+    //     // Ajouter une option pour annuler
+    //     add_menu_action(&ban_menu, "Cancel", NULL, 0);
+
+    //     // Afficher le menu et récupérer le choix de l'utilisateur
+    //     selected_index = display_menu(ban_menu);
+
+    //     if (selected_index < users.count) {
+    //         int user_id = users.users[selected_index].id;
+
+    //         // Envoyer la requête de bannissement au serveur
+    //         response = send_ban_user(sock, connected_user.api_token, user_id);
+
+    //         if (response->status.code == 200) {
+    //             printf("User %s has been banned successfully.\n", users.users[selected_index].name);
+    //         } else {
+    //             printf("Failed to ban user. Response: %d %s\n", response->status.code, response->status.message);
+    //         }
+
+    //         // Libérer la mémoire
+    //         free(ban_menu.actions);
+    //         free(users.users);
+    //         break;
+    //     } else {
+    //         // Annuler l'opération
+    //         free(ban_menu.actions);
+    //         free(users.users);
+    //         break;
+    //     }
+    // }
 }
 
 void disconnect()

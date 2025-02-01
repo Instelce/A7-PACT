@@ -80,6 +80,7 @@ message_list_t db_get_messages_by_sender(PGconn* conn, int sender_id, int offset
 message_list_t db_get_unread_messages(PGconn* conn, int receiver_id, int offset, int limit);
 message_list_t db_get_messages_between_users(PGconn* conn, int user1, int user2, int offset, int limit);
 user_list_t db_get_all_receiver_users_of_user(PGconn* conn, int user_id);
+user_list_t db_get_users_who_sent_messages(PGconn* conn);
 
 // Messages list
 void add_message(message_list_t* messages, message_t message);

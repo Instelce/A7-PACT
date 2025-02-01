@@ -146,7 +146,7 @@ foreach ($members as $i => $member) {
 $db->pdo->exec("INSERT INTO mean_of_payment (id) VALUES (11), (12), (13);");
 $db->pdo->exec("INSERT INTO cb_mean_of_payment (payment_id, name, card_number, expiration_date, cvv) VALUES (11, 'Fred port', '1548759863254125', '07/25', '123'),(12,'Rance Evasion','4287621589632154','08/29','123'), (13,'Recrée des 3 curés','5168789654123654','08/27','458');");
 
-$db->pdo->exec("INSERT INTO administrator_user (user_id) VALUES (1);");
+$db->pdo->exec("INSERT INTO administrator_user (user_id,pseudo) VALUES (1,'VICTOU');");
 
 $db->pdo->exec("INSERT INTO member_user (user_id, lastname, firstname, phone, pseudo) VALUES (2, 'Chesnel', 'Yann', '0123456789', 'VieilArbre');");
 
