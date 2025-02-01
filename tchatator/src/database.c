@@ -558,8 +558,33 @@ message_list_t db_get_unread_messages(PGconn* conn, int receiver_id, int offset,
     return message_list;
 }
 
+user_list_t db_get_users_who_sent_messages(PGconn* conn)
+{
+    PGresult* res;
+    user_list_t user_list = { 0 };
+    const char* query = "SELECT DISTINCT sender_id FROM message";
 
-void add_message(message_list_t* messages, message_t message) {
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Erreur lors de la récupération des expéditeurs");
+    }
+
+    user_list.count = PQntuples(res);
+    user_list.users = malloc(user_list.count * sizeof(user_t));
+
+    for (int i = 0; i < user_list.count; i++) {
+        int sender_id = atoi(PQgetvalue(res, i, 0));
+        db_get_user(conn, &user_list.users[i], sender_id);
+        db_set_user_type(conn, &user_list.users[i]);
+    }
+
+    PQclear(res);
+    return user_list;
+}
+
+void add_message(message_list_t* messages, message_t message)
+{
     if (messages->messages == NULL) {
         messages->messages = malloc(sizeof(message_t));
         messages->count = 0;
@@ -571,7 +596,8 @@ void add_message(message_list_t* messages, message_t message) {
     messages->count++;
 }
 
-void remove_message(message_list_t* messages, int message_id) {
+void remove_message(message_list_t* messages, int message_id)
+{
     for (int i = 0; i < messages->count; i++) {
         if (messages->messages[i].id == message_id) {
             for (int j = i; j < messages->count - 1; j++) {
