@@ -6,27 +6,93 @@ Le protocole est basé sur une architecture client-serveur où le client envoie 
 
 ---
 
-### Les commandes et leurs paramètres
+### Les commandes, leurs paramètres et les réponses possibles
 
 Le client envoie des commandes au serveur pour réaliser diverses actions. Les commandes sont envoyées sous forme de [chaînes formatées](#format-des-commandes) et incluent des paramètres comme le jeton d'authentification, l'identifiant du destinataire, et le contenu du message.
 
-Voici les commandes disponibles :
+Voici toutes les commandes disponibles :
 
-- `LOGIN` : Authentifie un utilisateur avec un jeton API.
+- `LOGIN` : **Authentifie un utilisateur avec un jeton API**.
+
+    Paramètres :
     - `api-token` : La clé d'API de l'utilisateur.
-- `SEND_MSG` : Envoie un message à un utilisateur.
+
+    Réponse possible :
+    - `200/OK` : L'authentification a réussi.
+    - `403/DENIED` : L'authentification a échoué (utilisateur déja connecté, jeton invalide, banni).
+
+- `DISCONNECTED` : **Informe le serveur qu'un client s'est déconnecté**.
+
+Les commandes suivantes nécessitent que l'utilisateur soit authentifié avec un jeton API valide.
+
+- `SEND_MSG` : **Envoie un message à un utilisateur**.
+
+    Paramètres :
     - `token` : Le jeton d'authentification de l'utilisateur.
     - `recipient-id` : L'identifiant de l'utilisateur destinataire.
     - `message-length` : La longueur du message.
     - `content` : Le contenu du message.
-- `UPDT_MSG` : Met à jour un message existant.
+
+    Réponse possible :
+    - `200/OK` : Le message a été envoyé avec succès.
+    - `401/UNAUTH` : L'utilisateur n'est pas authentifié.
+- `UPDT_MSG` : **Met à jour un message existant**.
+
+    Paramètres :
     - `token` : Le jeton d'authentification de l'utilisateur.
     - `message-id` : L'identifiant du message à mettre à jour.
     - `content` : Le nouveau contenu du message.
-- `DEL_MSG` : Supprime un message.
+
+    Réponse possible :
+    - `200/OK` : Le message a été mis à jour avec succès.
+    - `401/UNAUTH` : L'utilisateur n'est pas authentifié.
+    - `403/DENIED` : L'utilisateur n'a pas les permissions nécessaires pour mettre à jour le message.
+- `DEL_MSG` : **Supprime un message**.
+
+    Paramètres :
     - `token` : Le jeton d'authentification de l'utilisateur.
     - `message-id` : L'identifiant du message à supprimer.
-- `DISCONNECTED` : Informe le serveur qu'un client s'est déconnecté.
+
+    Réponse possible :
+    - `200/OK` : Le message a été supprimé avec succès.
+    - `401/UNAUTH` : L'utilisateur n'est pas authentifié.
+    - `403/DENIED` : L'utilisateur n'a pas les permissions nécessaires pour supprimer le message.
+- `NEW_CHG_AVAILABLE` : **Demande au serveur de vérifier si de nouveaux changements** (nouveau messsage, suppression, modification) **sont disponibles**.
+
+    Paramètres :
+    - `token` : Le jeton d'authentification de l'utilisateur.
+
+    Réponse possible :
+    - `200/OK` : Il y a de nouveaux changements.
+        Données supplémentaires :
+        - `type` : Le type de changement (`new_message`, `message_updated`, `message_deleted`).
+
+        Plus, selon le type de changement :
+
+        Si `type` est `new_message` :
+        - `message` : Les informations du nouveau message (voir la table `message`).
+
+        Si `type` est `message_updated` :
+        - `message` : Les informations du message mis à jour (voir la table `message`).
+
+        Si `type` est `message_deleted` :
+        - `message-id` : L'identifiant du message supprimé.
+
+Commandes réservées aux professionnels et aux administrateurs :
+
+- `BLOCK_USER` : **Bloque un utilisateur**.
+
+    Paramètres :
+    - `token` : Le jeton d'authentification
+    - `user-id` : L'identifiant de l'utilisateur à bloquer.
+
+Commandes réservées aux administrateurs :
+
+- `BAN_USER` : **Bannit un utilisateur**.
+
+    Paramètres :
+    - `token` : Le jeton d'authentification de l'administrateur.
+    - `user-id` : L'identifiant de l'utilisateur à bannir.
 
 ### Format des commandes
 
@@ -61,7 +127,7 @@ La réponse comprend les informations suivantes :
 - **Statut** : Un [code de statut](#les-codes-de-statut)
 - **Données supplémentaires** : Des informations additionnelles en fonction de la commande reçu au format clé-valeur.
 
-Le format des réponses est similaire à celui des commandes, avec le code de statut en première ligne suivi des données supplémentaires.
+Le format des réponses est similaire à celui des commandes, avec le code de statut en première ligne suivi des données supplémentaires. Dans les données supplémentaires, il y a souvent un champ `message` qui contient des informations supplémentaires et plus de précisions.
 
 #### Les codes de statut
 

@@ -43,6 +43,13 @@ typedef struct {
     int count;
 } user_list_t;
 
+typedef struct {
+    // User that is banned
+    int user_id;
+    // The user is banned for, if 0 the user is banned for all
+    int for_user_id;
+} blocked_user_t;
+
 static const user_t NOT_CONNECTED_USER = { 0, "", "", "", UNKNOWN };
 
 // Utils functions
@@ -74,7 +81,16 @@ message_list_t db_get_unread_messages(PGconn* conn, int receiver_id, int offset,
 message_list_t db_get_messages_between_users(PGconn* conn, int user1, int user2, int offset, int limit);
 user_list_t db_get_all_receiver_users_of_user(PGconn* conn, int user_id);
 
+// Messages list
 void add_message(message_list_t* messages, message_t message);
 void remove_message(message_list_t* messages, int message_id);
+
+// Ban and block
+void db_get_banned_users(PGconn* conn, int* user_ids, int* count);
+void db_ban_user(PGconn* conn, int user_id);
+void db_unban_user(PGconn* conn, int user_id);
+void db_get_blocked_users(PGconn* conn, blocked_user_t* blocked_users, int* count);
+void db_block_user(PGconn* conn, int user_id, int for_user_id);
+void db_unblock_user(PGconn* conn, int user_id, int for_user_id);
 
 #endif // DATABASE_H
