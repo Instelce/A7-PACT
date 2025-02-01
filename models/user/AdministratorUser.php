@@ -7,6 +7,7 @@ use app\models\account\UserAccount;
 class AdministratorUser extends DBModel
 {
   public int $user_id = 0;
+  public string $pseudo = '';
 
   public static function tableName(): string
   {
@@ -15,7 +16,7 @@ class AdministratorUser extends DBModel
 
   public function attributes(): array
   {
-    return [];
+    return ['user_id', 'pseudo'];
   }
 
   public static function pk(): string
@@ -28,8 +29,9 @@ class AdministratorUser extends DBModel
     return [];
   }
 
-  public function user(): UserAccount {
-      return UserAccount::findOne(['account_id' => $this->user_id]);
+  public function account(): UserAccount
+  {
+    return UserAccount::findOne(['user_id' => $this->user_id]);
   }
 }
 

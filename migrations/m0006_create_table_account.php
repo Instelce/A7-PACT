@@ -35,6 +35,7 @@ class m0006_create_table_account
         );
         CREATE TABLE administrator_user (
             user_id INT PRIMARY KEY,
+            pseudo VARCHAR(50) NOT NULL,
 
             CONSTRAINT administrator_user_fk FOREIGN KEY (user_id) REFERENCES user_account(account_id) ON DELETE CASCADE
         );

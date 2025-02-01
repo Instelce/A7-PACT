@@ -14,14 +14,11 @@ void db_login(PGconn** conn)
 {
     *conn = PQsetdbLogin(getenv("DB_HOST"), getenv("DB_PORT"), NULL, NULL, getenv("DB_NAME"), getenv("DB_USER"), getenv("DB_PASSWORD"));
 
-    // printf("PostgreSQL status: %d\n", PQstatus(*conn));
-
     if (PQstatus(*conn) != CONNECTION_OK) {
-        perror("Error when connecting the DB");
+        fprintf(stderr, "Error when connecting the DB: %s\n", PQerrorMessage(*conn));
         db_exit(*conn);
     }
 }
-
 void db_exit(PGconn* conn)
 {
     PQfinish(conn);
@@ -92,7 +89,7 @@ int db_get_user(PGconn* conn, user_t* user, int id)
     PGresult* res;
     char query[256];
 
-    snprintf(query,sizeof(query), "SELECT account_id, mail, api_token FROM user_account WHERE account_id = %d", id);
+    snprintf(query, sizeof(query), "SELECT account_id, mail, api_token FROM user_account WHERE account_id = %d", id);
 
     res = PQexec(conn, query);
 
@@ -310,6 +307,20 @@ int db_set_user_type(PGconn* conn, user_t* user)
 
     if (PQntuples(res) == 1) {
         user->type = PROFESSIONAL;
+        strcpy(user->name, PQgetvalue(res, 0, 1));
+        PQclear(res);
+        return 1;
+    }
+
+    snprintf(query, sizeof(query), "SELECT user_id, pseudo FROM administrator_user WHERE user_id = %d", user->id);
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Error when fetching user type");
+    }
+
+    if (PQntuples(res) == 1) {
+        user->type = ADMIN;
         strcpy(user->name, PQgetvalue(res, 0, 1));
         PQclear(res);
         return 1;
@@ -606,7 +617,8 @@ void remove_message(message_list_t* messages, int message_id)
     }
 }
 
-void db_get_banned_users(PGconn* conn, int* user_ids, int* count) {
+void db_get_banned_users(PGconn* conn, int* user_ids, int* count)
+{
     PGresult* res;
     char query[256];
 
@@ -635,7 +647,8 @@ void db_get_banned_users(PGconn* conn, int* user_ids, int* count) {
     PQclear(res);
 }
 
-void db_ban_user(PGconn* conn, int user_id) {
+void db_ban_user(PGconn* conn, int user_id)
+{
     PGresult* res;
     char query[256];
 
@@ -650,7 +663,8 @@ void db_ban_user(PGconn* conn, int user_id) {
     PQclear(res);
 }
 
-void db_unban_user(PGconn* conn, int user_id) {
+void db_unban_user(PGconn* conn, int user_id)
+{
     PGresult* res;
     char query[256];
 
@@ -665,7 +679,8 @@ void db_unban_user(PGconn* conn, int user_id) {
     PQclear(res);
 }
 
-void db_get_blocked_users(PGconn* conn, blocked_user_t* blocked_users, int* count) {
+void db_get_blocked_users(PGconn* conn, blocked_user_t* blocked_users, int* count)
+{
     PGresult* res;
     char query[256];
 
@@ -695,7 +710,8 @@ void db_get_blocked_users(PGconn* conn, blocked_user_t* blocked_users, int* coun
     PQclear(res);
 }
 
-void db_block_user(PGconn* conn, int user_id, int for_user_id) {
+void db_block_user(PGconn* conn, int user_id, int for_user_id)
+{
     PGresult* res;
     char query[256];
 
@@ -710,7 +726,8 @@ void db_block_user(PGconn* conn, int user_id, int for_user_id) {
     PQclear(res);
 }
 
-void db_unblock_user(PGconn* conn, int user_id, int for_user_id) {
+void db_unblock_user(PGconn* conn, int user_id, int for_user_id)
+{
     PGresult* res;
     char query[256];
 
