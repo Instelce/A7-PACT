@@ -6,7 +6,7 @@
 typedef struct config {
     int port;
     char log_file[CHAR_SIZE];
-    int ban_duration;
+    int bock_cli_duration;
     int max_messages_per_minutes;
     int max_messages_per_hours;
     int max_message_length;

@@ -516,9 +516,6 @@ void onmessage(ws_cli_conn_t client_conn,
         // - new message
         // - message updated
         // - message deleted
-        // - message seen
-        // - new connected user
-        // 
         if (strcmp(cmd, NEW_CHANGE_AVAILABLE) == 0) {
             // Create an object
             json_object* jobj = json_object_new_object();

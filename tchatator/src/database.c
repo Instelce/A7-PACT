@@ -44,7 +44,7 @@ int db_last_id(PGconn* conn, const char* table)
     PGresult* res;
     char query[256];
 
-    sprintf(query, "SELECT currval('%s_id_seq')", table);
+    snprintf(query, sizeof(query), "SELECT currval('%s_id_seq')", table);
 
     res = PQexec(conn, query);
 
@@ -75,8 +75,6 @@ user_t init_user(int id, char email[], char api_token[])
 message_t init_message(int sender_id, int receiver_id, char content[])
 {
     message_t message;
-    time_t now = time(NULL);
-    struct tm* tm = localtime(&now);
 
     set_date_now(message.sended_date);
     set_date_now(message.modified_date);
@@ -94,7 +92,7 @@ int db_get_user(PGconn* conn, user_t* user, int id)
     PGresult* res;
     char query[256];
 
-    sprintf(query, "SELECT account_id, mail, api_token FROM user_account WHERE account_id = %d", id);
+    snprintf(query,sizeof(query), "SELECT account_id, mail, api_token FROM user_account WHERE account_id = %d", id);
 
     res = PQexec(conn, query);
 
@@ -119,7 +117,7 @@ int db_get_user_by_email(PGconn* conn, user_t* user, char email[])
     PGresult* res;
     char query[256];
 
-    sprintf(query, "SELECT account_id, mail, api_token FROM user_account WHERE mail = '%s'", email);
+    snprintf(query, sizeof(query), "SELECT account_id, mail, api_token FROM user_account WHERE mail = '%s'", email);
 
     res = PQexec(conn, query);
 
@@ -144,7 +142,7 @@ int db_get_user_by_api_token(PGconn* conn, user_t* user, char api_token[])
     PGresult* res;
     char query[256];
 
-    sprintf(query, "SELECT account_id, mail, api_token FROM user_account WHERE api_token = '%s'", api_token);
+    snprintf(query, sizeof(query), "SELECT account_id, mail, api_token FROM user_account WHERE api_token = '%s'", api_token);
 
     res = PQexec(conn, query);
 
@@ -169,7 +167,7 @@ int db_get_message(PGconn* conn, int message_id, message_t* message)
     PGresult* res;
     char query[256];
 
-    sprintf(query, "SELECT id, sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE id = %d", message_id);
+    snprintf(query, sizeof(query), "SELECT id, sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE id = %d", message_id);
     res = PQexec(conn, query);
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
@@ -198,7 +196,6 @@ int db_get_message(PGconn* conn, int message_id, message_t* message)
 void db_create_message(PGconn* conn, message_t* message)
 {
     PGresult* res;
-    char query[256];
 
     char sender_id_str[20], receiver_id_str[20], deleted_str[10], seen_str[10];
     snprintf(sender_id_str, sizeof(sender_id_str), "%d", message->sender_id);
@@ -226,14 +223,14 @@ void db_create_message(PGconn* conn, message_t* message)
 void db_update_message(PGconn* conn, message_t* message)
 {
     PGresult* res;
-    char query[256];
+    char query[LARGE_CHAR_SIZE];
 
     set_date_now(message->modified_date);
 
-    sprintf(query, "UPDATE message SET modified_date = '%s', deleted = %s, seen = %s, content = '%s' WHERE id = %d",
+    snprintf(query, sizeof(query), "UPDATE message SET modified_date = '%s', deleted = %s, seen = %s, content = '%s' WHERE id = %d",
         message->modified_date, db_bool(message->deleted), db_bool(message->seen), message->content, message->id);
 
-    printf("%s\n", query);
+    // printf("%s\n", query);
 
     res = PQexec(conn, query);
 
@@ -247,9 +244,9 @@ void db_update_message(PGconn* conn, message_t* message)
 void db_delete_message(PGconn* conn, int message_id)
 {
     PGresult* res;
-    char query[256];
+    char query[CHAR_SIZE];
 
-    sprintf(query, "UPDATE message SET deleted = true WHERE id = %d", message_id);
+    snprintf(query, sizeof(query), "UPDATE message SET deleted = true WHERE id = %d", message_id);
 
     res = PQexec(conn, query);
 
@@ -288,9 +285,9 @@ char* get_token_by_email(PGconn* conn, char email[])
 int db_set_user_type(PGconn* conn, user_t* user)
 {
     PGresult* res;
-    char query[256];
+    char query[CHAR_SIZE];
 
-    sprintf(query, "SELECT user_id, pseudo FROM member_user WHERE user_id = %d", user->id);
+    snprintf(query, sizeof(query), "SELECT user_id, pseudo FROM member_user WHERE user_id = %d", user->id);
     res = PQexec(conn, query);
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
@@ -304,7 +301,7 @@ int db_set_user_type(PGconn* conn, user_t* user)
         return 1;
     }
 
-    sprintf(query, "SELECT user_id, denomination FROM professional_user WHERE user_id = %d", user->id);
+    snprintf(query, sizeof(query), "SELECT user_id, denomination FROM professional_user WHERE user_id = %d", user->id);
     res = PQexec(conn, query);
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
@@ -325,8 +322,8 @@ user_list_t db_get_members(PGconn* conn, int offset, int limit)
 {
     user_list_t user_list;
     PGresult* res;
-    char query[256];
-    sprintf(query,
+    char query[CHAR_SIZE];
+    snprintf(query, sizeof(query),
         "SELECT ua.account_id, mu.pseudo, ua.mail, ua.api_token "
         "FROM user_account ua "
         "JOIN member_user mu ON ua.account_id = mu.user_id "
@@ -361,9 +358,9 @@ user_list_t db_get_professionals(PGconn* conn, int offset, int limit)
 {
     user_list_t user_list;
     PGresult* res;
-    char query[256];
+    char query[CHAR_SIZE];
 
-    sprintf(query,
+    snprintf(query, sizeof(query),
         "SELECT ua.account_id, pu.denomination, ua.mail, ua.api_token "
         "FROM user_account ua "
         "JOIN professional_user pu ON ua.account_id = pu.user_id "
@@ -400,7 +397,7 @@ message_list_t db_get_messages_between_users(PGconn* conn, int user1, int user2,
     message_list_t messages_list;
     char query[CHAR_SIZE];
 
-    sprintf(query, "SELECT id, sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE ((sender_id = %d AND receiver_id = %d) OR (sender_id = %d AND receiver_id = %d)) AND deleted = false ORDER BY sended_date DESC LIMIT %d OFFSET %d", user1, user2, user2, user1, limit, offset);
+    snprintf(query, sizeof(query), "SELECT id, sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE ((sender_id = %d AND receiver_id = %d) OR (sender_id = %d AND receiver_id = %d)) AND deleted = false ORDER BY sended_date DESC LIMIT %d OFFSET %d", user1, user2, user2, user1, limit, offset);
 
     res = PQexec(conn, query);
 
@@ -433,7 +430,7 @@ user_list_t db_get_all_receiver_users_of_user(PGconn* conn, int user_id)
     user_list_t user_list;
     char query[CHAR_SIZE];
 
-    sprintf(query, "SELECT DISTINCT sender_id, receiver_id FROM message WHERE sender_id = %d OR receiver_id = %d", user_id, user_id);
+    snprintf(query, sizeof(query), "SELECT DISTINCT sender_id, receiver_id FROM message WHERE sender_id = %d OR receiver_id = %d", user_id, user_id);
 
     res = PQexec(conn, query);
 
@@ -487,7 +484,7 @@ message_list_t db_get_messages_by_sender(PGconn* conn, int sender_id, int offset
     PGresult* res;
     char query[256];
 
-    sprintf(query,
+    snprintf(query, sizeof(query),
         "SELECT id, sended_date, modified_date, receiver_id, deleted, seen, content "
         "FROM message "
         "WHERE sender_id = %d "
@@ -526,7 +523,7 @@ message_list_t db_get_unread_messages(PGconn* conn, int receiver_id, int offset,
     PGresult* res;
     char query[512];
 
-    sprintf(query,
+    snprintf(query, sizeof(query),
         "SELECT id, sended_date, modified_date, sender_id, deleted, seen, content "
         "FROM message "
         "WHERE receiver_id = %d AND seen = false AND deleted = false "
@@ -581,4 +578,123 @@ void remove_message(message_list_t* messages, int message_id) {
             break;
         }
     }
+}
+
+void db_get_banned_users(PGconn* conn, int* user_ids, int* count) {
+    PGresult* res;
+    char query[256];
+
+    snprintf(query, sizeof(query), "SELECT user_id FROM banned_user");
+
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Error when fetching banned users");
+    }
+
+    *count = PQntuples(res);
+
+    if (*count == 0) {
+        user_ids = NULL;
+        PQclear(res);
+        return;
+    }
+
+    user_ids = malloc(*count * sizeof(int));
+
+    for (int i = 0; i < *count; i++) {
+        user_ids[i] = atoi(PQgetvalue(res, i, 0));
+    }
+
+    PQclear(res);
+}
+
+void db_ban_user(PGconn* conn, int user_id) {
+    PGresult* res;
+    char query[256];
+
+    snprintf(query, sizeof(query), "INSERT INTO banned_user (user_id) VALUES (%d)", user_id);
+
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        db_error(conn, "Error when banning user");
+    }
+
+    PQclear(res);
+}
+
+void db_unban_user(PGconn* conn, int user_id) {
+    PGresult* res;
+    char query[256];
+
+    snprintf(query, sizeof(query), "DELETE FROM banned_user WHERE user_id = %d", user_id);
+
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        db_error(conn, "Error when unbanning user");
+    }
+
+    PQclear(res);
+}
+
+void db_get_blocked_users(PGconn* conn, blocked_user_t* blocked_users, int* count) {
+    PGresult* res;
+    char query[256];
+
+    snprintf(query, sizeof(query), "SELECT user_id, for_user_id FROM blocked_user");
+
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK) {
+        db_error(conn, "Error when fetching blocked users");
+    }
+
+    *count = PQntuples(res);
+
+    if (*count == 0) {
+        blocked_users = NULL;
+        PQclear(res);
+        return;
+    }
+
+    blocked_users = malloc(*count * sizeof(blocked_user_t));
+
+    for (int i = 0; i < *count; i++) {
+        blocked_users[i].user_id = atoi(PQgetvalue(res, i, 0));
+        blocked_users[i].for_user_id = atoi(PQgetvalue(res, i, 1));
+    }
+
+    PQclear(res);
+}
+
+void db_block_user(PGconn* conn, int user_id, int for_user_id) {
+    PGresult* res;
+    char query[256];
+
+    snprintf(query, sizeof(query), "INSERT INTO blocked_user (user_id, for_user_id) VALUES (%d, %d)", user_id, for_user_id);
+
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        db_error(conn, "Error when blocking user");
+    }
+
+    PQclear(res);
+}
+
+void db_unblock_user(PGconn* conn, int user_id, int for_user_id) {
+    PGresult* res;
+    char query[256];
+
+    snprintf(query, sizeof(query), "DELETE FROM blocked_user WHERE user_id = %d AND for_user_id = %d", user_id, for_user_id);
+
+    res = PQexec(conn, query);
+
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        db_error(conn, "Error when unblocking user");
+    }
+
+    PQclear(res);
 }

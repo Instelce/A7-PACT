@@ -10,10 +10,10 @@ port=4242
 
 log-file=tchatator.log
 
-# ban-duration: The duration (in hours) for which a user will be banned after violating the rules.
+# bock-cli-duration: The duration (in hours) for which a user will be banned after violating the rules.
 # Default: 24
 
-ban-duration=24
+block-cli-duration=24
 
 # max-messages-per-minutes: The maximum number of messages a user can send per minute.
 # Default: 12

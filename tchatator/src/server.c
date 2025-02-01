@@ -48,6 +48,18 @@ typedef struct
     user_t user;
 } client_t;
 
+typedef struct {
+    // All connected clients
+    client_t* clients;
+    int clients_count;
+    // List of user ids that are banned
+    int* banned_clients;
+    int banned_clients_count;
+    //
+    blocked_user_t* blocked_clients;
+    int blocked_clients_count;
+} server_data_t;
+
 // -------------------------------------------------------------------------
 // Global variables
 // -------------------------------------------------------------------------
@@ -56,15 +68,9 @@ volatile sig_atomic_t running = 1;
 
 pid_t server_pid;
 
-// All connected clients, it's shared between the server and the children
-// with shared memory
-client_t* clients;
-// Count of clients, same as clients, it's shared with shared memory
-int* clients_count;
-// Shared memory id for clients
-int shmid_clients;
-// Shared memory id for clients count
-int shmid_clients_count;
+// Server data, shared between the server and its children
+server_data_t* server_data;
+int shmid_server_data;
 
 // -------------------------------------------------------------------------
 // Functions signatures
@@ -81,6 +87,7 @@ void remove_client(pid_t pid);
 client_t get_client(pid_t pid);
 int client_pid_exist(pid_t pid);
 int client_connected(int user_id);
+int client_banned(int user_id);
 
 // -------------------------------------------------------------------------
 // Main
@@ -114,7 +121,7 @@ int main(int argc, char* argv[])
     char* config_path;
     PGconn* conn;
 
-    // Register signal
+    // Register signals
     signal(SIGINT, signal_handler);
     signal(SIGQUIT, signal_handler);
     signal(SIGCHLD, signal_handler);
@@ -122,15 +129,18 @@ int main(int argc, char* argv[])
     server_pid = getpid();
     current_clients_max_capacity = CLIENT_CAPACITY_INCR;
 
-    // Setup shared memory for clients and clients count
+    // Setup shared memory for server data
     key_t key = ftok(".", 65);
-    shmid_clients = shmget(key, current_clients_max_capacity * sizeof(client_t), 0666 | IPC_CREAT);
-    clients = (client_t*)shmat(shmid_clients, (void*)0, 0);
+    shmid_server_data = shmget(key, sizeof(server_data_t), 0666 | IPC_CREAT);
+    server_data = (server_data_t*) shmat(shmid_server_data, (void*)0, 0);
 
-    key_t key_count = ftok(".", 66);
-    shmid_clients_count = shmget(key_count, sizeof(int), 0666 | IPC_CREAT);
-    clients_count = (int*)shmat(shmid_clients_count, (void*)0, 0);
-    *clients_count = 0;
+    // Initialize server data
+    server_data->clients = malloc(current_clients_max_capacity * sizeof(client_t));
+    server_data->clients_count = 0;
+    server_data->banned_clients = NULL;
+    server_data->banned_clients_count = 0;
+    server_data->blocked_clients = NULL;
+    server_data->blocked_clients_count = 0;
 
     // Setup log and config
     log_verbose = 0;
@@ -141,12 +151,11 @@ int main(int argc, char* argv[])
     while ((options = getopt(argc, argv, "hvc:")) != -1) {
         switch (options) {
         case 'h':
-            printf("Usage : server --[option] | -[option]\n\n");
-            printf("Launch the server and allows communication between client and professional\n\n");
+            printf("Usage : server [options]\n");
             printf("Options :\n");
-            printf("-v,              explains what is currently happening, giving more details, show logs\n");
-            printf("-h, --help       shows help on the command\n");
-            printf("-c, --config     specify the configuration file\n");
+            printf("-v, --verbose           show logs\n");
+            printf("-h, --help              shows help\n");
+            printf("-c, --config <path>     specify the location of the configuration file\n");
 
             exit(0);
         case 'v':
@@ -157,11 +166,6 @@ int main(int argc, char* argv[])
             strcpy(config_path, optarg);
             break;
         case '?':
-            switch (optopt) {
-                case 'c':
-                    fprintf(stderr, "L'option -c prend un argument.\n");
-            }
-
             return 1;
         default:
             abort();
@@ -171,7 +175,7 @@ int main(int argc, char* argv[])
     // log_verbose = 1; // only for dev
 
     // Load env variables
-    env_load("..");
+    env_load(".");
 
     // Initialize config
     config_load(config, config_path);
@@ -179,24 +183,12 @@ int main(int argc, char* argv[])
     // Set log settings
     strcpy(log_file_path, config->log_file);
 
+    log_info("Starting Tchatator");
+
     // Login to the DB
     db_login(&conn);
 
-    // test db
-    // user_t user;
-    // user_t user2;
-    // printf("Get user\n");
-    // db_get_user_by_api_token(conn, &user, "42ff94c3c4678cd76cf10fb018d6b904da0b3bc147e02e563d4324ac762f1506");
-    // db_get_user(conn, &user, 1);
-    // printf("User email : %s\n", user.email);
-    // exit(0);
-    // printf("User type : %d\n", db_set_user_type(conn, 1));
-
-    // printf("%s %s %d\n", user.email, user.api_token, user.id);
-    // db_get_user_by_email(conn, &user2, "rouevictor@gmail.com");
-    // printf("%s %d\n", user2.email, user2.id);
-
-    log_info("Starting Tchatator");
+    log_info("Connection to the database established");
 
     // Setup the socket
     sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -229,6 +221,10 @@ int main(int argc, char* argv[])
 
     sock_conn_addr_size = sizeof(sock_conn_addr);
 
+    // Load banned and blocked users
+    db_get_banned_users(conn, server_data->banned_clients, &server_data->banned_clients_count);
+    db_get_blocked_users(conn, server_data->blocked_clients, &server_data->blocked_clients_count);
+
     // Start the server loop
     while (running) {
         sock_conn = accept(sock, (struct sockaddr*)&sock_conn_addr, (socklen_t*)&sock_conn_addr_size);
@@ -247,23 +243,18 @@ int main(int argc, char* argv[])
         sprintf(client_ip + strlen(client_ip), ":%d", client_port); // add port to ip
 
         // Increase the clients capacity if needed
-        if (*clients_count >= current_clients_max_capacity && server_pid == getpid()) {
+        if (server_data->clients_count >= current_clients_max_capacity && server_pid == getpid()) {
             log_info("Increase client capacity");
             current_clients_max_capacity += CLIENT_CAPACITY_INCR;
 
-            shmid_clients = shmget(key, current_clients_max_capacity * sizeof(client_t), 0666 | IPC_CREAT);
-
-            client_t* new_clients = (client_t*)shmat(shmid_clients, (void*)0, 0);
-            memcpy(new_clients, clients, (*clients_count) * sizeof(client_t));
-            shmdt(clients);
-            clients = new_clients;
+            server_data->clients = realloc(server_data->clients, current_clients_max_capacity * sizeof(client_t));
         }
 
         // Create a new child process
         if ((client_pid = fork()) == 0) {
             close(sock);
 
-            int client_id = (*clients_count) - 1;
+            int client_id = (server_data->clients_count) - 1;
             char api_token[API_TOKEN_SIZE];
             int client_login = 0;
             message_t message;
@@ -273,8 +264,8 @@ int main(int argc, char* argv[])
 
             // Child loop
             while (1) {
-                // printf("C Clients count %d\n", *clients_count);
-                // for (int i = 0; i < *clients_count; i++) {
+                // printf("C Clients count %d\n", server_data->clients_count);
+                // for (int i = 0; i < server_data->clients_count; i++) {
                 //     printf("C Client (ip: %d) (id: %d) (email:%s)\n", clients[i].ip, clients[i].user.id, clients[i].user.email);
                 // }
 
@@ -296,9 +287,9 @@ int main(int argc, char* argv[])
                 if (!command_parsed) {
                     send_response(sock_conn, STATUS_MIS_FORMAT, "message", "Message mal formaté", NULL);
                     log_info("Invalid action received");
-                }
-                // Then handle commands logic
-                else {
+                } else {
+                    // Then handle commands logic
+
                     log_info("Action received [%s]", command.name);
 
                     // Disconnect command
@@ -315,11 +306,20 @@ int main(int argc, char* argv[])
 
                         if (!user_found) {
                             send_response(sock_conn, STATUS_DENIED, "message", "Accès refusé", NULL);
+                            log_info("Access denied for %s", client_ip);
                             continue;
                         } else {
+                            // Check if the user is banned
+                            if (client_banned(tmp_user.id)) {
+                                send_response(sock_conn, STATUS_DENIED, "message", "Utilisateur banni", NULL);
+                                log_info("User %s try to connect but is banned", tmp_user.email);
+                                continue;
+                            }
+
                             // Check if the user is already connected
                             if (client_connected(tmp_user.id)) {
                                 send_response(sock_conn, STATUS_DENIED, "message", "Utilisateur déjà connecté", NULL);
+                                log_info("User %s already connected", tmp_user.email);
                                 continue;
                             }
 
@@ -327,7 +327,7 @@ int main(int argc, char* argv[])
                             strcpy(log_client_identity, tmp_user.email);
 
                             client_login = 1;
-                            clients[client_id].user = tmp_user;
+                            server_data->clients[client_id].user = tmp_user;
 
                             log_info("Client (%d) logged in", getpid());
                             send_response(sock_conn, STATUS_OK, "message", "Accès autorisé", NULL);
@@ -337,24 +337,25 @@ int main(int argc, char* argv[])
 
                     if (client_login) {
                         // Check if the token is valid
-                        if (strcmp(get_command_param_value(command, "token"), clients[client_id].user.api_token) != 0) {
+                        if (strcmp(get_command_param_value(command, "token"), server_data->clients[client_id].user.api_token) != 0) {
                             send_response(sock_conn, STATUS_UNAUTHORIZED, "message", "Client non identifié", NULL);
+                            log_info("Client not identified");
                             continue;
                         }
+
                         // Handle all commands that need to be logged in
                         if (strcmp(command.name, SEND_MESSAGE) == 0) {
                             message = init_message(
-                                clients[client_id].user.id,
+                                server_data->clients[client_id].user.id,
                                 atoi(get_command_param_value(command, "receiver-id")),
                                 get_command_param_value(command, "content"));
 
                             db_create_message(conn, &message);
 
-                            log_info("Message (%d) send from %d to %d", message.id, clients[client_id].user.id, message.receiver_id);
+                            log_info("Message (%d) send from %d to %d", message.id, server_data->clients[client_id].user.id, message.receiver_id);
 
                             send_response(sock_conn, STATUS_OK, "message", "Message bien reçu et traité", NULL);
                         } else if (strcmp(command.name, UPDATE_MESSAGE) == 0) {
-                            printf("on rentre\n");
                             db_get_message(conn, atoi(get_command_param_value(command, "message-id")), &message);
 
                             strcpy(message.content, get_command_param_value(command, "content"));
@@ -362,21 +363,35 @@ int main(int argc, char* argv[])
                             db_update_message(conn, &message);
 
                             send_response(sock_conn, STATUS_OK, "message", "Message mis à jour avec succès", NULL);
+
+                            log_info("Message (%d) updated with success", message.id);
                         } else if (strcmp(command.name, DELETE_MESSAGE) == 0) {
                             db_delete_message(conn, atoi(get_command_param_value(command, "message-id")));
 
                             send_response(sock_conn, STATUS_OK, "message", "Message supprimé avec succès", NULL);
-                        } 
-                        // else if (strcmp(command.name, IS_CONNECTED) == 0) {
-                        //     int user_id = atoi(get_command_param_value(command, "user-id"));
+                            log_info("Message (%d) deleted with success", atoi(get_command_param_value(command, "message-id")));
+                        } else if (strcmp(command.name, NEW_CHANGE_AVAILABLE) == 0) {
+                        } else if (strcmp(command.name, BLOCK_USER) == 0) {
+                            db_block_user(conn, atoi(get_command_param_value(command, "user-id")), atoi(get_command_param_value(command, "for-user-id")));
 
-                        //     if (client_connected(user_id)) {
-                        //         send_response(sock_conn, STATUS_OK, "message", "Utilisateur connecté", NULL);
-                        //     } else {
-                        //         send_response(sock_conn, STATUS_DENIED, "message", "Utilisateur non connecté", NULL);
-                        //     }
-                        // } 
-                        else {
+                            // Add to the blocked list
+                            server_data->blocked_clients = realloc(server_data->blocked_clients, (server_data->blocked_clients_count + 1) * sizeof(blocked_user_t));
+                            server_data->blocked_clients[server_data->blocked_clients_count].user_id = atoi(get_command_param_value(command, "user-id"));
+                            server_data->blocked_clients[server_data->blocked_clients_count].for_user_id = atoi(get_command_param_value(command, "for-user-id"));
+                            server_data->blocked_clients_count++;
+
+                            send_response(sock_conn, STATUS_OK, "message", "Utilisateur bloqué avec succès", NULL);
+                        } else if (strcmp(command.name, BAN_USER) == 0) {
+                            db_ban_user(conn, atoi(get_command_param_value(command, "user-id")));
+
+                            // Add to the banned list
+                            server_data->banned_clients = realloc(server_data->banned_clients, (server_data->banned_clients_count + 1) * sizeof(int));
+                            server_data->banned_clients[server_data->banned_clients_count] = atoi(get_command_param_value(command, "user-id"));
+                            server_data->banned_clients_count++;
+
+                            send_response(sock_conn, STATUS_OK, "message", "Utilisateur banni avec succès", NULL);
+                        } else {
+                            send_response(sock_conn, STATUS_DENIED, "message", "Action non autorisée", NULL);
                         }
                     } else {
                         send_response(sock_conn, STATUS_DENIED, "message", "Action non autorisée", NULL);
@@ -394,8 +409,8 @@ int main(int argc, char* argv[])
             log_info("New connection with %s (%d)", client_ip, client_pid);
         }
 
-        // printf("S Clients count %d\n", *clients_count);
-        // for (int i = 0; i < *clients_count; i++) {
+        // printf("S Clients count %d\n", server_data->clients_count);
+        // for (int i = 0; i < server_data->clients_count; i++) {
         //     printf("S Client %d %s\n", clients[i].ip, clients[i].user.email);
         // }
     }
@@ -478,17 +493,15 @@ void signal_handler(int sig)
 
     if (sig == SIGINT || sig == SIGQUIT) {
         running = 0;
-        shmdt(clients);
-        shmctl(shmid_clients, IPC_RMID, NULL);
-        shmdt(clients_count);
-        shmctl(shmid_clients_count, IPC_RMID, NULL);
+        shmdt(server_data);
+        shmctl(shmid_server_data, IPC_RMID, NULL);
     }
 
     if (sig == SIGINT && server_pid == self) {
-        if (*clients_count > 0) {
+        if (server_data->clients_count > 0) {
             kill(0, SIGQUIT);
 
-            for (int i = 0; i < *clients_count; i++) {
+            for (int i = 0; i < server_data->clients_count; i++) {
                 int status;
 
                 for (;;) {
@@ -560,7 +573,7 @@ int parse_command(char command_str[], command_t* command)
         } else {
             trim(line);
 
-            printf("Line: %s\n", line);
+            // printf("Line: %s\n", line);
 
             if (!command_exist(line)) {
                 return -1;
@@ -642,23 +655,23 @@ void add_client(int sock, pid_t pid, char ip[], user_t user)
     client_t client;
 
     if (!client_pid_exist(pid)) {
-        // printf("Add client %d\n", *clients_count);
+        // printf("Add client %d\n", server_data->clients_count);
 
         client = init_client(sock, pid, ip, user);
-        clients[*clients_count] = client;
-        (*clients_count)++;
+        server_data->clients[server_data->clients_count] = client;
+        (server_data->clients_count)++;
     }
 }
 
 void remove_client(pid_t pid)
 {
-    for (int i = 0; i < *clients_count; i++) {
-        if (clients[i].pid == pid) {
+    for (int i = 0; i < server_data->clients_count; i++) {
+        if (server_data->clients[i].pid == pid) {
             // printf("Remove client %d\n", i);
-            for (int j = i; j < *clients_count - 1; j++) {
-                clients[j] = clients[j + 1];
+            for (int j = i; j < server_data->clients_count - 1; j++) {
+                server_data->clients[j] = server_data->clients[j + 1];
             }
-            (*clients_count)--;
+            (server_data->clients_count)--;
             break;
         }
     }
@@ -666,9 +679,9 @@ void remove_client(pid_t pid)
 
 client_t get_client(pid_t pid)
 {
-    for (int i = 0; i < *clients_count; i++) {
-        if (clients[i].pid == pid) {
-            return clients[i];
+    for (int i = 0; i < server_data->clients_count; i++) {
+        if (server_data->clients[i].pid == pid) {
+            return server_data->clients[i];
         }
     }
 
@@ -677,8 +690,8 @@ client_t get_client(pid_t pid)
 
 int client_pid_exist(pid_t pid)
 {
-    for (int i = 0; i < *clients_count; i++) {
-        if (clients[i].pid == pid) {
+    for (int i = 0; i < server_data->clients_count; i++) {
+        if (server_data->clients[i].pid == pid) {
             return 1;
         }
     }
@@ -688,8 +701,18 @@ int client_pid_exist(pid_t pid)
 
 int client_connected(int user_id)
 {
-    for (int i = 0; i < *clients_count; i++) {
-        if (clients[i].user.id == user_id) {
+    for (int i = 0; i < server_data->clients_count; i++) {
+        if (server_data->clients[i].user.id == user_id) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+int client_banned(int user_id) {
+    for (int i = 0; i < server_data->banned_clients_count; i++) {
+        if (server_data->banned_clients[i] == user_id) {
             return 1;
         }
     }
