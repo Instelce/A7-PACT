@@ -7,6 +7,12 @@
 #include "types.h"
 #include "utils.h"
 
+/**
+ * @brief Formats a response into a string like this for example : "200/OK\ndata:value\nname:toto\n"
+ *
+ * @param response The response_t structure to be formatted.
+ * @return char* Formated response.
+ */
 char* format_response(response_t response)
 {
     char* format = malloc(LARGE_CHAR_SIZE);
@@ -19,6 +25,12 @@ char* format_response(response_t response)
     return format;
 }
 
+/**
+ * @brief Formats a response status into a string like this : "<code>/<message>"
+ *
+ * @param status The response_status_t structure to be formatted.
+ * @return char* Formated status.
+ */
 char* format_status(response_status_t status)
 {
     char* format = malloc(CHAR_SIZE);
@@ -255,4 +267,23 @@ void send_disconnected(int sock)
         perror("Error sending message");
         exit(EXIT_FAILURE);
     }
+}
+
+response_t* send_block_user(int sock, char token[], int user_id, int for_user_id) {
+    command_t command = create_command(BLOCK_USER);
+
+    add_command_param(&command, "token", token);
+    add_command_param(&command, "user-id", to_string(user_id));
+    add_command_param(&command, "for-user-id", to_string(for_user_id));
+
+    return request(sock, format_command(command));
+}
+
+response_t* send_ban_user(int sock, char token[], int user_id) {
+    command_t command = create_command(BAN_USER);
+
+    add_command_param(&command, "token", token);
+    add_command_param(&command, "user-id", to_string(user_id));
+
+    return request(sock, format_command(command));
 }

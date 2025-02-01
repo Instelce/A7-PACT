@@ -82,6 +82,8 @@ char* get_color_code(color_t color)
         color_code = "\033[0m";
         break;
     }
+
+    return color_code;
 }
 
 char* get_text_style(text_style_t style)
@@ -102,6 +104,8 @@ char* get_text_style(text_style_t style)
         style_code = "\033[7m";
         break;
     }
+
+    return style_code;
 }
 
 void color_printf(color_t color, char* format, ...)

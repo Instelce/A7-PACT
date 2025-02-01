@@ -298,6 +298,8 @@ int main()
         // printf("User name: %s\n", connected_user.name);
 
         if (is_connected) {
+            memset(error_message, 0, sizeof(error_message));
+
             if (connected_user.type == UNKNOWN) {
                 db_set_user_type(conn, &connected_user);
             }

@@ -58,12 +58,12 @@ static const char UPDATE_MESSAGE[] = "UPDT_MSG";
 static const char DELETE_MESSAGE[] = "DEL_MSG";
 static const char DISCONNECTED[] = "DISCONNECTED";
 
+
 /// Client check if a change is available
 /// - new message
 /// - message updated
 /// - message deleted
-/// - message seen
-/// - user connected
+/// - message seen (not implemented)
 static const char NEW_CHANGE_AVAILABLE[] = "NEW_CHG_AVAILABLE";
 
 
@@ -78,6 +78,13 @@ static const char USER_INFO[] = "USER_INFO";
 /// - present in a discussion with a user
 static const char CLIENT_INFO[] = "CLIENT_INFO";
 
+/// Block a user
+/// - user_id to block
+/// - for_user_id the user that block (0 for all users)
+static const char BLOCK_USER[] = "BLOCK_USER";
+
+static const char BAN_USER[] = "BAN_USER";
+
 static const char* EXISTING_COMMANDS[] = {
     LOGIN,
     SEND_MESSAGE,
@@ -86,7 +93,9 @@ static const char* EXISTING_COMMANDS[] = {
     NEW_CHANGE_AVAILABLE,
     DISCONNECTED,
     USER_INFO,
-    CLIENT_INFO
+    CLIENT_INFO,
+    BLOCK_USER,
+    BAN_USER,
 };
 
 static const command_def_t COMMANDS_DEFINITIONS[] = {
@@ -95,9 +104,11 @@ static const command_def_t COMMANDS_DEFINITIONS[] = {
     { "UPDT_MSG", 4 }, // token,message-id,message-length,content
     { "DEL_MSG", 2 }, // token,message-id
     { "NEW_CHG_AVAILABLE", 1 }, // token
-    { "USER_INFO", 1 }, // token,user_id
-    { "CLIENT_INFO", 3 }, // token,is_writing,in_conversation
+    { "USER_INFO", 1 }, // token,user-id
+    { "CLIENT_INFO", 3 }, // token,is-writing,in-conversation
     { "DISCONNECTED", 0 },
+    { "BLOCK_USER", 3 }, // token,user-id,for-user-id
+    { "BAN_USER", 2 }, // token,user-id
 };
 
 static const int COMMANDS_COUNT = sizeof(COMMANDS_DEFINITIONS) / sizeof(command_def_t);
@@ -129,7 +140,9 @@ response_t* send_login(int sock, char api_token[]);
 response_t* send_message(int sock, char token[], char message[], int receiver_id);
 response_t* send_update_message(int sock, char token[], int message_id, char message[]);
 response_t* send_delete_message(int sock, char token[], int message_id);
-response_t* send_get_new_message(int sock, char token[]);
+// response_t* send_get_new_message(int sock, char token[]);
+response_t* send_block_user(int sock, char token[], int user_id, int for_user_id);
+response_t* send_ban_user(int sock, char token[], int user_id);
 void send_disconnected(int sock);
 
 #endif // PROTOCOL_H

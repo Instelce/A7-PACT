@@ -20,7 +20,7 @@ void config_load(config_t* c, char* path)
     char* var_value;
 
     if (path == NULL) {
-        path = malloc(6*sizeof(char));
+        path = malloc(7*sizeof(char));
         strcpy(path, "config");
     }
 
@@ -54,8 +54,8 @@ void config_load(config_t* c, char* path)
                     c->port = atoi(var_value);
                 } else if (strcmp(var_name, "log-file") == 0) {
                     strcpy(c->log_file, var_value);
-                } else if (strcmp(var_name, "ban-duration") == 0) {
-                    c->ban_duration = atoi(var_value);
+                } else if (strcmp(var_name, "bock-cli-duration") == 0) {
+                    c->bock_cli_duration = atoi(var_value);
                 } else if (strcmp(var_name, "max-messages-per-minutes") == 0) {
                     c->max_messages_per_minutes = atoi(var_value);
                 } else if (strcmp(var_name, "max-messages-per-hours") == 0) {
