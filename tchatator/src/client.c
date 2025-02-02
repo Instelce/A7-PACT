@@ -895,9 +895,6 @@ void menu_ban_user()
         return;
     }
 
-    ban_menu.actions = malloc((users.count + 1) * sizeof(menu_action_t));
-    ban_menu.actions_count = users.count + 1;
-
     for (int i = 0; i < users.count; i++) {
         add_menu_action(&ban_menu, users.users[i].name, NULL, 0);
     }
@@ -1040,11 +1037,11 @@ char* format_date(char date[])
 
     if (tm.tm_year + 1900 == year && tm.tm_mon + 1 == month && tm.tm_mday == day) {
         if (tm.tm_hour == hour) {
-            if (tm.tm_min == min) {
+            if (tm.tm_min - min < 1) {
                 if (tm.tm_sec - sec < 10) {
                     strcpy(formatted_date, "il y a quelques secondes");
                 } else {
-                    sprintf(formatted_date, "il y a %d min", tm.tm_min - min);
+                    sprintf(formatted_date, "il y a %d sec", tm.tm_sec - sec);
                 }
             } else {
                 sprintf(formatted_date, "il y a %d min", tm.tm_min - min);
