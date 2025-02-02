@@ -387,6 +387,9 @@ void connection_client()
         connected_user = NOT_CONNECTED_USER;
         set_error(get_response_data(*response, "message"));
     }
+    if (response->status.code == 200) {
+        printf("Connexion en tant que client réussie.\n");
+    }
 }
 
 void connection_admin()
@@ -841,13 +844,10 @@ void menu_block_user()
     printf("Fetching users who sent messages...\n");
     users = db_get_users_who_sent_messages(conn);
 
-    if (users.count == 0) {
-        set_error("No users available for blocking.");
-        return;
-    }
+    printf("Users count: %d\n", users.count);
 
     for (int i = 0; i < users.count; i++) {
-        add_menu_action(&block_menu, users.users[i].name, NULL, 0);
+        add_menu_action(&ban_menu, users.users[i].name, NULL, 0);
     }
     add_menu_action(&block_menu, "Cancel", NULL, 0);
 

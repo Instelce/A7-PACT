@@ -44,6 +44,14 @@ Connection Pro
         se déconnecter
 
 Connection Admin
-    
+    rentrer l'email. (accès menu connecté)
+
+        blocker un utilisateur
+            choisir le temps de blockage
+                selectionner l'utilisateur a blocker
+        bannir un utilisateur
+            selectionner l'utilisateur a bannir
+
+        se déconnecter
 
 Déconnexion

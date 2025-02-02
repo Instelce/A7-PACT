@@ -570,30 +570,29 @@ user_list_t db_get_users_who_sent_messages(PGconn* conn)
 {
     PGresult* res;
     user_list_t user_list = { .count = 0, .users = NULL };
-    const char* query = "SELECT DISTINCT m.sender_id "
+    const char* query = "SELECT DISTINCT m.sender_id , mu.pseudo "
                         "FROM message m "
                         "JOIN member_user mu ON m.sender_id = mu.user_id;";
 
     res = PQexec(conn, query);
 
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
-        db_error(conn, "Erreur lors de la récupération des expéditeurs");
+        db_error(conn, "Error when fetching users who sent messages");
     }
 
     user_list.count = PQntuples(res);
     user_list.users = malloc(user_list.count * sizeof(user_t));
-    if (user_list.users == NULL) {
-        db_error(conn, "Erreur d'allocation mémoire");
-    }
 
     for (int i = 0; i < user_list.count; i++) {
-        int sender_id = atoi(PQgetvalue(res, i, 0));
-        user_list.users[i] = init_user(sender_id, "", "");
-        db_get_user(conn, &user_list.users[i], sender_id);
-        db_set_user_type(conn, &user_list.users[i]);
+        user_list.users[i] = (user_t) {
+            .id = atoi(PQgetvalue(res, i, 0)),
+            .type = MEMBER,
+        };
+        strcpy(user_list.users[i].name, PQgetvalue(res, i, 1));
     }
 
     PQclear(res);
+
     return user_list;
 }
 void add_message(message_list_t* messages, message_t message)
