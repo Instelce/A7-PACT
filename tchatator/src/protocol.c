@@ -269,17 +269,20 @@ void send_disconnected(int sock)
     }
 }
 
-response_t* send_block_user(int sock, char token[], int user_id, int for_user_id) {
+response_t* send_block_user(int sock, char token[], int user_id, int for_user_id, int duration_seconds)
+{
     command_t command = create_command(BLOCK_USER);
 
     add_command_param(&command, "token", token);
     add_command_param(&command, "user-id", to_string(user_id));
     add_command_param(&command, "for-user-id", to_string(for_user_id));
+    add_command_param(&command, "duration-seconds", to_string(duration_seconds)); // Nouveau paramètre
 
     return request(sock, format_command(command));
 }
 
-response_t* send_ban_user(int sock, char token[], int user_id) {
+response_t* send_ban_user(int sock, char token[], int user_id)
+{
     command_t command = create_command(BAN_USER);
 
     add_command_param(&command, "token", token);

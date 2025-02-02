@@ -21,7 +21,7 @@ class m0023_create_table_message
             id SERIAL PRIMARY KEY,
             user_id INT NOT NULL,
             banned_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            active BOOLEAN NOT NULL DEFAULT TRUE,
+            
 
             FOREIGN KEY (user_id) REFERENCES account (id) ON DELETE CASCADE
         );
@@ -31,7 +31,7 @@ class m0023_create_table_message
             for_user_id INT NOT NULL DEFAULT 0,
             blocked_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             duration_seconds INT NOT NULL,
-            active BOOLEAN NOT NULL DEFAULT TRUE,
+            
 
             FOREIGN KEY (user_id) REFERENCES account (id) ON DELETE CASCADE
         );";
