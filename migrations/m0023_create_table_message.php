@@ -30,7 +30,7 @@ class m0023_create_table_message
             user_id INT NOT NULL,
             for_user_id INT NOT NULL DEFAULT 0,
             blocked_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            duration_seconds INT NOT NULL,
+            duration INT NOT NULL,
             
 
             FOREIGN KEY (user_id) REFERENCES account (id) ON DELETE CASCADE
