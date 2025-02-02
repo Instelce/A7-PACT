@@ -254,6 +254,7 @@ int main()
         &menu_pro, "Professional",
         "Send a message", menu_send_message,
         "Discussions", menu_select_discussion,
+        "Block user", menu_block_user,
         "Disconnect", disconnect,
         NULL);
 
@@ -814,133 +815,111 @@ void menu_delete_and_update(message_t m)
 /// @details A professional can block messages from a client who has sent messages to them.
 ///          An administrator can block messages from any client for all recipients.
 /// @return void
+/// @brief Displays the menu to block a user and sends the block request.
+/// @details A professional blocks a client (messages only sent to them) or an admin blocks a client globally.
+/// @return void
 void menu_block_user()
 {
-    printf("menu_ban_user called\n"); // Message de débogage
+    clear_term();
+    menu_t block_menu;
+    int selected_index = -1;
+    const int limit = 5;
+    user_list_t users;
+    int duration = 86400; // Durée par défaut de 24h en secondes
+    char input[50];
 
-    // clear_term();
-    // menu_t block_menu;
-    // int selected_index = -1;
-    // int offset = 0;
-    // const int limit = 5;
-    // user_list_t users;
+    printf("\nBlock a User\n");
+    printf("Duration in hours [default 24]: ");
+    fgets(input, sizeof(input), stdin);
+    if (atoi(input) > 0) {
+        duration = atoi(input) * 3600;
+    }
+    strcpy(block_menu.name, "Select a User to Block");
 
-    // printf("\nBlock a User\n");
+    // Récupérer la liste des utilisateurs ayant envoyé des messages
+    printf("Fetching users who sent messages...\n");
+    users = db_get_users_who_sent_messages(conn);
 
-    // strcpy(block_menu.name, "Select a User to Block");
+    if (users.count == 0) {
+        printf("No users available for blocking.\n");
+        return;
+    }
 
-    // while (1) {
-    //     // Récupérer les utilisateurs qui ont envoyé des messages
-    //     users = db_get_users_who_sent_messages(conn);
+    block_menu.actions = malloc((users.count + 1) * sizeof(menu_action_t));
+    block_menu.actions_count = users.count + 1;
 
-    //     if (users.count == 0) {
-    //         printf("No users available for blocking.\n");
-    //         break;
-    //     }
+    for (int i = 0; i < users.count; i++) {
+        add_menu_action(&block_menu, users.users[i].name, NULL, 0);
+    }
+    add_menu_action(&block_menu, "Cancel", NULL, 0);
 
-    //     // Créer le menu avec les utilisateurs
-    //     block_menu.actions = malloc((users.count + 1) * sizeof(menu_action_t));
-    //     block_menu.actions_count = users.count + 1;
+    selected_index = display_menu(block_menu);
 
-    //     for (int i = 0; i < users.count; i++) {
-    //         add_menu_action(&block_menu, users.users[i].name, NULL, 0);
-    //     }
+    if (selected_index < users.count) {
+        int user_id = users.users[selected_index].id;
+        int for_user_id = connected_user.id;
 
-    //     // Ajouter une option pour annuler
-    //     add_menu_action(&block_menu, "Cancel", NULL, 0);
+        printf("Sending BLOCK_USER command to server...\n");
+        response_t* response = send_block_user(sock, connected_user.api_token, user_id, for_user_id, duration);
+        if (response->status.code == 200) {
+            printf("User %s has been blocked successfully for %d hours.\n", users.users[selected_index].name, duration / 3600);
+        } else {
+            printf("Failed to block user. Response: %d %s\n", response->status.code, response->status.message);
+        }
+        free(response);
+    } else {
+        printf("Operation cancelled.\n");
+    }
 
-    //     // Afficher le menu et récupérer le choix de l'utilisateur
-    //     selected_index = display_menu(block_menu);
-
-    //     if (selected_index < users.count) {
-    //         int user_id = users.users[selected_index].id;
-    //         int for_user_id = (connected_user.type == PROFESSIONAL) ? connected_user.id : 0; // 0 = admin bloque globalement
-
-    //         // Envoyer la requête de blocage au serveur
-    //         response = send_block_user(sock, connected_user.api_token, user_id, for_user_id);
-
-    //         if (response->status.code == 200) {
-    //             printf("User %s has been blocked successfully.\n", users.users[selected_index].name);
-    //         } else {
-    //             printf("Failed to block user. Response: %d %s\n", response->status.code, response->status.message);
-    //         }
-
-    //         // Libérer la mémoire
-    //         free(block_menu.actions);
-    //         free(users.users);
-    //         break;
-    //     } else {
-    //         // Annuler l'opération
-    //         free(block_menu.actions);
-    //         free(users.users);
-    //         break;
-    //     }
-    // }
+    free(block_menu.actions);
+    free(users.users);
 }
 /// @brief Display the menu to ban a user.
 /// @details An administrator can permanently ban any client.
-
 void menu_ban_user()
 {
-    printf("menu_ban_user called\n"); // Message de débogage
+    clear_term();
+    menu_t ban_menu;
+    int selected_index = -1;
+    const int limit = 5;
+    user_list_t users;
 
-    // clear_term();
-    // menu_t ban_menu;
-    // int selected_index = -1;
-    // int offset = 0;
-    // const int limit = 5;
-    // user_list_t users;
+    printf("\nBan a User\n");
 
-    // printf("\nBan a User\n");
+    strcpy(ban_menu.name, "Select a User to Ban");
 
-    // strcpy(ban_menu.name, "Select a User to Ban");
+    users = db_get_users_who_sent_messages(conn);
 
-    // while (1) {
-    //     // Récupérer les utilisateurs qui ont envoyé des messages
-    //     users = db_get_users_who_sent_messages(conn);
+    if (users.count == 0) {
+        printf("No users available for banning.\n");
+        return;
+    }
 
-    //     if (users.count == 0) {
-    //         printf("No users available for banning.\n");
-    //         break;
-    //     }
+    ban_menu.actions = malloc((users.count + 1) * sizeof(menu_action_t));
+    ban_menu.actions_count = users.count + 1;
 
-    //     // Créer le menu avec les utilisateurs
-    //     ban_menu.actions = malloc((users.count + 1) * sizeof(menu_action_t));
-    //     ban_menu.actions_count = users.count + 1;
+    for (int i = 0; i < users.count; i++) {
+        add_menu_action(&ban_menu, users.users[i].name, NULL, 0);
+    }
+    add_menu_action(&ban_menu, "Cancel", NULL, 0);
 
-    //     for (int i = 0; i < users.count; i++) {
-    //         add_menu_action(&ban_menu, users.users[i].name, NULL, 0);
-    //     }
+    selected_index = display_menu(ban_menu);
 
-    //     // Ajouter une option pour annuler
-    //     add_menu_action(&ban_menu, "Cancel", NULL, 0);
+    if (selected_index < users.count) {
+        int user_id = users.users[selected_index].id;
 
-    //     // Afficher le menu et récupérer le choix de l'utilisateur
-    //     selected_index = display_menu(ban_menu);
+        response = send_ban_user(sock, connected_user.api_token, user_id);
+        if (response->status.code == 200) {
+            printf("User %s has been banned successfully.\n", users.users[selected_index].name);
+        } else {
+            printf("Failed to ban user. Response: %d %s\n", response->status.code, response->status.message);
+        }
+    } else {
+        printf("Operation cancelled.\n");
+    }
 
-    //     if (selected_index < users.count) {
-    //         int user_id = users.users[selected_index].id;
-
-    //         // Envoyer la requête de bannissement au serveur
-    //         response = send_ban_user(sock, connected_user.api_token, user_id);
-
-    //         if (response->status.code == 200) {
-    //             printf("User %s has been banned successfully.\n", users.users[selected_index].name);
-    //         } else {
-    //             printf("Failed to ban user. Response: %d %s\n", response->status.code, response->status.message);
-    //         }
-
-    //         // Libérer la mémoire
-    //         free(ban_menu.actions);
-    //         free(users.users);
-    //         break;
-    //     } else {
-    //         // Annuler l'opération
-    //         free(ban_menu.actions);
-    //         free(users.users);
-    //         break;
-    //     }
-    // }
+    free(ban_menu.actions);
+    free(users.users);
 }
 
 void disconnect()

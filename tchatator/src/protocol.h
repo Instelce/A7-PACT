@@ -58,14 +58,12 @@ static const char UPDATE_MESSAGE[] = "UPDT_MSG";
 static const char DELETE_MESSAGE[] = "DEL_MSG";
 static const char DISCONNECTED[] = "DISCONNECTED";
 
-
 /// Client check if a change is available
 /// - new message
 /// - message updated
 /// - message deleted
 /// - message seen (not implemented)
 static const char NEW_CHANGE_AVAILABLE[] = "NEW_CHG_AVAILABLE";
-
 
 /// Send info for a specific user
 /// - connection status
@@ -141,7 +139,7 @@ response_t* send_message(int sock, char token[], char message[], int receiver_id
 response_t* send_update_message(int sock, char token[], int message_id, char message[]);
 response_t* send_delete_message(int sock, char token[], int message_id);
 // response_t* send_get_new_message(int sock, char token[]);
-response_t* send_block_user(int sock, char token[], int user_id, int for_user_id);
+response_t* send_block_user(int sock, char token[], int user_id, int for_user_id, int duration_seconds);
 response_t* send_ban_user(int sock, char token[], int user_id);
 void send_disconnected(int sock);
 

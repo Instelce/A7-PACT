@@ -88,6 +88,7 @@ client_t get_client(pid_t pid);
 int client_pid_exist(pid_t pid);
 int client_connected(int user_id);
 int client_banned(int user_id);
+void refresh_blocked_users(server_data_t* server_data, PGconn* conn);
 
 // -------------------------------------------------------------------------
 // Main
@@ -132,7 +133,7 @@ int main(int argc, char* argv[])
     // Setup shared memory for server data
     key_t key = ftok(".", 65);
     shmid_server_data = shmget(key, sizeof(server_data_t), 0666 | IPC_CREAT);
-    server_data = (server_data_t*) shmat(shmid_server_data, (void*)0, 0);
+    server_data = (server_data_t*)shmat(shmid_server_data, (void*)0, 0);
 
     // Initialize server data
     server_data->clients = malloc(current_clients_max_capacity * sizeof(client_t));
@@ -222,8 +223,8 @@ int main(int argc, char* argv[])
     sock_conn_addr_size = sizeof(sock_conn_addr);
 
     // Load banned and blocked users
-    db_get_banned_users(conn, server_data->banned_clients, &server_data->banned_clients_count);
-    db_get_blocked_users(conn, server_data->blocked_clients, &server_data->blocked_clients_count);
+    db_get_banned_users(conn, &server_data->banned_clients, &server_data->banned_clients_count);
+    db_get_blocked_users(conn, &server_data->blocked_clients, &server_data->blocked_clients_count);
 
     // Start the server loop
     while (running) {
@@ -372,12 +373,12 @@ int main(int argc, char* argv[])
                             log_info("Message (%d) deleted with success", atoi(get_command_param_value(command, "message-id")));
                         } else if (strcmp(command.name, NEW_CHANGE_AVAILABLE) == 0) {
                         } else if (strcmp(command.name, BLOCK_USER) == 0) {
-                            db_block_user(conn, atoi(get_command_param_value(command, "user-id")), atoi(get_command_param_value(command, "for-user-id")));
+                            db_block_user(conn, atoi(get_command_param_value(command, "user-id")), atoi(get_command_param_value(command, "for-user-id")), atoi(get_command_param_value(command, "duration-seconds")));
 
-                            // Add to the blocked list
                             server_data->blocked_clients = realloc(server_data->blocked_clients, (server_data->blocked_clients_count + 1) * sizeof(blocked_user_t));
                             server_data->blocked_clients[server_data->blocked_clients_count].user_id = atoi(get_command_param_value(command, "user-id"));
                             server_data->blocked_clients[server_data->blocked_clients_count].for_user_id = atoi(get_command_param_value(command, "for-user-id"));
+                            server_data->blocked_clients[server_data->blocked_clients_count].duration_seconds = atoi(get_command_param_value(command, "duration-seconds"));
                             server_data->blocked_clients_count++;
 
                             send_response(sock_conn, STATUS_OK, "message", "Utilisateur bloqué avec succès", NULL);
@@ -390,8 +391,6 @@ int main(int argc, char* argv[])
                             server_data->banned_clients_count++;
 
                             send_response(sock_conn, STATUS_OK, "message", "Utilisateur banni avec succès", NULL);
-                        } else {
-                            send_response(sock_conn, STATUS_DENIED, "message", "Action non autorisée", NULL);
                         }
                     } else {
                         send_response(sock_conn, STATUS_DENIED, "message", "Action non autorisée", NULL);
@@ -710,7 +709,8 @@ int client_connected(int user_id)
     return 0;
 }
 
-int client_banned(int user_id) {
+int client_banned(int user_id)
+{
     for (int i = 0; i < server_data->banned_clients_count; i++) {
         if (server_data->banned_clients[i] == user_id) {
             return 1;
