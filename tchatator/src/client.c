@@ -262,7 +262,7 @@ int main()
     config = malloc(sizeof(config_t));
     config_load(config, NULL);
 
-    env_load("..");
+    env_load(".");
 
     db_login(&conn);
 
@@ -312,6 +312,7 @@ int main()
                 menu_client.actions[choice].action();
             } else if (connected_user.type == ADMIN) {
                 choice = display_menu(menu_admin);
+                printf("%d\n", choice);
                 menu_admin.actions[choice].action();
             } else if (connected_user.type == PROFESSIONAL) {
                 choice = display_menu(menu_pro);
@@ -744,7 +745,7 @@ void menu_delete_and_update(message_t m)
 
         display_message(m, 1, 1);
 
-        style_printf(BOLD, "\n   Delete or Update Message");
+        style_printf(BOLD, "\n   Delete or Update Message\n\n");
         display_line();
 
         char* options[] = { "Delete", "Update", "Cancel" };
@@ -841,12 +842,9 @@ void menu_block_user()
     users = db_get_users_who_sent_messages(conn);
 
     if (users.count == 0) {
-        printf("No users available for blocking.\n");
+        set_error("No users available for blocking.");
         return;
     }
-
-    block_menu.actions = malloc((users.count + 1) * sizeof(menu_action_t));
-    block_menu.actions_count = users.count + 1;
 
     for (int i = 0; i < users.count; i++) {
         add_menu_action(&block_menu, users.users[i].name, NULL, 0);
@@ -854,6 +852,8 @@ void menu_block_user()
     add_menu_action(&block_menu, "Cancel", NULL, 0);
 
     selected_index = display_menu(block_menu);
+
+    printf("Selected index: %d\n", selected_index);
 
     if (selected_index < users.count) {
         int user_id = users.users[selected_index].id;
@@ -1012,7 +1012,7 @@ void display_line()
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-    printf("\n   ");
+    printf("   ");
     for (int i = 0; i < w.ws_col - 6; i++) {
         color_printf(GRAY, "╴");
     }
@@ -1041,20 +1041,13 @@ char* format_date(char date[])
     if (tm.tm_year + 1900 == year && tm.tm_mon + 1 == month && tm.tm_mday == day) {
         if (tm.tm_hour == hour) {
             if (tm.tm_min == min) {
-                if (tm.tm_sec == sec) {
+                if (tm.tm_sec - sec < 10) {
                     strcpy(formatted_date, "il y a quelques secondes");
                 } else {
-                    strcpy(formatted_date, "il y a quelques minutes");
+                    sprintf(formatted_date, "il y a %d min", tm.tm_min - min);
                 }
             } else {
-                strcpy(formatted_date, "il y a ");
-                if (tm.tm_min - min == 15 || tm.tm_min - min == 30 || tm.tm_min - min == 45) {
-                    strcat(formatted_date, to_string(tm.tm_min - min));
-                    strcat(formatted_date, " min");
-                } else {
-                    strcat(formatted_date, to_string(tm.tm_min - min));
-                    strcat(formatted_date, " min");
-                }
+                sprintf(formatted_date, "il y a %d min", tm.tm_min - min);
             }
         } else {
             strcpy(formatted_date, "il y a ");
@@ -1101,8 +1094,15 @@ int display_message(message_t message, int align_left, int selected)
 
     // printf("size %d\n", (w.ws_col / 2 - 2));
 
-    for (int i = 0; i < strlen(message.content); i++) {
-        c = message.content[i];
+    char* message_content = malloc(CHAR_SIZE);
+    strcpy(message_content, message.content);
+
+    if (message.deleted) {
+        strcpy(message_content, "Message supprimé");
+    }
+
+    for (int i = 0; i < strlen(message_content); i++) {
+        c = message_content[i];
 
         // printf("c: %c\n", c);
         // printf("%d\n", strlen(lines[line_count]));
@@ -1122,6 +1122,15 @@ int display_message(message_t message, int align_left, int selected)
     int height = line_count + 8;
     int left_space = align_left ? 0 : w.ws_col / 2;
     color_t color = selected ? CYAN : WHITE;
+
+    if (strlen(message.modified_date) == 0) {
+        height--;
+    }
+
+    if (message.deleted) {
+        height = 5;
+        color = GRAY;
+    }
 
     user_t receiver_user;
     if (connected_user.id == message.receiver_id) {
@@ -1180,8 +1189,13 @@ int display_message(message_t message, int align_left, int selected)
 
             // Show message content
             if (i == 3 + printed_line_count && j == 1 && printed_line_count <= line_count) {
-                printf("%s", lines[printed_line_count]);
-                j += strlen(lines[printed_line_count]);
+                if (message.deleted) {
+                    color_printf(color, "Message deleted");
+                    j += 16;
+                } else {
+                    printf("%s", lines[printed_line_count]);
+                    j += strlen(lines[printed_line_count]);
+                }
                 printed_line_count++;
             }
 
@@ -1190,7 +1204,7 @@ int display_message(message_t message, int align_left, int selected)
                 j += strlen(sended_date) + 7;
             }
             if (i == 6 + line_count && j == 1) {
-                if (message.modified_date != NULL) {
+                if (strlen(message.modified_date) > 0) {
                     char* modified_date = format_date(message.modified_date);
                     color_printf(color, "Mis à jour %s", modified_date);
                     j += strlen(modified_date) + 11;

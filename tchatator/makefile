@@ -1,5 +1,4 @@
 CC = cc
-CFLAGS += -Wall
 CFLAGS += -I/usr/include -L/usr/lib -lpq # postgreSQL
 
 lib_dir = lib

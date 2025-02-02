@@ -14,9 +14,11 @@
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
+#include <pthread.h>
 
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <sys/sem.h>
 
 #include <signal.h>
 #include <sys/wait.h>
@@ -131,9 +133,8 @@ int main(int argc, char* argv[])
     current_clients_max_capacity = CLIENT_CAPACITY_INCR;
 
     // Setup shared memory for server data
-    key_t key = ftok(".", 65);
-    shmid_server_data = shmget(key, sizeof(server_data_t), 0666 | IPC_CREAT);
-    server_data = (server_data_t*)shmat(shmid_server_data, (void*)0, 0);
+    shmid_server_data = shmget(IPC_PRIVATE, sizeof(server_data_t), 0666 | IPC_CREAT);
+    server_data = (server_data_t*) shmat(shmid_server_data, NULL, 0);
 
     // Initialize server data
     server_data->clients = malloc(current_clients_max_capacity * sizeof(client_t));
@@ -265,9 +266,14 @@ int main(int argc, char* argv[])
 
             // Child loop
             while (1) {
+                // printf("Client id %d\n", client_id);
                 // printf("C Clients count %d\n", server_data->clients_count);
                 // for (int i = 0; i < server_data->clients_count; i++) {
-                //     printf("C Client (ip: %d) (id: %d) (email:%s)\n", clients[i].ip, clients[i].user.id, clients[i].user.email);
+                //     if (i == client_id) {
+                //         printf("C Client (ip: %s) (id: %d) (email: %s) (logged in)\n", server_data->clients[i].ip, server_data->clients[i].user.id, server_data->clients[i].user.email);
+                //     } else {
+                //     printf("C Client (ip: %s) (id: %d) (email: %s)\n", server_data->clients[i].ip, server_data->clients[i].user.id, server_data->clients[i].user.email);
+                //     }
                 // }
 
                 memset(command_recv, 0, sizeof(command_recv));
@@ -373,6 +379,7 @@ int main(int argc, char* argv[])
                             log_info("Message (%d) deleted with success", atoi(get_command_param_value(command, "message-id")));
                         } else if (strcmp(command.name, NEW_CHANGE_AVAILABLE) == 0) {
                         } else if (strcmp(command.name, BLOCK_USER) == 0) {
+                            printf("Block\n");
                             db_block_user(conn, atoi(get_command_param_value(command, "user-id")), atoi(get_command_param_value(command, "for-user-id")), atoi(get_command_param_value(command, "duration-seconds")));
 
                             server_data->blocked_clients = realloc(server_data->blocked_clients, (server_data->blocked_clients_count + 1) * sizeof(blocked_user_t));
@@ -382,6 +389,7 @@ int main(int argc, char* argv[])
                             server_data->blocked_clients_count++;
 
                             send_response(sock_conn, STATUS_OK, "message", "Utilisateur bloqué avec succès", NULL);
+                            log_info("User %d blocked with success for %d hours", atoi(get_command_param_value(command, "user-id")), atoi(get_command_param_value(command, "duration-seconds")) / 3600);
                         } else if (strcmp(command.name, BAN_USER) == 0) {
                             db_ban_user(conn, atoi(get_command_param_value(command, "user-id")));
 
@@ -391,6 +399,7 @@ int main(int argc, char* argv[])
                             server_data->banned_clients_count++;
 
                             send_response(sock_conn, STATUS_OK, "message", "Utilisateur banni avec succès", NULL);
+                            log_info("User %d banned with success", atoi(get_command_param_value(command, "user-id")));
                         }
                     } else {
                         send_response(sock_conn, STATUS_DENIED, "message", "Action non autorisée", NULL);
@@ -398,6 +407,7 @@ int main(int argc, char* argv[])
                 }
             }
 
+            shmdt(server_data);
             exit(0);
         } else if (client_pid == -1) {
             perror("Fork");
@@ -410,7 +420,7 @@ int main(int argc, char* argv[])
 
         // printf("S Clients count %d\n", server_data->clients_count);
         // for (int i = 0; i < server_data->clients_count; i++) {
-        //     printf("S Client %d %s\n", clients[i].ip, clients[i].user.email);
+        //     printf("S Client %s %s\n", server_data->clients[i].ip, server_data->clients[i].user.email);
         // }
     }
 

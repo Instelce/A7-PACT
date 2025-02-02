@@ -220,16 +220,16 @@ void db_create_message(PGconn* conn, message_t* message)
 void db_update_message(PGconn* conn, message_t* message)
 {
     PGresult* res;
-    char query[LARGE_CHAR_SIZE];
-
     set_date_now(message->modified_date);
 
-    snprintf(query, sizeof(query), "UPDATE message SET modified_date = '%s', deleted = %s, seen = %s, content = '%s' WHERE id = %d",
-        message->modified_date, db_bool(message->deleted), db_bool(message->seen), message->content, message->id);
+    const char* paramValues[5] = { message->modified_date, db_bool(message->deleted), db_bool(message->seen), message->content, NULL };
+    char id_str[20];
+    snprintf(id_str, sizeof(id_str), "%d", message->id);
+    paramValues[4] = id_str;
 
-    // printf("%s\n", query);
-
-    res = PQexec(conn, query);
+    res = PQexecParams(conn,
+        "UPDATE message SET modified_date = $1, deleted = $2, seen = $3, content = $4 WHERE id = $5",
+        5, NULL, paramValues, NULL, NULL, 0);
 
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         db_error(conn, "Error when updating message");
@@ -408,7 +408,7 @@ message_list_t db_get_messages_between_users(PGconn* conn, int user1, int user2,
     message_list_t messages_list;
     char query[CHAR_SIZE];
 
-    snprintf(query, sizeof(query), "SELECT id, sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE ((sender_id = %d AND receiver_id = %d) OR (sender_id = %d AND receiver_id = %d)) AND deleted = false ORDER BY sended_date DESC LIMIT %d OFFSET %d", user1, user2, user2, user1, limit, offset);
+    snprintf(query, sizeof(query), "SELECT id, sended_date, modified_date, sender_id, receiver_id, deleted, seen, content FROM message WHERE ((sender_id = %d AND receiver_id = %d) OR (sender_id = %d AND receiver_id = %d)) ORDER BY sended_date DESC LIMIT %d OFFSET %d", user1, user2, user2, user1, limit, offset);
 
     res = PQexec(conn, query);
 
@@ -425,8 +425,8 @@ message_list_t db_get_messages_between_users(PGconn* conn, int user1, int user2,
         strcpy(messages_list.messages[i].modified_date, PQgetvalue(res, i, 2));
         messages_list.messages[i].sender_id = atoi(PQgetvalue(res, i, 3));
         messages_list.messages[i].receiver_id = atoi(PQgetvalue(res, i, 4));
-        messages_list.messages[i].deleted = atoi(PQgetvalue(res, i, 5));
-        messages_list.messages[i].seen = atoi(PQgetvalue(res, i, 6));
+        messages_list.messages[i].deleted = strcmp(PQgetvalue(res, i, 5), "t") == 0;
+        messages_list.messages[i].seen = strcmp(PQgetvalue(res, i, 6), "t") == 0;
         strcpy(messages_list.messages[i].content, PQgetvalue(res, i, 7));
     }
 
@@ -723,8 +723,8 @@ void db_block_user(PGconn* conn, int user_id, int for_user_id, int duration_seco
 
     snprintf(query, sizeof(query),
         "INSERT INTO blocked_user (user_id, for_user_id, duration_seconds, blocked_date) VALUES (%d, %d, %d, NOW()) "
-        "ON CONFLICT (user_id, for_user_id) DO UPDATE SET duration_seconds = %d, blocked_date = NOW()",
-        user_id, for_user_id, duration_seconds, duration_seconds);
+        "ON CONFLICT (user_id, for_user_id) DO UPDATE SET duration_seconds = EXCLUDED.duration_seconds, blocked_date = EXCLUDED.blocked_date",
+        user_id, for_user_id, duration_seconds);
 
     res = PQexec(conn, query);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
