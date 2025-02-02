@@ -7,6 +7,7 @@
 //
 
 #include <errno.h>
+#include <pthread.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,11 +15,10 @@
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
-#include <pthread.h>
 
 #include <sys/ipc.h>
-#include <sys/shm.h>
 #include <sys/sem.h>
+#include <sys/shm.h>
 
 #include <signal.h>
 #include <sys/wait.h>
@@ -35,6 +35,7 @@
 #include "log.h"
 #include "protocol.h"
 #include "utils.h"
+#include <bits/getopt_core.h>
 
 #define CLIENT_CAPACITY_INCR 10
 
@@ -134,7 +135,7 @@ int main(int argc, char* argv[])
 
     // Setup shared memory for server data
     shmid_server_data = shmget(IPC_PRIVATE, sizeof(server_data_t), 0666 | IPC_CREAT);
-    server_data = (server_data_t*) shmat(shmid_server_data, NULL, 0);
+    server_data = (server_data_t*)shmat(shmid_server_data, NULL, 0);
 
     // Initialize server data
     server_data->clients = malloc(current_clients_max_capacity * sizeof(client_t));
@@ -380,16 +381,16 @@ int main(int argc, char* argv[])
                         } else if (strcmp(command.name, NEW_CHANGE_AVAILABLE) == 0) {
                         } else if (strcmp(command.name, BLOCK_USER) == 0) {
                             printf("Block\n");
-                            db_block_user(conn, atoi(get_command_param_value(command, "user-id")), atoi(get_command_param_value(command, "for-user-id")), atoi(get_command_param_value(command, "duration-seconds")));
+                            db_block_user(conn, atoi(get_command_param_value(command, "user-id")), atoi(get_command_param_value(command, "for-user-id")), atoi(get_command_param_value(command, "duration")));
 
                             server_data->blocked_clients = realloc(server_data->blocked_clients, (server_data->blocked_clients_count + 1) * sizeof(blocked_user_t));
                             server_data->blocked_clients[server_data->blocked_clients_count].user_id = atoi(get_command_param_value(command, "user-id"));
                             server_data->blocked_clients[server_data->blocked_clients_count].for_user_id = atoi(get_command_param_value(command, "for-user-id"));
-                            server_data->blocked_clients[server_data->blocked_clients_count].duration_seconds = atoi(get_command_param_value(command, "duration-seconds"));
+                            server_data->blocked_clients[server_data->blocked_clients_count].duration = atoi(get_command_param_value(command, "duration"));
                             server_data->blocked_clients_count++;
 
                             send_response(sock_conn, STATUS_OK, "message", "Utilisateur bloqué avec succès", NULL);
-                            log_info("User %d blocked with success for %d hours", atoi(get_command_param_value(command, "user-id")), atoi(get_command_param_value(command, "duration-seconds")) / 3600);
+                            log_info("User %d blocked with success for %d hours", atoi(get_command_param_value(command, "user-id")), atoi(get_command_param_value(command, "duration")));
                         } else if (strcmp(command.name, BAN_USER) == 0) {
                             db_ban_user(conn, atoi(get_command_param_value(command, "user-id")));
 

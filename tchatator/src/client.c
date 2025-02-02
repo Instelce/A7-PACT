@@ -826,14 +826,14 @@ void menu_block_user()
     int selected_index = -1;
     const int limit = 5;
     user_list_t users;
-    int duration = 86400; // Durée par défaut de 24h en secondes
+    int duration = 24;
     char input[50];
 
     printf("\nBlock a User\n");
     printf("Duration in hours [default 24]: ");
     fgets(input, sizeof(input), stdin);
     if (atoi(input) > 0) {
-        duration = atoi(input) * 3600;
+        duration = atoi(input);
     }
     strcpy(block_menu.name, "Select a User to Block");
 

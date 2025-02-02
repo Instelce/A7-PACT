@@ -569,7 +569,7 @@ message_list_t db_get_unread_messages(PGconn* conn, int receiver_id, int offset,
 user_list_t db_get_users_who_sent_messages(PGconn* conn)
 {
     PGresult* res;
-    user_list_t user_list = { 0 };
+    user_list_t user_list = { .count = 0, .users = NULL };
     const char* query = "SELECT DISTINCT m.sender_id "
                         "FROM message m "
                         "JOIN member_user mu ON m.sender_id = mu.user_id;";
@@ -582,9 +582,13 @@ user_list_t db_get_users_who_sent_messages(PGconn* conn)
 
     user_list.count = PQntuples(res);
     user_list.users = malloc(user_list.count * sizeof(user_t));
+    if (user_list.users == NULL) {
+        db_error(conn, "Erreur d'allocation mémoire");
+    }
 
     for (int i = 0; i < user_list.count; i++) {
         int sender_id = atoi(PQgetvalue(res, i, 0));
+        user_list.users[i] = init_user(sender_id, "", "");
         db_get_user(conn, &user_list.users[i], sender_id);
         db_set_user_type(conn, &user_list.users[i]);
     }
@@ -592,7 +596,6 @@ user_list_t db_get_users_who_sent_messages(PGconn* conn)
     PQclear(res);
     return user_list;
 }
-
 void add_message(message_list_t* messages, message_t message)
 {
     if (messages->messages == NULL) {
@@ -652,7 +655,7 @@ void db_ban_user(PGconn* conn, int user_id)
     PGresult* res;
     char query[256];
 
-    snprintf(query, sizeof(query), "INSERT INTO banned_user (user_id) VALUES (%d) ON CONFLICT (user_id) DO NOTHING", user_id);
+    snprintf(query, sizeof(query), "INSERT INTO banned_user (user_id) VALUES (%d)", user_id);
 
     res = PQexec(conn, query);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
@@ -680,16 +683,20 @@ void db_unban_user(PGconn* conn, int user_id)
 void db_clean_expired_blocks(PGconn* conn)
 {
     PGresult* res;
-    const char* query = "DELETE FROM blocked_user WHERE NOW() > blocked_date + (duration_seconds || ' seconds')::INTERVAL";
+    const char* query = "DELETE FROM blocked_user WHERE blocked_date + duration * interval '1 hour' < NOW()";
 
     res = PQexec(conn, query);
+    if (PQresultStatus(res) != PGRES_COMMAND_OK) {
+        db_error(conn, "Error when cleaning expired blocks");
+    }
+
     PQclear(res);
 }
 
 void db_get_blocked_users(PGconn* conn, blocked_user_t** blocked_users, int* count)
 {
     PGresult* res;
-    const char* query = "SELECT user_id, for_user_id FROM blocked_user WHERE NOW() < blocked_date + (duration_seconds || ' seconds')::INTERVAL";
+    const char* query = "SELECT user_id, for_user_id, duration FROM blocked_user";
 
     res = PQexec(conn, query);
     if (PQresultStatus(res) != PGRES_TUPLES_OK) {
@@ -711,6 +718,7 @@ void db_get_blocked_users(PGconn* conn, blocked_user_t** blocked_users, int* cou
     for (int i = 0; i < *count; i++) {
         (*blocked_users)[i].user_id = atoi(PQgetvalue(res, i, 0));
         (*blocked_users)[i].for_user_id = atoi(PQgetvalue(res, i, 1));
+        (*blocked_users)[i].duration = atoi(PQgetvalue(res, i, 2));
     }
 
     PQclear(res);
@@ -722,8 +730,7 @@ void db_block_user(PGconn* conn, int user_id, int for_user_id, int duration_seco
     char query[256];
 
     snprintf(query, sizeof(query),
-        "INSERT INTO blocked_user (user_id, for_user_id, duration_seconds, blocked_date) VALUES (%d, %d, %d, NOW()) "
-        "ON CONFLICT (user_id, for_user_id) DO UPDATE SET duration_seconds = EXCLUDED.duration_seconds, blocked_date = EXCLUDED.blocked_date",
+        "INSERT INTO blocked_user (user_id, for_user_id, duration, blocked_date) VALUES (%d, %d, %d, NOW())",
         user_id, for_user_id, duration_seconds);
 
     res = PQexec(conn, query);
