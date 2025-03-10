@@ -31,10 +31,13 @@
     align-items: center;
     gap: .4rem;
     padding: 2px;
-    padding: 2px;
     text-align: center;
     color: rgb(var(--color-gray-4));
     background-color: rgb(var(--color-white));
+}
+
+.category-item:hover{
+    background-color: rgb(var(--color-gray-1));
 }
 
 .category-item svg {

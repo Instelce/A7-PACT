@@ -270,7 +270,7 @@ function displayOffers(Data) {
                         <p class="summary">${offer.summary}</p>
                         <div class="flex flex-row gap-6">
                         ${offer.minimum_price
-                        ? "<div> À partir de " +
+                        ? "<div class='italic'> À partir de " +
                         offer.minimum_price +
                         " € </div >"
                         : "<div class='hidden'></div>"

@@ -5,7 +5,7 @@ use app\core\Application;
 ?>
 
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="utf-8">
