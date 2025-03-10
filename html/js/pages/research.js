@@ -152,10 +152,12 @@ async function applyFilters(newFilters = {}, neworder = null) {
         let Data = await getOffers();
         displayOffers(Data);
         listenerIteneraire(Data);
+        displayMap(Data, true);
     } else {
         let Data = await getOffers();
         displayOffers(Data);
         listenerIteneraire(Data);
+        displayMap(Data);
     }
     offset += 5;
 }
@@ -597,3 +599,37 @@ const observer = new IntersectionObserver(
 );
 
 observer.observe(loaderSection);
+
+
+// ---------------------------------------------------------------------------------------------- //
+// Map
+// ---------------------------------------------------------------------------------------------- //
+
+let map;
+let CoordsTAble = [];
+
+function displayMap(Data, remove = false) {
+    if (remove) {
+        CoordsTAble = [];
+    }
+    Data.forEach((offer) => {
+        CoordsTAble.push([[offer.address.latitude, offer.address.longitude], offer.title, offer.address.city]);
+    });
+
+    if (map) {
+        map.remove();
+    }
+    map = L.map('map', {
+        center: [48.8566, 2.3522],
+        zoom: 5
+    }); 
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    CoordsTAble.forEach((coords) => {
+        let marker = L.marker(coords[0]).addTo(map);
+        marker.bindPopup(`<b>${coords[1]}</b><br>${coords[2]}`);
+    });
+}

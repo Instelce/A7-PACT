@@ -7,6 +7,7 @@ $maxPrice = intval($researchInfo["MaxMinimumPrice"]);
 $this->title = "Recherche";
 $this->cssFile = "research";
 $this->jsFile = "research";
+$this->leaflet = true;
 
 
 
@@ -69,11 +70,11 @@ $iconsNames = [
         foreach ($filtersNames as $key => $filterName) {
             $iconName = $iconsNames[$key];
             ?>
-            <button id="<?php echo strtolower($filterName); ?>" class="category-item">
-                <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
-                <span><?php echo htmlentities($filterName); ?></span>
-            </button>
-            <?php
+        <button id="<?php echo strtolower($filterName); ?>" class="category-item">
+            <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
+            <span><?php echo htmlentities($filterName); ?></span>
+        </button>
+        <?php
         }
         ?>
     </div>
@@ -205,7 +206,10 @@ $iconsNames = [
 </div>
 </div>
 </div>
-
+<!-- map -->
+<div class="absolute top-0 left-0 z-20">
+    <div id="map" class="w-64 h-64"></div>
+</div>
 <!-- Offers, generated in js file -->
 <div class="flex flex-col gap-2 mt-4">
 </div>
