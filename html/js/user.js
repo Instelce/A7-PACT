@@ -11,5 +11,8 @@ export async function getUser() {
         })
         .then(data => {
             return data;
+        })
+        .catch((e) => {
+            console.log("Not connected")
         });
 }

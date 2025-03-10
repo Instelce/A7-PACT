@@ -380,7 +380,6 @@ int main(int argc, char* argv[])
                             log_info("Message (%d) deleted with success", atoi(get_command_param_value(command, "message-id")));
                         } else if (strcmp(command.name, NEW_CHANGE_AVAILABLE) == 0) {
                         } else if (strcmp(command.name, BLOCK_USER) == 0) {
-                            printf("Block\n");
                             db_block_user(conn, atoi(get_command_param_value(command, "user-id")), atoi(get_command_param_value(command, "for-user-id")), atoi(get_command_param_value(command, "duration")));
 
                             server_data->blocked_clients = realloc(server_data->blocked_clients, (server_data->blocked_clients_count + 1) * sizeof(blocked_user_t));

@@ -847,7 +847,7 @@ void menu_block_user()
     printf("Users count: %d\n", users.count);
 
     for (int i = 0; i < users.count; i++) {
-        add_menu_action(&ban_menu, users.users[i].name, NULL, 0);
+        add_menu_action(&block_menu, users.users[i].name, NULL, 0);
     }
     add_menu_action(&block_menu, "Cancel", NULL, 0);
 
@@ -880,6 +880,7 @@ void menu_ban_user()
 {
     clear_term();
     menu_t ban_menu;
+    ban_menu.actions = NULL;
     int selected_index = -1;
     const int limit = 5;
     user_list_t users;
