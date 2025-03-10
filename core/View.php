@@ -15,6 +15,8 @@ class View
 
     public bool $waves = false;
     public bool $leaflet = false;
+    public bool $threejs = false;
+    public bool $noMain = false;
 
     public function renderView(string $view, array $params = [])
     {

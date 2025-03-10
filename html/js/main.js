@@ -8,6 +8,7 @@ import { Tab } from "./components/tabs/Tab.js";
 import { Panel } from "./components/tabs/Panel.js";
 import "./components/dialog.js";
 import "./tchatator.js"
+import {offerRecentlyConsulted} from "./offerRecentlyConsulted.js";
 
 // Do not change
 try {
@@ -199,3 +200,8 @@ for (const star of stars) {
     }
 }
 
+// -------------------------------------------------------------------------- //
+// Load recently consulted offers
+// -------------------------------------------------------------------------- //
+
+offerRecentlyConsulted.loadRecentlyConsulted();

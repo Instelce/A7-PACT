@@ -17,15 +17,16 @@ class Carousel {
      * @param {boolean} [options.navigation=true]
      */
 
-    constructor (element, options = {}){
+    constructor(element, options = {}) {
         this.element = element
         this.options = Object.assign({}, {
-            slidesToScroll : 1,
-            slidesVisible : 1,
-            slidesVisibleMobile :1,
-            loop : false,
-            pagination : false,
-            navigation: true
+            slidesToScroll: 1,
+            slidesVisible: 1,
+            slidesVisibleMobile: 1,
+            loop: false,
+            pagination: false,
+            navigation: true,
+            gap: 1
         }, options)
         console.log(this.options)
         let children = [].slice.call(element.children)
@@ -46,11 +47,11 @@ class Carousel {
             return item
         })
         this.setStyle()
-        if (this.options.navigation){
+        if (this.options.navigation) {
             this.createNavigation()
         }
 
-        if (this.options.pagination){
+        if (this.options.pagination) {
             this.createPagination()
         }
 
@@ -61,7 +62,7 @@ class Carousel {
         this.root.addEventListener('keyup', e => {
             if (e.key === 'ArrowRight' || e.key === 'Right') {
                 this.next()
-            } else if (e.key === 'ArrowLeft' || e.key === 'left'){
+            } else if (e.key === 'ArrowLeft' || e.key === 'left') {
                 this.prev()
             }
         })
@@ -71,21 +72,24 @@ class Carousel {
      * Applique les bonnes dimensions aux éléments du carousel
      */
 
-    setStyle (){
+    setStyle() {
         let ratio = this.items.length / this.slidesVisible
-        this.container.style.width = (ratio * 100) + "%"
-        this.items.forEach(item => item.style.width = ((100 / this.slidesVisible) / ratio) + "%")
+        this.container.style.width = (ratio * 101.5) + "%"
+        this.items.forEach((item, index) => {
+            item.style.width = `calc(${(100 / this.slidesVisible) / ratio}% - ${this.options.gap}rem)`;
+            item.style.marginRight = this.options.gap + "rem"
+        })
     }
 
     /**
      *
      * Créé les flèches de navigation
      */
-    createNavigation () {
+    createNavigation() {
         let nextButton = this.createDivWithClass('carousel__next')
         let prevButton = this.createDivWithClass('carousel__prev')
-        this.root.appendChild(nextButton)
-        this.root.appendChild(prevButton)
+        this.element.appendChild(nextButton)
+        this.element.appendChild(prevButton)
 
         // nextButton.addEventListener('click', () => {console.log("next click", this.currentItem); this.next.bind(this)})
         // prevButton.addEventListener('click', () => {console.log("prev click", this.currentItem); this.prev.bind(this)})
@@ -93,7 +97,7 @@ class Carousel {
         nextButton.addEventListener('click', () => this.next())
         prevButton.addEventListener('click', () => this.prev())
 
-        if(this.options.loop === true) {
+        if (this.options.loop === true) {
             return
         }
 
@@ -104,7 +108,7 @@ class Carousel {
                 prevButton.classList.remove('carousel__prev--hidden')
             }
 
-            if(this.items[this.currentItem + this.slidesVisible] === undefined) {
+            if (this.items[this.currentItem + this.slidesVisible] === undefined) {
                 nextButton.classList.add('carousel__next--hidden')
             } else {
                 nextButton.classList.remove('carousel__next--hidden')
@@ -116,11 +120,11 @@ class Carousel {
      *
      * Créé la pagination dans le DOM
      */
-    createPagination () {
+    createPagination() {
         let pagination = this.createDivWithClass('carousel__pagination')
         let buttons = []
         this.root.appendChild(pagination)
-        for (let i = 0; i < this.items.length; i = i + this.options.slidesToScroll){
+        for (let i = 0; i < this.items.length; i = i + this.options.slidesToScroll) {
             let button = this.createDivWithClass('carousel__pagination__button')
             button.addEventListener('click', () => this.goToItem(i))
             pagination.appendChild(button)
@@ -135,11 +139,11 @@ class Carousel {
         })
     }
 
-    next () {
+    next() {
         this.goToItem(this.currentItem + this.slidesToScroll)
     }
 
-    prev () {
+    prev() {
         this.goToItem(this.currentItem - this.slidesToScroll)
     }
 
@@ -148,18 +152,16 @@ class Carousel {
      * @param {number} index
      */
 
-    goToItem (index){
+    goToItem(index) {
 
         if (index < 0) {
-            if (this.options.loop){
+            if (this.options.loop) {
                 index = this.items.length - this.slidesVisible
             } else {
                 return
             }
-        }
-
-        else if (index >= this.items.length || this.items[this.currentItem + this.slidesVisible] === undefined && index > this.currentItem){
-            if (this.options.loop){
+        } else if (index >= this.items.length || this.items[this.currentItem + this.slidesVisible] === undefined && index > this.currentItem) {
+            if (this.options.loop) {
                 index = 0
             } else {
                 return
@@ -175,13 +177,13 @@ class Carousel {
      *
      * @param {moveCallback} cb
      */
-    onMove (cb){
+    onMove(cb) {
         this.moveCallbacks.push(cb)
     }
 
-    onWindowResize (){
+    onWindowResize() {
         let mobile = window.innerWidth < 800
-        if (mobile !== this.isMobile){
+        if (mobile !== this.isMobile) {
             this.isMobile = mobile
             this.setStyle()
             this.moveCallbacks.forEach(cb => cb(this.currentItem))
@@ -194,7 +196,7 @@ class Carousel {
      * @returns {HTMLElement}
      */
 
-    createDivWithClass (className){
+    createDivWithClass(className) {
         let div = document.createElement('div')
         div.setAttribute('class', className)
         return div
@@ -204,7 +206,7 @@ class Carousel {
      *
      * @returns {number}
      */
-    get slidesToScroll (){
+    get slidesToScroll() {
         return this.isMobile ? 1 : this.options.slidesToScroll
     }
 
@@ -213,18 +215,18 @@ class Carousel {
      *
      * @returns {number}
      */
-    get slidesVisible (){
-        return this.isMobile? this.options.slidesVisibleMobile : this.options.slidesVisible
+    get slidesVisible() {
+        return this.isMobile ? this.options.slidesVisibleMobile : this.options.slidesVisible
     }
 }
 
 let carouselGen = document.querySelectorAll('.carousel-gen')
 for (let el of carouselGen) {
-    new Carousel(el,{
+    new Carousel(el, {
         slidesVisible: parseInt(el.getAttribute('data-slides-visible')),
         slidesToScroll: parseInt(el.getAttribute('data-slides-to-scroll')),
         loop: el.hasAttribute('data-loop'),
-        pagination : el.hasAttribute('data-pagination'),
+        pagination: el.hasAttribute('data-pagination'),
         slidesVisibleMobile: el.hasAttribute('data-slides-visible-mobile') ? parseInt(el.getAttribute('data-slides-visible-mobile')) : 1
     })
 }

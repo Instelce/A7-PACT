@@ -12,7 +12,6 @@ Pour compiler lancez simplement la commander `make client`.
 
 ## Exécuter
 
-Avant d'exécuter le server, assurez-vous que la DB tourne.
+Avant d'exécuter le client, assurez-vous que la DB tourne.
 
-Pour exécuter le server lancez : `./bin/client`.
-
+Pour exécuter le client lancez : `./bin/client`.
