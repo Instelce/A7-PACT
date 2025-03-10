@@ -29,7 +29,7 @@ $class = "";
 
 if ($status == "Fermé") {
     $class = "offer-closed";
-} elseif ($status == "Ferme bientôt") {
+} elseif ($status == "Ferme bientôt" || $status == "Ouvre bientôt") {
     $class = "offer-closing-soon";
 } elseif ($status == "Ouvert") {
     $class = "offer-open";
