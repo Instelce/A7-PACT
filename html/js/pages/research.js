@@ -633,3 +633,35 @@ function displayMap(Data, remove = false) {
         marker.bindPopup(`<b>${coords[1]}</b><br>${coords[2]}`);
     });
 }
+
+let fullScaleMap = document.getElementById("fullScaleMap");
+let mapContainer = document.getElementById("mapContainer");
+let closeMap = document.getElementById("closeMap");
+let mapScale = document.getElementById("map");
+let searchMap = document.getElementById("searchMap");
+
+function ScaleMap() {
+    closeMap.classList.toggle("md:hidden");
+    closeMap.classList.toggle("md:block");
+    fullScaleMap.classList.toggle("md:hidden");
+    fullScaleMap.classList.toggle("md:block");
+    mapScale.classList.toggle("md:w-[13vw]");
+    mapScale.classList.toggle("md:h-[13vw]");
+    mapScale.classList.toggle("xl:w-[18vw]");
+    mapScale.classList.toggle("xl:h-[18vw]");
+    mapScale.classList.toggle("md:w-[70vw]");
+    mapScale.classList.toggle("md:h-[80vh]");
+    mapScale.classList.toggle("w-full");
+    mapScale.classList.toggle("h-[50vh]");
+    mapScale.classList.toggle("w-0");
+    mapScale.classList.toggle("h-0");
+}
+searchMap.addEventListener("click", () => {
+    ScaleMap();
+});
+fullScaleMap.addEventListener("click", () => {
+    ScaleMap();
+});
+closeMap.addEventListener("click", () => {
+    ScaleMap();
+});
