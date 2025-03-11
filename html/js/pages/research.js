@@ -225,7 +225,7 @@ function displayOffers(Data) {
                 let offerRelief = offer.relief || offer.a_la_une ? true : false;
                 const offerElement = document.createElement("a");
                 offerElement.innerHTML = `
-                <article                 
+                <article id="${offer.id}"                
                 ${
                     offerRelief
                         ? "class='research-card enReliefArticle mb-4 relative'"
@@ -622,12 +622,31 @@ observer.observe(loaderSection);
 // Map
 // ---------------------------------------------------------------------------------------------- //
 
-var marker = L.Icon.extend({
-    options: {
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-    },
+const markerOptions = {
+    iconSize: [20, 26],
+};
+
+let restaurantIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/retaurant_pin.svg",
+});
+
+let attractionIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/attraction_pin.svg",
+});
+
+let activityIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/activity_pin.svg",
+});
+let showIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/spectacle_pin.svg",
+});
+let visitIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/visit_pin.svg",
 });
 
 let map;
@@ -645,6 +664,8 @@ function displayMap(Data, remove = false) {
             offer.address.city,
             offer.address.postal_code,
             offer.id,
+            offer.category,
+            offer.rating,
         ]);
     });
 
@@ -662,7 +683,28 @@ function displayMap(Data, remove = false) {
     }).addTo(map);
 
     TableMarker.forEach((coords, index) => {
-        let marker = L.marker(coords[0]).addTo(map);
+        let markerIcon;
+        switch (coords[5]) {
+            case "restaurant":
+                markerIcon = restaurantIcon;
+                break;
+            case "attraction_park":
+                markerIcon = attractionIcon;
+                break;
+            case "activity":
+                markerIcon = activityIcon;
+                break;
+            case "show":
+                markerIcon = showIcon;
+                break;
+            case "visit":
+                markerIcon = visitIcon;
+                break;
+        }
+        let marker = L.marker(coords[0], {
+            icon: markerIcon,
+        }).addTo(map);
+
         let stars = document.createElement("div");
         stars.classList.add("stars");
 
@@ -671,9 +713,9 @@ function displayMap(Data, remove = false) {
             star.classList.add("star");
             star.innerHTML = starSVG;
 
-            if (i < Data[index].rating && i > Data[index].rating - 1) {
+            if (i < coords[6] && i > coords[6] - 1) {
                 star.classList.add("half-fill");
-            } else if (i < Data[index].rating) {
+            } else if (i < coords[6]) {
                 star.classList.add("fill");
             }
 
@@ -681,16 +723,15 @@ function displayMap(Data, remove = false) {
         }
 
         marker.bindPopup(`
-            <a
-            <div class="map-card">
-                <h1>${coords[1]}</h1>
-                <p>${coords[2]}, ${coords[3]}</p>
-                <div>${stars.outerHTML}</div>
-                <div class="flex gap-1 pt-1 mt-2">
-                    <div id="${coords[4]}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
-                    <a href="/offres/${coords[4]}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
-                </div>
-            </div>`);
+            <a class="map-card" href="#${coords[4]}">
+            <h1>${coords[1]}</h1>
+            <p>${coords[2]}, ${coords[3]}</p>
+            <div>${stars.outerHTML}</div>
+            <div class="flex gap-1 pt-1 mt-2">
+                <div id="${coords[4]}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
+                <a href="/offres/${coords[4]}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
+            </div>
+            </a>`);
         marker.on("popupopen", function () {
             document.querySelectorAll(".iteneraire").forEach((element) => {
                 element.addEventListener("click", (event) => {
@@ -706,10 +747,6 @@ function displayMap(Data, remove = false) {
                 });
             });
         });
-    });
-}
-
-        marker.bindPopup(`<b>${coords[1]}</b><br>${coords[2]}`);
     });
 }
 
