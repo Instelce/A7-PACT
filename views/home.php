@@ -115,9 +115,19 @@ $this->noMain = true;
 </section>
 
 
+<section class="home-display mt-12 mb-12 recently-consulted">
+    <h2 class="home-category-title">Consulté récements</h2>
+
+    <!-- Carousel -->
+    <div class="recently-consulted-carousel">
+        <!-- Generated in JS -->
+    </div>
+</section>
+
+
 <section>
     <div class="home-display mt-12 mb-12">
-        <h1 class="home-category-title">Nouvelles offres</h1>
+        <h2 class="home-category-title">Nouvelles offres</h2>
 
         <!-- Carousel -->
         <div class="carousel-gen" data-slides-visible="3" data-slides-to-scroll="1">

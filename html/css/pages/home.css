@@ -86,7 +86,12 @@ header button {
 /* Section */
 
 section {
+    min-height: 60vh;
     padding: 0 20%;
+}
+
+.recently-consulted-carousel {
+    position: relative;
 }
 
 /* --------------------------- */
@@ -173,6 +178,8 @@ section {
     font-family: var(--font-title);
     font-size: var(--typescale-u1);
     margin-bottom: .6rem;
+    font-weight: 600;
+    line-height: 120%;
 }
 
 .home-card .summary {

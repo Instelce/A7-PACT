@@ -349,8 +349,16 @@ class ApiController extends Controller
     {
         $pk = $routeParams['pk'];
         $offer = Offer::findOneByPk($pk);
+        $photo = OfferPhoto::findOne(['offer_id' => $pk]);
+        $author = ProfessionalUser::findOneByPk($offer->professional_id);
+        $address = Address::findOneByPk($offer->address_id);
 
-        return $this->json($offer);
+        $data = $offer->toJson();
+        $data['photo'] = $photo->url_photo;
+        $data['author'] = $author->denomination;
+        $data['location'] = $address->city;
+
+        return $response->json($data);
     }
 
     /**

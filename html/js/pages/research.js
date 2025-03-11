@@ -272,7 +272,7 @@ function displayOffers(Data) {
                 <header>
                 <h2 class="research-card--title">${offer.title}</h2>
                 <div class="flex flex-row gap-2 justify-between items-center">
-                <p>${translateCategory(offer.category)} par <a href="/comptes/${
+                <p>${capitalize(translateCategory(offer.category))} par <a href="/comptes/${
                     offer.professional_id
                 }" class="underline">${
                     offer.profesionalUser["denomination"]
