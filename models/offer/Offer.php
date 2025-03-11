@@ -26,6 +26,7 @@ class Offer extends DBModel
     public string $phone_number = '';
     public ?float $minimum_price = null;
     public float $rating = 0;
+    public int $nbJetonsDispo = 3;
 
     /**
      * @var 'activity' | 'attraction_park' | 'restaurant' | 'show' | 'visit'
@@ -64,12 +65,12 @@ class Offer extends DBModel
 
     public function attributes(): array
     {
-        return ['title', 'summary', 'description', 'offline', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price', 'rating'];
+        return ['title', 'summary', 'description', 'offline', 'view_counter', 'click_counter', 'website', 'phone_number', 'category', 'offer_type_id', 'professional_id', 'address_id', 'minimum_price', 'rating','nbJetonsDispo'];
     }
 
     public function updateAttributes(): array
     {
-        return ['title', 'summary', 'description', 'offline', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price', 'rating'];
+        return ['title', 'summary', 'description', 'offline', 'view_counter', 'click_counter', 'website', 'category', 'phone_number', 'address_id', 'minimum_price', 'rating','nbJetonsDispo'];
     }
 
     public function rules(): array

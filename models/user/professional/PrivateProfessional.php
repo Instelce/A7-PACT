@@ -2,7 +2,9 @@
 
 namespace app\models\user\professional;
 use app\core\DBModel;
+use app\models\offer\Offer;
 use app\models\payment\MeanOfPayment;
+use app\models\opinion\OpinionBlackList;
 
 class PrivateProfessional extends DBModel
 {
@@ -48,4 +50,5 @@ class PrivateProfessional extends DBModel
         }
         return $mean->specific();
     }
+
 }
