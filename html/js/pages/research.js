@@ -1,3 +1,5 @@
+import {capitalize, translateCategory} from "../utils.js";
+
 //initialize the global parameters and save them permanently
 let filters = {};
 let order = null;
@@ -321,20 +323,6 @@ function displayOffers(Data) {
     }
 }
 
-function translateCategory(category) {
-    switch (category) {
-        case "attraction_park":
-            return "parc d'attraction";
-        case "visit":
-            return "visite";
-        case "restaurant":
-            return "restaurant";
-        case "activity":
-            return "activité";
-        case "show":
-            return "spectacle";
-    }
-}
 // ---------------------------------------------------------------------------------------------- //
 // Pop up
 // ---------------------------------------------------------------------------------------------- //
