@@ -70,7 +70,8 @@ $iconsNames = [
 <div class="flex flex-col">
     <div class="flex flex-row gap-1 lg:gap-2">
         <x-input rounded>
-            <input class="search-input" slot="input" type="text" placeholder="Rechercher par nom d'offre">
+            <input class="search-input" slot="input" type="text" placeholder="Rechercher par nom d'offre"
+                title="Rechercher par nom d'offre">
             <button slot="button" id="filterButton" class="button gray p-4" title="Filtrer les offres">
                 <i data-lucide="sliders-horizontal" class="w-[18px] h-[18px]"> </i>
             </button>
@@ -84,7 +85,8 @@ $iconsNames = [
         foreach ($filtersNames as $key => $filterName) {
             $iconName = $iconsNames[$key];
             ?>
-        <button id="<?php echo strtolower($filterName); ?>" class="category-item">
+        <button id="<?php echo strtolower($filterName); ?>" class="category-item"
+            title="Filtrer par <?php echo htmlentities($filterName); ?>">
             <i data-lucide="<?php echo $iconName ?>" class="h-[20px] w-[20px]"></i>
             <span><?php echo htmlentities($filterName); ?></span>
         </button>
@@ -95,7 +97,7 @@ $iconsNames = [
 </div>
 <!-- more filters-->
 <div id="popup"
-    class="close hidden lg:fixed lg:inset-0 lg:bg-black/50 flex lg:justify-start justify-between items-start z-40">
+    class="close hidden lg:fixed lg:inset-0 lg:bg-black/50 flex lg:justify-start justify-between items-start z-50">
     <div
         class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[400px] w-full h-full lg:mb-0 p-2 lg:p-6 lg:pt-[84px] flex flex-row justify-start items-start overflow-y-scroll">
         <!-- Contenu de la popup -->
@@ -107,10 +109,21 @@ $iconsNames = [
             </x-input> -->
 
         <div class="flex flex-col gap-1 lg:gap-4 w-full">
-
+            <div class="w-full flex flex-row justify-end items-center">
+                <div id="closeFilters" class="cursor-pointer" title="Fermer les filtres">
+                    <svg fill="#000000" viewBox="0 0 32 32" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path
+                                d="M18.8,16l5.5-5.5c0.8-0.8,0.8-2,0-2.8l0,0C24,7.3,23.5,7,23,7c-0.5,0-1,0.2-1.4,0.6L16,13.2l-5.5-5.5 c-0.8-0.8-2.1-0.8-2.8,0C7.3,8,7,8.5,7,9.1s0.2,1,0.6,1.4l5.5,5.5l-5.5,5.5C7.3,21.9,7,22.4,7,23c0,0.5,0.2,1,0.6,1.4 C8,24.8,8.5,25,9,25c0.5,0,1-0.2,1.4-0.6l5.5-5.5l5.5,5.5c0.8,0.8,2.1,0.8,2.8,0c0.8-0.8,0.8-2.1,0-2.8L18.8,16z">
+                            </path>
+                        </g>
+                    </svg>
+                </div>
+            </div>
             <div>
                 <h3 class="lg:block hidden section-header mb-2">Tris</h3>
-
                 <x-select id="sort">
                     <span slot="trigger">Tris</span>
                     <div slot="options">
@@ -214,10 +227,10 @@ $iconsNames = [
 </div>
 </div>
 <!-- map -->
-<div id="mapContainer" class="md:fixed md:bottom-[1vw] md:right-[1vw] z-50 flex flex-col items-start rounded-lg">
+<div id="mapContainer" class="md:fixed md:bottom-[1vw] md:right-[1vw] z-20 flex flex-col items-start rounded-lg">
     <div class="w-full bg-white rounded-t-lg">
         <svg viewBox="0 0 24 24" fill="none" width="32" height="32" xmlns="http://www.w3.org/2000/svg" id="fullScaleMap"
-            class="hidden md:block cursor-pointer">
+            class="hidden md:block cursor-pointer" title="Agrandir la carte">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
             <g id="SVGRepo_iconCarrier">
@@ -227,7 +240,7 @@ $iconsNames = [
             </g>
         </svg>
         <svg fill="#000000" viewBox="0 0 32 32" width="32" height="32" xmlns="http://www.w3.org/2000/svg" id="closeMap"
-            class="hidden md:hidden cursor-pointer">
+            class="hidden md:hidden cursor-pointer" title="Fermer la carte">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
             <g id="SVGRepo_iconCarrier">
@@ -237,7 +250,7 @@ $iconsNames = [
             </g>
         </svg>
     </div>
-    <div id="map" class="map w-0 h-0 md:w-[13vw] md:h-[13vw] xl:w-[18vw] xl:h-[18vw] all-transition duration-500"></div>
+    <div id="map" class="map w-0 h-0 md:w-[13vw] md:h-[13vw] xl:w-[18vw] xl:h-[18vw] z-10"></div>
 </div>
 <!-- Offers, generated in js file -->
 <div class="flex flex-col gap-2 mt-4">

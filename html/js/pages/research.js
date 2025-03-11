@@ -319,6 +319,7 @@ function translateCategory(category) {
 
 let popup = document.getElementById("popup");
 let filterButton = document.getElementById("filterButton");
+let closeFilters = document.getElementById("closeFilters");
 const popupContent = document.querySelector(".popup-content");
 
 filterButton.addEventListener("click", () => {
@@ -332,6 +333,12 @@ filterButton.addEventListener("click", () => {
     }
 });
 
+closeFilters.addEventListener("click", () => {
+    if (!popup.classList.contains("close")) {
+        popup.classList.add("close");
+        setTimeout(() => { popup.classList.add("hidden"); }, 500);
+    }
+});
 popup.addEventListener("click", (event) => {
     if (!popup.classList.contains("close") && !popupContent.contains(event.target)) {
         popup.classList.add("close");
@@ -649,12 +656,14 @@ function ScaleMap() {
     mapScale.classList.toggle("md:h-[13vw]");
     mapScale.classList.toggle("xl:w-[18vw]");
     mapScale.classList.toggle("xl:h-[18vw]");
-    mapScale.classList.toggle("md:w-[70vw]");
-    mapScale.classList.toggle("md:h-[80vh]");
+    mapScale.classList.toggle("md:w-full");
+    mapScale.classList.toggle("md:h-[70vh]");
     mapScale.classList.toggle("w-full");
     mapScale.classList.toggle("h-[50vh]");
     mapScale.classList.toggle("w-0");
     mapScale.classList.toggle("h-0");
+    mapContainer.classList.toggle("md:fixed");
+    mapContainer.classList.toggle("md:block");
 }
 searchMap.addEventListener("click", () => {
     ScaleMap();
