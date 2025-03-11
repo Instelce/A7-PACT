@@ -547,7 +547,6 @@ function listenerIteneraire(Data) {
     let iteneraire = document.querySelectorAll(".iteneraire");
     iteneraire.forEach((element) => {
         element.addEventListener("click", (event) => {
-            console.log(event.target.id);
             let offerId = event.target.id;
             Data.forEach((offer) => {
                 if (offer.id == offerId) {
@@ -660,9 +659,10 @@ let visitIcon = L.icon({
 
 let map;
 let TableMarker = [];
+let DataTableMap;
 
 function displayMap(Data, remove = false) {
-    console.log(Data);
+    DataTableMap = Data;
     let groupMarkers = L.markerClusterGroup();
     if (remove) {
         TableMarker = [];
@@ -679,12 +679,32 @@ function displayMap(Data, remove = false) {
         ]);
     });
 
+
     if (map) {
         map.remove();
     }
+
+    let userCoords = [48.1782600, -2.7543300];
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                console.log("Geolocation is supported by this browser.");
+                userCoords = [position.coords.latitude, position.coords.longitude];
+            },
+            (error) => {
+                console.error("Error getting user location:", error);
+            }
+        );
+    } else {
+        console.error("Geolocation is not supported by this browser.");
+    }
+
+    console.log(userCoords);
+
     map = L.map("map", {
-        center: [48.8566, 2.3522],
-        zoom: 5,
+        center: userCoords,
+        zoom: 8,
     });
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
@@ -765,26 +785,27 @@ function displayMap(Data, remove = false) {
 let fullScaleMap = document.getElementById("fullScaleMap");
 let mapContainer = document.getElementById("mapContainer");
 let closeMap = document.getElementById("closeMap");
-let mapScale = document.getElementById("map");
 let searchMap = document.getElementById("searchMap");
+let mapInteractive = document.getElementById("map");
+let topPart = document.getElementById("topPart");
+let searchPart = document.getElementById("searchPart")
 
 function ScaleMap() {
     closeMap.classList.toggle("md:hidden");
     closeMap.classList.toggle("md:block");
     fullScaleMap.classList.toggle("md:hidden");
     fullScaleMap.classList.toggle("md:block");
-    mapScale.classList.toggle("md:w-[13vw]");
-    mapScale.classList.toggle("md:h-[13vw]");
-    mapScale.classList.toggle("xl:w-[18vw]");
-    mapScale.classList.toggle("xl:h-[18vw]");
-    mapScale.classList.toggle("md:w-full");
-    mapScale.classList.toggle("md:h-[70vh]");
-    mapScale.classList.toggle("w-full");
-    mapScale.classList.toggle("h-[50vh]");
-    mapScale.classList.toggle("w-0");
-    mapScale.classList.toggle("h-0");
-    mapContainer.classList.toggle("md:fixed");
-    mapContainer.classList.toggle("md:block");
+    mapContainer.classList.toggle("w-0");
+    mapContainer.classList.toggle("h-0");
+    mapContainer.classList.toggle("md:w-1/3");
+    mapContainer.classList.toggle("md:h-full");
+    mapContainer.classList.toggle("w-full");
+    mapContainer.classList.toggle("h-[50vh]");
+    mapContainer.classList.toggle("md:h-[70vh]");
+    topPart.classList.toggle("md:flex-row");
+    topPart.classList.toggle("md:h-[170px]");
+    searchPart.classList.toggle("md:w-2/3");
+    displayMap(DataTableMap);
 }
 searchMap.addEventListener("click", () => {
     ScaleMap();
