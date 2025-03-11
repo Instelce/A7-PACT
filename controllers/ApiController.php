@@ -16,6 +16,7 @@ use app\models\offer\OfferType;
 use app\models\offer\schedule\OfferSchedule;
 use app\models\offer\schedule\LinkSchedule;
 use app\models\opinion\Opinion;
+use app\models\opinion\OpinionBlackList;
 use app\models\opinion\OpinionDislike;
 use app\models\opinion\OpinionLike;
 use app\models\opinion\OpinionPhoto;
