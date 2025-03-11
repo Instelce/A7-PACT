@@ -216,8 +216,7 @@ function displayOffers(Data) {
 
                     if (i < offer.rating && i > offer.rating - 1) {
                         star.classList.add("half-fill");
-                    }
-                    else if (i < offer.rating) {
+                    } else if (i < offer.rating) {
                         star.classList.add("fill");
                     }
 
@@ -226,42 +225,50 @@ function displayOffers(Data) {
                 let offerRelief = offer.relief || offer.a_la_une ? true : false;
                 const offerElement = document.createElement("a");
                 offerElement.innerHTML = `
-                <article                 
-                ${offerRelief
+                <article id="${offer.id}"                
+                ${
+                    offerRelief
                         ? "class='research-card enReliefArticle mb-4 relative'"
                         : "class='research-card mb-4 relative'"
-                    }>
+                }>
                 
                 
-                ${offerRelief
+                ${
+                    offerRelief
                         ? "<img class='enReliefIcon' src='/assets/images/reliefIcon.svg' alt='Icone offre en relief'>"
                         : "<div class='hidden'></div>"
-                    }
+                }
                 
                 <div                
-                ${offerRelief
+                ${
+                    offerRelief
                         ? "class='research-card--photo enRelief'"
                         : "class='research-card--photo'"
-                    }>
+                }>
                 
-                ${offer.photos[0]
+                ${
+                    offer.photos[0]
                         ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
                         : ""
-                    }
+                }
                 </div>
                 <div                 
-                ${offerRelief
+                ${
+                    offerRelief
                         ? "class='research-card--body enRelief'"
                         : "class='research-card--body'"
-                    }">
+                }">
                 
                 <header>
                 <h2 class="research-card--title">${offer.title}</h2>
                 <div class="flex flex-row gap-2 justify-between items-center">
-                <p>${translateCategory(offer.category)} par <a href="/comptes/${offer.professional_id
-                    }" class="underline">${offer.profesionalUser["denomination"]
-                    }</a></p>
-                    <div class="flex flex-row gap-1 justify-center items-center">${stars.outerHTML
+                <p>${translateCategory(offer.category)} par <a href="/comptes/${
+                    offer.professional_id
+                }" class="underline">${
+                    offer.profesionalUser["denomination"]
+                }</a></p>
+                    <div class="flex flex-row gap-1 justify-center items-center">${
+                        stars.outerHTML
                     }
                         </div>
                     </div>
@@ -269,27 +276,32 @@ function displayOffers(Data) {
                         <div class="flex flex-col gap-2">
                         <p class="summary">${offer.summary}</p>
                         <div class="flex flex-row gap-6">
-                        ${offer.minimum_price
-                        ? "<div class='italic'> À partir de " +
-                        offer.minimum_price +
-                        " € </div >"
-                        : "<div class='hidden'></div>"
-                    }
-                        ${offer.status
-                        ? "<div>" + offer.status + "</div >"
-                        : "<div class='hidden'></div>"
-                    }
-                        ${offer.address.city
-                        ? "<div>" + offer.address.city + "</div>"
-                        : "<div class='hidden'></div>"
-                    }
+                        ${
+                            offer.minimum_price
+                                ? "<div> À partir de " +
+                                  offer.minimum_price +
+                                  " € </div >"
+                                : "<div class='hidden'></div>"
+                        }
+                        ${
+                            offer.status
+                                ? "<div>" + offer.status + "</div >"
+                                : "<div class='hidden'></div>"
+                        }
+                        ${
+                            offer.address.city
+                                ? "<div>" + offer.address.city + "</div>"
+                                : "<div class='hidden'></div>"
+                        }
                         </div >
                         </div >
                     <div class="flex gap-2 mt-auto pt-4">
-                        <div id="${offer.id
-                    }" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
-                        <a href="/offres/${offer.id
-                    }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
+                        <div id="${
+                            offer.id
+                        }" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
+                        <a href="/offres/${
+                            offer.id
+                        }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
                     </div>
             </article >
                     `;
@@ -326,10 +338,11 @@ filterButton.addEventListener("click", () => {
     if (popup.classList.contains("close")) {
         popup.classList.remove("close");
         popup.classList.remove("hidden");
-    }
-    else {
+    } else {
         popup.classList.add("close");
-        setTimeout(() => { popup.classList.add("hidden"); }, 500);
+        setTimeout(() => {
+            popup.classList.add("hidden");
+        }, 500);
     }
 });
 
@@ -340,9 +353,14 @@ closeFilters.addEventListener("click", () => {
     }
 });
 popup.addEventListener("click", (event) => {
-    if (!popup.classList.contains("close") && !popupContent.contains(event.target)) {
+    if (
+        !popup.classList.contains("close") &&
+        !popupContent.contains(event.target)
+    ) {
         popup.classList.add("close");
-        setTimeout(() => { popup.classList.add("hidden"); }, 500);
+        setTimeout(() => {
+            popup.classList.add("hidden");
+        }, 500);
     }
 });
 
@@ -607,37 +625,135 @@ const observer = new IntersectionObserver(
 
 observer.observe(loaderSection);
 
-
 // ---------------------------------------------------------------------------------------------- //
 // Map
 // ---------------------------------------------------------------------------------------------- //
 
+const markerOptions = {
+    iconSize: [20, 26],
+};
+
+let restaurantIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/retaurant_pin.svg",
+});
+
+let attractionIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/attraction_pin.svg",
+});
+
+let activityIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/activity_pin.svg",
+});
+let showIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/spectacle_pin.svg",
+});
+let visitIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/visit_pin.svg",
+});
+
 let map;
-let CoordsTAble = [];
+let TableMarker = [];
 
 function displayMap(Data, remove = false) {
+    console.log(Data);
     if (remove) {
-        CoordsTAble = [];
+        TableMarker = [];
     }
     Data.forEach((offer) => {
-        CoordsTAble.push([[offer.address.latitude, offer.address.longitude], offer.title, offer.address.city]);
+        TableMarker.push([
+            [offer.address.latitude, offer.address.longitude],
+            offer.title,
+            offer.address.city,
+            offer.address.postal_code,
+            offer.id,
+            offer.category,
+            offer.rating,
+        ]);
     });
 
     if (map) {
         map.remove();
     }
-    map = L.map('map', {
+    map = L.map("map", {
         center: [48.8566, 2.3522],
-        zoom: 5
-    }); 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        zoom: 5,
+    });
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    CoordsTAble.forEach((coords) => {
-        let marker = L.marker(coords[0]).addTo(map);
-        marker.bindPopup(`<b>${coords[1]}</b><br>${coords[2]}`);
+    TableMarker.forEach((coords, index) => {
+        let markerIcon;
+        switch (coords[5]) {
+            case "restaurant":
+                markerIcon = restaurantIcon;
+                break;
+            case "attraction_park":
+                markerIcon = attractionIcon;
+                break;
+            case "activity":
+                markerIcon = activityIcon;
+                break;
+            case "show":
+                markerIcon = showIcon;
+                break;
+            case "visit":
+                markerIcon = visitIcon;
+                break;
+        }
+        let marker = L.marker(coords[0], {
+            icon: markerIcon,
+        }).addTo(map);
+
+        let stars = document.createElement("div");
+        stars.classList.add("stars");
+
+        for (let i = 0; i < 5; i++) {
+            let star = document.createElement("span");
+            star.classList.add("star");
+            star.innerHTML = starSVG;
+
+            if (i < coords[6] && i > coords[6] - 1) {
+                star.classList.add("half-fill");
+            } else if (i < coords[6]) {
+                star.classList.add("fill");
+            }
+
+            stars.appendChild(star);
+        }
+
+        marker.bindPopup(`
+            <a class="map-card" href="#${coords[4]}">
+            <h1>${coords[1]}</h1>
+            <p>${coords[2]}, ${coords[3]}</p>
+            <div>${stars.outerHTML}</div>
+            <div class="flex gap-1 pt-1 mt-2">
+                <div id="${coords[4]}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
+                <a href="/offres/${coords[4]}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
+            </div>
+            </a>`);
+        marker.on("popupopen", function () {
+            document.querySelectorAll(".iteneraire").forEach((element) => {
+                element.addEventListener("click", (event) => {
+                    let offerId = event.target.id;
+                    Data.forEach((offer) => {
+                        if (offer.id == offerId) {
+                            let latitude = offer.address["latitude"];
+                            let longitude = offer.address["longitude"];
+                            let url = `https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=${latitude},${longitude}`;
+                            window.open(url, "_blank");
+                        }
+                    });
+                });
+            });
+        });
     });
 }
 
