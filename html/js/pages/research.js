@@ -805,7 +805,7 @@ function ScaleMap() {
     topPart.classList.toggle("md:flex-row");
     topPart.classList.toggle("md:h-[170px]");
     searchPart.classList.toggle("md:w-2/3");
-    displayMap(DataTableMap);
+    displayMap(DataTableMap, true);
 }
 searchMap.addEventListener("click", () => {
     ScaleMap();
