@@ -50,6 +50,8 @@ function getCategoryFromFileName($filename) {
         "parcs-animaliers" => "activity",
         "fest-noz" => "show",
         "menhirs-dolmens" => "visit",
+        "concerts" => "show",
+        "sorties-nature" => "activity",
     };
 }
 
@@ -154,7 +156,8 @@ foreach ($files as $file) {
             $show = new ShowOffer();
             $show->offer_id = $offer->id;
             $show->duration = rand(1, 4);
-            $show->capacity = rand(10, 100);
+            $capcacities = [100, 120, 130, 140, 150, 160, 170, 180, 190, 200, 250, 300];
+            $show->capacity = $capcacities[array_rand($capcacities)];
             $show->save();
         } else {
         }

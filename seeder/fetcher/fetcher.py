@@ -6,8 +6,8 @@ import json
 import re
 
 def main():
-    file_name = "fest-noz"
-    url = 'https://www.cotesdarmor.com/agenda/culture-bretonne/'
+    file_name = "sorties-nature"
+    url = 'https://www.cotesdarmor.com/agenda/sorties-nature/'
 
     service = Service('./geckodriver')
     driver = webdriver.Firefox(service=service)
@@ -73,9 +73,9 @@ def main():
 
             for link in sidebar_links:
                 match = re.search(r'(-?\d+\.\d+),(-?\d+\.\d+)', link.get_attribute('href'))
-                if link.text == 'Voir le numéro':
-                    print(link.get_attribute('href'))
-                    plage_data['phone'] = link.get_attribute('href')
+#                 if link.text == 'Voir le numéro':
+#                     print(link.get_attribute('href'))
+#                     plage_data['phone'] = link.get_attribute('href')
                 if link.text == 'E-mail':
                     print(link.get_attribute('href'))
                     plage_data['email'] = link.get_attribute('href')
