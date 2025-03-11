@@ -22,6 +22,7 @@ use app\core\Application;
 
     <?php if ($this->leaflet) { ?>
         <link rel="stylesheet" href="/css/parts/leaflet.css" />
+
     <?php } ?>
 
     <?php if ($this->cssFile): ?>
@@ -344,16 +345,17 @@ use app\core\Application;
     <?php if ($this->leaflet) { ?>
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
     <?php } ?>
 
     <?php if ($this->threejs) { ?>
         <script type="importmap">
-                        {
-                          "imports": {
-                            "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
-                          }
-                        }
-                    </script>
+                                {
+                                  "imports": {
+                                    "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
+                                  }
+                                }
+                            </script>
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
     <?php } ?>
 
