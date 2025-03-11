@@ -2,6 +2,8 @@
 /** @var $this \app\core\View */
 
 /** @var $offersALaUne array */
+/** @var $newOffers \app\models\offer\Offer[] */
+
 
 use app\core\Application;
 
@@ -53,9 +55,9 @@ $this->noMain = true;
         <div class="carousel-gen" data-slides-visible="3" data-slides-to-scroll="1">
 
             <?php foreach ($offersALaUne as $offer) { ?>
-                <a href="/offres/<?php echo $offer["id"]; ?>">
-
                     <div class="home-card">
+                        <a href="/offres/<?php echo $offer["id"]; ?>">
+
                         <!-- Image -->
                         <div class="image-container">
                             <img src="<?php echo $offer["image"]; ?>"
@@ -110,7 +112,6 @@ $this->noMain = true;
         </div>
     </div>
 </section>
-
 
 <section class="home-display mb-12 mt-12">
     <h1 class="home-category-title">Venez découvrir</h1>
