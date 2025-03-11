@@ -137,9 +137,25 @@ export function createOpinionCard(opinion, dashboard = false) {
                         `}
                 </div>                          
             </div>
-            <button class="report-card button gray spaced flex flex-row gap-1" data-dialog-trigger="report-dialog">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>                  
-            </button>    
+            <div class="option-parent">
+                <button class="button-management-options button gray spaced flex flex-row gap-1" title="more informations">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                </button>
+                <div class="management-options">
+                    <button class="report-card" data-dialog-trigger="report-dialog" title="signal">
+                        <div class="flex justify-between">
+                            Signaler
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>                  
+                        </div>
+                    </button>    
+                    <button data-dialog-trigger="blacklist-dialog" title="blacklist">
+                        <div class="flex justify-between">
+                            Blacklister
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>                    
+                        </div>
+                    </button>    
+                </div>
+            </div>
         </header>
         
         <!-- Stars -->
@@ -149,36 +165,37 @@ export function createOpinionCard(opinion, dashboard = false) {
             <p class="text-sm text-gray-4">votre ${translateCategory(opinion.offer.category)}</p>
         </div>` : ''}
         
-        <div class="flex flex-col gap-1 mb-4"> 
+        <div class="flex flex-col gap-1"> 
             <!-- Title -->
             <h3 class="heading-2 font-title">${opinion.title}</h3>
     
             <!-- Comment -->
             <p>${opinion.comment}</p>
             
-            ${dashboard ? `<p class="mt-2">Le ${formatDate(opinion.visit_date)} en ${opinion.visit_context}</p>` : ``}
+            <div class="flex justify-between">
+                ${dashboard ? `<p class="mt-2">Le ${formatDate(opinion.visit_date)} en ${opinion.visit_context}</p>` : ``}
+                <!-- Likes -->
+                <div class="flex flex-row gap-4">
+                    <div class="flex flex-row gap-2 items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-up"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+                        <p>${opinion.likes}</p>
+                    </div>
+                    <div class="flex flex-row gap-2 items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-down"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></svg>
+                        <p>${opinion.dislikes}</p>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- Photos -->
         ${photos.outerHTML}
         
-        <!-- Likes -->
-        <div class="flex flex-row gap-4">
-            <div class="flex flex-row gap-2 items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-up"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
-                <p>${opinion.likes}</p>
-            </div>
-            <div class="flex flex-row gap-2 items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-down"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></svg>
-                <p>${opinion.dislikes}</p>
-            </div>
-        </div>
-        
         <br>
         
         <!-- Formulaire -->
         ${dashboard ? `<form id="replyForm" class="reply-form" method="post">
-            <label for="dataInput">Message</label>
+            <label for="dataInput"></label>
             <input type="hidden" name="form-name" value="add-reply">
             <input type="hidden" name="opinion_id" value="${opinion.id}">
             <textarea id="dataInput" name="comment" required maxlength="250" placeholder="Entrez votre réponse ici..."></textarea>
@@ -233,7 +250,26 @@ export function createOpinionCard(opinion, dashboard = false) {
         
 `;
 
-    // Manage reports
+    /* options to blacklist opinion for example*/
+
+    const actionsOpinionButton = card.querySelector('.button-management-options');
+    const actionsOpinionOptions = card.querySelector('.management-options');
+
+    if (actionsOpinionButton && actionsOpinionOptions) {
+        actionsOpinionButton.addEventListener('click', function (event) {
+            actionsOpinionOptions.classList.toggle('open');
+            console.log(actionsOpinionOptions);
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!actionsOpinionOptions.contains(event.target) && !actionsOpinionButton.contains(event.target)) {
+                actionsOpinionOptions.classList.remove('open');
+            }
+        });
+    }
+
+
+            // Manage reports
     let reportButton = card.querySelector(".report-card");
     let reportSvg = reportButton.querySelector('svg');
 
@@ -305,3 +341,5 @@ function formatDate(string) {
     let date = new Date(string);
     return `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
 }
+
+
