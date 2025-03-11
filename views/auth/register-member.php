@@ -83,7 +83,7 @@ $this->cssFile = 'register-member';
                 <label for="switch-period" id="switch-period-label">J'accepte les <a href="../../conditions" class="link">conditions générales d'utilisation</a></label>
             </div>
         </div>
-        <button type="submit" class="button w-full ">S'inscrire</button>
+        <button type="submit" class="button w-full">S'inscrire</button>
     </div>
     <?php \app\core\form\Form::end() ?>
 </div>

@@ -35,6 +35,7 @@ use app\models\user\professional\ProfessionalUser;
 use app\core\Utils;
 use DateTime;
 use DateInterval;
+use Exception;
 
 
 class ApiController extends Controller
@@ -237,36 +238,52 @@ class ApiController extends Controller
 
             //add status
             $openingHours = $offer->schedule();
-            $dayOfWeek = strtolower((new DateTime())->format('N'));
+            $dayOfWeek = (new DateTime())->format('N');
+            $todayHour = null;
+
             foreach ($openingHours as $openingHour) {
                 if ($openingHour->day == $dayOfWeek) {
                     $todayHour = $openingHour;
+                    break;
                 }
             }
 
-            $closingHour = $todayHour->closing_hours;
-            $openingHour = $todayHour->opening_hours;
-
             if ($todayHour) {
-                if ($closingHour === 'fermé') {
+                $closingHour = $todayHour->closing_hours;
+                $openingHour = $todayHour->opening_hours;
+
+                if ($closingHour === 'fermé' || $openingHour === 'fermé') {
                     $status = "Fermé";
                 } else {
-                    $closingTime = new DateTime($closingHour);
-                    $openingTime = new DateTime($openingHour);
+                    try {
+                        $closingTime = new DateTime($closingHour);
+                        $openingTime = new DateTime($openingHour);
+                        $currentTime = new DateTime();
 
-                    $currentTime = new DateTime();
-
-                    if ($closingTime <= $currentTime && $openingTime >= $currentTime) {
-                        $status = "Fermé";
-                    } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
-                        $status = "Ferme bientôt";
-                    } else {
-                        $status = "Ouvert";
+                        if ($currentTime < $openingTime) {
+                            if ($openingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
+                                $status = "Ouvre bientôt";
+                            } else {
+                                $status = "Fermé";
+                            }
+                        } elseif ($currentTime >= $openingTime && $currentTime < $closingTime) {
+                            $status = "Ouvert";
+                        } elseif ($currentTime >= $closingTime) {
+                            $status = "Fermé";
+                        } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
+                            $status = "Ferme bientôt";
+                        } else {
+                            $status = "Non renseigné";
+                        }
+                    } catch (Exception $e) {
+                        $status = null;
                     }
                 }
             } else {
-                $status = NULL;
+                $status = null;
             }
+
+
             $data[$i]['status'] = $status;
 
             // Add offer type

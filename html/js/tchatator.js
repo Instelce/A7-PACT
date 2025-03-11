@@ -102,7 +102,6 @@ if (chat) {
     }
 }
 
-
 getUser().then(_user => {
     user = _user;
 
@@ -270,6 +269,7 @@ getUser().then(_user => {
         })
     }
 })
+
 
 function loadConversations() {
     fetch('/api/messages')

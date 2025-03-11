@@ -7,7 +7,7 @@ use app\core\Application;
 ?>
 
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="utf-8">
@@ -35,7 +35,9 @@ use app\core\Application;
 
     <input type="hidden" class="app-environment" value="<?php echo $_ENV['APP_ENVIRONMENT'] ?>">
 
-    <div class="height-top"></div>
+    <?php if (!$this->noMain) { ?>
+        <div class="height-top"></div>
+    <?php } ?>
 
     <!-- Loader -->
     <div class="loader">
@@ -45,7 +47,6 @@ use app\core\Application;
             <path d="M21 12a9 9 0 1 1-6.219-8.56" />
         </svg>
     </div>
-
 
     <!-- Navbar -->
     <nav class="navbar">
@@ -68,7 +69,7 @@ use app\core\Application;
             <?php } ?>
         </div>
         <div class="navbar-right">
-            <a href="/recherche" class="button gray icon-left icon-right no-border hidden md:flex">
+            <a href="/recherche" class="button sm gray icon-left icon-right no-border hidden md:flex">
                 Recherche
                 <i data-lucide="search"></i>
             </a>
@@ -210,18 +211,25 @@ use app\core\Application;
         </div>
     <?php } ?>
 
+    <!-- With main -->
+    <?php if (!$this->noMain) { ?>
+        <main class="main-container">
+            <!-- Show alert -->
+            <?php if (Application::$app->session->getFlash('success')): ?>
+                <div class="alert success">
+                    <?php echo Application::$app->session->getFlash('success') ?>
+                </div>
+            <?php endif; ?>
 
-    <main class="main-container">
-        <!-- Show alert -->
-        <?php if (Application::$app->session->getFlash('success')): ?>
-            <div class="alert success">
-                <?php echo Application::$app->session->getFlash('success') ?>
-            </div>
-        <?php endif; ?>
+            <!-- Content of the view-->
+            {{content}}
+        </main>
+    <?php } ?>
 
-        <!-- Content of the view-->
+    <!-- Without main -->
+    <?php if ($this->noMain) { ?>
         {{content}}
-    </main>
+    <?php } ?>
 
 
     <!-- Bottom navbar for mobile -->
@@ -324,8 +332,18 @@ use app\core\Application;
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <?php } ?>
 
-    <script type="module" src="/js/main.js"></script>
+    <?php if ($this->threejs) { ?>
+        <script type="importmap">
+            {
+              "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
+              }
+            }
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+    <?php } ?>
 
+    <script type="module" src="/js/main.js"></script>
 
     <?php if ($this->jsFile) { ?>
         <script type="module" src="/js/pages/<?php echo $this->jsFile ?>.js"></script>
