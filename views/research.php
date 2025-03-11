@@ -110,7 +110,7 @@ $iconsNames = [
 </div>
 <!-- more filters-->
 <div id="popup"
-    class="close hidden lg:fixed lg:inset-0 lg:bg-black/50 flex lg:justify-start justify-between items-start z-50">
+    class="close hidden lg:fixed lg:inset-0 lg:bg-white/50 flex lg:justify-start justify-between items-start z-50">
     <div
         class="popup-content bg-white lg:rounded-lg lg:shadow-lg lg:max-w-[400px] w-full h-full lg:mb-0 p-2 lg:p-6 lg:pt-[84px] flex flex-row justify-start items-start overflow-y-scroll">
         <!-- Contenu de la popup -->

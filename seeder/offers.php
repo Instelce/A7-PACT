@@ -59,7 +59,8 @@ $files = glob(__DIR__ . "/fetcher/data/*.json");
 $professionals = ProfessionalUser::all();
 
 echo "Found " . count($files) . " files to process\n";
-echo "Professionals count: " . count($professionals) . "\n";
+
+$startTime = microtime(true);
 
 foreach ($files as $file) {
     echo "Processing $file...\n";
@@ -69,8 +70,8 @@ foreach ($files as $file) {
 
     foreach ($data as $offerData) {
         echo "\tProcessing offer {$offerData['title']}...\n";
-        if (empty($offerData['longitude']) && empty($offerData['latitude'])) {
-            echo "\t  Skip offer {$offerData['title']} because of missing location\n";
+        if (empty($offerData['longitude']) || empty($offerData['latitude']) || empty($offerData['title']) || empty($offerData['description']) || empty($offerData['images'])) {
+            echo "\t  Skip offer because of missing data\n";
             continue;
         }
 
@@ -83,8 +84,8 @@ foreach ($files as $file) {
         $city = explode(" ", end($addressParts))[1] ? explode(" ", end($addressParts))[1] : $addressParts[0];
 
         $address = new Address();
-        $address->longitude = $offerData["longitude"];
-        $address->latitude = $offerData["latitude"];
+        $address->longitude = intval($offerData["longitude"]);
+        $address->latitude = intval($offerData["latitude"]);
         $address->number = 0;
         $address->street = $addressParts[0];
         $address->city = $city;
@@ -164,5 +165,8 @@ foreach ($files as $file) {
     }
 }
 
+$endTime = microtime(true);
+
+echo "All offers created in " . ($endTime - $startTime) . " seconds\n";
 
 ?>
