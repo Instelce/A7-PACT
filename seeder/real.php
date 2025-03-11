@@ -2,6 +2,7 @@
 
 use app\core\Application;
 use app\models\account\Account;
+use app\models\Address;
 use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
 use app\models\offer\OfferStatusHistory;
@@ -73,38 +74,201 @@ function generatedApiKey(): string
     return hash('sha256', bin2hex(random_bytes(16)));
 }
 
+// Truncate all tables
 $db->pdo->exec("TRUNCATE TABLE address, offer_tag, offer_photo, option, subscription, offer, offer_type, offer_period, private_professional, public_professional, professional_user, member_user, administrator_user, user_account, anonymous_account, account, mean_of_payment RESTART IDENTITY CASCADE;");
 
 // ---------------------------------------------------------------------- //
 // user adress
 // ---------------------------------------------------------------------- //
 
-$db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
-                                                                    (11,68, 'Avenue Millies Lacroix', 'Eaubonne', 95600,2.2779189 ,48.992128), 
-                                                                    (12,90,'rue de Lille','Asnières-sur-Seine',92600,2.285369,48.914155),
-                                                                    (13,44,'rue de la Hulotais','Saint-priest',69800,4.947071,45.698938),
-                                                                    (14,47,'boulevard Bryas',' Dammarie-les-lys',77190,	2.634831,48.515451),
-                                                                    (15, 1, 'Rue de la Mairie', 'Lannion', 22300, -3.4597, 48.7326)
-                                                                    ;");
+$address1 = new Address();
+$address1->number = 68;
+$address1->street = 'Avenue Millies Lacroix';
+$address1->city = 'Eaubonne';
+$address1->postal_code = 95600;
+$address1->longitude = 2.2779189;
+$address1->latitude = 48.992128;
+$address1->save();
+
+$address2 = new Address();
+$address2->number = 90;
+$address2->street = 'rue de Lille';
+$address2->city = 'Asnières-sur-Seine';
+$address2->postal_code = 92600;
+$address2->longitude = 2.285369;
+$address2->latitude = 48.914155;
+$address2->save();
+
+$address3 = new Address();
+$address3->number = 44;
+$address3->street = 'rue de la Hulotais';
+$address3->city = 'Saint-priest';
+$address3->postal_code = 69800;
+$address3->longitude = 4.947071;
+$address3->latitude = 45.698938;
+$address3->save();
+
+$address4 = new Address();
+$address4->number = 47;
+$address4->street = 'boulevard Bryas';
+$address4->city = 'Dammarie-les-lys';
+$address4->postal_code = 77190;
+$address4->longitude = 2.634831;
+$address4->latitude = 48.515451;
+$address4->save();
+
+$address5 = new Address();
+$address5->number = 1;
+$address5->street = 'Rue de la Mairie';
+$address5->city = 'Lannion';
+$address5->postal_code = 22300;
+$address5->longitude = -3.4597;
+$address5->latitude = 48.7326;
+$address5->save();
 
 // ---------------------------------------------------------------------- //
 // create offer adress
 // ---------------------------------------------------------------------- //
-$db->pdo->exec("INSERT INTO address (id, number, street, city, postal_code, longitude, latitude) VALUES 
-                                                                    (21, 2, 'Rue des Halles', 'Lannion', 22300, -3.4597, 48.7326), 
-                                                                    (22, 1, 'Parc du Radôme', 'Pleumeur-Bodou', 22560, -3.5262799946878105, 48.784432468993565),
-                                                                    (23, 1, 'Parking du plan deau', 'Samson-sur-Rance', 22100, -3.4597, 48.7326),
-                                                                    (24, 13, 'Rue des Ruees', 'Tréhorenteuc', 56430, -2.2850415831640905, 48.00799182324886),
-                                                                    (25, 7, 'Chau. des Corsaires', 'Saint-Malo', 35400, -2.018348791710329, 48.64509219510429),
-                                                                    (26, 1, 'place abbé Gillard', 'Tréhorenteuc', 56430 , -2.2872720618427955, 48.007504883778765),
-                                                                    (27, 34, 'Sentier des Douaniers', 'Plogoff', 29770 ,-4.6664956672893725, 48.03667645649522),
-                                                                    (28, 1, 'All. de l`Embarcadere', 'Baden', 56870, -2.8604925767306435, 47.60272463103174),
-                                                                    (29, 3, 'Pl. Saint-Tanguy', 'Plougonvelin', 29217, -4.7701230204747525, 48.33125210141691),
-                                                                    (16, 1, 'Crec’h Kerrio', 'Île-de-Bréhat', 22870, -2.999732772564104, 48.84070603138791),
-                                                                    (17, 1, 'La Récré des 3 Curés', 'Les Trois Cures', 29290, -4.526581655177133, 48.47492014209391),
-                                                                    (18, 1, 'La Vallée des Saints', 'Carnoët', 22160, -2.999732772564104, 48.84070603138791),
-                                                                    (19, 3, 'Rue des potiers','Noyal-Châtillon-sur-Seiche', 35230, -1.6674224847189223, 48.041895277402126),
-                                                                    (20, 9, 'Place de L`hôtel de Ville', 'Perros-Guirec', 22700, -3.446007, 48.815243);");
+
+$address21 = new Address();
+$address21->id = 21;
+$address21->number = 2;
+$address21->street = 'Rue des Halles';
+$address21->city = 'Lannion';
+$address21->postal_code = 22300;
+$address21->longitude = -3.4597;
+$address21->latitude = 48.7326;
+$address21->save();
+
+$address22 = new Address();
+$address22->id = 22;
+$address22->number = 1;
+$address22->street = 'Parc du Radôme';
+$address22->city = 'Pleumeur-Bodou';
+$address22->postal_code = 22560;
+$address22->longitude = -3.5262799946878105;
+$address22->latitude = 48.784432468993565;
+$address22->save();
+
+$address23 = new Address();
+$address23->id = 23;
+$address23->number = 1;
+$address23->street = 'Parking du plan deau';
+$address23->city = 'Samson-sur-Rance';
+$address23->postal_code = 22100;
+$address23->longitude = -3.4597;
+$address23->latitude = 48.7326;
+$address23->save();
+
+$address24 = new Address();
+$address24->id = 24;
+$address24->number = 13;
+$address24->street = 'Rue des Ruees';
+$address24->city = 'Tréhorenteuc';
+$address24->postal_code = 56430;
+$address24->longitude = -2.2850415831640905;
+$address24->latitude = 48.00799182324886;
+$address24->save();
+
+$address25 = new Address();
+$address25->id = 25;
+$address25->number = 7;
+$address25->street = 'Chau. des Corsaires';
+$address25->city = 'Saint-Malo';
+$address25->postal_code = 35400;
+$address25->longitude = -2.018348791710329;
+$address25->latitude = 48.64509219510429;
+$address25->save();
+
+$address26 = new Address();
+$address26->id = 26;
+$address26->number = 1;
+$address26->street = 'place abbé Gillard';
+$address26->city = 'Tréhorenteuc';
+$address26->postal_code = 56430;
+$address26->longitude = -2.2872720618427955;
+$address26->latitude = 48.007504883778765;
+$address26->save();
+
+$address27 = new Address();
+$address27->id = 27;
+$address27->number = 34;
+$address27->street = 'Sentier des Douaniers';
+$address27->city = 'Plogoff';
+$address27->postal_code = 29770;
+$address27->longitude = -4.6664956672893725;
+$address27->latitude = 48.03667645649522;
+$address27->save();
+
+$address28 = new Address();
+$address28->id = 28;
+$address28->number = 1;
+$address28->street = 'All. de l`Embarcadere';
+$address28->city = 'Baden';
+$address28->postal_code = 56870;
+$address28->longitude = -2.8604925767306435;
+$address28->latitude = 47.60272463103174;
+$address28->save();
+
+$address29 = new Address();
+$address29->id = 29;
+$address29->number = 3;
+$address29->street = 'Pl. Saint-Tanguy';
+$address29->city = 'Plougonvelin';
+$address29->postal_code = 29217;
+$address29->longitude = -4.7701230204747525;
+$address29->latitude = 48.33125210141691;
+$address29->save();
+
+$address16 = new Address();
+$address16->id = 16;
+$address16->number = 1;
+$address16->street = 'Crec’h Kerrio';
+$address16->city = 'Île-de-Bréhat';
+$address16->postal_code = 22870;
+$address16->longitude = -2.999732772564104;
+$address16->latitude = 48.84070603138791;
+$address16->save();
+
+$address17 = new Address();
+$address17->id = 17;
+$address17->number = 1;
+$address17->street = 'La Récré des 3 Curés';
+$address17->city = 'Les Trois Cures';
+$address17->postal_code = 29290;
+$address17->longitude = -4.526581655177133;
+$address17->latitude = 48.47492014209391;
+$address17->save();
+
+$address18 = new Address();
+$address18->id = 18;
+$address18->number = 1;
+$address18->street = 'La Vallée des Saints';
+$address18->city = 'Carnoët';
+$address18->postal_code = 22160;
+$address18->longitude = -2.999732772564104;
+$address18->latitude = 48.84070603138791;
+$address18->save();
+
+$address19 = new Address();
+$address19->id = 19;
+$address19->number = 3;
+$address19->street = 'Rue des potiers';
+$address19->city = 'Noyal-Châtillon-sur-Seiche';
+$address19->postal_code = 35230;
+$address19->longitude = -1.6674224847189223;
+$address19->latitude = 48.041895277402126;
+$address19->save();
+
+$address20 = new Address();
+$address20->id = 20;
+$address20->number = 9;
+$address20->street = 'Place de L`hôtel de Ville';
+$address20->city = 'Perros-Guirec';
+$address20->postal_code = 22700;
+$address20->longitude = -3.446007;
+$address20->latitude = 48.815243;
+$address20->save();
 
 
 // ---------------------------------------------------------------------- //
@@ -115,15 +279,15 @@ for ($j = 0; $j <= 20; $j++) {
     $a->save();
 }
 $db->pdo->exec("INSERT INTO user_account (account_id, mail, password, avatar_url, address_id,api_token) VALUES 
-                                                                     (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',11,'" . generatedApiKey() . "'), 
-                                                                     (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',12,'" . generatedApiKey() . "'), 
-                                                                     (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg',13,'" . generatedApiKey() . "'),
-                                                                     (4, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',14,'" . generatedApiKey() . "'),                                                            
-                                                                     (5, 'rance.evasion@gmail.com', '" . $password . "', 'https://fr.web.img5.acsta.net/pictures/16/05/17/12/17/360795.jpg', 15,'" . generatedApiKey() . "'),
+                                                                     (1, 'rouevictor@gmail.com', '" . $password . "','https://i.pinimg.com/control/564x/a2/a9/fd/a2a9fdfb77c19cc7b5e1749718228945.jpg',1,'" . generatedApiKey() . "'), 
+                                                                     (2, 'eliaz.chesnel@outlook.fr', '" . $password . "', 'https://preview.redd.it/4l7yhfrppsh51.jpg?width=640&crop=smart&auto=webp&s=11445a8cd85d7b4e81170491d3f013e5599048ae',2,'" . generatedApiKey() . "'), 
+                                                                     (3, 'sergelemytho@gmail.com','" . $password . "','https://media.gqmagazine.fr/photos/5e135c806b02b40008e0d316/1:1/w_1600%2Cc_limit/thumbnail_sergemytho.jpg',3,'" . generatedApiKey() . "'),
+                                                                     (4, 'fredlechat@gmail.com', '" . $password . "', 'https://i.chzbgr.com/full/10408722944/hDAD92EF6/ole',4,'" . generatedApiKey() . "'),                                                            
+                                                                     (5, 'rance.evasion@gmail.com', '" . $password . "', 'https://fr.web.img5.acsta.net/pictures/16/05/17/12/17/360795.jpg', 5,'" . generatedApiKey() . "'),
                                                                      (6, 'roiduvoyage@gmail.com', '" . $password . "', 'https://cdn.discordapp.com/attachments/1194441121376514099/1298550202579554314/roi_brigand.png?ex=6719f89e&is=6718a71e&hm=b3ad4fe032eb2ed29b6f15aba207cb3132a322b9c69317afa07869d783b13269&',19,'" . generatedApiKey() . "'),
-                                                                     (8, 'brehat@gmail.com', '" . $password . "', 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png',16,'" . generatedApiKey() . "'),
-                                                                     (9, 'recree_trois_cures@gmail.com', '" . $password . "', 'https://www.larecredes3cures.com/app/uploads/2024/04/vertika-la-recre-des-3-cures-scaled-910x668-c-center.jpg',17,'" . generatedApiKey() . "'),
-                                                                     (10, 'valleedessaints@gmail.com', '" . $password . "', 'https://media.letelegramme.fr/api/v1/images/view/637cf1668f4302361f300639/web_golden_xl/637cf1668f4302361f300639.1',18,'" . generatedApiKey() . "');");
+                                                                     (8, 'brehat@gmail.com', '" . $password . "', 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-man-avatar-image-for-profile-png-image_13001882.png',6,'" . generatedApiKey() . "'),
+                                                                     (9, 'recree_trois_cures@gmail.com', '" . $password . "', 'https://www.larecredes3cures.com/app/uploads/2024/04/vertika-la-recre-des-3-cures-scaled-910x668-c-center.jpg',7,'" . generatedApiKey() . "'),
+                                                                     (10, 'valleedessaints@gmail.com', '" . $password . "', 'https://media.letelegramme.fr/api/v1/images/view/637cf1668f4302361f300639/web_golden_xl/637cf1668f4302361f300639.1',8,'" . generatedApiKey() . "');");
 
 
 // ---------------------------------------------------------------------- //
@@ -212,7 +376,7 @@ $offre1->website = 'https://www.facebook.com/people/Caf%C3%A9-Des-Halles/1000640
 $offre1->phone_number = '0296371642';
 $offre1->category = 'restaurant';
 $offre1->professional_id = 3;
-$offre1->address_id = 21;
+$offre1->address_id = 6;
 $offre1->offer_type_id = 1;
 $offre1->created_at = randomOfferDate();
 $offre1->save();
@@ -321,7 +485,7 @@ $offre2->phone_number = '0296918395';
 $offre2->category = 'attraction_park';
 $offre2->offer_type_id = 2;
 $offre2->professional_id = 4;
-$offre2->address_id = 22;
+$offre2->address_id = 7;
 $offre2->minimum_price = 15;
 $offre2->created_at = randomOfferDate();
 $offre2->save();
@@ -398,7 +562,7 @@ $offre3->website = 'https://www.rance-evasion.fr/';
 $offre3->phone_number = '0786912239';
 $offre3->offer_type_id = 1;
 $offre3->professional_id = 5;
-$offre3->address_id = 23;
+$offre3->address_id = 8;
 $offre3->category = 'visit';
 $offre3->minimum_price = 25;
 $offre3->created_at = randomOfferDate();
@@ -431,7 +595,7 @@ $offre4->phone_number = '0698834022';
 $offre4->category = 'show';
 $offre4->offer_type_id = 2;
 $offre4->professional_id = 6;
-$offre4->address_id = 24;
+$offre4->address_id = 9;
 $offre4->minimum_price = 12;
 $offre4->created_at = randomOfferDate();
 $offre4->save();
@@ -459,7 +623,7 @@ $offre5->phone_number = '0677980042';
 $offre5->category = 'activity';
 $offre5->offer_type_id = 2;
 $offre5->professional_id = 8;
-$offre5->address_id = 16;
+$offre5->address_id = 10;
 $offre5->minimum_price = 35;
 $offre5->created_at = randomOfferDate();
 $offre5->save();
@@ -536,7 +700,7 @@ $offre6->phone_number = '0298079559';
 $offre6->category = 'attraction_park';
 $offre6->offer_type_id = 2;
 $offre6->professional_id = 9;
-$offre6->address_id = 17;
+$offre6->address_id = 11;
 $offre6->minimum_price = 18;
 $offre6->created_at = randomOfferDate();
 $offre6->save();
@@ -609,7 +773,7 @@ $offre7->website = 'https://www.saint-malo-tourisme.com/';
 $offre7->phone_number = '0299566699';
 $offre7->offer_type_id = 1;
 $offre7->professional_id = 4;
-$offre7->address_id = 25;
+$offre7->address_id = 12;
 $offre7->category = 'visit';
 $offre7->minimum_price = 20;
 $offre7->created_at = randomOfferDate();
@@ -641,7 +805,7 @@ $offre8->website = 'https://www.broceliande-vacances.com/';
 $offre8->phone_number = '0299798554';
 $offre8->offer_type_id = 1;
 $offre8->professional_id = 3;
-$offre8->address_id = 26;
+$offre8->address_id = 13;
 $offre8->category = 'visit';
 $offre8->created_at = randomOfferDate();
 $offre8->save();
@@ -673,7 +837,7 @@ $offre9->website = 'https://www.pointe-du-raz.com/';
 $offre9->phone_number = '0298920020';
 $offre9->offer_type_id = 1;
 $offre9->professional_id = 5;
-$offre9->address_id = 27;
+$offre9->address_id = 14;
 $offre9->category = 'visit';
 $offre9->minimum_price = 12;
 $offre9->created_at = randomOfferDate();
@@ -703,7 +867,7 @@ $offre10->website = 'https://www.golfedumorbihan.fr/';
 $offre10->phone_number = '0297636421';
 $offre10->offer_type_id = 2;
 $offre10->professional_id = 4;
-$offre10->address_id = 28;
+$offre10->address_id = 15;
 $offre10->category = 'activity';
 $offre10->minimum_price = 25;
 $offre10->created_at = randomOfferDate();
@@ -734,7 +898,7 @@ $offre11->website = 'http://fr-fr.facebook.com/lacrepedantel';
 $offre11->phone_number = '0298402968';
 $offre11->category = 'restaurant';
 $offre11->professional_id = 4;
-$offre11->address_id = 26;
+$offre11->address_id = 16;
 $offre11->offer_type_id = 1;
 $offre10->created_at = randomOfferDate();
 $offre11->save();
@@ -849,7 +1013,7 @@ $offre12->website = 'https://gigifamily.fr/basilico-perros-guirec/';
 $offre12->phone_number = '0296141754';
 $offre12->category = 'restaurant';
 $offre12->professional_id = 3;
-$offre12->address_id = 20;
+$offre12->address_id = 17;
 $offre12->offer_type_id = 1;
 $offre10->created_at = randomOfferDate();
 $offre12->save();
@@ -1514,6 +1678,8 @@ foreach ($offers as $offer) {
 
 }
 
+
+
 // ---------------------------------------------------------------------------------------------- //
 // Generate offer status histories
 // ---------------------------------------------------------------------------------------------- //
@@ -1579,6 +1745,7 @@ foreach ($offers as $offer) {
         $date->modify('+1 month');
     }
 }
+
 
 echo "Database seeded successfully.\n";
 

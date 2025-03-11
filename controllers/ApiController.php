@@ -101,7 +101,7 @@ class ApiController extends Controller
         $query = Offer::query();
 
         $q = $request->getQueryParams('q');
-        $offset = $request->getQueryParams('offset');
+        $offset = $request->getQueryParams('offset') ?? 0;
         $limit = $request->getQueryParams('limit');
         $enrelief = $request->getQueryParams('enrelief');
         $online = $request->getQueryParams('online');
@@ -214,7 +214,7 @@ class ApiController extends Controller
         }
         /** @var Offer[] $offers */
         $offers = $query->make();
-
+        
         foreach ($offers as $i => $offer) {
             $data[$i] = $offer->toJson();
 
@@ -237,7 +237,7 @@ class ApiController extends Controller
             $data[$i]['address'] = $address->toJson();
             unset($data[$i]['address']['id']);
 
-            //add status
+            // Add status
             $openingHours = $offer->schedule();
             $dayOfWeek = (new DateTime())->format('N');
             $todayHour = null;
@@ -283,7 +283,6 @@ class ApiController extends Controller
             } else {
                 $status = null;
             }
-
 
             $data[$i]['status'] = $status;
 
