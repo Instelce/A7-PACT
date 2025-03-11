@@ -332,5 +332,3 @@ searchBar.addEventListener("keyup", (event) => {
 function goSearchPage(text) {
     window.location.href = `/recherche?search=${text}`;
 }
-
-
