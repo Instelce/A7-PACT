@@ -123,9 +123,8 @@ $this->noMain = true;
         <div class="carousel-gen" data-slides-visible="3" data-slides-to-scroll="1">
 
             <?php foreach ($newOffers as $offer) { ?>
-                <a href="/offres/<?php echo $offer['id']; ?>">
-
-                    <div class="home-card">
+                <div class="home-card">
+                    <a href="/offres/<?php echo $offer['id']; ?>">
                         <!-- Image -->
                         <div class="image-container">
                             <img src="<?php echo $offer["image"]; ?>"

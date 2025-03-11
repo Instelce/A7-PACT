@@ -399,6 +399,10 @@ class OfferController extends Controller
                 }
 
                 $opinionSubmitted = false;
+
+
+                header("Location: /offres/$id");
+                exit();
             } else {
                 $opinionSubmitted = true;
             }
