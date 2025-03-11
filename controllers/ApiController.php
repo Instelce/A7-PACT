@@ -16,6 +16,7 @@ use app\models\offer\OfferType;
 use app\models\offer\schedule\OfferSchedule;
 use app\models\offer\schedule\LinkSchedule;
 use app\models\opinion\Opinion;
+use app\models\opinion\OpinionBlackList;
 use app\models\opinion\OpinionDislike;
 use app\models\opinion\OpinionLike;
 use app\models\opinion\OpinionPhoto;
@@ -100,7 +101,8 @@ class ApiController extends Controller
         $query = Offer::query();
 
         $q = $request->getQueryParams('q');
-        $offset = $request->getQueryParams('offset');
+        $offset = $request->getQueryParams('offset') ?? 0;
+        $map = $request->getQueryParams('map') ?? false;
         $limit = $request->getQueryParams('limit');
         $enrelief = $request->getQueryParams('enrelief');
         $online = $request->getQueryParams('online');
@@ -192,6 +194,10 @@ class ApiController extends Controller
             $order_by[] = 'rating DESC';
             $where[] = ['rating', '0', '>', 'ratingDesc'];
         }
+        //  /!\ if map, the limit will be incress sinificantly
+        if ($map) {
+            $limit = 3000;
+        }
 
         $query->select(attrs: ['offer.*', "(CASE WHEN option.type = 'en_relief' OR option.type = 'a_la_une' THEN 1 ELSE 0 END) as _est_en_relief"])
             ->join(new Address())
@@ -213,113 +219,127 @@ class ApiController extends Controller
         }
         /** @var Offer[] $offers */
         $offers = $query->make();
-
-        foreach ($offers as $i => $offer) {
-            $data[$i] = $offer->toJson();
-
-            $data[$i]['rating'] = $offer->rating();
-
-            // Add professionalUser account
-            $data[$i]['profesionalUser'] = ProfessionalUser::findOneByPk($offer->professional_id)->toJson();
-            unset($data[$i]['profesionalUser']['notification']);
-            unset($data[$i]['profesionalUser']['conditions']);
-
-            $data[$i]["photos"] = [];
-            foreach ($offer->photos() as $photo) {
-                $data[$i]["photos"][] = $photo->url_photo;
+        if ($map) { //if the data is for the interactive map
+            $data = [];
+            foreach ($offers as $i => $offer) {
+                //address
+                $data[$i]['id'] = $offer->id;
+                $address = Address::findOneByPk($offer->address_id);
+                $data[$i]['latitude'] = $address->latitude;
+                $data[$i]['longitude'] = $address->longitude;
+                $data[$i]['city'] = $address->city;
+                $data[$i]['postal_code'] = $address->postal_code;
+                $data[$i]['title'] = $offer->title;
+                $data[$i]['category'] = $offer->category;
+                $data[$i]['rating'] = $offer->rating();
             }
+        } else { //if the data is for the list
+            foreach ($offers as $i => $offer) {
+                $data[$i] = $offer->toJson();
 
-            $data[$i]["specific"] = $offer->specificData()->toJson();
+                $data[$i]['rating'] = $offer->rating();
 
-            // Add address
-            $address = Address::findOneByPk($offer->address_id);
-            $data[$i]['address'] = $address->toJson();
-            unset($data[$i]['address']['id']);
+                // Add professionalUser account
+                $data[$i]['profesionalUser'] = ProfessionalUser::findOneByPk($offer->professional_id)->toJson();
+                unset($data[$i]['profesionalUser']['notification']);
+                unset($data[$i]['profesionalUser']['conditions']);
 
-            //add status
-            $openingHours = $offer->schedule();
-            $dayOfWeek = (new DateTime())->format('N');
-            $todayHour = null;
-
-            foreach ($openingHours as $openingHour) {
-                if ($openingHour->day == $dayOfWeek) {
-                    $todayHour = $openingHour;
-                    break;
+                $data[$i]["photos"] = [];
+                foreach ($offer->photos() as $photo) {
+                    $data[$i]["photos"][] = $photo->url_photo;
                 }
-            }
 
-            if ($todayHour) {
-                $closingHour = $todayHour->closing_hours;
-                $openingHour = $todayHour->opening_hours;
+                $data[$i]["specific"] = $offer->specificData()->toJson();
 
-                if ($closingHour === 'fermé' || $openingHour === 'fermé') {
-                    $status = "Fermé";
-                } else {
-                    try {
-                        $closingTime = new DateTime($closingHour);
-                        $openingTime = new DateTime($openingHour);
-                        $currentTime = new DateTime();
+                // Add address
+                $address = Address::findOneByPk($offer->address_id);
+                $data[$i]['address'] = $address->toJson();
+                unset($data[$i]['address']['id']);
 
-                        if ($currentTime < $openingTime) {
-                            if ($openingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
-                                $status = "Ouvre bientôt";
-                            } else {
-                                $status = "Fermé";
-                            }
-                        } elseif ($currentTime >= $openingTime && $currentTime < $closingTime) {
-                            $status = "Ouvert";
-                        } elseif ($currentTime >= $closingTime) {
-                            $status = "Fermé";
-                        } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
-                            $status = "Ferme bientôt";
-                        } else {
-                            $status = "Non renseigné";
-                        }
-                    } catch (Exception $e) {
-                        $status = null;
+                // Add status
+                $openingHours = $offer->schedule();
+                $dayOfWeek = (new DateTime())->format('N');
+                $todayHour = null;
+
+                foreach ($openingHours as $openingHour) {
+                    if ($openingHour->day == $dayOfWeek) {
+                        $todayHour = $openingHour;
+                        break;
                     }
                 }
-            } else {
-                $status = null;
-            }
 
+                if ($todayHour) {
+                    $closingHour = $todayHour->closing_hours;
+                    $openingHour = $todayHour->opening_hours;
 
-            $data[$i]['status'] = $status;
+                    if ($closingHour === 'fermé' || $openingHour === 'fermé') {
+                        $status = "Fermé";
+                    } else {
+                        try {
+                            $closingTime = new DateTime($closingHour);
+                            $openingTime = new DateTime($openingHour);
+                            $currentTime = new DateTime();
 
-            // Add offer type
-            $data[$i]['type'] = OfferType::findOneByPk($offer->offer_type_id)->type;
-            unset($data[$i]['offer_type_id']);
-
-            // Add relief and a la une
-            $relief = false;
-            $a_la_une = false;
-            $subscription = $offer->subscription();
-            if ($subscription) {
-                $option = Option::findOne(['id' => $subscription->option_id]);
-                if ($option->type == 'en_relief') {
-                    $relief = true;
+                            if ($currentTime < $openingTime) {
+                                if ($openingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
+                                    $status = "Ouvre bientôt";
+                                } else {
+                                    $status = "Fermé";
+                                }
+                            } elseif ($currentTime >= $openingTime && $currentTime < $closingTime) {
+                                $status = "Ouvert";
+                            } elseif ($currentTime >= $closingTime) {
+                                $status = "Fermé";
+                            } elseif ($closingTime <= (clone $currentTime)->add(new DateInterval('PT30M'))) {
+                                $status = "Ferme bientôt";
+                            } else {
+                                $status = "Non renseigné";
+                            }
+                        } catch (Exception $e) {
+                            $status = null;
+                        }
+                    }
+                } else {
+                    $status = null;
                 }
-                if ($option->type == 'a_la_une') {
-                    $a_la_une = true;
+
+                $data[$i]['status'] = $status;
+
+                // Add offer type
+                $data[$i]['type'] = OfferType::findOneByPk($offer->offer_type_id)->type;
+                unset($data[$i]['offer_type_id']);
+
+                // Add relief and a la une
+                $relief = false;
+                $a_la_une = false;
+                $subscription = $offer->subscription();
+                if ($subscription) {
+                    $option = Option::findOne(['id' => $subscription->option_id]);
+                    if ($option->type == 'en_relief') {
+                        $relief = true;
+                    }
+                    if ($option->type == 'a_la_une') {
+                        $a_la_une = true;
+                    }
                 }
-            }
-            $data[$i]['relief'] = $relief;
-            $data[$i]['a_la_une'] = $a_la_une;
+                $data[$i]['relief'] = $relief;
+                $data[$i]['a_la_une'] = $a_la_une;
 
-            // Add subscription and option
-            if ($subscription) {
-                $data[$i]['subscription'] = $subscription->toJson();
-                $data[$i]['subscription']['end_date'] = $subscription->endDate();
-                $data[$i]['subscription']['option'] = $subscription->option()->toJson();
-            } else {
-                $data[$i]['subscription'] = null;
-            }
-            unset($data[$i]['subscription']['option_id']);
-            unset($data[$i]['subscription']['offer_id']);
+                // Add subscription and option
+                if ($subscription) {
+                    $data[$i]['subscription'] = $subscription->toJson();
+                    $data[$i]['subscription']['end_date'] = $subscription->endDate();
+                    $data[$i]['subscription']['option'] = $subscription->option()->toJson();
+                } else {
+                    $data[$i]['subscription'] = null;
+                }
+                unset($data[$i]['subscription']['option_id']);
+                unset($data[$i]['subscription']['offer_id']);
 
-            // Opinion count
-            $data[$i]['opinion_count'] = $offer->opinionsCount();
-            $data[$i]['no_read_opinion_count'] = $offer->noReadOpinions();
+                // Opinion count
+                $data[$i]['opinion_count'] = $offer->opinionsCount();
+                $data[$i]['no_read_opinion_count'] = $offer->noReadOpinions();
+            }
         }
 
         return $response->json($data);
@@ -653,4 +673,3 @@ class ApiController extends Controller
         return $response->json([]);
     }
 }
-

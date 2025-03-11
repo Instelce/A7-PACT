@@ -341,5 +341,3 @@ function formatDate(string) {
     let date = new Date(string);
     return `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getFullYear()}`;
 }
-
-

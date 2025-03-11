@@ -57,7 +57,13 @@ class m0021_create_table_opinion
             comment VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(opinion_id) REFERENCES opinion(id) ON DELETE CASCADE
-        );";
+        );
+        CREATE TABLE opinion_blacklist(
+            id_blacklist SERIAL PRIMARY KEY,
+            opinion_id INT NOT NULL,
+            blacklisted_date TIMESTAMP NOT NULL,
+            FOREIGN KEY(opinion_id) REFERENCES opinion(id) ON DELETE CASCADE
+        )";
         $db->pdo->exec($sql);
     }
 

@@ -441,6 +441,8 @@ function createOpinionCard(opinion) {
         <!-- Photos -->
         ${photos.outerHTML}
         
+        <br>
+        
         <div class="flex flex-row gap-2 ">
             <div class="like-button flex flex-row gap-1 items-center">
                 <button class="button gray spaced flex flex-row gap-1" id="opinion-likes" title="Liker l'avis">

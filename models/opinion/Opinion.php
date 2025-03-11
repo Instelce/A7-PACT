@@ -114,4 +114,9 @@ class Opinion extends DBModel
     {
         return OpinionPhoto::find(['opinion_id' => $this->id]);
     }
+
+    public function blacklisted(): bool
+    {
+        return $this->blacklisted;
+    }
 }

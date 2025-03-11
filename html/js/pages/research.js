@@ -3,6 +3,8 @@ let filters = {};
 let order = null;
 let limit = 5;
 let offset = 0;
+//first init map
+let mapInit = false;
 /**
  * Displays the fetched offers data in the offers container.
  *
@@ -32,11 +34,13 @@ let offset = 0;
  * @returns {Promise<Object|boolean>} The fetched offers data in JSON format, or false if an error occurs.
  * @throws {Error} If the response status is not OK.
  */
-async function getOffers() {
+async function getOffers(map = false) {
     const host = window.location.protocol;
     const searchParams = new URLSearchParams();
-    if (order) {
-        searchParams.set("order_by", order || null);
+    if(!map){
+        if (order) {
+            searchParams.set("order_by", order || null);
+        }
     }
     if (filters["category"]) {
         searchParams.set("category", filters["category"] || null);
@@ -95,7 +99,8 @@ async function getOffers() {
         "&online=" +
         true +
         moreSearch +
-        search; //url of the api for research page offers's data
+        search +
+        (map ? "&map=true" : ""); //url of the api for research page offers's data
     // console.log("url : " + url);
     try {
         const response = await fetch(url); //fetching the data from the api
@@ -152,12 +157,17 @@ async function applyFilters(newFilters = {}, neworder = null) {
         let Data = await getOffers();
         displayOffers(Data);
         listenerIteneraire(Data);
-        displayMap(Data, true);
+        let DataMap = await getOffers(true);
+        displayMap(DataMap);
     } else {
         let Data = await getOffers();
         displayOffers(Data);
         listenerIteneraire(Data);
-        displayMap(Data);
+        if (!mapInit) {
+            mapInit = true;
+            let DataMap = await getOffers(true);
+            displayMap(DataMap);
+        }
     }
     offset += 5;
 }
@@ -216,8 +226,7 @@ function displayOffers(Data) {
 
                     if (i < offer.rating && i > offer.rating - 1) {
                         star.classList.add("half-fill");
-                    }
-                    else if (i < offer.rating) {
+                    } else if (i < offer.rating) {
                         star.classList.add("fill");
                     }
 
@@ -226,42 +235,50 @@ function displayOffers(Data) {
                 let offerRelief = offer.relief || offer.a_la_une ? true : false;
                 const offerElement = document.createElement("a");
                 offerElement.innerHTML = `
-                <article                 
-                ${offerRelief
+                <article id="${offer.id}"                
+                ${
+                    offerRelief
                         ? "class='research-card enReliefArticle mb-4 relative'"
                         : "class='research-card mb-4 relative'"
-                    }>
+                }>
                 
                 
-                ${offerRelief
+                ${
+                    offerRelief
                         ? "<img class='enReliefIcon' src='/assets/images/reliefIcon.svg' alt='Icone offre en relief'>"
                         : "<div class='hidden'></div>"
-                    }
+                }
                 
                 <div                
-                ${offerRelief
+                ${
+                    offerRelief
                         ? "class='research-card--photo enRelief'"
                         : "class='research-card--photo'"
-                    }>
+                }>
                 
-                ${offer.photos[0]
+                ${
+                    offer.photos[0]
                         ? `<img alt="photo d'article" src="${offer.photos[0]}" />`
                         : ""
-                    }
+                }
                 </div>
                 <div                 
-                ${offerRelief
+                ${
+                    offerRelief
                         ? "class='research-card--body enRelief'"
                         : "class='research-card--body'"
-                    }">
+                }">
                 
                 <header>
                 <h2 class="research-card--title">${offer.title}</h2>
                 <div class="flex flex-row gap-2 justify-between items-center">
-                <p>${translateCategory(offer.category)} par <a href="/comptes/${offer.professional_id
-                    }" class="underline">${offer.profesionalUser["denomination"]
-                    }</a></p>
-                    <div class="flex flex-row gap-1 justify-center items-center">${stars.outerHTML
+                <p>${translateCategory(offer.category)} par <a href="/comptes/${
+                    offer.professional_id
+                }" class="underline">${
+                    offer.profesionalUser["denomination"]
+                }</a></p>
+                    <div class="flex flex-row gap-1 justify-center items-center">${
+                        stars.outerHTML
                     }
                         </div>
                     </div>
@@ -269,27 +286,32 @@ function displayOffers(Data) {
                         <div class="flex flex-col gap-2">
                         <p class="summary">${offer.summary}</p>
                         <div class="flex flex-row gap-6">
-                        ${offer.minimum_price
-                        ? "<div class='italic'> À partir de " +
-                        offer.minimum_price +
-                        " € </div >"
-                        : "<div class='hidden'></div>"
-                    }
-                        ${offer.status
-                        ? "<div>" + offer.status + "</div >"
-                        : "<div class='hidden'></div>"
-                    }
-                        ${offer.address.city
-                        ? "<div>" + offer.address.city + "</div>"
-                        : "<div class='hidden'></div>"
-                    }
+                        ${
+                            offer.minimum_price
+                                ? "<div> À partir de " +
+                                  offer.minimum_price +
+                                  " € </div >"
+                                : "<div class='hidden'></div>"
+                        }
+                        ${
+                            offer.status
+                                ? "<div>" + offer.status + "</div >"
+                                : "<div class='hidden'></div>"
+                        }
+                        ${
+                            offer.address.city
+                                ? "<div>" + offer.address.city + "</div>"
+                                : "<div class='hidden'></div>"
+                        }
                         </div >
                         </div >
                     <div class="flex gap-2 mt-auto pt-4">
-                        <div id="${offer.id
-                    }" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
-                        <a href="/offres/${offer.id
-                    }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
+                        <div id="${
+                            offer.id
+                        }" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
+                        <a href="/offres/${
+                            offer.id
+                        }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
                     </div>
             </article >
                     `;
@@ -319,23 +341,38 @@ function translateCategory(category) {
 
 let popup = document.getElementById("popup");
 let filterButton = document.getElementById("filterButton");
+let closeFilters = document.getElementById("closeFilters");
 const popupContent = document.querySelector(".popup-content");
 
 filterButton.addEventListener("click", () => {
     if (popup.classList.contains("close")) {
         popup.classList.remove("close");
         popup.classList.remove("hidden");
-    }
-    else {
+    } else {
         popup.classList.add("close");
-        setTimeout(() => { popup.classList.add("hidden"); }, 500);
+        setTimeout(() => {
+            popup.classList.add("hidden");
+        }, 500);
     }
 });
 
-popup.addEventListener("click", (event) => {
-    if (!popup.classList.contains("close") && !popupContent.contains(event.target)) {
+closeFilters.addEventListener("click", () => {
+    if (!popup.classList.contains("close")) {
         popup.classList.add("close");
-        setTimeout(() => { popup.classList.add("hidden"); }, 500);
+        setTimeout(() => {
+            popup.classList.add("hidden");
+        }, 500);
+    }
+});
+popup.addEventListener("click", (event) => {
+    if (
+        !popup.classList.contains("close") &&
+        !popupContent.contains(event.target)
+    ) {
+        popup.classList.add("close");
+        setTimeout(() => {
+            popup.classList.add("hidden");
+        }, 500);
     }
 });
 
@@ -520,7 +557,6 @@ function listenerIteneraire(Data) {
     let iteneraire = document.querySelectorAll(".iteneraire");
     iteneraire.forEach((element) => {
         element.addEventListener("click", (event) => {
-            console.log(event.target.id);
             let offerId = event.target.id;
             Data.forEach((offer) => {
                 if (offer.id == offerId) {
@@ -600,36 +636,176 @@ const observer = new IntersectionObserver(
 
 observer.observe(loaderSection);
 
-
 // ---------------------------------------------------------------------------------------------- //
 // Map
 // ---------------------------------------------------------------------------------------------- //
 
-let map;
-let CoordsTAble = [];
+const markerOptions = {
+    iconSize: [20, 26],
+};
 
-function displayMap(Data, remove = false) {
-    if (remove) {
-        CoordsTAble = [];
-    }
-    Data.forEach((offer) => {
-        CoordsTAble.push([[offer.address.latitude, offer.address.longitude], offer.title, offer.address.city]);
-    });
+let restaurantIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/retaurant_pin.svg",
+});
+
+let attractionIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/attraction_pin.svg",
+});
+
+let activityIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/activity_pin.svg",
+});
+let showIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/spectacle_pin.svg",
+});
+let visitIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/visit_pin.svg",
+});
+
+let map;
+let DataTableMap;
+
+function displayMap(DataMap) {
+    DataTableMap = DataMap;
+    let groupMarkers = L.markerClusterGroup();
 
     if (map) {
         map.remove();
     }
-    map = L.map('map', {
-        center: [48.8566, 2.3522],
-        zoom: 5
-    }); 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
+    let userCoords = [48.1782600, -2.7543300];
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                userCoords = [position.coords.latitude, position.coords.longitude];
+            },
+            (error) => {
+                console.error("Error getting user location:", error);
+            }
+        );
+    } else {
+        console.error("Geolocation is not supported by this browser.");
+    }
+
+    console.log(userCoords);
+
+    map = L.map("map", {
+        center: userCoords,
+        zoom: 8,
+    });
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    CoordsTAble.forEach((coords) => {
-        let marker = L.marker(coords[0]).addTo(map);
-        marker.bindPopup(`<b>${coords[1]}</b><br>${coords[2]}`);
+    DataMap.forEach((coords, index) => {
+        let markerIcon;
+        switch (coords.category) {
+            case "restaurant":
+                markerIcon = restaurantIcon;
+                break;
+            case "attraction_park":
+                markerIcon = attractionIcon;
+                break;
+            case "activity":
+                markerIcon = activityIcon;
+                break;
+            case "show":
+                markerIcon = showIcon;
+                break;
+            case "visit":
+                markerIcon = visitIcon;
+                break;
+        }
+        let marker = L.marker([coords.latitude,coords.longitude], {
+            icon: markerIcon,
+        });
+        groupMarkers.addLayer(marker);
+
+        let stars = document.createElement("div");
+        stars.classList.add("stars");
+
+        for (let i = 0; i < 5; i++) {
+            let star = document.createElement("span");
+            star.classList.add("star");
+            star.innerHTML = starSVG;
+
+            if (i < coords.rating && i > coords.rating - 1) {
+                star.classList.add("half-fill");
+            } else if (i < coords.rating) {
+                star.classList.add("fill");
+            }
+
+            stars.appendChild(star);
+        }
+
+        marker.bindPopup(`
+            <div class="map-card">
+                <h1>${coords.title}</h1>
+                <p>${coords.city}, ${coords.postal_code}</p>
+                <div>${stars.outerHTML}</div>
+                <div class="flex gap-1 pt-1 mt-2">
+                    <div id="${coords.id}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
+                    <a href="/offres/${coords.id}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
+                </div>
+            </div>`);
+        marker.on("popupopen", function () {
+            document.querySelectorAll(".iteneraire").forEach((element) => {
+                element.addEventListener("click", (event) => {
+                    let offerId = event.target.id;
+                    Data.forEach((offer) => {
+                        if (offer.id == offerId) {
+                            let latitude = offer.address["latitude"];
+                            let longitude = offer.address["longitude"];
+                            let url = `https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=${latitude},${longitude}`;
+                            window.open(url, "_blank");
+                        }
+                    });
+                });
+            });
+        });
     });
+    map.addLayer(groupMarkers);
 }
+
+let fullScaleMap = document.getElementById("fullScaleMap");
+let mapContainer = document.getElementById("mapContainer");
+let closeMap = document.getElementById("closeMap");
+let searchMap = document.getElementById("searchMap");
+let mapInteractive = document.getElementById("map");
+let topPart = document.getElementById("topPart");
+let searchPart = document.getElementById("searchPart")
+
+function ScaleMap() {
+    closeMap.classList.toggle("md:hidden");
+    closeMap.classList.toggle("md:block");
+    fullScaleMap.classList.toggle("md:hidden");
+    fullScaleMap.classList.toggle("md:block");
+    mapContainer.classList.toggle("w-0");
+    mapContainer.classList.toggle("h-0");
+    mapContainer.classList.toggle("md:w-1/3");
+    mapContainer.classList.toggle("md:h-full");
+    mapContainer.classList.toggle("w-full");
+    mapContainer.classList.toggle("h-[50vh]");
+    mapContainer.classList.toggle("md:h-[70vh]");
+    topPart.classList.toggle("md:flex-row");
+    topPart.classList.toggle("md:h-[170px]");
+    searchPart.classList.toggle("md:w-2/3");
+    displayMap(DataTableMap);
+}
+searchMap.addEventListener("click", () => {
+    ScaleMap();
+});
+fullScaleMap.addEventListener("click", () => {
+    ScaleMap();
+});
+closeMap.addEventListener("click", () => {
+    ScaleMap();
+});

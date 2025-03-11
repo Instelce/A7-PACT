@@ -334,3 +334,33 @@ function goSearchPage(text) {
 }
 
 
+// -------------------------------------------------------------------------------------------------
+// Maps
+// -------------------------------------------------------------------------------------------------
+
+const cities = ["Bréhat", "Plouha", "Lannion", "Pléneuf", "Paimpol", "Erquy", "Pontrieux", "Saint-Brieuc"];
+const citiesContainer = document.querySelector(".cities");
+
+function createCityCard(theta, name) {
+    let card = document.createElement("a");
+    card.href = `/recherche?city=${name}`;
+    card.classList.add("city-card");
+    card.innerHTML += `
+        <div class="front">
+            <p>${name}</p>
+            <img src="/assets/images/homeCarouselImages/${name}.jpg" alt="${name}">
+        </div>
+        <img class="background" src="/assets/images/homeCarouselImages/${name}.jpg" alt="${name}">
+    `;
+
+    card.style.left = 50 + (50 * Math.cos(theta)) + "%";
+    card.style.top = 50 + (50 * Math.sin(theta)) + "%";
+
+    return card;
+}
+
+cities.forEach((city, index) => {
+    let angle = ((Math.PI * 2) / cities.length) * index;
+    citiesContainer.appendChild(createCityCard(angle, city));
+})
+
