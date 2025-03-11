@@ -10,6 +10,7 @@ use app\models\offer\ActivityOffer;
 use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
 use app\models\offer\RestaurantOffer;
+use app\models\offer\ShowOffer;
 use app\models\offer\VisitOffer;
 use app\models\user\professional\ProfessionalUser;
 
@@ -45,6 +46,10 @@ function getCategoryFromFileName($filename) {
         "parcs-jardins" => "visit",
         "restaurants" => "restaurant",
         "plages" => "activity",
+        "jeux-enigmes" => "activity",
+        "parcs-animaliers" => "activity",
+        "fest-noz" => "show",
+        "menhirs-dolmens" => "visit",
     };
 }
 
@@ -146,6 +151,11 @@ foreach ($files as $file) {
             $visit->guide = rand(0, 1);
             $visit->save();
         } else if ($category == "show") {
+            $show = new ShowOffer();
+            $show->offer_id = $offer->id;
+            $show->duration = rand(1, 4);
+            $show->capacity = rand(10, 100);
+            $show->save();
         } else {
         }
     }
