@@ -3,6 +3,8 @@ let filters = {};
 let order = null;
 let limit = 5;
 let offset = 0;
+//first init map
+let mapInit = false;
 /**
  * Displays the fetched offers data in the offers container.
  *
@@ -32,11 +34,13 @@ let offset = 0;
  * @returns {Promise<Object|boolean>} The fetched offers data in JSON format, or false if an error occurs.
  * @throws {Error} If the response status is not OK.
  */
-async function getOffers() {
+async function getOffers(map = false) {
     const host = window.location.protocol;
     const searchParams = new URLSearchParams();
-    if (order) {
-        searchParams.set("order_by", order || null);
+    if(!map){
+        if (order) {
+            searchParams.set("order_by", order || null);
+        }
     }
     if (filters["category"]) {
         searchParams.set("category", filters["category"] || null);
@@ -95,7 +99,8 @@ async function getOffers() {
         "&online=" +
         true +
         moreSearch +
-        search; //url of the api for research page offers's data
+        search +
+        (map ? "&map=true" : ""); //url of the api for research page offers's data
     // console.log("url : " + url);
     try {
         const response = await fetch(url); //fetching the data from the api
@@ -152,12 +157,17 @@ async function applyFilters(newFilters = {}, neworder = null) {
         let Data = await getOffers();
         displayOffers(Data);
         listenerIteneraire(Data);
-        displayMap(Data, true);
+        let DataMap = await getOffers(true);
+        displayMap(DataMap);
     } else {
         let Data = await getOffers();
         displayOffers(Data);
         listenerIteneraire(Data);
-        displayMap(Data);
+        if (!mapInit) {
+            mapInit = true;
+            let DataMap = await getOffers(true);
+            displayMap(DataMap);
+        }
     }
     offset += 5;
 }
@@ -658,27 +668,11 @@ let visitIcon = L.icon({
 });
 
 let map;
-let TableMarker = [];
 let DataTableMap;
 
-function displayMap(Data, remove = false) {
-    DataTableMap = Data;
+function displayMap(DataMap) {
+    DataTableMap = DataMap;
     let groupMarkers = L.markerClusterGroup();
-    if (remove) {
-        TableMarker = [];
-    }
-    Data.forEach((offer) => {
-        TableMarker.push([
-            [offer.address.latitude, offer.address.longitude],
-            offer.title,
-            offer.address.city,
-            offer.address.postal_code,
-            offer.id,
-            offer.category,
-            offer.rating,
-        ]);
-    });
-
 
     if (map) {
         map.remove();
@@ -689,7 +683,6 @@ function displayMap(Data, remove = false) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                console.log("Geolocation is supported by this browser.");
                 userCoords = [position.coords.latitude, position.coords.longitude];
             },
             (error) => {
@@ -712,9 +705,9 @@ function displayMap(Data, remove = false) {
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    TableMarker.forEach((coords, index) => {
+    DataMap.forEach((coords, index) => {
         let markerIcon;
-        switch (coords[5]) {
+        switch (coords.category) {
             case "restaurant":
                 markerIcon = restaurantIcon;
                 break;
@@ -731,7 +724,7 @@ function displayMap(Data, remove = false) {
                 markerIcon = visitIcon;
                 break;
         }
-        let marker = L.marker(coords[0], {
+        let marker = L.marker([coords.latitude,coords.longitude], {
             icon: markerIcon,
         });
         groupMarkers.addLayer(marker);
@@ -744,9 +737,9 @@ function displayMap(Data, remove = false) {
             star.classList.add("star");
             star.innerHTML = starSVG;
 
-            if (i < coords[6] && i > coords[6] - 1) {
+            if (i < coords.rating && i > coords.rating - 1) {
                 star.classList.add("half-fill");
-            } else if (i < coords[6]) {
+            } else if (i < coords.rating) {
                 star.classList.add("fill");
             }
 
@@ -755,12 +748,12 @@ function displayMap(Data, remove = false) {
 
         marker.bindPopup(`
             <div class="map-card">
-                <h1>${coords[1]}</h1>
-                <p>${coords[2]}, ${coords[3]}</p>
+                <h1>${coords.title}</h1>
+                <p>${coords.city}, ${coords.postal_code}</p>
                 <div>${stars.outerHTML}</div>
                 <div class="flex gap-1 pt-1 mt-2">
-                    <div id="${coords[4]}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
-                    <a href="/offres/${coords[4]}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
+                    <div id="${coords.id}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
+                    <a href="/offres/${coords.id}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
                 </div>
             </div>`);
         marker.on("popupopen", function () {
@@ -805,7 +798,7 @@ function ScaleMap() {
     topPart.classList.toggle("md:flex-row");
     topPart.classList.toggle("md:h-[170px]");
     searchPart.classList.toggle("md:w-2/3");
-    displayMap(DataTableMap, true);
+    displayMap(DataTableMap);
 }
 searchMap.addEventListener("click", () => {
     ScaleMap();
