@@ -713,9 +713,8 @@ function displayMap(Data, remove = false) {
         }
         let marker = L.marker(coords[0], {
             icon: markerIcon,
-        }).addTo(map);
+        });
         groupMarkers.addLayer(marker);
-        map.addLayer(groupMarkers);
 
         let stars = document.createElement("div");
         stars.classList.add("stars");
@@ -760,7 +759,6 @@ function displayMap(Data, remove = false) {
             });
         });
     });
-
     map.addLayer(groupMarkers);
 }
 

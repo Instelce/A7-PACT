@@ -22,6 +22,8 @@ use app\core\Application;
 
     <?php if ($this->leaflet) { ?>
         <link rel="stylesheet" href="/css/parts/leaflet.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
 
     <?php } ?>
 
@@ -350,12 +352,12 @@ use app\core\Application;
 
     <?php if ($this->threejs) { ?>
         <script type="importmap">
-                                {
-                                  "imports": {
-                                    "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
-                                  }
-                                }
-                            </script>
+                                    {
+                                      "imports": {
+                                        "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
+                                      }
+                                    }
+                                </script>
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
     <?php } ?>
 
