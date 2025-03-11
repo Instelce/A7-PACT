@@ -21,8 +21,7 @@ use app\core\Application;
     <link rel="stylesheet" href="/css/dist/output.css">
 
     <?php if ($this->leaflet) { ?>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <link rel="stylesheet" href="/css/parts/leaflet.css" />
     <?php } ?>
 
     <?php if ($this->cssFile): ?>
@@ -74,28 +73,41 @@ use app\core\Application;
                 <i data-lucide="search"></i>
             </a>
 
-        <?php if (Application::$app->isAuthenticated()) { ?>
-            <button class="chat-trigger button gray icon-left icon-right no-border hidden md:flex">
-                <span>Messages</span>
-                <i data-lucide="message-circle"></i>
-            </button>
+            <?php if (Application::$app->isAuthenticated()) { ?>
+                <button class="chat-trigger button gray icon-left icon-right no-border hidden md:flex">
+                    <span>Messages</span>
+                    <i data-lucide="message-circle"></i>
+                </button>
 
-            <!-- Notifications -->
-            <div class="notification">
-                <div class="notification-icon button gray icon-left icon-right no-border hidden md:flex">
-                    <p>Notifications</p>
-                    <svg id="icon-alert" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-dot"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M13.916 2.314A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.74 7.327A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673 9 9 0 0 1-.585-.665"/><circle cx="18" cy="8" r="3" fill="red" stroke="red"/></svg>
-                    <svg id="icon-default" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+                <!-- Notifications -->
+                <div class="notification">
+                    <div class="notification-icon button gray icon-left icon-right no-border hidden md:flex">
+                        <p>Notifications</p>
+                        <svg id="icon-alert" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-bell-dot">
+                            <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+                            <path
+                                d="M13.916 2.314A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.74 7.327A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673 9 9 0 0 1-.585-.665" />
+                            <circle cx="18" cy="8" r="3" fill="red" stroke="red" />
+                        </svg>
+                        <svg id="icon-default" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-bell">
+                            <path d="M10.268 21a2 2 0 0 0 3.464 0" />
+                            <path
+                                d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" />
+                        </svg>
+                    </div>
+                    <div class="notification-container"></div>
                 </div>
-                <div class="notification-container"></div>
-            </div>
 
-            <!-- Avatar -->
-            <div class="avatar">
-                <div class="image-container">
-                    <img src="<?php echo Application::$app->user->avatar_url ?>"
-                         alt="<?php echo Application::$app->user->mail ?>">
-                </div>
+                <!-- Avatar -->
+                <div class="avatar">
+                    <div class="image-container">
+                        <img src="<?php echo Application::$app->user->avatar_url ?>"
+                            alt="<?php echo Application::$app->user->mail ?>">
+                    </div>
 
                     <div class="avatar-options">
 
@@ -143,7 +155,7 @@ use app\core\Application;
     <?php if ($this->waves) { ?>
         <div class="wave">
             <svg class="waveSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                 viewBox="0 24 150 28" preserveAspectRatio="none">
+                viewBox="0 24 150 28" preserveAspectRatio="none">
                 <defs>
                     <path id="gentle-wave" d="M-160 44c30 0
             58-18 88-18s
@@ -325,7 +337,9 @@ use app\core\Application;
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js" integrity="sha512-8BHxHDLsOHx+flIrQ0DrZcea7MkHqRU5GbTHmbdzMRnAaoCIkZ97PqZcXJkKZckMMhqfoeaJE+DNUVuyoQsO3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"
+        integrity="sha512-8BHxHDLsOHx+flIrQ0DrZcea7MkHqRU5GbTHmbdzMRnAaoCIkZ97PqZcXJkKZckMMhqfoeaJE+DNUVuyoQsO3Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <?php if ($this->leaflet) { ?>
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -334,12 +348,12 @@ use app\core\Application;
 
     <?php if ($this->threejs) { ?>
         <script type="importmap">
-            {
-              "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
-              }
-            }
-        </script>
+                        {
+                          "imports": {
+                            "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
+                          }
+                        }
+                    </script>
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
     <?php } ?>
 

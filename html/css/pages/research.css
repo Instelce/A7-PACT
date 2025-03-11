@@ -91,6 +91,27 @@
     animation: popupClose .3s forwards;
 }
 
+.map-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+}
+.map-card > a {
+    color: inherit !important;
+    
+}
+.map-card > h1 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.map-card > p {
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin: 0;
+}
+
 
 @media (max-width: 768px) {
     .categories-container {
