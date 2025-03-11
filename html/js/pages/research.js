@@ -349,7 +349,9 @@ filterButton.addEventListener("click", () => {
 closeFilters.addEventListener("click", () => {
     if (!popup.classList.contains("close")) {
         popup.classList.add("close");
-        setTimeout(() => { popup.classList.add("hidden"); }, 500);
+        setTimeout(() => {
+            popup.classList.add("hidden");
+        }, 500);
     }
 });
 popup.addEventListener("click", (event) => {
@@ -661,6 +663,7 @@ let TableMarker = [];
 
 function displayMap(Data, remove = false) {
     console.log(Data);
+    let groupMarkers = L.markerClusterGroup();
     if (remove) {
         TableMarker = [];
     }
@@ -710,7 +713,8 @@ function displayMap(Data, remove = false) {
         }
         let marker = L.marker(coords[0], {
             icon: markerIcon,
-        }).addTo(map);
+        });
+        groupMarkers.addLayer(marker);
 
         let stars = document.createElement("div");
         stars.classList.add("stars");
@@ -730,15 +734,15 @@ function displayMap(Data, remove = false) {
         }
 
         marker.bindPopup(`
-            <a class="map-card" href="#${coords[4]}">
-            <h1>${coords[1]}</h1>
-            <p>${coords[2]}, ${coords[3]}</p>
-            <div>${stars.outerHTML}</div>
-            <div class="flex gap-1 pt-1 mt-2">
-                <div id="${coords[4]}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
-                <a href="/offres/${coords[4]}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
-            </div>
-            </a>`);
+            <div class="map-card">
+                <h1>${coords[1]}</h1>
+                <p>${coords[2]}, ${coords[3]}</p>
+                <div>${stars.outerHTML}</div>
+                <div class="flex gap-1 pt-1 mt-2">
+                    <div id="${coords[4]}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
+                    <a href="/offres/${coords[4]}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
+                </div>
+            </div>`);
         marker.on("popupopen", function () {
             document.querySelectorAll(".iteneraire").forEach((element) => {
                 element.addEventListener("click", (event) => {
@@ -755,6 +759,7 @@ function displayMap(Data, remove = false) {
             });
         });
     });
+    map.addLayer(groupMarkers);
 }
 
 let fullScaleMap = document.getElementById("fullScaleMap");
