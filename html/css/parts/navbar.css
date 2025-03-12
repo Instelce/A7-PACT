@@ -192,6 +192,7 @@
     opacity: 1;
     pointer-events: auto;
     transform: translateY(calc(100% + .5rem)) translateX(-75%);
+    border-radius: var(--radius-small);
 }
 
 .notification .notification-container a {
@@ -215,9 +216,15 @@
     gap: 1rem;
 }
 
+.notification-separator {
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0;
+}
+
+
 .notification-card{
     padding: 1rem 2rem;
-
 }
 
 @media only screen and (max-width: 768px) {
