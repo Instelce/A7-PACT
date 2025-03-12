@@ -398,6 +398,8 @@ class OfferController extends Controller
                     $opinion->addPhoto($file);
                 }
 
+                Application::$app->notifications->createNotification(ProfessionalUser::findOneByPk($opinion->account_id) , Application::$app->user->specific()->pseudo . " Vous a envoyé un commentaire");
+
                 $opinionSubmitted = false;
 
 
