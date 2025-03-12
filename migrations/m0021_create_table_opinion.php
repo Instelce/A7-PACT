@@ -80,4 +80,22 @@ class m0021_create_table_opinion
 ";
         Application::$app->db->pdo->exec($sql);
     }
+
+    //create or replace function ftg_document_totalite()
+//  returns trigger as $$
+//begin
+//  perform * from document_totalite;
+//  if found then
+//    raise exception 'Vous devez créer un post ou un commentaire, pas un document seul !';
+//  end if;
+//  return null;
+//end;
+//$$ language plpgsql;
+//
+//DROP TRIGGER if exists tg_document_totalite ON forum1._document CASCADE;
+//create trigger tg_document_totalite
+//after insert
+//on _document for each row
+//execute procedure ftg_document_totalite();
+
 }

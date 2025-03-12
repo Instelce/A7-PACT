@@ -107,6 +107,14 @@ export function createOpinionCard(opinion, dashboard = false) {
             .then(response => response.json())
     }
 
+    async function blacklisting(id){
+        await fetch(`/api/opinions/blacklisted/${id}`,
+            {
+                method: 'post',
+            })
+            .then(response => response.json())
+    }
+
     console.log(opinion)
 
     card.innerHTML = `
@@ -153,7 +161,7 @@ export function createOpinionCard(opinion, dashboard = false) {
                             Blacklister
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>                    
                         </div>
-                    </button>    
+                    </button>     
                 </div>
             </div>
         </header>
@@ -239,8 +247,29 @@ export function createOpinionCard(opinion, dashboard = false) {
                     <p>En le signalant, vous signalez qu'il enfreint les règles de notre plateforme.</p></br>
     
                     <div class="popup-class on-same-line grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mt-8">
-                        <button type="button" class="button gray confirm-button" title="Signaler cet avis">
+                        <button type="button" class="button gray confirm-button-report" title="Signaler cet avis">
                             Confirmer le signalement
+                        </button>
+                        <button type="button" class="button cancel-button">Annuler</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pop-up Blacklist -->
+        <div class="dialog-container hide" data-dialog-name="">
+            <div class="dialog w-[70%]">
+                <header class="dialog-header">
+                    <h3 class="dialog-title">Confirmer le blacklistage</h3>
+                </header>
+    
+                <div class="dialog-content">
+                    <h2>Êtes-vous sûr de vouloir blacklister ce commentaire ? </h2></br>
+                    <p>En le blacklistant, vous empêchez sa visibilité par les autres utilisateurs.</p></br>
+    
+                    <div class="popup-class on-same-line grid lg:grid-cols-2 sm:grid-cols-1 gap-4 mt-8">
+                        <button type="button" class="button gray confirm-button-blacklist" title="Signaler cet avis">
+                            Confirmer le blacklistage
                         </button>
                         <button type="button" class="button cancel-button">Annuler</button>
                     </div>
@@ -273,7 +302,15 @@ export function createOpinionCard(opinion, dashboard = false) {
     let reportButton = card.querySelector(".report-card");
     let reportSvg = reportButton.querySelector('svg');
 
+    let blacklistButton = card.querySelector(".blacklist-card");
+    let blacklistSvg = reportButton.querySelector('svg');
+
     reportButton.addEventListener("click", () => {
+        const dialog = card.querySelector('.dialog-container');
+        dialog.classList.remove('hide');
+    });
+
+    blacklistButton.addEventListener("click", () => {
         const dialog = card.querySelector('.dialog-container');
         dialog.classList.remove('hide');
     });
@@ -284,13 +321,25 @@ export function createOpinionCard(opinion, dashboard = false) {
         dialog.classList.add('hide');
     });
 
-    let confirmButton = card.querySelector('.confirm-button');
-    confirmButton.addEventListener('click', () => {
+    let confirmButtonReport = card.querySelector('.confirm-button-report');
+    confirmButtonReport.addEventListener('click', () => {
         getReports(opinion.id); // Traiter le signalement
         reportSvg.setAttribute('fill', 'red');
         reportSvg.setAttribute('stroke', 'white');
 
         reportButton.disabled = true;
+
+        const dialog = card.querySelector('.dialog-container');
+        dialog.classList.add('hide'); // Fermer la fenêtre après confirmation
+    });
+
+    let confirmButtonBlacklist = card.querySelector('.confirm-button-blacklist');
+    confirmButtonBlacklist.addEventListener('click', () => {
+        blacklisting(opinion.id); // Traiter le blacklistage
+        blacklistSvg.setAttribute('fill', 'black');
+        blacklistSvg.setAttribute('stroke', 'white');
+
+        blacklistButton.disabled = true;
 
         const dialog = card.querySelector('.dialog-container');
         dialog.classList.add('hide'); // Fermer la fenêtre après confirmation

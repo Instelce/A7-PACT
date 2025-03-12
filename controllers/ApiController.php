@@ -683,4 +683,9 @@ class ApiController extends Controller
         }
         return $response->json([]);
     }
+
+    public function blacklists(Request $request, Response $response)
+    {
+
+    }
 }
