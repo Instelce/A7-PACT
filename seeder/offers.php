@@ -178,6 +178,9 @@ echo "All offers created in " . ($endTime - $startTime) . " seconds\n";
 // Generate opinions
 // ---------------------------------------------------------------------- //
 
+echo "Génération des commentaires en cours...\n";
+
+
 /** @var Offer[] $offers */
 $offers = Offer::all();
 /** @var MemberUser[] $members */
@@ -473,7 +476,7 @@ $reviews = [
 ];
 
 foreach ($offers as $offer) {
-    $count = rand(6, 20);
+    $count = rand(5, 12);
     $account_ids = [];
 
     for ($k = 0; $k < $count; $k++) {
@@ -504,6 +507,7 @@ foreach ($offers as $offer) {
 
 }
 
+echo "Commentaires créés...\n";
 
 
 ?>
