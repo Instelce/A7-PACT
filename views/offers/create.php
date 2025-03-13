@@ -7,7 +7,7 @@
 use app\core\Application;
 use app\core\form\Form;
 
-$this->title = "Création d'une offre";
+$this->title = "Créer une offre";
 $this->jsFile = "offerCreate";
 
 $form = new Form();
@@ -361,24 +361,24 @@ $form = new Form();
                             <x-input class="w-[200px]">
                                 <p slot="label">Numéro de rue</p>
                                 <input slot="input" id="address-number" type="number" name="address-number"
-                                    placeholder="2">
+                                    placeholder="2" disabled>
                             </x-input>
                             <x-input>
                                 <p slot="label">Nom de la rue</p>
                                 <input slot="input" id="address-street" type="text" name="address-street"
-                                    placeholder="Rue Edouard Branly" required>
+                                    placeholder="Rue Edouard Branly" required disabled>
                             </x-input>
                         </div>
                         <div class="flex gap-4">
                             <x-input class="w-[200px]">
                                 <p slot="label">Code postal</p>
                                 <input slot="input" id="address-postal-code" type="text" name="address-postal-code"
-                                    placeholder="22300" required>
+                                    placeholder="22300" required disabled>
                             </x-input>
                             <x-input>
                                 <p slot="label">Ville</p>
                                 <input slot="input" id="address-city" type="text" name="address-city"
-                                    placeholder="Lannion" required>
+                                    placeholder="Lannion" required disabled>
                             </x-input>
                         </div>
 
