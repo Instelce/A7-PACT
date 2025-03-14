@@ -71,7 +71,7 @@ class m0021_create_table_opinion
 
     public function down()
     {
-        $sql = "DROP TABLE opinion_blacklist CASCADE; /*MODIFICATION ICI*/
+        $sql = "DROP TABLE opinion_blacklist CASCADE;
                 DROP TABLE opinion CASCADE;
                 DROP TABLE opinion_photo CASCADE;
                 DROP TABLE opinion_like CASCADE;
