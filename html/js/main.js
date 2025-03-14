@@ -85,6 +85,10 @@ if (notificationContainer){
             }
 
             notificationContainer.appendChild(notificationCard);
+
+            let separator = document.createElement('div');
+            separator.classList.add('notification-separator'); // Ajoute une classe pour styliser la ligne
+            notificationContainer.appendChild(separator);
         }
 
         if (notifications.find(n => n.is_read === 0)){
