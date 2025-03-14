@@ -62,12 +62,17 @@ function getCategoryFromFileName($filename) {
 
 $files = glob(__DIR__ . "/fetcher/data/*.json");
 $professionals = ProfessionalUser::all();
+$exclude = ["concerts"];
 
 echo "Found " . count($files) . " files to process\n";
 
 $startTime = microtime(true);
 
 foreach ($files as $file) {
+    if (in_array(basename($file, ".json"), $exclude)) {
+        continue;
+    }
+
     echo "Processing $file...\n";
     $json = file_get_contents($file);
     $json = mb_convert_encoding($json, 'UTF-8', 'auto');
@@ -89,8 +94,8 @@ foreach ($files as $file) {
         $city = explode(" ", end($addressParts))[1] ? explode(" ", end($addressParts))[1] : $addressParts[0];
 
         $address = new Address();
-        $address->longitude = intval($offerData["longitude"]);
-        $address->latitude = intval($offerData["latitude"]);
+        $address->longitude = floatval($offerData["longitude"]);
+        $address->latitude = floatval($offerData["latitude"]);
         $address->number = 0;
         $address->street = $addressParts[0];
         $address->city = $city;
