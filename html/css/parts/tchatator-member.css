@@ -10,7 +10,6 @@
     right: 0;
     top: calc(var(--navbar-height) - 2px);
     border-left: 1px solid rgb(var(--color-gray-1));
-
     background: rgb(var(--color-white));
 }
 

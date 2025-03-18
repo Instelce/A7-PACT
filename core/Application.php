@@ -57,7 +57,7 @@ class Application
         if ($pkValue) {
             $this->userType = $this->session->get('userType');
             $pk = UserAccount::pk();
-            $this->user = UserAccount::findOne([$pk => $pkValue]);
+            $this->user = UserAccount::findOne([$pk => $pkValue])  ?: null;
         } else {
             $this->userType = 'visitor';
         }

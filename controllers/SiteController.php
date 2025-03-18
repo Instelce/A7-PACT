@@ -103,25 +103,96 @@ class SiteController extends Controller
                     ];
                 }
 
-                $offers[$offer->id] = [
-                    "id" => $offer->id,
-                    "image" => $image,
-                    "title" => $offer->title,
-                    "author" => $professional,
-                    "type" => $type,
-                    "price" => $price,
-                    "location" => $location,
-                    'summary' => $offer->summary,
-                    "dateSincePublication" => $dateSincePublication,
-                    "ratingsCount" => $ratingsCount,
-                    'rating' => $offer->rating,
-                ];
+//                $offers[$offer->id] = [
+//                    "id" => $offer->id,
+//                    "image" => $image,
+//                    "title" => $offer->title,
+//                    "author" => $professional,
+//                    "type" => $type,
+//                    "price" => $price,
+//                    "location" => $location,
+//                    'summary' => $offer->summary,
+//                    "dateSincePublication" => $dateSincePublication,
+//                    "ratingsCount" => $ratingsCount,
+//                    'rating' => $offer->rating,
+//                ];
             }
         }
 
+        $newOffersArray = [];
+        $newOffers = Offer::query()->order_by(["created_at DESC"])->limit(10)->make();
+
+        foreach ($newOffers as $i => $offer) {
+            $image = OfferPhoto::findOne(['offer_id' => $offer->id])->url_photo ?? null;
+            $professional = ProfessionalUser::findOne(['user_id' => $offer->professional_id])->denomination ?? null;
+            $type = null;
+            $price = null;
+
+            switch ($offer->category) {
+                case 'restaurant':
+                    $type = "Restaurant";
+                    $range_price = RestaurantOffer::findOne(['offer_id' => $offer->id])->range_price ?? 0;
+                    if ($range_price == 1) {
+                        $price = "€";
+                    } elseif ($range_price == 2) {
+                        $price = "€€";
+                    } elseif ($range_price == 3) {
+                        $price = "€€€";
+                    } else {
+                        $price = $range_price;
+                    }
+                    break;
+
+                case 'activity':
+                    $type = "Activité";
+                    $priceData = ActivityOffer::findOne(['offer_id' => $offer->id]);
+                    $price = $offer->minimum_price !== null ? "À partir de  " . $offer->minimum_price . "€" : "Gratuit";
+                    break;
+
+                case 'show':
+                    $type = "Spectacle";
+                    $priceData = ShowOffer::findOne(['offer_id' => $offer->id]);
+                    $price = $offer->minimum_price !== null ? "À partir de " . $offer->minimum_price . "€" : "Gratuit";
+                    break;
+
+                case 'visit':
+                    $type = "Visite";
+                    $priceData = VisitOffer::findOne(['offer_id' => $offer->id]);
+                    $price = $offer->minimum_price !== null ? "À partir de " . $offer->minimum_price . "€" : "Gratuit";
+                    break;
+
+                case 'attraction_park':
+                    $priceData = AttractionParkOffer::findOne(['offer_id' => $offer->id]);
+                    $price = $offer->minimum_price !== null ? "À partir de " . $offer->minimum_price . "€" : "Gratuit";
+                    $type = "Parc d'attraction";
+                    break;
+            }
+
+            $location = Address::findOne(['id' => $offer->address_id])->city ?? null;
+            $lastOnlineDate = strtotime($offer->last_online_date ?? 'now');
+            $currentDate = strtotime(date('Y-m-d'));
+            $dateSincePublication = floor(($currentDate - $lastOnlineDate) / (60 * 60 * 24));
+
+            $ratingsCount = Offer::findOne(['id' => $offer->id])->opinionsCount();
+
+            $newOffersArray[$offer->id] = [
+                "id" => $offer->id,
+                "image" => $image,
+                "title" => $offer->title,
+                "author" => $professional,
+                "type" => $type,
+                "price" => $price,
+                "location" => $location,
+                'summary' => $offer->summary,
+                "dateSincePublication" => $dateSincePublication,
+                "ratingsCount" => $ratingsCount,
+                'rating' => $offer->rating,
+            ];
+        }
+
         $params = [
-            'offers' => $offers,
             'offersALaUne' => $offersALaUne,
+            'newOffers' => $newOffersArray
         ];
 
         return $this->render("home", $params);

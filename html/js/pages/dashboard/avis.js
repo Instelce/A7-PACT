@@ -153,3 +153,29 @@ searchInput.addEventListener('input', debounce(() => {
             offset += 3;
         })
 }, 300));
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const actionsOpinionButton = document.querySelector('.button-management-options');
+    const actionsOpinionOptions = document.querySelector('.management-options');
+
+    console.log(actionsOpinionOptions);
+    console.log(actionsOpinionButton);
+
+    if (actionsOpinionButton && actionsOpinionOptions) {
+        console.log("ok");
+
+        actionsOpinionButton.addEventListener('click', function (event) {
+            actionsOpinionOptions.classList.toggle('open');
+            event.stopPropagation();
+        });
+
+        // Ferme lorsque l'on clique à l'extérieur
+        document.addEventListener('click', function (event) {
+            if (!actionsOpinionOptions.contains(event.target) && !actionsOpinionButton.contains(event.target)) {
+                actionsOpinionOptions.classList.remove('open');
+            }
+        });
+    }
+});

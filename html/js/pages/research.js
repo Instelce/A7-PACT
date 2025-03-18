@@ -1,8 +1,14 @@
+import {capitalize, translateCategory} from "../utils.js";
+
 //initialize the global parameters and save them permanently
 let filters = {};
 let order = null;
 let limit = 5;
 let offset = 0;
+//first init map
+let mapInit = false;
+//block interaction when loading
+let blockElement = false;
 /**
  * Displays the fetched offers data in the offers container.
  *
@@ -32,11 +38,13 @@ let offset = 0;
  * @returns {Promise<Object|boolean>} The fetched offers data in JSON format, or false if an error occurs.
  * @throws {Error} If the response status is not OK.
  */
-async function getOffers() {
+async function getOffers(map = false) {
     const host = window.location.protocol;
     const searchParams = new URLSearchParams();
-    if (order) {
-        searchParams.set("order_by", order || null);
+    if(!map){
+        if (order) {
+            searchParams.set("order_by", order || null);
+        }
     }
     if (filters["category"]) {
         searchParams.set("category", filters["category"] || null);
@@ -95,7 +103,8 @@ async function getOffers() {
         "&online=" +
         true +
         moreSearch +
-        search; //url of the api for research page offers's data
+        search +
+        (map ? "&map=true" : ""); //url of the api for research page offers's data
     // console.log("url : " + url);
     try {
         const response = await fetch(url); //fetching the data from the api
@@ -129,6 +138,7 @@ async function getOffers() {
  * @returns {Promise<void>} A promise that resolves when the offers have been fetched and displayed.
  */
 async function applyFilters(newFilters = {}, neworder = null) {
+    blockElementFunction("BlockInteraction", true);
     filters = { ...filters, ...newFilters };
     if (neworder && neworder !== -1) {
         order = neworder;
@@ -152,14 +162,20 @@ async function applyFilters(newFilters = {}, neworder = null) {
         let Data = await getOffers();
         displayOffers(Data);
         listenerIteneraire(Data);
-        displayMap(Data, true);
+        let DataMap = await getOffers(true);
+        displayMap(DataMap);
     } else {
         let Data = await getOffers();
         displayOffers(Data);
         listenerIteneraire(Data);
-        displayMap(Data);
+        if (!mapInit) {
+            mapInit = true;
+            let DataMap = await getOffers(true);
+            displayMap(DataMap);
+        }
     }
     offset += 5;
+    blockElementFunction("BlockInteraction", false);
 }
 // ---------------------------------------------------------------------------------------------- //
 // SVG
@@ -262,7 +278,7 @@ function displayOffers(Data) {
                 <header>
                 <h2 class="research-card--title">${offer.title}</h2>
                 <div class="flex flex-row gap-2 justify-between items-center">
-                <p>${translateCategory(offer.category)} par <a href="/comptes/${
+                <p>${capitalize(translateCategory(offer.category))} par <a href="/comptes/${
                     offer.professional_id
                 }" class="underline">${
                     offer.profesionalUser["denomination"]
@@ -311,20 +327,6 @@ function displayOffers(Data) {
     }
 }
 
-function translateCategory(category) {
-    switch (category) {
-        case "attraction_park":
-            return "parc d'attraction";
-        case "visit":
-            return "visite";
-        case "restaurant":
-            return "restaurant";
-        case "activity":
-            return "activité";
-        case "show":
-            return "spectacle";
-    }
-}
 // ---------------------------------------------------------------------------------------------- //
 // Pop up
 // ---------------------------------------------------------------------------------------------- //
@@ -395,13 +397,15 @@ categoryListenners.forEach((listener, index) => {
     let categories = document.querySelectorAll(".category-item");
     if (element) {
         element.addEventListener("click", () => {
-            if (element.classList.contains("active")) {
-                element.classList.remove("active");
-                applyFilters({ category: null });
-            } else {
-                categories.forEach((cat) => cat.classList.remove("active"));
-                element.classList.add("active");
-                applyFilters({ category: categoryValue[index] });
+            if (!blockElement) {  
+                if (element.classList.contains("active")) {
+                    element.classList.remove("active");
+                    applyFilters({ category: null });
+                } else {
+                    categories.forEach((cat) => cat.classList.remove("active"));
+                    element.classList.add("active");
+                    applyFilters({ category: categoryValue[index] });
+                }
             }
         });
     } else {
@@ -524,7 +528,7 @@ function error(err) {
 }
 
 aProximite.addEventListener("click", (event) => {
-    if (aProximite.classList.contains("gray")) {
+    if (aProximite.classList.contains("gray") && !blockElement) {
         aProximite.classList.remove("gray");
         aProximite.classList.add("blue");
         proximiteLoader.classList.remove("hidden");
@@ -536,7 +540,7 @@ aProximite.addEventListener("click", (event) => {
                 "La géolocalisation n'est pas supportée par ce navigateur."
             );
         }
-    } else if (aProximite.classList.contains("blue")) {
+    } else if (aProximite.classList.contains("blue") && !blockElement) {
         applyFilters({ latitude: null, longitude: null });
         aProximite.classList.remove("blue");
         aProximite.classList.add("gray");
@@ -547,7 +551,6 @@ function listenerIteneraire(Data) {
     let iteneraire = document.querySelectorAll(".iteneraire");
     iteneraire.forEach((element) => {
         element.addEventListener("click", (event) => {
-            console.log(event.target.id);
             let offerId = event.target.id;
             Data.forEach((offer) => {
                 if (offer.id == offerId) {
@@ -614,7 +617,7 @@ async function loadOffers() {
 // Create intersection observer on loader section
 const observer = new IntersectionObserver(
     (entries) => {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && !blockElement) {
             loadOffers();
         }
     },
@@ -659,32 +662,36 @@ let visitIcon = L.icon({
 });
 
 let map;
-let TableMarker = [];
+let DataTableMap;
 
-function displayMap(Data, remove = false) {
-    console.log(Data);
+function displayMap(DataMap) {
+    DataTableMap = DataMap;
     let groupMarkers = L.markerClusterGroup();
-    if (remove) {
-        TableMarker = [];
-    }
-    Data.forEach((offer) => {
-        TableMarker.push([
-            [offer.address.latitude, offer.address.longitude],
-            offer.title,
-            offer.address.city,
-            offer.address.postal_code,
-            offer.id,
-            offer.category,
-            offer.rating,
-        ]);
-    });
 
     if (map) {
         map.remove();
     }
+
+    let userCoords = [48.1782600, -2.7543300];
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                userCoords = [position.coords.latitude, position.coords.longitude];
+            },
+            (error) => {
+                console.error("Error getting user location:", error);
+            }
+        );
+    } else {
+        console.error("Geolocation is not supported by this browser.");
+    }
+
+    console.log(userCoords);
+
     map = L.map("map", {
-        center: [48.8566, 2.3522],
-        zoom: 5,
+        center: userCoords,
+        zoom: 8,
     });
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
@@ -692,9 +699,9 @@ function displayMap(Data, remove = false) {
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    TableMarker.forEach((coords, index) => {
+    DataMap.forEach((coords, index) => {
         let markerIcon;
-        switch (coords[5]) {
+        switch (coords.category) {
             case "restaurant":
                 markerIcon = restaurantIcon;
                 break;
@@ -711,7 +718,7 @@ function displayMap(Data, remove = false) {
                 markerIcon = visitIcon;
                 break;
         }
-        let marker = L.marker(coords[0], {
+        let marker = L.marker([coords.latitude,coords.longitude], {
             icon: markerIcon,
         });
         groupMarkers.addLayer(marker);
@@ -724,9 +731,9 @@ function displayMap(Data, remove = false) {
             star.classList.add("star");
             star.innerHTML = starSVG;
 
-            if (i < coords[6] && i > coords[6] - 1) {
+            if (i < coords.rating && i > coords.rating - 1) {
                 star.classList.add("half-fill");
-            } else if (i < coords[6]) {
+            } else if (i < coords.rating) {
                 star.classList.add("fill");
             }
 
@@ -735,12 +742,12 @@ function displayMap(Data, remove = false) {
 
         marker.bindPopup(`
             <div class="map-card">
-                <h1>${coords[1]}</h1>
-                <p>${coords[2]}, ${coords[3]}</p>
+                <h1>${coords.title}</h1>
+                <p>${coords.city}, ${coords.postal_code}</p>
                 <div>${stars.outerHTML}</div>
                 <div class="flex gap-1 pt-1 mt-2">
-                    <div id="${coords[4]}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
-                    <a href="/offres/${coords[4]}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
+                    <div id="${coords.id}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
+                    <a href="/offres/${coords.id}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
                 </div>
             </div>`);
         marker.on("popupopen", function () {
@@ -765,26 +772,27 @@ function displayMap(Data, remove = false) {
 let fullScaleMap = document.getElementById("fullScaleMap");
 let mapContainer = document.getElementById("mapContainer");
 let closeMap = document.getElementById("closeMap");
-let mapScale = document.getElementById("map");
 let searchMap = document.getElementById("searchMap");
+let mapInteractive = document.getElementById("map");
+let topPart = document.getElementById("topPart");
+let searchPart = document.getElementById("searchPart")
 
 function ScaleMap() {
     closeMap.classList.toggle("md:hidden");
     closeMap.classList.toggle("md:block");
     fullScaleMap.classList.toggle("md:hidden");
     fullScaleMap.classList.toggle("md:block");
-    mapScale.classList.toggle("md:w-[13vw]");
-    mapScale.classList.toggle("md:h-[13vw]");
-    mapScale.classList.toggle("xl:w-[18vw]");
-    mapScale.classList.toggle("xl:h-[18vw]");
-    mapScale.classList.toggle("md:w-full");
-    mapScale.classList.toggle("md:h-[70vh]");
-    mapScale.classList.toggle("w-full");
-    mapScale.classList.toggle("h-[50vh]");
-    mapScale.classList.toggle("w-0");
-    mapScale.classList.toggle("h-0");
-    mapContainer.classList.toggle("md:fixed");
-    mapContainer.classList.toggle("md:block");
+    mapContainer.classList.toggle("w-0");
+    mapContainer.classList.toggle("h-0");
+    mapContainer.classList.toggle("md:w-1/3");
+    mapContainer.classList.toggle("md:h-full");
+    mapContainer.classList.toggle("w-full");
+    mapContainer.classList.toggle("h-[50vh]");
+    mapContainer.classList.toggle("md:h-[70vh]");
+    topPart.classList.toggle("md:flex-row");
+    topPart.classList.toggle("md:h-[170px]");
+    searchPart.classList.toggle("md:w-2/3");
+    displayMap(DataTableMap);
 }
 searchMap.addEventListener("click", () => {
     ScaleMap();
@@ -795,3 +803,38 @@ fullScaleMap.addEventListener("click", () => {
 closeMap.addEventListener("click", () => {
     ScaleMap();
 });
+
+
+// ---------------------------------------------------------------------------------------------- //
+//blockElement
+// ---------------------------------------------------------------------------------------------- //
+function blockElementFunction(className, action) {
+    if (action) {
+        blockElement = true
+    } else{
+        blockElement = false
+    }
+    let elements = document.querySelectorAll("."+className);
+    if (elements) {
+        elements.forEach((element) => {
+            if (action) {
+                const overlay = document.createElement("div");
+                overlay.style.position = "absolute";
+                overlay.style.top = 0;
+                overlay.style.left = 0;
+                overlay.style.width = "100%";
+                overlay.style.height = "100%";
+                overlay.style.zIndex = 1;
+                overlay.classList.add("_overlayLoading");
+                overlay.classList.add("cursor-progress");
+                element.appendChild(overlay);
+                element.classList.add("relative");
+            } else{
+                const overlay = element.querySelector("._overlayLoading");
+                if (overlay) {
+                    overlay.remove();
+                }
+            }
+        });
+    }
+}

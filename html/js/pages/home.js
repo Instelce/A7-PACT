@@ -1,6 +1,8 @@
 import "../components/Carousel.js"
 import * as THREE from 'three';
-// import {gsap} from "gsap";
+import {offerRecentlyConsulted} from "../offerRecentlyConsulted.js";
+import {translateCategory, capitalize} from "../utils.js";
+import {Carousel} from "../components/Carousel.js";
 
 // -------------------------------------------------------------------------------------------------
 // Header background animation
@@ -171,9 +173,9 @@ export class Sketch {
         this.camera.position.set(0, 0, 0.4);
         this.time = 0;
         this.uniforms = {
-            time: { value: 1.0 },
-            resolution: { value: new THREE.Vector2() },
-            mouse: { value: new THREE.Vector2() },
+            time: {value: 1.0},
+            resolution: {value: new THREE.Vector2()},
+            mouse: {value: new THREE.Vector2()},
         };
 
         this.isPlaying = true;
@@ -290,7 +292,7 @@ var vSlide = gsap.timeline({
     // duration: 2.0
 });
 
-vsOpts.slides.forEach(function(slide, i) {
+vsOpts.slides.forEach(function (slide, i) {
     // Move each letter
     let letters = splitTextIntoSpans(slide);
     let tween = gsap.from(letters, {
@@ -329,8 +331,126 @@ searchBar.addEventListener("keyup", (event) => {
         goSearchPage(searchValue);
     }
 });
+
 function goSearchPage(text) {
     window.location.href = `/recherche?search=${text}`;
 }
 
 
+// -------------------------------------------------------------------------------------------------
+// Maps
+// -------------------------------------------------------------------------------------------------
+
+const cities = ["Bréhat", "Plouha", "Lannion", "Pléneuf", "Paimpol", "Erquy", "Pontrieux", "Saint-Brieuc"];
+const citiesContainer = document.querySelector(".cities");
+
+function createCityCard(theta, name) {
+    let card = document.createElement("a");
+    card.href = `/recherche?city=${name}`;
+    card.classList.add("city-card");
+    card.innerHTML += `
+        <div class="front">
+            <p>${name}</p>
+            <img src="/assets/images/homeCarouselImages/${name}.jpg" alt="${name}">
+        </div>
+        <img class="background" src="/assets/images/homeCarouselImages/${name}.jpg" alt="${name}">
+    `;
+
+    card.style.left = 50 + (50 * Math.cos(theta)) + "%";
+    card.style.top = 50 + (50 * Math.sin(theta)) + "%";
+
+    return card;
+}
+
+cities.forEach((city, index) => {
+    let angle = ((Math.PI * 2) / cities.length) * index;
+    citiesContainer.appendChild(createCityCard(angle, city));
+})
+
+
+// -------------------------------------------------------------------------------------------------
+// Recently consulted offers
+// -------------------------------------------------------------------------------------------------
+
+function createOfferCard(offer) {
+    return `
+        <div class="home-card">
+            <a href="/offres/${offer.id}">
+                <!-- Image -->
+                <div class="image-container">
+                    <img src="${offer.photo}"
+                         alt="Image de ${offer.title}">
+                    <!-- Nice background on hover -->
+                    <img class="image-bg" src="${offer.photo}"
+                         alt="Image de ${offer.title}">
+
+                    <!-- Localization -->
+                    <div class="flex gap-2 justify-center items-center localization">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15"
+                             viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="3"
+                             stroke-linecap="round"
+                             stroke-linejoin="round" class="lucide lucide-map-pin">
+                            <path
+                                d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <p>${offer.location}</p>
+                    </div>
+
+                    <!-- Stars + Avis -->
+                    <div class="flex gap-2 stars-container">
+                        <!-- TODO -->
+                        <div class="stars" data-number="<?php echo $offer["rating"] ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-content">
+                    <!-- Title and summary -->
+                    <h2>${offer.title}</h2>
+                    <p class="summary text-ellipsis">${offer.summary}</p>
+
+                    <div class="flex flex-col gap-2">
+                        <!-- Type + Professional -->
+                        <p class="text-sm">${capitalize(translateCategory(offer.category))} proposé par <a
+                                href="/">${offer.author}</a></p>
+                    </div>
+                </div>
+            </div>
+    `;
+}
+
+async function fetchOffers() {
+    let offers = [];
+
+    for (let offerId of offerRecentlyConsulted.offerIds) {
+        let response = await fetch(`/api/offers/${offerId}`);
+        let offer = await response.json();
+        offers.push(offer);
+    }
+
+    return offers;
+}
+
+if (offerRecentlyConsulted.offerIds.length > 0) {
+    fetchOffers().then((offers) => {
+        let carousel = document.querySelector(".recently-consulted-carousel");
+        console.log(offers)
+
+        for (let offer of offers) {
+            carousel.innerHTML += createOfferCard(offer);
+        }
+
+        new Carousel(carousel, {
+            slidesToScroll: 1,
+            slidesVisible: 3,
+            loop: false,
+            pagination: false,
+            navigation: true,
+            slidesVisibleMobile: 1,
+        });
+    })
+} else {
+    document.querySelector(".recently-consulted").style.display = "none";
+}

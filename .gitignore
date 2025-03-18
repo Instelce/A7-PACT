@@ -5,3 +5,5 @@ seeder/env
 html/css/dist
 playground.php
 .vscode
+node_modules/
+

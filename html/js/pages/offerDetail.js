@@ -2,6 +2,7 @@ import '../photoUpload.js';
 import '../tchatator.js';
 import {clientInfoCommand, loginCommand, sendMessageCommand} from '../tchatator.js';
 import {getUser} from "../user.js";
+import {offerRecentlyConsulted} from "../offerRecentlyConsulted.js";
 
 let offerId = document.querySelector('#offer-id').value;
 
@@ -20,6 +21,9 @@ getUser().then(u => {
     user = u
 });
 
+
+// Update recently consulted offers
+offerRecentlyConsulted.consultOffer(offerId);
 
 
 // ---------------------------------------------------------------------------------------------- //
@@ -440,6 +444,8 @@ function createOpinionCard(opinion) {
         </div>       
         <!-- Photos -->
         ${photos.outerHTML}
+        
+        <br>
         
         <div class="flex flex-row gap-2 ">
             <div class="like-button flex flex-row gap-1 items-center">
