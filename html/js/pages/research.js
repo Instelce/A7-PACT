@@ -744,8 +744,8 @@ function displayMap(Data, remove = false) {
                 </div>
             </div>`);
         marker.on("popupopen", function () {
-            document.querySelectorAll(".iteneraire").forEach((element) => {
-                element.addEventListener("click", (event) => {
+            document.addEventListener("click", function (event) {
+                if (event.target.classList.contains("iteneraire")) {
                     let offerId = event.target.id;
                     Data.forEach((offer) => {
                         if (offer.id == offerId) {
@@ -755,7 +755,7 @@ function displayMap(Data, remove = false) {
                             window.open(url, "_blank");
                         }
                     });
-                });
+                }
             });
         });
     });
