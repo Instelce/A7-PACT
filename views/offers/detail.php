@@ -361,7 +361,7 @@ $latitude = $offer->address()->latitude;
                                         </div>
                                     </a>
                                     <a href="/comptes/<?php echo Application::$app->user->account_id ?>" class="user-name"><?php echo Application::$app->user->specific()->pseudo ?></a>
-                                    <p class="text-sm text-gray-4">Créer le <?php echo Utils::formatDate($userOpinion->created_at) ?></p>
+                                    <p class="text-sm text-gray-4">Créé le <?php echo Utils::formatDate($userOpinion->created_at) ?></p>
 
                                 </div>
 
@@ -403,6 +403,20 @@ $latitude = $offer->address()->latitude;
                                 </div>
                             <?php } ?>
 
+                            <br>
+
+                            <!-- Likes -->
+                            <div class="flex flex-row gap-4">
+                                <div class="flex flex-row gap-2 items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-up"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+                                    <p><?php echo $userOpinion->likes() ?></p>
+                                </div>
+                                <div class="flex flex-row gap-2 items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-down"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></svg>
+                                    <p><?php echo $userOpinion->dislikes() ?></p>
+                                </div>
+                            </div>
+
 
                         </article>
                     </div>
@@ -420,14 +434,15 @@ $latitude = $offer->address()->latitude;
             <div id="map" class="map"></div>
             <input type="hidden" id="map-latitude" value="<?php echo $latitude ?>">
             <input type="hidden" id="map-longitude" value="<?php echo $longitude ?>">
+            <input id="offer-category" type="hidden" value="<?php echo $offerData['category'] ?>">
             <a href="https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=<?php echo $latitude . ',' . $longitude ?>"
                 class="button gray spaced">
                 Itinéraire
                 <i data-lucide="map"></i>
                 </button>
                 <a class="button gray spaced"
-                    href="https://maps.google.com/?q=<?php echo $latitude . ',' . $longitude ?>" target="_blank">
-                    Ouvrir dans Maps
+                    href="/recherche#map" target="_blank">
+                    Retour sur la carte
                     <i data-lucide="arrow-up-right"></i>
                 </a>
         </div>

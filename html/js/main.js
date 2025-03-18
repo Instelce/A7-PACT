@@ -23,19 +23,14 @@ try {
     console.error("Please connect you to a wifi network");
 }
 
-
 customElements.define("x-input", Input);
 customElements.define("x-slider", Slider);
 customElements.define("x-select", Select);
 customElements.define("x-acordeon", Acordeon);
 customElements.define("x-carousel", SliderCarousel);
-
-
-
 customElements.define('x-tabs', Tabs);
 customElements.define('x-tab', Tab);
 customElements.define('x-tab-panel', Panel)
-
 
 // Loader
 const loader = document.querySelector(".loader");
@@ -46,8 +41,10 @@ if (loader) {
     });
 }
 
-
+// -------------------------------------------------------------------------- //
 // Navbar
+// -------------------------------------------------------------------------- //
+
 let navbar = document.querySelector('.navbar');
 let heightTop = document.querySelector('.height-top');
 let navIcon = document.getElementById('nav-burger');
@@ -65,7 +62,9 @@ if (navbar && heightTop) {
     heightTop.style.height = navbar.offsetHeight + 'px';
 }
 
+// -------------------------------------------------------------------------- //
 // Notifications
+// -------------------------------------------------------------------------- //
 
 const notificationTrigger = document.querySelector('.notification-icon');
 const notificationContainer = document.querySelector('.notification-container');
@@ -74,24 +73,84 @@ const notificationIconDefault = document.getElementById('icon-default');
 
 if (notificationContainer){
     fetch('/api/notifications').then(response => response.json()).then(notifications => {
+        notificationContainer.innerHTML = ("<div class='notification-header'>" +
+                "<div class='notification-header-content'>" +
+                    "<div class='notification-text-header'>Vos notifications</div>" +
+                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-trash\"><path d=\"M3 6h18\"/><path d=\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"/><path d=\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"/></svg>" +
+                "</div>" +
+                "<div class='notification-separator-header'></div>" +
+            "</div>");
         for (let notification of notifications){
-            console.log(notification);
+
             let notificationCard = document.createElement('div');
             notificationCard.classList.add('notification-card');
-            notificationCard.innerHTML = notification.content;
 
-            if(!notification.is_read){
-                notificationCard.classList.add('not-read');
-            }
+                console.log(notification);
+
+                //Icones sur la gauche des notifications
+
+                let notificationCardIcon = document.createElement('div');
+                notificationCardIcon.classList.add('notification-card-icon');
+
+                let contentIcon = "";
+                if (notification.content.includes("a liké")) {
+                    contentIcon =`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="rgb(0, 87, 255)" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-thumbs-up"> <path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>`;
+                } else if (notification.content.includes("a disliké")) {
+                    contentIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="rgb(255, 59, 48)" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-down"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></svg>`;
+                } else {
+                    contentIcon = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-message-circle-more\"><path d=\"M7.9 20A9 9 0 1 0 4 16.1L2 22Z\"/><path d=\"M8 12h.01\"/><path d=\"M12 12h.01\"/><path d=\"M16 12h.01\"/></svg>";
+                }
+                notificationCardIcon.innerHTML = contentIcon;
+
+                //Vérification si les notifications sont lues
+
+                if (!notification.is_read) {
+                    notificationCard.classList.add('not-read');
+                }
+
+                //Contenu des notifications
+
+                let notificationCardContent = document.createElement('div');
+                notificationCardContent.classList.add('notification-card-content');
+                notificationCardContent.innerHTML = notification.content;
+
+                //Vérification si les notifications sont lues
+
+                if(!notification.is_read){
+                    notificationCard.classList.add('not-read');
+                }
+
+                //Bouton de supression des notifications sur le côté droit
+
+                let notificationCardBin = document.createElement('div');
+                notificationCardBin.classList.add('notification-card-bin');
+
+                let binIcon = document.createElement('svg');
+                binIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>`;
+                notificationCardBin.innerHTML = binIcon;
+
+                notificationCard.appendChild(notificationCardIcon);
+                notificationCard.appendChild(notificationCardContent);
+                notificationCard.appendChild(notificationCardBin);
 
             notificationContainer.appendChild(notificationCard);
+
+            let separator = document.createElement('div');
+            separator.classList.add('notification-separator');
+            notificationContainer.appendChild(separator);
         }
 
         if (notifications.find(n => n.is_read === 0)){
             notificationIconDefault.classList.add('hidden');
         } else {
             notificationIconAlert.classList.add('hidden');
-            notificationContainer.innerHTML = "<div>Vous n'avez pas de notifications</div>";
+            notificationContainer.innerHTML = ("<div class='notification-header'>" +
+                "<div class='notification-header-content'>" +
+                    "<div class='notification-text-header'>Vos notifications</div>" +
+                "</div>" +
+                    "<div class='notification-separator-header'></div>" +
+                    "<div class='no-notifications'>Vous n'avez pas de nouvelles notifications</div>" +
+                "</div>");
         }
     });
 
@@ -124,8 +183,10 @@ if (notificationContainer){
     });
 }
 
-
+// -------------------------------------------------------------------------- //
 // Avatar
+// -------------------------------------------------------------------------- //
+
 const avatarButton = document.querySelector('.avatar .image-container');
 const avatarOptions = document.querySelector('.avatar .avatar-options');
 

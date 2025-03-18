@@ -162,12 +162,12 @@ days.forEach((day, index) => {
             <td>${day}</td>
             <td>
                 <div class="flex justify-center">
-                    <input type="time" name="schedules[${index}][open]">
+                    <input type="time" name="schedules[${index}][open]" step="900" value="08:00">
                 </div>
             </td>
             <td>
                 <div class="flex justify-center">
-                    <input type="time" name="schedules[${index}][close]">
+                    <input type="time" name="schedules[${index}][close]" step="900" value="17:00">
                 </div>
             </td>
         </tr>

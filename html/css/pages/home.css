@@ -60,7 +60,7 @@ header div {
     /*width: fit-content;*/
     display: flex;
     flex-direction: column;
-    height: calc(var(--typescale-u6) + 1rem);
+    height: calc(var(--typescale-u6) + .5rem);
     overflow: hidden;
     margin-left: .8rem;
 }

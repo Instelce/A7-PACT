@@ -480,7 +480,7 @@ class OfferController extends Controller
                 $history->save();
             }
             // Switching to offline
-            else if ($offer->offline === 0) {
+            else if (!array_key_exists("online", array: $body) && $offer->offline === 0) {
                 $offer->offline = 1;
 
                 // Add history line
@@ -501,11 +501,9 @@ class OfferController extends Controller
             // Add tags to the offer
             if (array_key_exists('tags', $body)) {
                 foreach ($body['tags'] as $tagName) {
+                    $tagModel = OfferTag::findOne(['name' => strtolower($tagName)]);
 
-                    $tagName = strtolower($tagName);
-                    $tagModel = OfferTag::findOne(['name' => $tagName]);
-
-                    // Check if the tag
+                    // Check if the tag already exists
                     if (!$offer->hasTag($tagName)) {
                         $offer->addTag($tagModel->id);
                     }
@@ -526,8 +524,6 @@ class OfferController extends Controller
                     $period->end_date = $body['period-end'];
                     $period->offer_id = $offer->id;
                     $period->update();
-
-
                 }
 
                 $visit->update();

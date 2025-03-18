@@ -7,6 +7,8 @@ let limit = 5;
 let offset = 0;
 //first init map
 let mapInit = false;
+//block interaction when loading
+let blockElement = false;
 /**
  * Displays the fetched offers data in the offers container.
  *
@@ -136,6 +138,7 @@ async function getOffers(map = false) {
  * @returns {Promise<void>} A promise that resolves when the offers have been fetched and displayed.
  */
 async function applyFilters(newFilters = {}, neworder = null) {
+    blockElementFunction("BlockInteraction", true);
     filters = { ...filters, ...newFilters };
     if (neworder && neworder !== -1) {
         order = neworder;
@@ -172,6 +175,7 @@ async function applyFilters(newFilters = {}, neworder = null) {
         }
     }
     offset += 5;
+    blockElementFunction("BlockInteraction", false);
 }
 // ---------------------------------------------------------------------------------------------- //
 // SVG
@@ -393,13 +397,15 @@ categoryListenners.forEach((listener, index) => {
     let categories = document.querySelectorAll(".category-item");
     if (element) {
         element.addEventListener("click", () => {
-            if (element.classList.contains("active")) {
-                element.classList.remove("active");
-                applyFilters({ category: null });
-            } else {
-                categories.forEach((cat) => cat.classList.remove("active"));
-                element.classList.add("active");
-                applyFilters({ category: categoryValue[index] });
+            if (!blockElement) {  
+                if (element.classList.contains("active")) {
+                    element.classList.remove("active");
+                    applyFilters({ category: null });
+                } else {
+                    categories.forEach((cat) => cat.classList.remove("active"));
+                    element.classList.add("active");
+                    applyFilters({ category: categoryValue[index] });
+                }
             }
         });
     } else {
@@ -522,7 +528,7 @@ function error(err) {
 }
 
 aProximite.addEventListener("click", (event) => {
-    if (aProximite.classList.contains("gray")) {
+    if (aProximite.classList.contains("gray") && !blockElement) {
         aProximite.classList.remove("gray");
         aProximite.classList.add("blue");
         proximiteLoader.classList.remove("hidden");
@@ -534,7 +540,7 @@ aProximite.addEventListener("click", (event) => {
                 "La géolocalisation n'est pas supportée par ce navigateur."
             );
         }
-    } else if (aProximite.classList.contains("blue")) {
+    } else if (aProximite.classList.contains("blue") && !blockElement) {
         applyFilters({ latitude: null, longitude: null });
         aProximite.classList.remove("blue");
         aProximite.classList.add("gray");
@@ -611,7 +617,7 @@ async function loadOffers() {
 // Create intersection observer on loader section
 const observer = new IntersectionObserver(
     (entries) => {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && !blockElement) {
             loadOffers();
         }
     },
@@ -745,18 +751,18 @@ function displayMap(DataMap) {
                 </div>
             </div>`);
         marker.on("popupopen", function () {
-            document.querySelectorAll(".iteneraire").forEach((element) => {
-                element.addEventListener("click", (event) => {
+            document.addEventListener("click", function (event) {
+                if (event.target.classList.contains("iteneraire")) {
                     let offerId = event.target.id;
-                    Data.forEach((offer) => {
+                    DataMap.forEach((offer) => {
                         if (offer.id == offerId) {
-                            let latitude = offer.address["latitude"];
-                            let longitude = offer.address["longitude"];
+                            let latitude = coords.latitude;
+                            let longitude = coords.longitude;
                             let url = `https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=${latitude},${longitude}`;
                             window.open(url, "_blank");
                         }
                     });
-                });
+                }
             });
         });
     });
@@ -797,3 +803,38 @@ fullScaleMap.addEventListener("click", () => {
 closeMap.addEventListener("click", () => {
     ScaleMap();
 });
+
+
+// ---------------------------------------------------------------------------------------------- //
+//blockElement
+// ---------------------------------------------------------------------------------------------- //
+function blockElementFunction(className, action) {
+    if (action) {
+        blockElement = true
+    } else{
+        blockElement = false
+    }
+    let elements = document.querySelectorAll("."+className);
+    if (elements) {
+        elements.forEach((element) => {
+            if (action) {
+                const overlay = document.createElement("div");
+                overlay.style.position = "absolute";
+                overlay.style.top = 0;
+                overlay.style.left = 0;
+                overlay.style.width = "100%";
+                overlay.style.height = "100%";
+                overlay.style.zIndex = 1;
+                overlay.classList.add("_overlayLoading");
+                overlay.classList.add("cursor-progress");
+                element.appendChild(overlay);
+                element.classList.add("relative");
+            } else{
+                const overlay = element.querySelector("._overlayLoading");
+                if (overlay) {
+                    overlay.remove();
+                }
+            }
+        });
+    }
+}
