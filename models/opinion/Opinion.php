@@ -4,6 +4,7 @@ namespace app\models\opinion;
 
 use app\core\Application;
 use app\core\DBModel;
+use app\models\offer\Offer;
 use app\models\offer\OfferPhoto;
 
 class Opinion extends DBModel
@@ -115,8 +116,12 @@ class Opinion extends DBModel
         return OpinionPhoto::find(['opinion_id' => $this->id]);
     }
 
-    public function blacklisted(): bool
+    public function isBlacklisted(): bool
     {
         return $this->blacklisted;
+    }
+
+    public function getOffer(){
+        return Offer::findOne($this->offer_id);
     }
 }

@@ -116,7 +116,7 @@ $this->noMain = true;
 
 
 <section class="home-display mt-12 mb-12 recently-consulted">
-    <h2 class="home-category-title">Consulté récements</h2>
+    <h2 class="home-category-title">Consulté récemment</h2>
 
     <!-- Carousel -->
     <div class="recently-consulted-carousel">
