@@ -31,9 +31,3 @@ class Notifications
         return $notification;
     }
 }
-
-// Scénarios des notifications :
-//
-// Membre commente pro
-// Pro like membre
-// Pro Répond membre
