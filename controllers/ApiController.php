@@ -438,6 +438,9 @@ class ApiController extends Controller
             $offer = Offer::findOneByPk($opinion->offer_id);
             $data[$i]['offer'] = $offer->toJson();
 
+            // Replace offer type
+            $data[$i]['offer']['type'] = OfferType::findOneByPk($offer->offer_type_id)->type;
+
             // Add photos
             /** @var OpinionPhoto[] $photos */
             $photos = OpinionPhoto::find(['opinion_id' => $opinion->id]);
@@ -468,6 +471,8 @@ class ApiController extends Controller
             } else {
                 $data[$i]['opinionDisliked'] = false;
             }
+
+
 
             // Read on load
             if ($readOnLoad) {
@@ -680,6 +685,37 @@ class ApiController extends Controller
         $notifications = Notification::find(['user_id' => Application::$app->user->account_id]);
         foreach ($notifications as $notification) {
             $notification->markAsRead();
+        }
+        return $response->json([]);
+    }
+
+
+    //blacklistage
+
+    public function blacklist(Request $request, Response $response, $routeParams)
+    {
+        $receivePk = $routeParams['opinion_id'];
+        $opinion = Opinion::findOneByPk($receivePk);
+
+        if (!$opinion) {
+            $response->setStatusCode(404);
+            return $response->json(['error' => 'Opinion not found']);
+        }
+
+        $selected_offer = Offer::findOneByPk($opinion->offer_id);
+        if ($selected_offer->nbJetonsDispo > 0) { //si le professionnel a assez de jetons pour blacklister l'avis
+            $blacklisted = new OpinionBlackList();
+            $blacklisted->blacklisted_date = date('y-m-d');
+            $blacklisted->opinion_id = $opinion->id;
+            $blacklisted->save();
+
+            $opinion->blacklisted = true; //on modifie l'état de l'avis
+            $opinion->update();
+
+            $selected_offer->nbJetonsDispo--; //on met à jour le nombre de blacklistages disponibles
+            $selected_offer->update();
+        } else {
+            //pas possible ;
         }
         return $response->json([]);
     }
