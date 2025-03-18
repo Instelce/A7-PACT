@@ -434,14 +434,15 @@ $latitude = $offer->address()->latitude;
             <div id="map" class="map"></div>
             <input type="hidden" id="map-latitude" value="<?php echo $latitude ?>">
             <input type="hidden" id="map-longitude" value="<?php echo $longitude ?>">
+            <input id="offer-category" type="hidden" value="<?php echo $offerData['category'] ?>">
             <a href="https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=<?php echo $latitude . ',' . $longitude ?>"
                 class="button gray spaced">
                 Itinéraire
                 <i data-lucide="map"></i>
                 </button>
                 <a class="button gray spaced"
-                    href="https://maps.google.com/?q=<?php echo $latitude . ',' . $longitude ?>" target="_blank">
-                    Ouvrir dans Maps
+                    href="/recherche#map" target="_blank">
+                    Retour sur la carte
                     <i data-lucide="arrow-up-right"></i>
                 </a>
         </div>

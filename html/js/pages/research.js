@@ -754,10 +754,10 @@ function displayMap(DataMap) {
             document.addEventListener("click", function (event) {
                 if (event.target.classList.contains("iteneraire")) {
                     let offerId = event.target.id;
-                    Data.forEach((offer) => {
+                    DataMap.forEach((offer) => {
                         if (offer.id == offerId) {
-                            let latitude = offer.address["latitude"];
-                            let longitude = offer.address["longitude"];
+                            let latitude = coords.latitude;
+                            let longitude = coords.longitude;
                             let url = `https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=${latitude},${longitude}`;
                             window.open(url, "_blank");
                         }
