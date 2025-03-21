@@ -35,7 +35,7 @@ class m0007_create_table_offer
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             
-            nbJetonsDispo INT DEFAULT 3 NOT NULL,
+            nbJetonsDispo INT NOT NULL,
             
             FOREIGN KEY (professional_id) REFERENCES professional_user(user_id) ON DELETE CASCADE,
             FOREIGN KEY (address_id) REFERENCES address(id) ON DELETE CASCADE,

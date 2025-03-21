@@ -57,20 +57,21 @@ $this->jsFile = "dashboard/avis";
             <div class="filters grid grid-cols-3 gap-2">
                 <label for="a" class="button gray">
                     <i data-lucide="message-square-dot"></i>
-                    Non lu
+                    Non lus
                     <input id="filter-non-lu" type="radio" name="filter" value="read">
-                </label>
-                <!--
-                <label for="a" class="button gray">
-                    <i data-lucide="message-square-more"></i>
-                    Non répondu
-                    <input id="filter-non-repondu" type="radio" name="filter" value="replied">
                 </label>
                 <label for="a" class="button gray">
                     <i data-lucide="ban"></i>
-                    Blacklisté
+                    Blacklistés
                     <input id="filter-blackliste" type="radio" name="filter" value="blacklisted">
-                </label> -->
+                </label>
+
+<!--                <label for="a" class="button gray">-->
+<!--                    <i data-lucide="message-square-more"></i>-->
+<!--                    Non répondu-->
+<!--                    <input id="filter-non-repondu" type="radio" name="filter" value="replied">-->
+<!--                </label>-->
+
             </div>
         </header>
 

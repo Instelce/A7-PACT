@@ -17,7 +17,6 @@ class Opinion extends DBModel
     public string $visit_context = "";
 
     public bool $read = false;
-    public bool $blacklisted = false;
 
     public int $account_id;
     public int $offer_id;
@@ -33,7 +32,7 @@ class Opinion extends DBModel
 
     public function attributes(): array
     {
-        return ['rating', 'title', 'comment', 'visit_date', 'visit_context', 'read', 'blacklisted', 'account_id', 'offer_id', 'nb_reports'];
+        return ['rating', 'title', 'comment', 'visit_date', 'visit_context', 'read', 'account_id', 'offer_id', 'nb_reports'];
     }
 
     public function rules(): array
@@ -52,7 +51,7 @@ class Opinion extends DBModel
         return [
             'rating' => 'Quelle note donneriez-vous à votre expérience ?',
             'title' => 'Donnez un titre à votre avis',
-            'comment' => 'Ajouter votre commentaire',
+            'comment' => 'Ajoutez votre commentaire',
             'visit_date' => 'Quand y êtes-vous allé ?',
             'visit_context' => 'Qui vous accompagnait ?',
         ];
@@ -116,10 +115,6 @@ class Opinion extends DBModel
         return OpinionPhoto::find(['opinion_id' => $this->id]);
     }
 
-    public function isBlacklisted(): bool
-    {
-        return $this->blacklisted;
-    }
 
     public function getOffer(){
         return Offer::findOne($this->offer_id);

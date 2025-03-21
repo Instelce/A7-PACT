@@ -199,7 +199,6 @@ class Offer extends DBModel
 
     public function addTag($tagId)
     {
-        echo "Add tag\n";
         $isTagged = new OfferIsTagged();
         $isTagged->tag_id = $tagId;
         $isTagged->offer_id = $this->id;
