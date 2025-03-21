@@ -142,7 +142,7 @@ export function createOpinionCard(opinion, dashboard = false) {
                 </button>
                 <div class="management-options">
                     <button class="report-card" data-dialog-trigger="report-dialog" title="signal">
-                        <div class="flex justify-between">
+                        <div class="flex justify-between w-full">
                             Signaler
                             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>                  
                         </div>
@@ -151,10 +151,19 @@ export function createOpinionCard(opinion, dashboard = false) {
                         `<button data-dialog-trigger="blacklist-dialog" title="blacklist">
                             <div class="flex justify-between">
                                 Blacklister
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>                    
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>                    
                             </div>
-                        </button> `
-                    : ''}
+                        </button> 
+                        <div class="flex px-4 py-2 justify-between items-center gap-4 ${opinion.offer.nbJetonsDispo >= 2 ? 'color-green' : opinion.offer.nbJetonsDispo >= 1 ? 'color-yellow' : 'color-red'}">
+                            <span class="token-tooltip">
+                                ${opinion.offer.nbJetonsDispo} jetons
+                                <span class="tooltip-text font-normal">
+                                    Nombre restants de blacklistages '${opinion.offer.title}'
+                                </span>
+                            </span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-coins"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>
+                        </div>
+                    ` : ''}
                 </div>
             </div> ` : ''}
         </header>
@@ -251,6 +260,41 @@ export function createOpinionCard(opinion, dashboard = false) {
         
 `;
 
+    // Manage reports
+    document.addEventListener("DOMContentLoaded", function () {
+        let reportSvg = null;
+        let reportButton = card.querySelector('.report-card');
+        if (reportButton) {
+            reportSvg = reportButton.querySelector('svg');
+        }
+        reportButton.addEventListener("click", () => {
+            const dialog = card.querySelector('.dialog-container');
+            dialog.classList.remove('hide');
+        });
+
+        let cancelButton = card.querySelector('.cancel-button');
+        cancelButton.addEventListener('click', () => {
+            const dialog = card.querySelector('.dialog-container');
+            dialog.classList.add('hide');
+        });
+
+        let confirmButton = card.querySelector('.confirm-button');
+        confirmButton.addEventListener('click', () => {
+            getReports(opinion.id); // Traiter le signalement
+            reportSvg.setAttribute('fill', 'red');
+            reportSvg.setAttribute('stroke', 'white');
+
+            reportButton.disabled = true;
+
+            const dialog = card.querySelector('.dialog-container');
+            dialog.classList.add('hide'); // Fermer la fenêtre après confirmation
+        });
+
+        console.log("content", opinion.reply.content);
+    });
+
+
+
     /* options to blacklist opinion for example*/
 
     const actionsOpinionButton = card.querySelector('.button-management-options');
@@ -269,35 +313,6 @@ export function createOpinionCard(opinion, dashboard = false) {
         });
     }
 
-
-            // Manage reports
-    let reportButton = card.querySelector(".report-card");
-    let reportSvg = reportButton.querySelector('svg');
-
-    reportButton.addEventListener("click", () => {
-        const dialog = card.querySelector('.dialog-container');
-        dialog.classList.remove('hide');
-    });
-
-    let cancelButton = card.querySelector('.cancel-button');
-    cancelButton.addEventListener('click', () => {
-        const dialog = card.querySelector('.dialog-container');
-        dialog.classList.add('hide');
-    });
-
-    let confirmButton = card.querySelector('.confirm-button');
-    confirmButton.addEventListener('click', () => {
-        getReports(opinion.id); // Traiter le signalement
-        reportSvg.setAttribute('fill', 'red');
-        reportSvg.setAttribute('stroke', 'white');
-
-        reportButton.disabled = true;
-
-        const dialog = card.querySelector('.dialog-container');
-        dialog.classList.add('hide'); // Fermer la fenêtre après confirmation
-    });
-
-    console.log("content", opinion.reply.content);
 
 
     // Manage reply

@@ -709,13 +709,12 @@ class ApiController extends Controller
             $blacklisted->opinion_id = $opinion->id;
             $blacklisted->save();
 
-            $opinion->blacklisted = true; //on modifie l'état de l'avis
-            $opinion->update();
+            $opinion->destroy();
 
             $selected_offer->nbJetonsDispo--; //on met à jour le nombre de blacklistages disponibles
             $selected_offer->update();
         } else {
-            //pas possible ;
+            return $response->json(['error' => 'Pas assez de jetons pour blacklister l\'avis']);
         }
         return $response->json([]);
     }
