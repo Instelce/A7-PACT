@@ -76,7 +76,9 @@ if (notificationContainer){
         notificationContainer.innerHTML = ("<div class='notification-header'>" +
                 "<div class='notification-header-content'>" +
                     "<div class='notification-text-header'>Vos notifications</div>" +
-                    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-trash\"><path d=\"M3 6h18\"/><path d=\"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6\"/><path d=\"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2\"/></svg>" +
+                    "<button class='delete-button button danger only-icon' title='Supprimer votre réponse'>" +
+                        `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>` +
+                    "</button>" +
                 "</div>" +
                 "<div class='notification-separator-header'></div>" +
             "</div>");
@@ -125,9 +127,8 @@ if (notificationContainer){
                 let notificationCardBin = document.createElement('div');
                 notificationCardBin.classList.add('notification-card-bin');
 
-                let binIcon = document.createElement('svg');
-                binIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>`;
-                notificationCardBin.innerHTML = binIcon;
+
+                notificationCardBin.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>`;
 
                 notificationCard.appendChild(notificationCardIcon);
                 notificationCard.appendChild(notificationCardContent);
@@ -144,13 +145,13 @@ if (notificationContainer){
             notificationIconDefault.classList.add('hidden');
         } else {
             notificationIconAlert.classList.add('hidden');
-            notificationContainer.innerHTML = ("<div class='notification-header'>" +
+            /*notificationContainer.innerHTML = ("<div class='notification-header'>" +
                 "<div class='notification-header-content'>" +
                     "<div class='notification-text-header'>Vos notifications</div>" +
                 "</div>" +
                     "<div class='notification-separator-header'></div>" +
                     "<div class='no-notifications'>Vous n'avez pas de nouvelles notifications</div>" +
-                "</div>");
+                "</div>");*/
         }
     });
 
@@ -176,11 +177,12 @@ if (notificationContainer){
     })
 
     // Close when click outside
-    document.addEventListener('click', (e) => {
-        if (!notificationTrigger.contains(e.target)) {
+    /*document.addEventListener('click', (e) => {
+        if (!notificationTrigger.contains(e.target) && !notificationContainer.contains(e.target)) {
             notificationContainer.classList.remove('open');
         }
-    });
+    });*/
+
 }
 
 // -------------------------------------------------------------------------- //
