@@ -9,6 +9,10 @@ let offset = 0;
 let mapInit = false;
 //block interaction when loading
 let blockElement = false;
+
+let mapDataCache =null;
+let lastMapRefreshTime = 0;
+let mapMarkers = null;
 /**
  * Displays the fetched offers data in the offers container.
  *
@@ -665,9 +669,19 @@ let map;
 let DataTableMap;
 
 function displayMap(DataMap) {
-    DataTableMap = DataMap;
-    let groupMarkers = L.markerClusterGroup();
 
+    DataTableMap = DataMap;
+    let groupMarkers = L.markerClusterGroup(
+        {
+            chunkedLoading: true, 
+            maxClusterRadius: 50
+        }
+    );
+    if (mapMarkers) {
+        map.removeLayer(mapMarkers);
+    }
+    const markers = [];
+    
     if (map) {
         map.remove();
     }
@@ -677,17 +691,15 @@ function displayMap(DataMap) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                userCoords = [position.coords.latitude, position.coords.longitude];
+                map.setView([position.coords.latitude, position.coords.longitude], 8);
             },
             (error) => {
                 console.error("Error getting user location:", error);
-            }
+            },
+            { timeout: 3000 }
         );
-    } else {
-        console.error("Geolocation is not supported by this browser.");
     }
 
-    console.log(userCoords);
 
     map = L.map("map", {
         center: userCoords,
@@ -739,29 +751,50 @@ function displayMap(DataMap) {
 
             stars.appendChild(star);
         }
-
+        
+        
         marker.bindPopup(`
             <div class="map-card">
                 <h1>${coords.title}</h1>
                 <p>${coords.city}, ${coords.postal_code}</p>
-                <div>${stars.outerHTML}</div>
+                <div id="stars-container-${coords.id}"></div>
+                <div id="popup-image-container-${coords.id}" class="popup-image-container"></div>
                 <div class="flex gap-1 pt-1 mt-2">
                     <div id="${coords.id}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
                     <a href="/offres/${coords.id}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
                 </div>
             </div>`);
+        
+     
         marker.on("popupopen", function () {
-            document.addEventListener("click", function (event) {
-                if (event.target.classList.contains("iteneraire")) {
-                    let offerId = event.target.id;
-                    DataMap.forEach((offer) => {
-                        if (offer.id == offerId) {
-                            let latitude = coords.latitude;
-                            let longitude = coords.longitude;
-                            let url = `https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=${latitude},${longitude}`;
+            const imageContainer = document.getElementById(`popup-image-container-${coords.id}`);
+            if (imageContainer && !imageContainer.querySelector('img')) {                
+                    const img = document.createElement('img');
+                    img.src = coords.imageurl;
+                    img.alt = "Photo de l'offre";
+                    img.classList.add("popup-offer-image", "w-full", "max-h-32", "object-cover", "rounded-md", "mt-2", "mb-2");
+                    imageContainer.appendChild(img); 
+            }
+
+            const starsContainer = document.getElementById(`stars-container-${coords.id}`);
+            if (starsContainer && !starsContainer.innerHTML) {
+                // Créer les étoiles uniquement lors de l'ouverture du popup
+                const starsHtml = generateStarsHtml(coords.rating);
+                starsContainer.innerHTML = starsHtml;
+            }
+            
+            // Gestion des clics sur le bouton itinéraire
+            document.addEventListener("click", function(event) {
+                const target = event.target.closest('.iteneraire');
+                if (target) {
+                    const offerId = target.id;
+                    if (DataTableMap) {
+                        const offer = DataTableMap.find(offer => offer.id == offerId);
+                        if (offer) {
+                            const url = `https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=${offer.latitude},${offer.longitude}`;
                             window.open(url, "_blank");
                         }
-                    });
+                    }
                 }
             });
         });
@@ -769,6 +802,20 @@ function displayMap(DataMap) {
     map.addLayer(groupMarkers);
 }
 
+function generateStarsHtml(rating) {
+    let starsHtml = '<div class="stars">';
+    for (let i = 0; i < 5; i++) {
+        let starClass = '';
+        if (i < rating && i > rating - 1) {
+            starClass = 'half-fill';
+        } else if (i < rating) {
+            starClass = 'fill';
+        }
+        starsHtml += `<span class="star ${starClass}">${starSVG}</span>`;
+    }
+    starsHtml += '</div>';
+    return starsHtml;
+}
 let fullScaleMap = document.getElementById("fullScaleMap");
 let mapContainer = document.getElementById("mapContainer");
 let closeMap = document.getElementById("closeMap");
@@ -804,6 +851,16 @@ closeMap.addEventListener("click", () => {
     ScaleMap();
 });
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.hash === '#map') {
+        setTimeout(() => {
+            if (!mapContainer.classList.contains('w-full')) {
+                ScaleMap();
+            }
+        }, 500);
+    }
+});
 
 // ---------------------------------------------------------------------------------------------- //
 //blockElement
