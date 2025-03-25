@@ -232,6 +232,7 @@ class ApiController extends Controller
                 $data[$i]['title'] = $offer->title;
                 $data[$i]['category'] = $offer->category;
                 $data[$i]['rating'] = $offer->rating();
+                $data[$i]['imageurl'] = $offer->photos()[0]->url_photo;
             }
         } else { //if the data is for the list
             foreach ($offers as $i => $offer) {

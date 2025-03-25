@@ -43,6 +43,7 @@ $this->jsFile = 'resetPassword';
             <input slot="input" name="password" type="password" placeholder="************" required>
         </x-input>
 
-        <button id ="passwordModify" type="submit" class="button w-full gray">Confirmer</button>
+        <button id="passwordModify" type="submit" class="button w-full gray"
+            title="Confirmer la réinitialisation du mot de passe">Confirmer</button>
     </form>
 </div>

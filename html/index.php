@@ -104,6 +104,7 @@ if (Application::$app->user) {
 $app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/comptes/<pk:int>', [AuthController::class, 'profile']);
 $app->router->get('/users', [SiteController::class, 'users']);
+$app->router->get('/comptes/activation-otp', [AuthController::class, 'otpActivation']);
 
 // Api routes
 $app->router->get('/api/auth/user', [ApiController::class, 'user']);
@@ -115,7 +116,7 @@ $app->router->post('/api/opinions/<opinion_pk:int>', [ApiController::class, 'opi
 $app->router->post('/api/opinions/<opinion_pk:int>/likes', [ApiController::class, 'opinionLikes']);
 $app->router->post('/api/opinions/<opinion_pk:int>/dislikes', [ApiController::class, 'opinionDislikes']);
 $app->router->post('/api/opinions/<opinion_pk:int>/reports', [ApiController::class, 'opinionReports']);
-// $app->router->get('/api/opinions/blacklisted/<opinion_pk:int>', [ApiController::class, 'opinionIsBlacklisted']);
+$app->router->get('/api/opinions/blacklisted/<opinion_pk:int>', [ApiController::class, 'opinionIsBlacklisted']);
 $app->router->get('/api/messages/<receiver_pk:int>', [ApiController::class, 'messages']);
 $app->router->get('/api/messages', [ApiController::class, 'conversations']);
 $app->router->get('/api/notifications', [ApiController::class, 'notifications']);

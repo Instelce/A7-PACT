@@ -441,7 +441,7 @@ $latitude = $offer->address()->latitude;
                 <i data-lucide="map"></i>
                 </button>
                 <a class="button gray spaced"
-                    href="/recherche#map" target="_blank">
+                    href="/recherche#map">
                     Retour sur la carte
                     <i data-lucide="arrow-up-right"></i>
                 </a>
