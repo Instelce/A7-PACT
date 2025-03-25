@@ -347,6 +347,7 @@ const citiesContainer = document.querySelector(".cities");
 function createCityCard(theta, name) {
     let card = document.createElement("a");
     card.href = `/recherche?city=${name}`;
+    card.title = `Accèder aux offres à ${name}`;
     card.classList.add("city-card");
     card.innerHTML += `
         <div class="front">
@@ -375,7 +376,7 @@ cities.forEach((city, index) => {
 function createOfferCard(offer) {
     return `
         <div class="home-card">
-            <a href="/offres/${offer.id}">
+            <a href="/offres/${offer.id}" title="Voir l'offre ${offer.title}">
                 <!-- Image -->
                 <div class="image-container">
                     <img src="${offer.photo}"
@@ -414,7 +415,7 @@ function createOfferCard(offer) {
                     <div class="flex flex-col gap-2">
                         <!-- Type + Professional -->
                         <p class="text-sm">${capitalize(translateCategory(offer.category))} proposé par <a
-                                href="/">${offer.author}</a></p>
+                                href="/" title="accèder au profil de ${offer.author}">${offer.author}</a></p>
                     </div>
                 </div>
             </div>
