@@ -380,6 +380,7 @@ class ApiController extends Controller
         $orderBy = explode(',', string: $request->getQueryParams('order_by') ?? '-created_at');
         $readOnLoad = $request->getQueryParams('read_on_load');
         $read = $request->getQueryParams('read');
+        $blacklisted = $request->getQueryParams('blacklisted');
 
         $data = [];
         $where = [];
@@ -399,6 +400,10 @@ class ApiController extends Controller
         }
         if ($read && $read !== 'null') {
             $where['read'] = $read;
+        }
+
+        if($blacklisted && $blacklisted !== 'null'){
+            $where['blacklisted'] = $blacklisted;
         }
 
         /** @var Opinion[] $opinions */
@@ -709,7 +714,8 @@ class ApiController extends Controller
             $blacklisted->opinion_id = $opinion->id;
             $blacklisted->save();
 
-            $opinion->destroy();
+            $opinion->blacklisted=true;
+            $opinion->update();
 
             $selected_offer->nbJetonsDispo--; //on met à jour le nombre de blacklistages disponibles
             $selected_offer->update();

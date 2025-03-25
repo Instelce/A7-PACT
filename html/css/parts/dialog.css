@@ -1,4 +1,4 @@
-.dialog-container{
+.dialog-container-report{
     inset: 0;
     position: fixed;
     top: 0;
@@ -13,12 +13,39 @@
     z-index: 100000;
     animation: dialogIn 0.3s forwards;
 }
-.dialog-container.close {
+
+
+.dialog-container-blacklist {
+    inset: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 100000;
+    animation: dialogIn 0.3s forwards;
+}
+
+.dialog-container-blacklist.hide {
+    display: none;
+}
+
+.dialog-container-blacklist.close {
     animation: dialogOut 0.3s forwards;
     pointer-events: none;
 }
 
-.dialog-container.hide {
+.dialog-container-report.close {
+    animation: dialogOut 0.3s forwards;
+    pointer-events: none;
+}
+
+.dialog-container-report.hide {
     display: none;
 }
 
