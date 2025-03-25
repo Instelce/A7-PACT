@@ -1,4 +1,4 @@
-.dialog-container {
+.dialog-container-report{
     inset: 0;
     position: fixed;
     top: 0;
@@ -14,14 +14,6 @@
     animation: dialogIn 0.3s forwards;
 }
 
-.dialog-container.close {
-    animation: dialogOut 0.3s forwards;
-    pointer-events: none;
-}
-
-.dialog-container.hide {
-    display: none;
-}
 
 .dialog-container-blacklist {
     inset: 0;
@@ -46,6 +38,15 @@
 .dialog-container-blacklist.close {
     animation: dialogOut 0.3s forwards;
     pointer-events: none;
+}
+
+.dialog-container-report.close {
+    animation: dialogOut 0.3s forwards;
+    pointer-events: none;
+}
+
+.dialog-container-report.hide {
+    display: none;
 }
 
 .dialog-container-delete-reply.hide {
@@ -95,7 +96,6 @@
         opacity: 1;
         transform: translateY(0) scale(1);
     }
-
     100% {
         opacity: 0;
         transform: translateY(-.8rem) scale(0.95);
@@ -107,7 +107,6 @@
         opacity: 0;
         transform: translateY(-.8rem) scale(0.95);
     }
-
     100% {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -115,23 +114,23 @@
 }
 
 @media (max-width: 1440px) {
-    .dialog {
+    .dialog{
         max-width: 100%;
     }
 }
 
-@media screen and (max-width: 992px) {
-    .dialog {
+@media screen and (max-width: 992px){
+    .dialog{
         max-width: 100%;
     }
 }
 
-@media screen and (max-width: 768px) {
-    .dialog {
+@media screen and (max-width: 768px){
+    .dialog{
         max-width: 100%;
     }
 
-    .on-same-line {
+    .on-same-line{
         flex-direction: column;
         gap: 0.5rem;
     }

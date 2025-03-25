@@ -17,6 +17,7 @@ class m0021_create_table_opinion
             visit_context VARCHAR(60) NOT NULL,
             
             read BOOLEAN NOT NULL DEFAULT false,
+            blacklisted BOOLEAN NOT NULL DEFAULT false,
             
             account_id INT NOT NULL,
             offer_id INT NOT NULL,
@@ -60,7 +61,7 @@ class m0021_create_table_opinion
         CREATE TABLE opinion_blacklist(
             id_blacklist SERIAL PRIMARY KEY,
             opinion_id INT NOT NULL,
-            blacklisted_date TIMESTAMP NOT NULL,
+            blacklisted_time TIMESTAMP NOT NULL,
             FOREIGN KEY(opinion_id) REFERENCES opinion(id) ON DELETE CASCADE
         )";
         $db->pdo->exec($sql);

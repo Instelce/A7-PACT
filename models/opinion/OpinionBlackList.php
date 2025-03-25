@@ -11,7 +11,7 @@ class OpinionBlackList extends DBModel
     public static $duration = 300; // 300 secondes
 
     public int $id_blacklist = 0;
-    public String $blacklisted_date = "";
+    public String $blacklisted_time = "";
     public int $opinion_id = 0;
 
 
@@ -28,13 +28,13 @@ class OpinionBlackList extends DBModel
 
     public function attributes(): array
     {
-        return['id_blacklist', 'blacklisted_date', 'opinion_id'];
+        return['id_blacklist', 'blacklisted_time', 'opinion_id'];
     }
 
     public function rules(): array
     {
         return [
-            'blacklisted_date' => [self::RULE_REQUIRED, self::RULE_DATE],
+            'blacklisted_time' => [self::RULE_REQUIRED, self::RULE_DATE],
             'opinion_id' => [self::RULE_REQUIRED]
 
         ];
@@ -43,6 +43,11 @@ class OpinionBlackList extends DBModel
     public function get_opinion(): Opinion
     {
         return Opinion::findOne($this->opinion_id);
+    }
+
+    public function can_earn_token(): float
+    {
+        return time() - $this->blacklisted_time >= self::$duration;
     }
 
 }
