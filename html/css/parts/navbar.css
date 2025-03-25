@@ -188,6 +188,11 @@
     overflow-y: scroll;
 }
 
+.notification-container.open{
+    opacity: 1;
+    pointer-events: auto;
+}
+
 .notification-header{
     max-height: 80px;
     min-height: 80px;
@@ -211,10 +216,6 @@
     background-color: rgb(var(--color-gray-1));
 }
 
-.notification-container.open{
-    opacity: 1;
-}
-
 .notification .notification-icon{
     cursor: pointer;
     display: flex;
@@ -225,11 +226,11 @@
 .notification-separator {
     height: 1px;
     background-color: rgb(var(--color-gray-1));
-    margin: 10px 0;
 }
 
 .notification-card{
     display: flex;
+    min-height: 60px;
 }
 
 .notification-card-icon{
@@ -244,6 +245,8 @@
     padding: 1rem 0.5rem;
     max-width: 280px;
     min-width: 280px;
+    align-items: center;
+    justify-content: center;
 }
 
 .notification-card-bin{

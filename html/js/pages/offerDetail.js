@@ -29,10 +29,36 @@ offerRecentlyConsulted.consultOffer(offerId);
 // ---------------------------------------------------------------------------------------------- //
 // Map
 // ---------------------------------------------------------------------------------------------- //
+const markerOptions = {
+    iconSize: [20, 26],
+};
+
+let restaurantIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/retaurant_pin.svg",
+});
+
+let attractionIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/attraction_pin.svg",
+});
+
+let activityIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/activity_pin.svg",
+});
+let showIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/spectacle_pin.svg",
+});
+let visitIcon = L.icon({
+    ...markerOptions,
+    iconUrl: "/assets/pins/visit_pin.svg",
+});
 
 let latitude = document.querySelector('#map-latitude')
 let longitude = document.querySelector('#map-longitude')
-
+let category = document.querySelector('#offer-category')
 let coords = [latitude.value, longitude.value];
 
 if (latitude.value !== '' && longitude.value !== '') {
@@ -41,12 +67,34 @@ if (latitude.value !== '' && longitude.value !== '') {
         zoom: 10
     });
 
-    let tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    let marker = L.marker(coords).addTo(map);
+    let markerIcon = restaurantIcon; // Default icon
+    let marker = L.marker(coords, {
+        icon: markerIcon,
+    });
+    switch (category.value) {
+        case 'Restaurant':
+            marker.setIcon(restaurantIcon);
+            break;
+        case 'Parc d\'attraction':
+            marker.setIcon(attractionIcon);
+            break;
+        case 'Activité':
+            marker.setIcon(activityIcon);
+            break;
+        case 'Spectacle':   
+            marker.setIcon(showIcon);
+            break;
+        case 'Visite':
+            marker.setIcon(visitIcon);
+            break;
+    }
+    marker.addTo(map);
+
 }
 
 

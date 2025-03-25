@@ -44,27 +44,5 @@ class OpinionBlackList extends DBModel
     {
         return Opinion::findOne($this->opinion_id);
     }
-    public function blacklist($id_opinion)
-    {
-        $opinion = Opinion::findOneByPk($id_opinion);
-        $selected_offer = Offer::findOneByPk($opinion->offer_id);
-        if (!$selected_offer->offer_type_id === 2) {
-            if (!$selected_offer->nbJetonsDispo > 0) {
-                $blacklisted = new OpinionBlackList();
-                $blacklisted->blacklisted_date = date('y-m-d');
-                $blacklisted->opinion_id = $id_opinion;
-
-                $blacklisted->save();
-                $opinion->blacklisted = true;
-                $blacklisted->update();
-                $selected_offer->nbJetonsDispo--;
-                $selected_offer->update();
-
-                return 1;
-            }
-            return 0;
-        }
-        return 0;
-    }
 
 }
