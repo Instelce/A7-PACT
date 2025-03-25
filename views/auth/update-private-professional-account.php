@@ -186,6 +186,7 @@ $this->jsFile = 'updatePrivateProfessionalAccount';
                     <input type="hidden" name="form-name" value="reset-password">
                     <button id ="passwordModify" type="submit" class="button w-full gray">Modifier le mot de passe</button>
                 </form>
+                <a href="/comptes/activation-otp" class="button gray">Activer l'authentification à 2 facteurs (OTP)</a>
             </div>
         </x-tab-panel>
     </x-tabs>

@@ -104,6 +104,7 @@ if (Application::$app->user) {
 $app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/comptes/<pk:int>', [AuthController::class, 'profile']);
 $app->router->get('/users', [SiteController::class, 'users']);
+$app->router->get('/comptes/activation-otp', [AuthController::class, 'otpActivation']);
 
 // Api routes
 $app->router->get('/api/auth/user', [ApiController::class, 'user']);
