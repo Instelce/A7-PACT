@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\core\Application;
+use app\core\Clock;
 use app\core\Controller;
 use app\core\exceptions\ForbiddenException;
 use app\core\exceptions\NotFoundException;
@@ -25,6 +26,15 @@ use app\forms\PublicProfessionalUpdateForm;
 use app\models\account\UserAccount;
 use app\models\User;
 use app\models\user\professional\PrivateProfessional;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
+use OTPHP\TOTP;
 
 class AuthController extends Controller
 {
@@ -360,5 +370,44 @@ class AuthController extends Controller
         }
 
         return $this->render('profile', ['user' => $user]);
+    }
+
+    public function otpActivation(Request $request, Response $response){
+
+        $clock = new Clock();
+
+        $otp = TOTP::generate($clock);
+
+        $otp->setLabel('PACT');
+
+        $writer = new PngWriter();
+
+        // Create QR code
+        $qrCode = new QrCode(
+            data: $otp->getProvisioningUri(),
+            encoding: new Encoding('UTF-8'),
+            errorCorrectionLevel: ErrorCorrectionLevel::Low,
+            size: 300,
+            margin: 10,
+            roundBlockSizeMode: RoundBlockSizeMode::Margin,
+            foregroundColor: new Color(0, 0, 0),
+            backgroundColor: new Color(255, 255, 255)
+        );
+
+        // Create generic logo
+        $logo = new Logo(
+            path: __DIR__.'/../html/assets/images/logo_round.png',
+            resizeToWidth: 50,
+            punchoutBackground: true
+        );
+
+        $label = new Label(
+            text: 'Votre code OTP',
+            textColor: new Color(255, 0, 0)
+        );
+
+        $qrCodeImage = $writer->write($qrCode, $logo, $label);
+
+        return $this->render('auth/otp-activation', ['qrCodeUri' => $qrCodeImage->getDataUri()]);
     }
 }

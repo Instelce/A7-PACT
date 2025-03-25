@@ -119,6 +119,7 @@ use app\core\Mailer;
                 </form>
                 <a href="/comptes/supprimer" id="accountDelete" class="button danger">Supprimer mon
                     compte</a>
+                <a href="/comptes/activation-otp" class="button gray">Activer l'authentification à 2 facteurs (OTP)</a>
             </div>
         </x-tab-panel>
     </x-tabs>

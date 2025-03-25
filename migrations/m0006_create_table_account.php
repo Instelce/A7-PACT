@@ -29,6 +29,7 @@ class m0006_create_table_account
             reset_password_hash VARCHAR(255) DEFAULT NULL,
             address_id INT NOT NULL,
             api_token VARCHAR(64) NOT NULL,
+            otp_secret VARCHAR(128),
             
             FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE,
             FOREIGN KEY (address_id) REFERENCES address(id) ON DELETE CASCADE
