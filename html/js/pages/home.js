@@ -402,7 +402,8 @@ function createOfferCard(offer) {
                     <!-- Stars + Avis -->
                     <div class="flex gap-2 stars-container">
                         <!-- TODO -->
-                        <div class="stars" data-number="<?php echo $offer["rating"] ?>">
+                        <!-- <div class="stars" data-number="<?php echo $offer["rating"] ?>"> -->
+                        <div class="stars" data-number="${offer.rating}">
                         </div>
                     </div>
                 </div>
