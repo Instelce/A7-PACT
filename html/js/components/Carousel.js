@@ -88,6 +88,8 @@ export class Carousel {
     createNavigation() {
         let nextButton = this.createDivWithClass('carousel__next')
         let prevButton = this.createDivWithClass('carousel__prev')
+        nextButton.setAttribute('title', 'slide suivant');
+        prevButton.setAttribute('title', 'slide précédent');
         this.element.appendChild(nextButton)
         this.element.appendChild(prevButton)
 

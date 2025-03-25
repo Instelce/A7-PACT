@@ -114,7 +114,7 @@ export function createOpinionCard(opinion, dashboard = false) {
         <header class="${!opinion.read && dashboard ? "not-read" : ""}">
             <div class="flex flex-row justify-between w-full">
                 <div>
-                    <a class="avatar" ${opinion.user.phone ? `href="/comptes/${opinion.account_id}"` : ''}>
+                    <a class="avatar" ${opinion.user.phone ? `href="/comptes/${opinion.account_id}" title="accèder au profile de ${opinion.user.pseudo}"` : ''}>
                         <div class="image-container">
                             <img src="${opinion.user.avatar_url}"
                                 alt="${opinion.user.pseudo}">
@@ -123,16 +123,16 @@ export function createOpinionCard(opinion, dashboard = false) {
                     
                     <div class="flex flex-col gap-1 justify-center">
                         <div>
-                            <a ${opinion.user.phone ? `href="/comptes/${opinion.account_id}"` : ''} class="user-name">${opinion.user.pseudo}</a>
+                            <a ${opinion.user.phone ? `href="/comptes/${opinion.account_id}" title="accèder au profile de ${opinion.user.pseudo}"` : ''} class="user-name">${opinion.user.pseudo}</a>
                             <p class="text-sm text-gray-4">Il y a ${dateText}</p>
                         </div>
                         
-                        ${dashboard ? `<p class="text-sm">Avis sur <a href="/offres/${opinion.offer_id}" class="underline">${opinion.offer.title}</a></p>`
-            : `
+                        ${dashboard ? `<p class="text-sm">Avis sur <a href="/offres/${opinion.offer_id}" title="accèder au profile de ${opinion.user.pseudo}" class="underline">${opinion.offer.title}</a></p>`
+                : `
                            <div class="opinion-card-stars mb-2">
                                 <p class="text-sm text-gray-4">A noté</p>
                                 ${stars.outerHTML}
-                                <p class="text-sm text-gray-4"><a href="/offres/${opinion.offer_id}" class="underline">${opinion.offer.title}</a></p>
+                                <p class="text-sm text-gray-4"><a href="/offres/${opinion.offer_id}" title="accèder au profile de ${opinion.user.pseudo}" class="underline">${opinion.offer.title}</a></p>
                             </div>
                         `}
                 </div>                          
@@ -199,7 +199,7 @@ export function createOpinionCard(opinion, dashboard = false) {
             <input type="hidden" name="form-name" value="add-reply">
             <input type="hidden" name="opinion_id" value="${opinion.id}">
             <textarea id="dataInput" name="comment" required maxlength="250" placeholder="Entrez votre réponse ici..."></textarea>
-            <button id="reply-submit" type="submit" class="button gray w-full h-10 justify-between">
+            <button id="reply-submit" type="submit" title="répondre" class="button gray w-full h-10 justify-between">
                 Répondre
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-reply"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>            
             </button>      
@@ -242,7 +242,7 @@ export function createOpinionCard(opinion, dashboard = false) {
                         <button type="button" class="button gray confirm-button" title="Signaler cet avis">
                             Confirmer le signalement
                         </button>
-                        <button type="button" class="button cancel-button">Annuler</button>
+                        <button type="button" title="Annuler" class="button cancel-button">Annuler</button>
                     </div>
                 </div>
             </div>
