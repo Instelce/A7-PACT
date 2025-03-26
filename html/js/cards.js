@@ -238,7 +238,7 @@ export function createOpinionCard(opinion, dashboard = false) {
         </div>
         
         <!-- Pop-up Report -->
-        <div class="dialog-container-report hide" data-dialog-name="">
+        <div class="dialog-container dialog-container-report hide" data-dialog-name="">
             <div class="dialog w-[70%]">
                 <header class="dialog-header">
                     <h3 class="dialog-title">Confirmer le signalement</h3>
@@ -311,13 +311,13 @@ export function createOpinionCard(opinion, dashboard = false) {
     }
     reportButton.addEventListener("click", () => {
         console.log("hehe");
-        const dialog = card.querySelector('.dialog-container-report');
+        const dialog = card.querySelector('.dialog-container');
         dialog.classList.remove('hide');
     });
 
     let cancelButton = card.querySelector('.cancel-button');
     cancelButton.addEventListener('click', () => {
-        const dialog = card.querySelector('.dialog-container-report');
+        const dialog = card.querySelector('.dialog-container');
         dialog.classList.add('hide');
     });
 
@@ -329,7 +329,7 @@ export function createOpinionCard(opinion, dashboard = false) {
 
         reportButton.disabled = true;
 
-        const dialog = card.querySelector('.dialog-container-report');
+        const dialog = card.querySelector('.dialog-container');
         dialog.classList.add('hide'); // Fermer la fenêtre après confirmation
     });
 

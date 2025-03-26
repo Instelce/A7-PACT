@@ -1,4 +1,4 @@
-.dialog-container-report{
+.dialog-container{
     inset: 0;
     position: fixed;
     top: 0;
@@ -40,12 +40,12 @@
     pointer-events: none;
 }
 
-.dialog-container-report.close {
+.dialog-container.close {
     animation: dialogOut 0.3s forwards;
     pointer-events: none;
 }
 
-.dialog-container-report.hide {
+.dialog-container.hide {
     display: none;
 }
 
