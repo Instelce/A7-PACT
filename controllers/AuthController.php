@@ -80,7 +80,6 @@ class AuthController extends Controller
         return $this->render('auth/password-forget', ['model' => $form]);
     }
 
-
     public function sendMail(Request $request, Response $response)
     {
         if ($request->isPost()) {
@@ -97,8 +96,6 @@ class AuthController extends Controller
         }
         return $this->render('auth/mail-send', ['mail' => $mail]);
     }
-
-
 
     public function register(Request $request)
     {
@@ -122,7 +119,6 @@ class AuthController extends Controller
             'model' => $user
         ]);
     }
-
 
     public function registerProfessional(Request $request, Response $response)
     {
@@ -156,7 +152,6 @@ class AuthController extends Controller
 
         return $this->render('auth/register-professional', ['proPublic' => $proPublic, 'proPrivate' => $proPrivate]);
     }
-
 
     public function updatePublicProfessionalAccount(Request $request, Response $response)
     {

@@ -15,6 +15,16 @@ class Notification extends DBModel
     public string $content = '';
     public int $user_id = 0;
 
+    public function deleteNotification(){
+        $sql = "DELETE FROM " . self::tableName() . " WHERE id = :id";
+        return DBModel::prepare($sql)->execute(['id' => $this->id]);
+    }
+
+    public static function deleteAllNotificationsByUser(int $userId)
+    {
+        $sql = "DELETE FROM " . self::tableName() . " WHERE user_id = :user_id";
+        return DBModel::prepare($sql)->execute(['user_id' => $userId]);
+    }
 
     public static function tableName(): string
     {
@@ -48,4 +58,6 @@ class Notification extends DBModel
         $this->is_read = 1;
         $this->update();
     }
+
+
 }
