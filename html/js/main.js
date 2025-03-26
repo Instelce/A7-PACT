@@ -122,17 +122,20 @@ if (notificationContainer){
                     notificationCard.classList.add('not-read');
                 }
 
-                //Bouton de supression des notifications sur le côté droit
+                //Bouton de supression des notifications individuelles
 
                 let notificationCardBin = document.createElement('div');
                 notificationCardBin.classList.add('notification-card-bin');
 
+                notificationCardBin.innerHTML = (
+                    "<button>"+
+                        `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-trash"> <path d="M3 6h18"/> <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/> <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/> </svg>` +
+                    "</button>"
+                );
 
-                notificationCardBin.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>`;
-
-                notificationCard.appendChild(notificationCardIcon);
-                notificationCard.appendChild(notificationCardContent);
-                notificationCard.appendChild(notificationCardBin);
+            notificationCard.appendChild(notificationCardIcon);
+            notificationCard.appendChild(notificationCardContent);
+            notificationCard.appendChild(notificationCardBin);
 
             notificationContainer.appendChild(notificationCard);
 
@@ -177,12 +180,32 @@ if (notificationContainer){
     })
 
     // Close when click outside
-    /*document.addEventListener('click', (e) => {
+    document.addEventListener('click', (e) => {
         if (!notificationTrigger.contains(e.target) && !notificationContainer.contains(e.target)) {
             notificationContainer.classList.remove('open');
         }
-    });*/
+    });
 
+    // Fonction de suppression d'une notification
+    function deleteNotification(notificationId, notificationCard) {
+        fetch('/api/notifications/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ id: notificationId })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Si la suppression est réussie, on enlève la notification du DOM
+                    notificationCard.remove();
+                } else {
+                    alert("Erreur lors de la suppression de la notification.");
+                }
+            })
+            .catch(err => {
+                alert("Une erreur est survenue. Veuillez réessayer.");
+            });
+    }
 }
 
 // -------------------------------------------------------------------------- //

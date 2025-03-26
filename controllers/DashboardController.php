@@ -180,4 +180,36 @@ class DashboardController extends Controller
         }
         return $response->json([]);
     }
+
+    //supprimer une notification individuelle
+    public function deleteAction()
+    {
+        if (isset($_POST['id']) && is_numeric($_POST['id'])) {
+            $notificationId = (int) $_POST['id'];
+
+            $notification = Notification::findOne($notificationId);
+
+            if ($notification) {
+                $notification->deleteNotification();
+
+            }
+        } else {
+            echo json_encode([
+                'status' => 'error',
+            ]);
+        }
+    }
+
+    // Supprimer toutes les notifications d'un utilisateur
+    public function deleteAllAction()
+    {
+        if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
+            $userId = (int) $_POST['user_id'];
+            Notification::deleteAllNotificationsByUser($userId);
+        } else {
+            echo json_encode([
+                'status' => 'error',
+            ]);
+        }
+    }
 }
