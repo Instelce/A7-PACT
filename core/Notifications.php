@@ -30,4 +30,15 @@ class Notifications
         $notification = Notification::find()->where(['is_read' => false])->andWhere(['user_id' => $userId])->all();
         return $notification;
     }
+
+    public function deleteNotification(){
+        $notification = "DELETE FROM " . self::tableName() . " WHERE id = :id";
+        return DBModel::prepare($notification)->execute(['id' => $this->id]);
+    }
+
+    public static function deleteAllNotificationsByUser(int $userId)
+    {
+        $notification = "DELETE FROM " . self::tableName() . " WHERE user_id = :user_id";
+        return DBModel::prepare($notification)->execute(['user_id' => $userId]);
+    }
 }
