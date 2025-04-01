@@ -329,3 +329,41 @@ for (const star of stars) {
 // -------------------------------------------------------------------------- //
 
 offerRecentlyConsulted.loadRecentlyConsulted();
+
+// -------------------------------------------------------------------------- //
+// Dislexia
+// -------------------------------------------------------------------------- //
+try {
+    let dislexiaElement = document.querySelectorAll('.Dislexia-font');
+    let dislexiaSwitch = document.querySelectorAll('.switch-dislexia');
+
+    dislexiaSwitch.forEach(function (switchElement) {
+        switchElement.checked = localStorage.getItem('dislexiaEnabled') === 'true';
+        dislexia(switchElement.checked);
+    });
+    dislexiaSwitch.forEach(function (switchElement) {
+        localStorage.setItem('dislexiaEnabled', switchElement.checked);
+        switchElement.addEventListener('click', function (event) {
+            const isChecked = event.target.checked;
+            localStorage.setItem('dislexiaEnabled', isChecked);
+            dislexia(isChecked);
+            dislexiaSwitch.forEach(function (switchElement) {
+                switchElement.checked = isChecked;
+            });
+        });
+    });
+
+    function dislexia(action) {
+        if (action === true) {
+            dislexiaElement.forEach(function (element) {
+                element.classList.add('lexend-zetta-light');
+            });
+        } else {
+            dislexiaElement.forEach(function (element) {
+                element.classList.remove('lexend-zetta-light');            
+            });
+        }
+    }
+} catch (error) {
+    console.error("An error occurred in the dislexia feature:", error);
+}
