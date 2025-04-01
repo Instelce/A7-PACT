@@ -526,7 +526,8 @@ class ApiController extends Controller
             $opinion->addLike();
 
             if (Application::$app->user->isMember()) {
-                Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liké votre avis : " . "'$opinion->title'");
+                $message = Application::$app->user->specific()->pseudo . " a liké votre avis : \n" . "'$opinion->title'";
+                Application::$app->notifications->createNotification($opinion->account_id, nl2br($message));
             }
 
         } else if ($action == "remove") {
@@ -551,7 +552,8 @@ class ApiController extends Controller
             $opinion->addDislike();
 
             if (Application::$app->user->isMember()) {
-                Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a disliké votre avis : " . "'$opinion->title'");
+                $message = Application::$app->user->specific()->pseudo . " a disliké votre avis : \n" . "'$opinion->title'";
+                Application::$app->notifications->createNotification($opinion->account_id, nl2br($message));
             }
 
         } else if ($action == "remove") {
@@ -696,7 +698,7 @@ class ApiController extends Controller
     }
 
     //supprimer une notification individuelle
-    public function deleteAction()
+    /*public function deleteAction()
     {
         if (isset($_POST['id']) && is_numeric($_POST['id'])) {
             $notificationId = (int) $_POST['id'];
@@ -712,7 +714,7 @@ class ApiController extends Controller
                 'status' => 'error',
             ]);
         }
-    }
+    }*/
 
     // Supprimer toutes les notifications d'un utilisateur
     public function deleteAllAction()

@@ -2,6 +2,7 @@
 
 namespace app\models;
 use app\core\DBModel;
+use app\core\Application;
 
 class Notification extends DBModel
 {
@@ -14,17 +15,6 @@ class Notification extends DBModel
     public int $is_read = self::IS_NOT_READ;
     public string $content = '';
     public int $user_id = 0;
-
-    public function deleteNotification(){
-        $sql = "DELETE FROM " . self::tableName() . " WHERE id = :id";
-        return DBModel::prepare($sql)->execute(['id' => $this->id]);
-    }
-
-    public static function deleteAllNotificationsByUser(int $userId)
-    {
-        $sql = "DELETE FROM " . self::tableName() . " WHERE user_id = :user_id";
-        return DBModel::prepare($sql)->execute(['user_id' => $userId]);
-    }
 
     public static function tableName(): string
     {
@@ -59,5 +49,14 @@ class Notification extends DBModel
         $this->update();
     }
 
+    public function removeNotification()
+    {
+        $notification = Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . content . "'$opinion->title'");
+        $notification->delete();
+    }
 
+    public function removeAllNotifications()
+    {
+
+    }
 }

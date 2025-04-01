@@ -398,7 +398,7 @@ class OfferController extends Controller
                     $opinion->addPhoto($file);
                 }
 
-                Application::$app->notifications->createNotification(ProfessionalUser::findOne(['user_id' => $offer->professional_id])->user_id , Application::$app->user->specific()->pseudo . " vous a envoyé un commentaire sur votre publication : " . "'$offer->title'");
+                Application::$app->notifications->createNotification(ProfessionalUser::findOne(['user_id' => $offer->professional_id])->user_id , Application::$app->user->specific()->pseudo . " vous a envoyé un commentaire sur votre publication : \n" . "'$offer->title'");
 
                 $opinionSubmitted = false;
 

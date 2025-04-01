@@ -76,12 +76,39 @@ if (notificationContainer){
         notificationContainer.innerHTML = ("<div class='notification-header'>" +
                 "<div class='notification-header-content'>" +
                     "<div class='notification-text-header'>Vos notifications</div>" +
-                    "<button class='delete-button button danger only-icon' title='Supprimer votre réponse'>" +
+                    "<button class='delete-all-button button danger only-icon' title='Supprimer votre réponse'>" +
                         `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>` +
                     "</button>" +
                 "</div>" +
                 "<div class='notification-separator-header'></div>" +
             "</div>");
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.delete-all-button')) {
+                e.preventDefault();
+
+                // Sélectionner toutes les notifications et les supprimer
+                let notifications = document.querySelectorAll('.notification-card');
+                for (let notification of notifications) {
+                    notification.remove();
+                }
+
+                // Vérifier si toutes les notifications sont supprimées
+                if (document.querySelectorAll('.notification-card').length === 0) {
+                    notificationContainer.innerHTML = `
+                <div class='notification-header'>
+                    <div class='notification-header-content'>
+                        <div class='notification-text-header'>Vos notifications</div>
+                    </div>
+                    <div class='notification-separator-header'></div>
+                    <div class='no-notifications'>Vous n'avez pas de nouvelles notifications</div>
+                </div>
+            `;
+                }
+            }
+        });
+
+
         for (let notification of notifications){
 
             let notificationCard = document.createElement('div');
@@ -127,20 +154,52 @@ if (notificationContainer){
                 let notificationCardBin = document.createElement('div');
                 notificationCardBin.classList.add('notification-card-bin');
 
-                notificationCardBin.innerHTML = (
-                    "<button>"+
-                        `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-trash"> <path d="M3 6h18"/> <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/> <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/> </svg>` +
-                    "</button>"
-                );
+                notificationCardBin.innerHTML = `
+                    <button class="notification-remove">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"> 
+                            <path d="M3 6h18"/> 
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/> 
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/> 
+                        </svg>
+                    </button>
+                `;
+
+            notificationCard.appendChild(notificationCardBin);
+
+            let separator = document.createElement('div');
+                separator.classList.add('notification-separator');
+
+
+                document.addEventListener('click', (e) => {
+                    if (e.target.closest('.notification-remove')) {
+                        e.preventDefault();
+                        let notificationCard = e.target.closest('.notification-card');
+                        if (notificationCard) {
+                            let notificationSeparator = notificationCard.nextElementSibling;
+                            notificationCard.remove();
+                            if (notificationSeparator && notificationSeparator.classList.contains('notification-separator')) {
+                                notificationSeparator.remove();
+                            }
+                        }
+                    }
+
+                    if (document.querySelectorAll('.notification-card').length === 0) {
+                        notificationContainer.innerHTML = `
+                        <div class='notification-header'>
+                            <div class='notification-header-content'>
+                                <div class='notification-text-header'>Vos notifications</div>
+                            </div>
+                            <div class='notification-separator-header'></div>
+                            <div class='no-notifications'>Vous n'avez pas de nouvelles notifications</div>
+                        </div>
+                        `;
+                    }
+                });
 
             notificationCard.appendChild(notificationCardIcon);
             notificationCard.appendChild(notificationCardContent);
             notificationCard.appendChild(notificationCardBin);
-
             notificationContainer.appendChild(notificationCard);
-
-            let separator = document.createElement('div');
-            separator.classList.add('notification-separator');
             notificationContainer.appendChild(separator);
         }
 
@@ -185,27 +244,6 @@ if (notificationContainer){
             notificationContainer.classList.remove('open');
         }
     });
-
-    // Fonction de suppression d'une notification
-    function deleteNotification(notificationId, notificationCard) {
-        fetch('/api/notifications/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ id: notificationId })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    // Si la suppression est réussie, on enlève la notification du DOM
-                    notificationCard.remove();
-                } else {
-                    alert("Erreur lors de la suppression de la notification.");
-                }
-            })
-            .catch(err => {
-                alert("Une erreur est survenue. Veuillez réessayer.");
-            });
-    }
 }
 
 // -------------------------------------------------------------------------- //
