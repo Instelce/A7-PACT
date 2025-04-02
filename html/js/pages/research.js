@@ -109,7 +109,7 @@ async function getOffers(map = false) {
         moreSearch +
         search +
         (map ? "&map=true" : ""); //url of the api for research page offers's data
-
+    // console.log("url : " + url);
     try {
         const response = await fetch(url); //fetching the data from the api
         if (!response.ok) {

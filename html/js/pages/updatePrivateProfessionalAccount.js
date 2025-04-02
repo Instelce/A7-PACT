@@ -1,7 +1,6 @@
 //--------------- payment ---------------
 import "./registerProfessional.js";
 
-
 //--------------- Popup pour l'enregistrement des modifications ---------------
 const saveUpdatePopupTrigger = document.getElementById("saveUpdatePopupTrigger");
 const popupSaveUpdate = document.getElementById("popupSaveUpdate");

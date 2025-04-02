@@ -12,4 +12,8 @@ class Clock implements ClockInterface
     {
         return new DateTimeImmutable('now');
     }
+
+    public function offset(){
+
+    }
 }
