@@ -1,4 +1,4 @@
-import {capitalize, translateCategory} from "../utils.js";
+import { capitalize, translateCategory } from "../utils.js";
 
 //initialize the global parameters and save them permanently
 let filters = {};
@@ -10,7 +10,7 @@ let mapInit = false;
 //block interaction when loading
 let blockElement = false;
 
-let mapDataCache =null;
+let mapDataCache = null;
 let lastMapRefreshTime = 0;
 let mapMarkers = null;
 /**
@@ -45,7 +45,7 @@ let mapMarkers = null;
 async function getOffers(map = false) {
     const host = window.location.protocol;
     const searchParams = new URLSearchParams();
-    if(!map){
+    if (!map) {
         if (order) {
             searchParams.set("order_by", order || null);
         }
@@ -109,7 +109,7 @@ async function getOffers(map = false) {
         moreSearch +
         search +
         (map ? "&map=true" : ""); //url of the api for research page offers's data
-    // console.log("url : " + url);
+
     try {
         const response = await fetch(url); //fetching the data from the api
         if (!response.ok) {
@@ -277,12 +277,14 @@ function displayOffers(Data) {
                     offerRelief
                         ? "class='research-card--body enRelief'"
                         : "class='research-card--body'"
-                }">
+                }>
                 
                 <header>
                 <h2 class="research-card--title">${offer.title}</h2>
                 <div class="flex flex-row gap-2 justify-between items-center">
-                <p>${capitalize(translateCategory(offer.category))} par <a href="/comptes/${
+                <p>${capitalize(
+                    translateCategory(offer.category)
+                )} par <a href="/comptes/${
                     offer.professional_id
                 }" class="underline">${
                     offer.profesionalUser["denomination"]
@@ -318,7 +320,7 @@ function displayOffers(Data) {
                     <div class="flex gap-2 mt-auto pt-4">
                         <div id="${
                             offer.id
-                        }" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
+                        }" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1-1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
                         <a href="/offres/${
                             offer.id
                         }" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
@@ -401,7 +403,7 @@ categoryListenners.forEach((listener, index) => {
     let categories = document.querySelectorAll(".category-item");
     if (element) {
         element.addEventListener("click", () => {
-            if (!blockElement) {  
+            if (!blockElement) {
                 if (element.classList.contains("active")) {
                     element.classList.remove("active");
                     applyFilters({ category: null });
@@ -551,17 +553,27 @@ aProximite.addEventListener("click", (event) => {
     }
 });
 
+/**
+ * Ajoute des écouteurs d'événements aux boutons d'itinéraire des offres.
+ * Lorsqu'un bouton est cliqué, extrait les coordonnées de l'offre et affiche l'itinéraire.
+ *
+ * @param {Array} Data - Tableau d'objets représentant les offres
+ */
 function listenerIteneraire(Data) {
     let iteneraire = document.querySelectorAll(".iteneraire");
     iteneraire.forEach((element) => {
         element.addEventListener("click", (event) => {
-            let offerId = event.target.id;
+            let offerId = event.currentTarget.id;
             Data.forEach((offer) => {
                 if (offer.id == offerId) {
                     let latitude = offer.address["latitude"];
                     let longitude = offer.address["longitude"];
-                    let url = `https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=${latitude},${longitude}`;
-                    window.open(url, "_blank");
+
+                    showRoute(latitude, longitude);
+
+                    if (!mapContainer.classList.contains("w-full")) {
+                        ScaleMap();
+                    }
                 }
             });
         });
@@ -639,7 +651,7 @@ observer.observe(loaderSection);
 // ---------------------------------------------------------------------------------------------- //
 
 const markerOptions = {
-    iconSize: [20, 26],
+    iconSize: [28, 35],
 };
 
 let restaurantIcon = L.icon({
@@ -665,41 +677,46 @@ let visitIcon = L.icon({
     iconUrl: "/assets/pins/visit_pin.svg",
 });
 
+let itineraryIcon = L.icon({
+    iconUrl: "/assets/pins/pin_itineraire.svg",
+    iconSize: [28, 35],
+    iconAnchor: [14, 35],
+    popupAnchor: [0, -35],
+});
+
+let routingControl = null;
+
+let currentDestination = null;
+
 let map;
 let DataTableMap;
 
+/**
+ * Affiche les données cartographiques et crée des marqueurs pour chaque offre.
+ * Configure les popups pour afficher les informations sur les offres.
+ *
+ * @param {Array} DataMap - Tableau d'objets représentant les offres à afficher sur la carte
+ */
 function displayMap(DataMap) {
-
     DataTableMap = DataMap;
-    let groupMarkers = L.markerClusterGroup(
-        {
-            chunkedLoading: true, 
-            maxClusterRadius: 50
-        }
-    );
+    let groupMarkers = L.markerClusterGroup({
+        chunkedLoading: true,
+        maxClusterRadius: 50,
+    });
     if (mapMarkers) {
         map.removeLayer(mapMarkers);
     }
     const markers = [];
-    
+
     if (map) {
+        if (routingControl) {
+            map.removeControl(routingControl);
+            routingControl = null;
+        }
         map.remove();
     }
 
-    let userCoords = [48.1782600, -2.7543300];
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                map.setView([position.coords.latitude, position.coords.longitude], 8);
-            },
-            (error) => {
-                console.error("Error getting user location:", error);
-            },
-            { timeout: 3000 }
-        );
-    }
-
+    let userCoords = [48.17826, -2.75433];
 
     map = L.map("map", {
         center: userCoords,
@@ -710,6 +727,21 @@ function displayMap(DataMap) {
         attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                map.setView(
+                    [position.coords.latitude, position.coords.longitude],
+                    8
+                );
+            },
+            (error) => {
+                console.error("Error getting user location:", error);
+            },
+            { timeout: 3000 }
+        );
+    }
 
     DataMap.forEach((coords, index) => {
         let markerIcon;
@@ -730,7 +762,7 @@ function displayMap(DataMap) {
                 markerIcon = visitIcon;
                 break;
         }
-        let marker = L.marker([coords.latitude,coords.longitude], {
+        let marker = L.marker([coords.latitude, coords.longitude], {
             icon: markerIcon,
         });
         groupMarkers.addLayer(marker);
@@ -751,8 +783,7 @@ function displayMap(DataMap) {
 
             stars.appendChild(star);
         }
-        
-        
+
         marker.bindPopup(`
             <div class="map-card">
                 <h1>${coords.title}</h1>
@@ -760,39 +791,49 @@ function displayMap(DataMap) {
                 <div id="stars-container-${coords.id}"></div>
                 <div id="popup-image-container-${coords.id}" class="popup-image-container"></div>
                 <div class="flex gap-1 pt-1 mt-2">
-                    <div id="${coords.id}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
+                    <div id="${coords.id}" class="iteneraire button gray w-full spaced">Itinéraire<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1-1.788 0z" /><path d="M15 5.764v15" /><path d="M9 3.236v15" /></svg></div>
                     <a href="/offres/${coords.id}" class="button blue w-full spaced">Voir plus<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></a>
                 </div>
             </div>`);
-        
-     
+
         marker.on("popupopen", function () {
-            const imageContainer = document.getElementById(`popup-image-container-${coords.id}`);
-            if (imageContainer && !imageContainer.querySelector('img')) {                
-                    const img = document.createElement('img');
-                    img.src = coords.imageurl;
-                    img.alt = "Photo de l'offre";
-                    img.classList.add("popup-offer-image", "w-full", "max-h-32", "object-cover", "rounded-md", "mt-2", "mb-2");
-                    imageContainer.appendChild(img); 
+            const imageContainer = document.getElementById(
+                `popup-image-container-${coords.id}`
+            );
+            if (imageContainer && !imageContainer.querySelector("img")) {
+                const img = document.createElement("img");
+                img.src = coords.imageurl;
+                img.alt = "Photo de l'offre";
+                img.classList.add(
+                    "popup-offer-image",
+                    "w-full",
+                    "max-h-32",
+                    "object-cover",
+                    "rounded-md",
+                    "mt-2",
+                    "mb-2"
+                );
+                imageContainer.appendChild(img);
             }
 
-            const starsContainer = document.getElementById(`stars-container-${coords.id}`);
+            const starsContainer = document.getElementById(
+                `stars-container-${coords.id}`
+            );
             if (starsContainer && !starsContainer.innerHTML) {
-                // Créer les étoiles uniquement lors de l'ouverture du popup
                 const starsHtml = generateStarsHtml(coords.rating);
                 starsContainer.innerHTML = starsHtml;
             }
-            
-            // Gestion des clics sur le bouton itinéraire
-            document.addEventListener("click", function(event) {
-                const target = event.target.closest('.iteneraire');
+
+            document.addEventListener("click", function (event) {
+                const target = event.target.closest(".iteneraire");
                 if (target) {
                     const offerId = target.id;
                     if (DataTableMap) {
-                        const offer = DataTableMap.find(offer => offer.id == offerId);
+                        const offer = DataTableMap.find(
+                            (offer) => offer.id == offerId
+                        );
                         if (offer) {
-                            const url = `https://www.google.com/maps/dir/?api=1&origin=Ma+Localisation&destination=${offer.latitude},${offer.longitude}`;
-                            window.open(url, "_blank");
+                            showRoute(offer.latitude, offer.longitude);
                         }
                     }
                 }
@@ -802,33 +843,313 @@ function displayMap(DataMap) {
     map.addLayer(groupMarkers);
 }
 
+/**
+ * Génère le code HTML pour afficher les étoiles de notation.
+ *
+ * @param {number} rating - La note à afficher (de 0 à 5)
+ * @returns {string} Code HTML pour afficher les étoiles
+ */
 function generateStarsHtml(rating) {
     let starsHtml = '<div class="stars">';
     for (let i = 0; i < 5; i++) {
-        let starClass = '';
+        let starClass = "";
         if (i < rating && i > rating - 1) {
-            starClass = 'half-fill';
+            starClass = "half-fill";
         } else if (i < rating) {
-            starClass = 'fill';
+            starClass = "fill";
         }
         starsHtml += `<span class="star ${starClass}">${starSVG}</span>`;
     }
-    starsHtml += '</div>';
+    starsHtml += "</div>";
     return starsHtml;
 }
+
+/**
+ * Affiche l'itinéraire vers la destination sélectionnée.
+ * Si la géolocalisation est disponible, utilise la position de l'utilisateur comme point de départ.
+ * Sinon, affiche un modal pour permettre à l'utilisateur de saisir son adresse.
+ *
+ * @param {number} destLat - Latitude de la destination
+ * @param {number} destLng - Longitude de la destination
+ */
+function showRoute(destLat, destLng) {
+    if (routingControl) {
+        map.removeControl(routingControl);
+    }
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                createRoute(userLat, userLng, destLat, destLng);
+            },
+            (error) => {
+                showAddressModal(destLat, destLng);
+            }
+        );
+    } else {
+        showAddressModal(destLat, destLng);
+    }
+
+    if (!mapContainer.classList.contains("w-full")) {
+        ScaleMap();
+    }
+}
+
+/**
+ * Affiche un modal permettant à l'utilisateur de saisir son adresse de départ.
+ * Configure l'autocomplétion d'adresses via l'API Nominatim.
+ *
+ * @param {number} destLat - Latitude de la destination
+ * @param {number} destLng - Longitude de la destination
+ */
+function showAddressModal(destLat, destLng) {
+    const modal = document.getElementById("address-modal");
+    const form = document.getElementById("address-form");
+    const cancelButton = document.getElementById("cancel-address");
+    const startAddressInput = document.getElementById("start-address");
+
+    startAddressInput.value = "";
+
+    const existingSuggestions = document.getElementById("address-suggestions");
+    if (existingSuggestions) {
+        existingSuggestions.remove();
+    }
+
+    const suggestionsContainer = document.createElement("div");
+    suggestionsContainer.id = "address-suggestions";
+    suggestionsContainer.className =
+        "bg-white border border-gray-300 rounded-md w-full shadow-lg hidden absolute z-50";
+
+    const inputWrapper = form.querySelector("x-input");
+    inputWrapper.insertAdjacentElement("afterend", suggestionsContainer);
+
+    modal.classList.remove("hidden");
+
+    let debounceTimer;
+    startAddressInput.addEventListener("input", function () {
+        const query = this.value.trim();
+
+        clearTimeout(debounceTimer);
+
+        if (!query) {
+            suggestionsContainer.classList.add("hidden");
+            return;
+        }
+
+        debounceTimer = setTimeout(() => {
+            fetch(
+                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+                    query
+                )}&limit=5`
+            )
+                .then((response) => response.json())
+                .then((data) => {
+                    suggestionsContainer.innerHTML = "";
+
+                    if (data.length > 0) {
+                        suggestionsContainer.classList.remove("hidden");
+
+                        data.forEach((item) => {
+                            const suggestionItem =
+                                document.createElement("div");
+                            suggestionItem.className =
+                                "p-2 hover:bg-gray-100 cursor-pointer";
+                            suggestionItem.textContent = item.display_name;
+
+                            suggestionItem.addEventListener("click", () => {
+                                startAddressInput.value = item.display_name;
+                                suggestionsContainer.classList.add("hidden");
+                            });
+
+                            suggestionsContainer.appendChild(suggestionItem);
+                        });
+                    } else {
+                        suggestionsContainer.classList.add("hidden");
+                    }
+                })
+                .catch((error) => {
+                    suggestionsContainer.classList.add("hidden");
+                });
+        }, 300);
+    });
+
+    form.onsubmit = function (e) {
+        e.preventDefault();
+        const startAddress = startAddressInput.value;
+        if (startAddress.trim() !== "") {
+            geocodeAddress(startAddress, destLat, destLng);
+            modal.classList.add("hidden");
+        }
+    };
+
+    cancelButton.onclick = function () {
+        modal.classList.add("hidden");
+    };
+
+    modal.onclick = function (e) {
+        if (e.target === modal) {
+            modal.classList.add("hidden");
+        }
+    };
+
+    setTimeout(() => {
+        startAddressInput.focus();
+    }, 100);
+}
+
+/**
+ * Convertit une adresse en coordonnées géographiques via l'API Nominatim.
+ * Une fois les coordonnées obtenues, crée un itinéraire vers la destination.
+ *
+ * @param {string} address - Adresse à convertir en coordonnées
+ * @param {number} destLat - Latitude de la destination
+ * @param {number} destLng - Longitude de la destination
+ */
+function geocodeAddress(address, destLat, destLng) {
+    const loadingIndicator = document.createElement("div");
+    loadingIndicator.className =
+        "fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50";
+    loadingIndicator.innerHTML = `
+        <div class="bg-white p-4 rounded-lg">
+            <svg class="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="mt-2 text-center">Recherche de votre adresse...</p>
+        </div>
+    `;
+    document.body.appendChild(loadingIndicator);
+
+    fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            address
+        )}`
+    )
+        .then((response) => response.json())
+        .then((data) => {
+            document.body.removeChild(loadingIndicator);
+
+            if (data && data.length > 0) {
+                const result = data[0];
+                const lat = parseFloat(result.lat);
+                const lon = parseFloat(result.lon);
+                createRoute(lat, lon, destLat, destLng);
+            } else {
+                alert(
+                    "Adresse introuvable. Veuillez essayer avec une adresse plus précise."
+                );
+            }
+        })
+        .catch((error) => {
+            document.body.removeChild(loadingIndicator);
+            alert(
+                "Erreur lors de la recherche de l'adresse. Veuillez réessayer."
+            );
+        });
+}
+
+/**
+ * Crée un itinéraire entre deux points en utilisant Leaflet Routing Machine.
+ * Configure le style, les marqueurs et les options de l'itinéraire.
+ *
+ * @param {number} startLat - Latitude du point de départ
+ * @param {number} startLng - Longitude du point de départ
+ * @param {number} destLat - Latitude de la destination
+ * @param {number} destLng - Longitude de la destination
+ */
+function createRoute(startLat, startLng, destLat, destLng) {
+    if (routingControl) {
+        map.removeControl(routingControl);
+        routingControl = null;
+    }
+
+    try {
+        routingControl = L.Routing.control({
+            waypoints: [
+                L.latLng(startLat, startLng),
+                L.latLng(destLat, destLng),
+            ],
+            routeWhileDragging: true,
+            showAlternatives: true,
+            fitSelectedRoutes: true,
+            createMarker: function (i, waypoint, n) {
+                if (i === 0) {
+                    return L.marker(waypoint.latLng, {
+                        icon: itineraryIcon,
+                        draggable: true,
+                    });
+                }
+                return null;
+            },
+            lineOptions: {
+                styles: [
+                    { color: "#0057FF", opacity: 0.7, weight: 5 },
+                    { color: "#FFA800", opacity: 0.3, weight: 8 },
+                ],
+                extendToWaypoints: true,
+                missingRouteTolerance: 0,
+            },
+            router: new L.Routing.OSRMv1({
+                serviceUrl: "https://router.project-osrm.org/route/v1",
+                profile: "driving",
+            }),
+            collapsible: true,
+            formatter: new L.Routing.Formatter({
+                language: "fr",
+                distanceTemplate: "{value} {unit}",
+                timeTemplate: "{time}",
+            }),
+            show: true,
+            containerClassName: "custom-routing-container",
+        }).addTo(map);
+
+        routingControl.on("routingerror", function (e) {
+            alert(
+                "Erreur lors du calcul de l'itinéraire. Veuillez réessayer avec un autre point de départ."
+            );
+        });
+
+        routingControl.on("routesfound", function (e) {
+            const routes = e.routes;
+            if (routes && routes.length > 0) {
+                const summary = routes[0].summary;
+
+                const totalTimeMinutes = Math.round(summary.totalTime / 60);
+
+                const totalDistanceKm =
+                    Math.round((summary.totalDistance / 1000) * 10) / 10;
+
+                if (!mapContainer.classList.contains("w-full")) {
+                    ScaleMap();
+                }
+            }
+        });
+    } catch (error) {
+        alert("Une erreur est survenue lors de la création de l'itinéraire.");
+    }
+}
+
 let fullScaleMap = document.getElementById("fullScaleMap");
 let mapContainer = document.getElementById("mapContainer");
 let closeMap = document.getElementById("closeMap");
 let searchMap = document.getElementById("searchMap");
 let mapInteractive = document.getElementById("map");
 let topPart = document.getElementById("topPart");
-let searchPart = document.getElementById("searchPart")
+let searchPart = document.getElementById("searchPart");
 
+/**
+ * Redimensionne la carte pour basculer entre les modes d'affichage.
+ * Met à jour les classes CSS des éléments concernés pour modifier l'affichage.
+ */
 function ScaleMap() {
-    closeMap.classList.toggle("md:hidden");
-    closeMap.classList.toggle("md:block");
-    fullScaleMap.classList.toggle("md:hidden");
-    fullScaleMap.classList.toggle("md:block");
+    closeMap.classList.toggle("hidden");
+    closeMap.classList.toggle("md-hidden");
+    closeMap.classList.toggle("md-block");
+    fullScaleMap.classList.toggle("hidden");
+    fullScaleMap.classList.toggle("md-hidden");
+    fullScaleMap.classList.toggle("md-block");
     mapContainer.classList.toggle("w-0");
     mapContainer.classList.toggle("h-0");
     mapContainer.classList.toggle("md:w-1/3");
@@ -839,7 +1160,9 @@ function ScaleMap() {
     topPart.classList.toggle("md:flex-row");
     topPart.classList.toggle("md:h-[170px]");
     searchPart.classList.toggle("md:w-2/3");
-    displayMap(DataTableMap);
+    if (mapInit) {
+        displayMap(DataTableMap);
+    }
 }
 searchMap.addEventListener("click", () => {
     ScaleMap();
@@ -851,11 +1174,10 @@ closeMap.addEventListener("click", () => {
     ScaleMap();
 });
 
-
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.location.hash === '#map') {
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.location.hash === "#map") {
         setTimeout(() => {
-            if (!mapContainer.classList.contains('w-full')) {
+            if (!mapContainer.classList.contains("w-full")) {
                 ScaleMap();
             }
         }, 500);
@@ -865,13 +1187,21 @@ document.addEventListener('DOMContentLoaded', function() {
 // ---------------------------------------------------------------------------------------------- //
 //blockElement
 // ---------------------------------------------------------------------------------------------- //
+
+/**
+ * Active ou désactive l'interaction avec les éléments d'une classe spécifique.
+ * Ajoute ou supprime une couche de superposition pour bloquer les interactions.
+ *
+ * @param {string} className - Nom de la classe des éléments à modifier
+ * @param {boolean} action - true pour bloquer l'interaction, false pour la réactiver
+ */
 function blockElementFunction(className, action) {
     if (action) {
-        blockElement = true
-    } else{
-        blockElement = false
+        blockElement = true;
+    } else {
+        blockElement = false;
     }
-    let elements = document.querySelectorAll("."+className);
+    let elements = document.querySelectorAll("." + className);
     if (elements) {
         elements.forEach((element) => {
             if (action) {
@@ -886,7 +1216,7 @@ function blockElementFunction(className, action) {
                 overlay.classList.add("cursor-progress");
                 element.appendChild(overlay);
                 element.classList.add("relative");
-            } else{
+            } else {
                 const overlay = element.querySelector("._overlayLoading");
                 if (overlay) {
                     overlay.remove();

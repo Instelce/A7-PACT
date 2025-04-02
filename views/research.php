@@ -250,6 +250,25 @@ $iconsNames = [
     <p>Désolé, nous n'avons trouvé aucune offre correspondant à vos critères de recherche.</p>
     <p>Veuillez essayer d'ajuster vos filtres ou revenir plus tard pour voir les nouvelles opportunités disponibles.</p>
 </div>
+
+<!-- Add address input modal with improved styling -->
+<div id="address-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full">
+        <h3 class="text-lg font-medium mb-4">Entrez votre adresse de départ</h3>
+        <form id="address-form" class="flex flex-col gap-4 relative">
+            <x-input>
+                <input slot="input" type="text" id="start-address" placeholder="Votre adresse de départ" class="w-full" required autocomplete="off">
+            </x-input>
+            <!-- Le conteneur des suggestions sera inséré ici -->
+            <p class="text-sm text-gray-500 mt-1">Saisissez votre adresse pour voir des suggestions</p>
+            <div class="flex gap-2 justify-end">
+                <button type="button" id="cancel-address" class="button gray">Annuler</button>
+                <button type="submit" class="button blue">Calculer l'itinéraire</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div id="loader-section"></div>
 <article class="w-full h-64 bg-gray-200 rounded-xl flex flex-col lg:flex-row gap-4 p-4 hidden" id="loaderLoaderSection">
     <div class="w-full h-full bg-gray-300 animate-pulse rounded-xl"></div>
