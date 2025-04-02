@@ -18,6 +18,7 @@ class UserAccount extends DBModel
     public ?string $reset_password_hash = '';
     public int $address_id = 0;
     public string $api_token = '';
+    public ?string $otp_secret = null;
 
     public function save(): bool
     {
@@ -33,7 +34,7 @@ class UserAccount extends DBModel
 
     public function attributes(): array
     {
-        return ['account_id', 'mail', 'password', 'avatar_url', 'address_id', 'reset_password_hash', 'api_token'];
+        return ['account_id', 'mail', 'password', 'avatar_url', 'address_id', 'reset_password_hash', 'api_token', 'otp_secret'];
     }
 
     public static function pk(): string

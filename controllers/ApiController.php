@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\core\Application;
+use app\core\Clock;
 use app\core\Controller;
 use app\core\Request;
 use app\core\Response;
@@ -37,6 +38,7 @@ use app\core\Utils;
 use DateTime;
 use DateInterval;
 use Exception;
+use OTPHP\TOTP;
 
 
 class ApiController extends Controller
@@ -757,5 +759,28 @@ class ApiController extends Controller
             return $response->json(['error' => 'Pas assez de jetons pour blacklister l\'avis']);
         }
         return $response->json([]);
+    }
+
+    public function otpVerification(Request $request, Response $response){
+
+        $body = $request->getBody();
+        $user = Application::$app->user;
+
+        if ($user) {
+            $clock = new Clock();
+
+            $secret = $user->otp_secret;
+            $otp = TOTP::createFromSecret($secret, $clock);
+
+            $otp->setPeriod(30);
+
+            $userOTP = $body['otp'];
+
+            if ($otp->verify($userOTP, null, 15)) {
+                return $response->json(true);
+            }
+        }
+
+        return $response->json(false);
     }
 }
