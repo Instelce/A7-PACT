@@ -407,7 +407,7 @@ class AuthController extends Controller
 
         $label = new Label(
             text: 'Votre code OTP',
-            textColor: new Color(255, 0, 0)
+            textColor: new Color(38, 99, 235)
         );
 
         $qrCodeImage = $writer->write($qrCode, $logo, $label);

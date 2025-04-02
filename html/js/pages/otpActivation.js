@@ -1,29 +1,31 @@
 let otpActivationForm = document.getElementById("otpActivation");
+let otpForm = document.getElementById("otpForm");
 let responseOTP = document.getElementById("responseOTP");
-let otpQrCode = document.getElementById("otpQrCode");
+let otpCodeError = document.getElementById("otpCodeError");
 let lottiePlayer = document.getElementById("lottiePlayer");
 
 otpActivationForm.addEventListener("submit", function (e) {
     e.preventDefault();
     let formData = new FormData(e.target);
+
     fetch('/api/otp-verification', {
         method: 'POST',
         body: JSON.stringify({
             otp: formData.get('otp')
         })
-    }).then(response => response.json()).then(response=>{
-        console.log(response)
-        if(response){
+    }).then(response => response.json()).then(response => {
+        if (response) {
+            otpForm.style.display = "none";
             responseOTP.classList.remove('hidden');
             lottiePlayer.stop();
             lottiePlayer.play();
-            otpActivationForm.style.display = "none"
-            otpQrCode.style.display = "none"
+
             setTimeout(() => {
                 window.location.href = "/comptes/modification?tab=securite";
-            }, 4000);
+            }, 3000);
         } else {
-            responseOTP.innerHTML = "Le code fournie est erroné"
+            otpCodeError.classList.remove('hidden');
+            otpCodeError.innerHTML = "Le code fourni est erroné";
         }
-    })
-})
+    });
+});
