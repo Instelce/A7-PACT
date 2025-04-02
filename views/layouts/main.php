@@ -147,15 +147,61 @@ use app\core\Application;
                 <span></span>
                 <span></span>
             </div>
-            <div class="hidden xl:flex gap-4 items-center">
+            <!-- <div class="hidden xl:flex gap-4 items-center">
                 <div class="flex items-center">
                     <input class="switch switch-dislexia" type="checkbox" id="switch-dislexia" />
                     <label class="switch" for="switch-dislexia"></label>
                 </div>
                 <label for="switch-dislexia" class="switch-dislexia-label">Mode Dislexique</label>
-            </div>
+            </div> -->
         </div>
     </nav>
+
+    <!-- accessibility -->
+    <aside
+        class="hidden xl:block fixed bottom-2 left-0 close-accessibility ease-in-out transition-all duration-500 bg-slate-200 z-50 rounded-r-lg shadow-lg p-2"
+        id="accessibility-popup">
+        <svg class="w-16 h-16 absolute top-1/4 -right-20 cursor-pointer" title="ouvrir le menu d'accessibilité"
+            alt="icon d'accessibilité" id="iconAccessibility" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+                <path
+                    d="M13.5 6.50024C13.5 7.32867 12.8284 8.00024 12 8.00024C11.1716 8.00024 10.5 7.32867 10.5 6.50024C10.5 5.67182 11.1716 5.00024 12 5.00024C12.8284 5.00024 13.5 5.67182 13.5 6.50024Z"
+                    fill="#000"></path>
+                <path
+                    d="M6.05132 8.68402C5.87667 9.20796 6.15983 9.77428 6.68377 9.94893C6.85906 10.0071 7.03576 10.0613 7.21265 10.1143C7.5363 10.2114 7.98911 10.3408 8.50746 10.4704C9.08908 10.6158 9.78094 10.7687 10.4783 10.8727C10.4323 11.7654 10.3205 12.4059 10.2166 12.8309L8.10557 17.053C7.85858 17.547 8.05881 18.1477 8.55279 18.3947C9.04677 18.6417 9.64744 18.4414 9.89443 17.9475L12 13.7363L14.1056 17.9475C14.3526 18.4414 14.9532 18.6417 15.4472 18.3947C15.9412 18.1477 16.1414 17.547 15.8944 17.053L13.7834 12.8309C13.6795 12.4059 13.5677 11.7654 13.5217 10.8727C14.2191 10.7687 14.9109 10.6158 15.4925 10.4704C16.0109 10.3408 16.4637 10.2114 16.7873 10.1143C16.963 10.0616 17.1384 10.0077 17.3125 9.95015C17.8261 9.77972 18.1201 9.19822 17.9487 8.68402C17.7741 8.16012 17.2078 7.87697 16.6839 8.05151C16.5277 8.10318 16.3703 8.15138 16.2127 8.19867C15.9113 8.28907 15.4891 8.40969 15.0075 8.5301C14.0216 8.77657 12.8709 9.00024 12 9.00024C11.1291 9.00024 9.97843 8.77657 8.99254 8.5301C8.51089 8.40969 8.0887 8.28907 7.78735 8.19867C7.63167 8.15196 7.47632 8.10404 7.32186 8.05342C6.80235 7.88161 6.22544 8.16164 6.05132 8.68402Z"
+                    fill="#000"></path>
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M23 12.0002C23 18.0754 18.0751 23.0002 12 23.0002C5.92487 23.0002 1 18.0754 1 12.0002C1 5.92511 5.92487 1.00024 12 1.00024C18.0751 1.00024 23 5.92511 23 12.0002ZM3.00683 12.0002C3.00683 16.967 7.03321 20.9934 12 20.9934C16.9668 20.9934 20.9932 16.967 20.9932 12.0002C20.9932 7.03345 16.9668 3.00707 12 3.00707C7.03321 3.00707 3.00683 7.03345 3.00683 12.0002Z"
+                    fill="#000"></path>
+            </g>
+        </svg>
+        <div class="flex flex-row gap-4 items-center justify-between w-full p-2">
+            <div></div>
+            <h2 class="text-lg font-bold">Accessibilité</h2>
+            <button class="w-6 h-6" id="crossAccessibility" title="fermer le menu d'accessibilité"
+                alt="croix du menu d'accessibilité"><svg viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path
+                            d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z"
+                            fill="#000"></path>
+                    </g>
+                </svg></button>
+        </div>
+        <hr>
+        <div class="gap-4 items-center w-full flex flex-row justify-around py-2">
+            <div class="flex items-center">
+                <input class="switch switch-dislexia" type="checkbox" id="switch-dislexia" />
+                <label class="switch" for="switch-dislexia"></label>
+            </div>
+            <label for="switch-dislexia" class="switch-dislexia-label">Mode Dislexique</label>
+        </div>
+    </aside>
 
     <!-- Menu of the navbar -->
     <div id="menu" class="menu-hidden">
@@ -391,13 +437,16 @@ use app\core\Application;
     <?php if ($this->threejs) { ?>
     <script type="importmap">
         {
-                                                                                                                                                                                                                                                          "imports": {
-                                                                                                                                                                                                                                                            "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
-                                                                                                                                                                                                                                                          }
-                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "imports": {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
                                                                                                                 
                                                                                                                 
-                            </script>
+                                                                                                                
+                                                                                                                
+                                                                                                                
+                                                        </script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
     <?php } ?>
 
