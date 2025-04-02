@@ -364,6 +364,21 @@ try {
             });
         }
     }
+    let accessibilityPopup = document.getElementById('accessibility-popup');
+    let iconAccessibility = document.getElementById("iconAccessibility");
+    let crossAccessibility = document.getElementById("crossAccessibility");
+    if (iconAccessibility) {
+        iconAccessibility.addEventListener('click', switchaccessibility);
+    }
+    if (crossAccessibility) {
+        crossAccessibility.addEventListener('click', switchaccessibility);
+    } 
+
+    function switchaccessibility() {
+        accessibilityPopup.classList.toggle('translate-x-0');
+        accessibilityPopup.classList.toggle('close-accessibility');
+    }   
+
 } catch (error) {
     console.error("An error occurred in the dislexia feature:", error);
 }
