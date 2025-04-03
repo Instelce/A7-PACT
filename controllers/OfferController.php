@@ -402,7 +402,6 @@ class OfferController extends Controller
 
                 $opinionSubmitted = false;
 
-
                 header("Location: /offres/$id");
                 exit();
             } else {
@@ -478,8 +477,7 @@ class OfferController extends Controller
                 $history->offer_id = $offer->id;
                 $history->switch_to = "online";
                 $history->save();
-            }
-            // Switching to offline
+            } // Switching to offline
             else if (!array_key_exists("online", array: $body) && $offer->offline === 0) {
                 $offer->offline = 1;
 

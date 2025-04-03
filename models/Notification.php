@@ -49,14 +49,27 @@ class Notification extends DBModel
         $this->update();
     }
 
-    public function removeNotification()
+    public function deleteNotification($notificationId)
     {
-        $notification = Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . content . "'$opinion->title'");
-        $notification->delete();
+        // Recherche la notification en base de données
+        $notification = Notification::findOneByPk($notificationId);
+
+        if (!$notification) {
+            // Retourne une erreur si la notification n'existe pas
+            return ['success' => false, 'message' => 'Notification introuvable'];
+        }
+
+        // Vérifie si l'utilisateur a les droits pour supprimer cette notification
+        if ($notification->user_id !== Application::$app->user->account_id) {
+            return ['success' => false, 'message' => 'Accès refusé'];
+        }
+
+        // Supprime la notification
+        if ($notification->delete()) {
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'message' => 'Erreur lors de la suppression'];
+        }
     }
 
-    public function removeAllNotifications()
-    {
-
-    }
 }
