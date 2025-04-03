@@ -25,6 +25,8 @@ class Opinion extends DBModel
     public string $created_at = "";
     public string $updated_at = "";
 
+    public bool $blacklistage_possible = true;
+
     public int $nb_reports = 0;
     public static function tableName(): string
     {
@@ -33,7 +35,7 @@ class Opinion extends DBModel
 
     public function attributes(): array
     {
-        return ['rating', 'title', 'comment', 'visit_date', 'visit_context', 'read', 'blacklisted', 'account_id', 'offer_id', 'nb_reports'];
+        return ['rating', 'title', 'comment', 'visit_date', 'visit_context', 'read', 'blacklisted', 'account_id', 'offer_id', 'nb_reports', 'blacklistage_possible'];
     }
 
     public function rules(): array
@@ -119,5 +121,28 @@ class Opinion extends DBModel
 
     public function getOffer(){
         return Offer::findOne($this->offer_id);
+    }
+
+    public function updateTimeNewToken() : bool
+    {
+        $opinion_blacklisted = OpinionBlackList::findOne(['opinion_id' => $this->id]);
+        if (!$opinion_blacklisted || empty($opinion_blacklisted->created_at)) {
+            return false;
+        }
+
+        $offer = Offer::findOneByPk($this->offer_id);
+        if (!$offer) {
+            return false;
+        }
+
+        $timeElapsed = time() - strtotime($opinion_blacklisted->created_at);
+        $timeRemaining = 300 - $timeElapsed;
+
+        if ($timeRemaining < 0) {
+            return false;
+        }
+
+        $offer->time_new_token = $timeElapsed;
+        return $offer->update();
     }
 }

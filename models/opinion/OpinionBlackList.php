@@ -28,7 +28,7 @@ class OpinionBlackList extends DBModel
 
     public function attributes(): array
     {
-        return['id_blacklist', 'blacklisted_time', 'opinion_id'];
+        return['blacklisted_time', 'opinion_id'];
     }
 
     public function rules(): array
@@ -36,7 +36,6 @@ class OpinionBlackList extends DBModel
         return [
             'blacklisted_time' => [self::RULE_REQUIRED, self::RULE_DATE],
             'opinion_id' => [self::RULE_REQUIRED]
-
         ];
     }
 

@@ -9,6 +9,7 @@ let loading = false;
 let nextMonday = document.querySelector('input#next-monday').value;
 let offset = 0;
 let limit = 3;
+let isLoading = false;
 
 // Filter elements
 let searchInput = document.querySelector('#search-input');
@@ -74,6 +75,9 @@ function preloadReset() {
 }
 
 function loadCards() {
+    if (isLoading) return;
+    isLoading = true;
+
     fetchOffers()
         .then(offers => {
             // Disable loader section
@@ -91,6 +95,9 @@ function loadCards() {
 
             offset += limit;
         })
+        .finally(() => {
+            isLoading = false;
+        });
 }
 
 async function fetchOffers() {

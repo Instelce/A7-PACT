@@ -63,7 +63,7 @@ $this->jsFile = "dashboard/avis";
                 <label for="a" class="button gray">
                     <i data-lucide="ban"></i>
                     Blacklistés
-                    <input id="filter-blackliste" type="radio" name="filter" value="blacklisted">
+                    <input id="filter-blacklist" type="radio" name="filter" value="blacklisted">
                 </label>
 
 <!--                <label for="a" class="button gray">-->

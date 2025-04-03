@@ -358,100 +358,101 @@ loaderButton.click();
 let userResponse = await getUser();
 
 function createOpinionCard(opinion) {
-    let card = document.createElement('article');
-    card.classList.add('opinion-card');
+    if(!opinion.blacklisted){
+        let card = document.createElement('article');
+        card.classList.add('opinion-card');
 
-    // Stars
-    let stars = document.createElement('div');
-    stars.classList.add('stars');
+        // Stars
+        let stars = document.createElement('div');
+        stars.classList.add('stars');
 
-    for (let i = 0; i < 5; i++) {
-        let star = document.createElement('span');
-        star.classList.add('star');
-        star.innerHTML = starSVG;
+        for (let i = 0; i < 5; i++) {
+            let star = document.createElement('span');
+            star.classList.add('star');
+            star.innerHTML = starSVG;
 
 
-        if (i < opinion.rating && i > opinion.rating - 1) {
-            star.classList.add("half-fill");
-        } else if (i < opinion.rating) {
-            star.classList.add("fill");
+            if (i < opinion.rating && i > opinion.rating - 1) {
+                star.classList.add("half-fill");
+            } else if (i < opinion.rating) {
+                star.classList.add("fill");
+            }
+
+
+            stars.appendChild(star);
         }
 
+        // Calculate the date
+        let currentDate = new Date();
 
-        stars.appendChild(star);
-    }
+        let date = new Date(opinion.created_at);
+        let diff = currentDate - date;
 
-    // Calculate the date
-    let currentDate = new Date();
-
-    let date = new Date(opinion.created_at);
-    let diff = currentDate - date;
-
-    let replyDate = new Date(opinion.reply.created_at);
-    let replyDiff = currentDate - replyDate;
+        let replyDate = new Date(opinion.reply.created_at);
+        let replyDiff = currentDate - replyDate;
 
 
 
-    let years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
-    let months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
-    let weeks = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
-    let days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    let hours = Math.floor(diff / (1000 * 60 * 60));
+        let years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+        let months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+        let weeks = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
+        let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        let hours = Math.floor(diff / (1000 * 60 * 60));
 
-    let yearsReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24 * 365));
-    let monthsReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24 * 30));
-    let weeksReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24 * 7));
-    let daysReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24));
-    let hoursReply = Math.floor(replyDiff / (1000 * 60 * 60));
+        let yearsReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24 * 365));
+        let monthsReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24 * 30));
+        let weeksReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24 * 7));
+        let daysReply = Math.floor(replyDiff / (1000 * 60 * 60 * 24));
+        let hoursReply = Math.floor(replyDiff / (1000 * 60 * 60));
 
-    let dateText = '';
+        let dateText = '';
 
-    let dateReply = '';
+        let dateReply = '';
 
-    if (years > 0) {
-        dateText = `${years}a`;
-    } else if (months > 0) {
-        dateText = `${months}mo`;
-    } else if (weeks > 0) {
-        dateText = `${weeks}sem`;
-    } else if (days > 0) {
-        dateText = `${days}j`;
-    } else if (hours > 0) {
-        dateText = `${hours}h`;
-    }
+        if (years > 0) {
+            dateText = `${years}a`;
+        } else if (months > 0) {
+            dateText = `${months}mo`;
+        } else if (weeks > 0) {
+            dateText = `${weeks}sem`;
+        } else if (days > 0) {
+            dateText = `${days}j`;
+        } else if (hours > 0) {
+            dateText = `${hours}h`;
+        }
 
-    let minutesReply = Math.floor(replyDiff / (1000 * 60));
+        let minutesReply = Math.floor(replyDiff / (1000 * 60));
 
-    if (yearsReply > 0) {
-        dateReply = `${yearsReply}a`;
-    } else if (monthsReply > 0) {
-        dateReply = `${monthsReply}mo`;
-    } else if (weeksReply > 0) {
-        dateReply = `${weeksReply}sem`;
-    } else if (daysReply > 0) {
-        dateReply = `${daysReply}j`;
-    } else if (hoursReply > 0) {
-        dateReply = `${hoursReply}h`;
-    } else if (minutesReply > 0) {
-        dateReply = `${minutesReply}min`;
-    } else {
-        dateReply = `moins d'une minute`;
-    }
+        if (yearsReply > 0) {
+            dateReply = `${yearsReply}a`;
+        } else if (monthsReply > 0) {
+            dateReply = `${monthsReply}mo`;
+        } else if (weeksReply > 0) {
+            dateReply = `${weeksReply}sem`;
+        } else if (daysReply > 0) {
+            dateReply = `${daysReply}j`;
+        } else if (hoursReply > 0) {
+            dateReply = `${hoursReply}h`;
+        } else if (minutesReply > 0) {
+            dateReply = `${minutesReply}min`;
+        } else {
+            dateReply = `moins d'une minute`;
+        }
 
-    // Photos
-    let photos = document.createElement('div');
-    if (opinion.photos.length > 0) {
-        photos.classList.add('opinion-card-photos');
-    }
+        // Photos
+        let photos = document.createElement('div');
+        if (opinion.photos.length > 0) {
+            photos.classList.add('opinion-card-photos');
+        }
 
-    for (let photo of opinion.photos) {
-        let photoElement = document.createElement('img');
-        photoElement.src = photo.photo_url;
-        photoElement.alt = opinion.title;
-        photos.appendChild(photoElement);
-    }
+        for (let photo of opinion.photos) {
+            let photoElement = document.createElement('img');
+            photoElement.src = photo.photo_url;
+            photoElement.alt = opinion.title;
+            photos.appendChild(photoElement);
+        }
 
-    card.innerHTML = `
+        card.innerHTML = `
         <!-- Header -->
         <header>
             <div class="flex flex-row justify-between w-full">
@@ -524,7 +525,8 @@ function createOpinionCard(opinion) {
             </div>
         </div>
       
-        <!-- Formulaire Report -->
+        <!-- formulaire report-->
+        
         <div class="dialog-container hide" data-dialog-name="">
             <div class="dialog w-[70%]">
                 <header class="dialog-header">
@@ -544,142 +546,142 @@ function createOpinionCard(opinion) {
                 </div>
             </div>
         </div>
-        
-        
-
     `;
 
-    // Likes buttons
+        // Likes buttons
 
-    let likeButton = card.querySelector(".like-button");
-    let dislikeButton = card.querySelector(".dislike-button");
+        let likeButton = card.querySelector(".like-button");
+        let dislikeButton = card.querySelector(".dislike-button");
 
-    let likeText = likeButton.querySelector('p');
-    let dislikeText = dislikeButton.querySelector('p');
+        let likeText = likeButton.querySelector('p');
+        let dislikeText = dislikeButton.querySelector('p');
 
-    let likeSvg = likeButton.querySelector('svg');
-    likeSvg.setAttribute('fill', 'none');
+        let likeSvg = likeButton.querySelector('svg');
+        likeSvg.setAttribute('fill', 'none');
 
-    let dislikeSvg = dislikeButton.querySelector('svg');
-    dislikeSvg.setAttribute('fill', 'none');
+        let dislikeSvg = dislikeButton.querySelector('svg');
+        dislikeSvg.setAttribute('fill', 'none');
 
-    let opinionLiked = opinion.opinionLiked;
-    let opinionDisliked = opinion.opinionDisliked;
+        let opinionLiked = opinion.opinionLiked;
+        let opinionDisliked = opinion.opinionDisliked;
 
-    if (opinionLiked) {
-        likeSvg.setAttribute('fill', 'rgb(0, 87, 255)');
-    }
-
-    if (opinionDisliked) {
-        dislikeSvg.setAttribute('fill', 'rgb(255, 59, 48)');
-    }
-
-    let currentDislikes = parseInt(dislikeText.innerHTML, 10);
-    let currentLikes = parseInt(likeText.innerHTML, 10);
-
-
-    likeButton.addEventListener("click", () => {
-        if (userResponse == null) {
-            opinionForm.classList.remove('hidden');
-            opinionAddButton.classList.add('hidden');
-            window.scrollTo({
-                top: document.querySelector('#opinion-form').offsetTop - 130,
-                behavior: 'smooth'
-            });
-        } else {
-            if (!opinionLiked) {
-                if (opinionDisliked) {
-                    removeDislike(opinion.id);
-                    dislikeText.innerHTML = (currentDislikes - 1).toString();
-                    currentDislikes = parseInt(dislikeText.innerHTML, 10);
-                    dislikeSvg.setAttribute('fill', 'none');
-                    opinionDisliked = false;
-                }
-                addLike(opinion.id);
-                likeText.innerHTML = (currentLikes + 1).toString();
-                currentLikes = parseInt(likeText.innerHTML, 10);
-                likeSvg.setAttribute('fill', 'rgb(0, 87, 255)');
-                opinionLiked = true;
-            } else {
-                // Si l'opinion est déjà likée
-                removeLike(opinion.id);
-                likeText.innerHTML = (currentLikes - 1).toString();
-                currentLikes = parseInt(likeText.innerHTML, 10);
-                likeSvg.setAttribute('fill', 'none');
-                opinionLiked = false;
-            }
+        if (opinionLiked) {
+            likeSvg.setAttribute('fill', 'rgb(0, 87, 255)');
         }
-    });
+
+        if (opinionDisliked) {
+            dislikeSvg.setAttribute('fill', 'rgb(255, 59, 48)');
+        }
+
+        let currentDislikes = parseInt(dislikeText.innerHTML, 10);
+        let currentLikes = parseInt(likeText.innerHTML, 10);
 
 
-    dislikeButton.addEventListener("click", () => {
-        if (userResponse == null) {
-            opinionForm.classList.remove('hidden');
-            opinionAddButton.classList.add('hidden');
-            window.scrollTo({
-                top: document.querySelector('#opinion-form').offsetTop - 130,
-                behavior: 'smooth'
-            });
-        } else {
-            if (!opinionDisliked) {
-                if (opinionLiked) {
+        likeButton.addEventListener("click", () => {
+            if (userResponse == null) {
+                opinionForm.classList.remove('hidden');
+                opinionAddButton.classList.add('hidden');
+                window.scrollTo({
+                    top: document.querySelector('#opinion-form').offsetTop - 130,
+                    behavior: 'smooth'
+                });
+            } else {
+                if (!opinionLiked) {
+                    if (opinionDisliked) {
+                        removeDislike(opinion.id);
+                        dislikeText.innerHTML = (currentDislikes - 1).toString();
+                        currentDislikes = parseInt(dislikeText.innerHTML, 10);
+                        dislikeSvg.setAttribute('fill', 'none');
+                        opinionDisliked = false;
+                    }
+                    addLike(opinion.id);
+                    likeText.innerHTML = (currentLikes + 1).toString();
+                    currentLikes = parseInt(likeText.innerHTML, 10);
+                    likeSvg.setAttribute('fill', 'rgb(0, 87, 255)');
+                    opinionLiked = true;
+                } else {
+                    // Si l'opinion est déjà likée
                     removeLike(opinion.id);
                     likeText.innerHTML = (currentLikes - 1).toString();
                     currentLikes = parseInt(likeText.innerHTML, 10);
                     likeSvg.setAttribute('fill', 'none');
                     opinionLiked = false;
                 }
-                addDislike(opinion.id);
-                dislikeText.innerHTML = (currentDislikes + 1).toString();
-                currentDislikes = parseInt(dislikeText.innerHTML, 10);
-                dislikeSvg.setAttribute('fill', 'rgb(255, 59, 48)');
-                opinionDisliked = true;
-            } else {
-                removeDislike(opinion.id);
-                dislikeText.innerHTML = (currentDislikes - 1).toString();
-                currentDislikes = parseInt(dislikeText.innerHTML, 10);
-                dislikeSvg.setAttribute('fill', 'none');
-                opinionDisliked = false;
             }
+        });
+
+
+        dislikeButton.addEventListener("click", () => {
+            if (userResponse == null) {
+                opinionForm.classList.remove('hidden');
+                opinionAddButton.classList.add('hidden');
+                window.scrollTo({
+                    top: document.querySelector('#opinion-form').offsetTop - 130,
+                    behavior: 'smooth'
+                });
+            } else {
+                if (!opinionDisliked) {
+                    if (opinionLiked) {
+                        removeLike(opinion.id);
+                        likeText.innerHTML = (currentLikes - 1).toString();
+                        currentLikes = parseInt(likeText.innerHTML, 10);
+                        likeSvg.setAttribute('fill', 'none');
+                        opinionLiked = false;
+                    }
+                    addDislike(opinion.id);
+                    dislikeText.innerHTML = (currentDislikes + 1).toString();
+                    currentDislikes = parseInt(dislikeText.innerHTML, 10);
+                    dislikeSvg.setAttribute('fill', 'rgb(255, 59, 48)');
+                    opinionDisliked = true;
+                } else {
+                    removeDislike(opinion.id);
+                    dislikeText.innerHTML = (currentDislikes - 1).toString();
+                    currentDislikes = parseInt(dislikeText.innerHTML, 10);
+                    dislikeSvg.setAttribute('fill', 'none');
+                    opinionDisliked = false;
+                }
+            }
+        })
+
+        // Manage Replies
+        let replyText = card.querySelector('.reply-text');
+        let replyHr = card.querySelector(".reply-hr");
+
+        if (opinion.reply == false){
+            replyText.classList.add('hide');
+            replyHr.classList.add('hidden');
         }
-    })
 
-    // Manage Replies
-    let replyText = card.querySelector('.reply-text');
-    let replyHr = card.querySelector(".reply-hr");
+        // Manage reports
+        let reportButton = card.querySelector(".report-card");
+        let reportSvg = reportButton.querySelector('svg');
 
-    if (opinion.reply == false){
-        replyText.classList.add('hide');
-        replyHr.classList.add('hidden');
+        reportButton.addEventListener("click", () => {
+            const dialog = card.querySelector('.dialog-container');
+            dialog.classList.remove('hide');
+        });
+
+        let cancelButton = card.querySelector('.cancel-button');
+        cancelButton.addEventListener('click', () => {
+            const dialog = card.querySelector('.dialog-container');
+            dialog.classList.add('hide');
+        });
+
+        let confirmButton = card.querySelector('.confirm-button');
+        confirmButton.addEventListener('click', () => {
+            getReports(opinion.id); // Traiter le signalement
+            reportSvg.setAttribute('fill', 'red');
+            reportSvg.setAttribute('stroke', 'white');
+
+            reportButton.disabled = true;
+
+            const dialog = card.querySelector('.dialog-container');
+            dialog.classList.add('hide'); // Fermer la fenêtre après confirmation
+        });
+        return card;
+
+    } else {
+        return document.createElement("div");
     }
-
-    // Manage reports
-    let reportButton = card.querySelector(".report-card");
-    let reportSvg = reportButton.querySelector('svg');
-
-    reportButton.addEventListener("click", () => {
-        const dialog = card.querySelector('.dialog-container');
-        dialog.classList.remove('hide');
-    });
-
-    let cancelButton = card.querySelector('.cancel-button');
-    cancelButton.addEventListener('click', () => {
-        const dialog = card.querySelector('.dialog-container');
-        dialog.classList.add('hide');
-    });
-
-    let confirmButton = card.querySelector('.confirm-button');
-    confirmButton.addEventListener('click', () => {
-        getReports(opinion.id); // Traiter le signalement
-        reportSvg.setAttribute('fill', 'red');
-        reportSvg.setAttribute('stroke', 'white');
-
-        reportButton.disabled = true;
-
-        const dialog = card.querySelector('.dialog-container');
-        dialog.classList.add('hide'); // Fermer la fenêtre après confirmation
-    });
-
-    return card;
 }
 
