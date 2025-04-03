@@ -119,7 +119,21 @@ use app\core\Mailer;
                 </form>
                 <a href="/comptes/supprimer" id="accountDelete" class="button danger">Supprimer mon
                     compte</a>
-                <a href="/comptes/activation-otp" class="button gray">Activer l'authentification à 2 facteurs (OTP)</a>
+                <?php
+                if(Application::$app->user->otp_secret){ ?>
+                    <div class="flex items-center justify-center w-full text-green-600 space-x-2 gap-3">
+                        <p class="text-center font-bold">L'Authentification à 2 facteurs est activée</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check">
+                            <path d="M20 6 9 17l-5-5"/>
+                        </svg>
+                    </div>
+
+                    <?php
+                } else { ?>
+                    <a href="/comptes/activation-otp" class="button gray otpButton">Activer l'authentification à 2 facteurs (OTP)</a>
+                    <?php
+                }
+                ?>
             </div>
         </x-tab-panel>
     </x-tabs>

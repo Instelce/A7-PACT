@@ -182,7 +182,7 @@ class DashboardController extends Controller
     }
 
     //supprimer une notification individuelle
-    public function deleteAction()
+    /*public function deleteAction()
     {
         if (isset($_POST['id']) && is_numeric($_POST['id'])) {
             $notificationId = (int) $_POST['id'];
@@ -198,7 +198,7 @@ class DashboardController extends Controller
                 'status' => 'error',
             ]);
         }
-    }
+    }*/
 
     // Supprimer toutes les notifications d'un utilisateur
     public function deleteAllAction()

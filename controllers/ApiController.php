@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\core\Application;
+use app\core\Clock;
 use app\core\Controller;
 use app\core\Request;
 use app\core\Response;
@@ -37,7 +38,7 @@ use app\core\Utils;
 use DateTime;
 use DateInterval;
 use Exception;
-use function Sodium\add;
+use OTPHP\TOTP;
 
 
 class ApiController extends Controller
@@ -546,7 +547,8 @@ class ApiController extends Controller
             $opinion->addLike();
 
             if (Application::$app->user->isMember()) {
-                Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a liké votre avis : " . "'$opinion->title'");
+                $message = Application::$app->user->specific()->pseudo . " a liké votre avis : \n" . "'$opinion->title'";
+                Application::$app->notifications->createNotification($opinion->account_id, nl2br($message));
             }
 
         } else if ($action == "remove") {
@@ -571,7 +573,8 @@ class ApiController extends Controller
             $opinion->addDislike();
 
             if (Application::$app->user->isMember()) {
-                Application::$app->notifications->createNotification($opinion->account_id, Application::$app->user->specific()->pseudo . " a disliké votre avis : " . "'$opinion->title'");
+                $message = Application::$app->user->specific()->pseudo . " a disliké votre avis : \n" . "'$opinion->title'";
+                Application::$app->notifications->createNotification($opinion->account_id, nl2br($message));
             }
 
         } else if ($action == "remove") {
@@ -716,7 +719,7 @@ class ApiController extends Controller
     }
 
     //supprimer une notification individuelle
-    public function deleteAction()
+    /*public function deleteAction()
     {
         if (isset($_POST['id']) && is_numeric($_POST['id'])) {
             $notificationId = (int) $_POST['id'];
@@ -732,7 +735,7 @@ class ApiController extends Controller
                 'status' => 'error',
             ]);
         }
-    }
+    }*/
 
     // Supprimer toutes les notifications d'un utilisateur
     public function deleteAllAction()
@@ -774,5 +777,28 @@ class ApiController extends Controller
             $opinion->update();
         }
         return $response->json([]);
+    }
+
+    public function otpVerification(Request $request, Response $response){
+
+        $body = $request->getBody();
+        $user = Application::$app->user;
+
+        if ($user) {
+            $clock = new Clock();
+
+            $secret = $user->otp_secret;
+            $otp = TOTP::createFromSecret($secret, $clock);
+
+            $otp->setPeriod(30);
+
+            $userOTP = $body['otp'];
+
+            if ($otp->verify($userOTP, null, 15)) {
+                return $response->json(true);
+            }
+        }
+
+        return $response->json(false);
     }
 }

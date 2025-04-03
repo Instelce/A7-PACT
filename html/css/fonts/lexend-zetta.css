@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Zetta:wght@100..900&display=swap');
+.lexend-zetta-thin {
+    font-family: "Lexend Zetta", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 100 !important;
+    font-style: normal !important;
+}
+
+.lexend-zetta-extra-light {
+    font-family: "Lexend Zetta", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 200 !important;
+    font-style: normal !important;
+}
+
+.lexend-zetta-light {
+    font-family: "Lexend Zetta", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 300 !important;
+    font-style: normal !important;
+}
+
+.lexend-zetta-regular {
+    font-family: "Lexend Zetta", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+}
+
+.lexend-zetta-medium {
+    font-family: "Lexend Zetta", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 500 !important;
+    font-style: normal !important;
+}
+
+.lexend-zetta-semi-bold {
+    font-family: "Lexend Zetta", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 600 !important;
+    font-style: normal !important;
+}
+
+.lexend-zetta-bold {
+    font-family: "Lexend Zetta", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 700 !important;
+    font-style: normal !important;
+}
+
+.lexend-zetta-extra-bold {
+    font-family: "Lexend Zetta", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 800 !important;
+    font-style: normal !important;
+}
+
+.lexend-zetta-black {
+    font-family: "Lexend Zetta", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+}

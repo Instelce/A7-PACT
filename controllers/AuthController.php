@@ -371,7 +371,15 @@ class AuthController extends Controller
 
         $clock = new Clock();
 
+        $user = Application::$app->user;
+
         $otp = TOTP::generate($clock);
+
+        $otp->setPeriod(30);
+
+        $user -> otp_secret = $otp->getSecret();
+
+        $user->update();
 
         $otp->setLabel('PACT');
 
@@ -396,13 +404,27 @@ class AuthController extends Controller
             punchoutBackground: true
         );
 
+
         $label = new Label(
             text: 'Votre code OTP',
-            textColor: new Color(255, 0, 0)
+            textColor: new Color(38, 99, 235)
         );
 
         $qrCodeImage = $writer->write($qrCode, $logo, $label);
 
+
         return $this->render('auth/otp-activation', ['qrCodeUri' => $qrCodeImage->getDataUri()]);
+    }
+
+    public function otpCodeVerification(Request $request, Response $response){
+
+        $otpCode = "Test";
+
+        if ($request->isPost()) {
+            $otpCode = $request->getBody()['otpCode'] ?? null;
+        }
+
+        return $this->render('auth/update-member-account', ['test' => $otpCode]);
+
     }
 }

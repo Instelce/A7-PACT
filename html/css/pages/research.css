@@ -3,13 +3,13 @@
     flex-direction: column;
 }
 
-.vertical-list>a {
+.vertical-list > a {
     margin-bottom: 1rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid rgb(var(--color-gray-1));
 }
 
-.vertical-list>a:last-child {
+.vertical-list > a:last-child {
     border-bottom: none;
 }
 
@@ -29,14 +29,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: .4rem;
+    gap: 0.4rem;
     padding: 2px;
     text-align: center;
     color: rgb(var(--color-gray-4));
     background-color: rgb(var(--color-white));
 }
 
-.category-item:hover{
+.category-item:hover {
     background-color: rgb(var(--color-gray-1));
 }
 
@@ -56,7 +56,6 @@
 .category-item.active svg {
     stroke: rgb(var(--color-white));
 }
-
 
 .research-card .summary {
     display: -webkit-box;
@@ -83,23 +82,21 @@
 }
 
 #popup {
-    animation: popupOpen .3s forwards;
+    animation: popupOpen 0.3s forwards;
 }
 
 #popup.close {
     pointer-events: none;
-    animation: popupClose .3s forwards;
+    animation: popupClose 0.3s forwards;
 }
 
 .map-card {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-
 }
 .map-card > a {
     color: inherit !important;
-    
 }
 .map-card > h1 {
     font-size: 1.2rem;
@@ -111,7 +108,6 @@
     font-weight: 400;
     margin: 0;
 }
-
 
 @media (max-width: 768px) {
     .categories-container {
@@ -180,16 +176,16 @@
     opacity: 0.2;
 }
 
-.waves>use {
+.waves > use {
     animation: move-forever 12s -12s linear infinite;
 }
 
-.waves>use:nth-child(2) {
+.waves > use:nth-child(2) {
     animation-delay: -12s;
     animation-duration: 27s;
 }
 
-.waves>use:nth-child(3) {
+.waves > use:nth-child(3) {
     animation-delay: -16s;
     animation-duration: 12s;
 }
@@ -220,4 +216,323 @@
     right: 0;
     transform: rotate(-90deg) translateY(-100%);
     transform-origin: top right;
+}
+
+/* Styles for address input modal */
+#address-modal {
+    transition: opacity 0.3s ease;
+}
+
+#address-modal.hidden {
+    display: none;
+}
+
+/* Loading indicator style */
+.route-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.route-loading-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Animation for the loading spinner */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Custom Routing Styles */
+.custom-routing-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    overflow: hidden;
+}
+
+.custom-routing-container .leaflet-routing-alternatives-container {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.custom-routing-container h2,
+.custom-routing-container h3 {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px;
+    margin: 0;
+    color: #333;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: rgba(var(--color-blue-primary), 0.05);
+}
+
+.custom-routing-container .leaflet-routing-alt {
+    padding: 6px 12px;
+}
+
+.custom-routing-container .leaflet-routing-alt table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.custom-routing-container .leaflet-routing-alt tr:hover {
+    background-color: rgba(var(--color-blue-primary), 0.05);
+    cursor: pointer;
+}
+
+.custom-routing-container .leaflet-routing-geocoder input {
+    padding: 8px 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    width: 100%;
+    font-size: 14px;
+}
+
+.custom-routing-container .leaflet-routing-remove-waypoint {
+    background-color: rgba(var(--color-red), 0.7);
+    border-radius: 50%;
+    padding: 2px;
+    font-size: 12px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.custom-routing-container .leaflet-routing-icon {
+    background-image: url("/assets/pins/pin_itineraire.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 20px;
+    height: 20px;
+}
+
+.custom-routing-container .leaflet-routing-alt-minimized {
+    padding: 8px;
+    background-color: rgba(var(--color-blue-primary), 0.9);
+    color: white;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+
+.leaflet-routing-container .leaflet-routing-instruction-distance {
+    color: rgb(var(--color-blue-primary));
+    font-weight: 600;
+}
+
+.leaflet-routing-container .leaflet-routing-instruction-text {
+    font-size: 13px;
+}
+
+/* Customize the route line animations */
+.leaflet-routing-animated-icon {
+    position: relative;
+    animation: routeAnimation 2s infinite linear;
+}
+
+@keyframes routeAnimation {
+    0% {
+        transform: translateX(-10px);
+    }
+    100% {
+        transform: translateX(10px);
+    }
+}
+
+/* Style for the summary box */
+.leaflet-routing-summary {
+    background-color: white;
+    padding: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+}
+
+.leaflet-routing-summary h2 {
+    font-size: 16px;
+    margin: 0 0 5px 0;
+    color: rgb(var(--color-blue-primary));
+}
+
+.leaflet-routing-summary-header {
+    font-weight: bold;
+}
+
+/* Style for the instructions panel */
+.leaflet-routing-container .leaflet-routing-geocoder {
+    margin: 10px;
+    padding: 5px 0;
+}
+
+.leaflet-routing-container .leaflet-routing-geocoder input {
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    font-size: 14px;
+    width: 100%;
+    border-radius: 4px;
+}
+
+/* Address autocompletion styles */
+#address-suggestions {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    z-index: 1050;
+    margin-top: 5px;
+    position: absolute;
+    left: 0;
+    top: 100%;
+}
+
+#address-suggestions div {
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+#address-suggestions div:hover {
+    background-color: rgba(var(--color-blue-primary), 0.1);
+}
+
+#address-form x-input {
+    position: relative;
+}
+
+/* Ensure routing container is visible */
+.leaflet-routing-container.leaflet-control {
+    display: block !important;
+    visibility: visible !important;
+    z-index: 800 !important;
+    margin-bottom: 60px !important; /* Make room for the button */
+}
+
+/* More specific selector to ensure it overrides other styles */
+.custom-routing-container.leaflet-routing-container.leaflet-control {
+    margin: 10px;
+    background: white;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    max-width: 320px;
+    overflow: hidden;
+}
+
+/* Address autocompletion styles - Fixed visibility issues */
+#address-suggestions {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    position: absolute;
+    z-index: 1000;
+    margin-top: 2px;
+}
+
+#address-suggestions div {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#address-suggestions div:hover {
+    background-color: rgba(var(--color-blue-primary), 0.1);
+}
+
+#address-form x-input {
+    position: relative;
+}
+
+/* Custom Routing Styles - Fixed visibility issues */
+.leaflet-routing-container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.custom-routing-container .leaflet-routing-alternatives-container {
+    max-height: 300px;
+    overflow-y: auto;
+    display: block !important;
+}
+
+/* Make sure the routing container appears above other elements */
+.leaflet-routing-container {
+    z-index: 800 !important;
+}
+
+/* Set base visibility of routing elements */
+.leaflet-routing-container,
+.leaflet-routing-alternatives-container,
+.leaflet-routing-alt {
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* Enhanced styling for route line */
+.leaflet-routing-line {
+    stroke-width: 6px;
+    stroke-opacity: 0.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
+}
+
+/* Itinerary button styles */
+#itinerary-button-container {
+    display: none !important;
+}
+
+#calculate-route {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+#calculate-route svg {
+    transition: transform 0.2s ease;
+}
+
+#calculate-route:hover svg {
+    transform: scale(1.1);
+}
+
+/* Fix map container styles to ensure proper expansion */
+.leaflet-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/* Fixed layout for modal */
+#address-modal .relative {
+    position: relative;
 }

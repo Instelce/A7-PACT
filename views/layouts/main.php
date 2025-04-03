@@ -24,7 +24,7 @@ use app\core\Application;
     <link rel="stylesheet" href="/css/parts/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
     <?php } ?>
 
     <?php if ($this->cssFile): ?>
@@ -33,7 +33,7 @@ use app\core\Application;
 </head>
 
 <body
-    class="<?php echo Application::$app->isAuthenticated() ? Application::$app->user->isProfessional() ? 'professional-mode' : '' : '' ?>">
+    class="<?php echo Application::$app->isAuthenticated() ? Application::$app->user->isProfessional() ? 'professional-mode' : '' : '' ?> Dislexia-font">
 
     <input type="hidden" class="app-environment" value="<?php echo $_ENV['APP_ENVIRONMENT'] ?>">
 
@@ -147,8 +147,61 @@ use app\core\Application;
                 <span></span>
                 <span></span>
             </div>
+            <!-- <div class="hidden xl:flex gap-4 items-center">
+                <div class="flex items-center">
+                    <input class="switch switch-dislexia" type="checkbox" id="switch-dislexia" />
+                    <label class="switch" for="switch-dislexia"></label>
+                </div>
+                <label for="switch-dislexia" class="switch-dislexia-label">Mode Dislexique</label>
+            </div> -->
         </div>
     </nav>
+
+    <!-- accessibility -->
+    <aside
+        class="hidden xl:block fixed bottom-2 left-0 close-accessibility ease-in-out transition-all duration-500 bg-slate-200 z-50 rounded-r-lg shadow-lg p-2"
+        id="accessibility-popup">
+        <svg class="w-16 h-16 absolute top-1/4 -right-20 cursor-pointer" title="ouvrir le menu d'accessibilité"
+            alt="icon d'accessibilité" id="iconAccessibility" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+                <path
+                    d="M13.5 6.50024C13.5 7.32867 12.8284 8.00024 12 8.00024C11.1716 8.00024 10.5 7.32867 10.5 6.50024C10.5 5.67182 11.1716 5.00024 12 5.00024C12.8284 5.00024 13.5 5.67182 13.5 6.50024Z"
+                    fill="#000"></path>
+                <path
+                    d="M6.05132 8.68402C5.87667 9.20796 6.15983 9.77428 6.68377 9.94893C6.85906 10.0071 7.03576 10.0613 7.21265 10.1143C7.5363 10.2114 7.98911 10.3408 8.50746 10.4704C9.08908 10.6158 9.78094 10.7687 10.4783 10.8727C10.4323 11.7654 10.3205 12.4059 10.2166 12.8309L8.10557 17.053C7.85858 17.547 8.05881 18.1477 8.55279 18.3947C9.04677 18.6417 9.64744 18.4414 9.89443 17.9475L12 13.7363L14.1056 17.9475C14.3526 18.4414 14.9532 18.6417 15.4472 18.3947C15.9412 18.1477 16.1414 17.547 15.8944 17.053L13.7834 12.8309C13.6795 12.4059 13.5677 11.7654 13.5217 10.8727C14.2191 10.7687 14.9109 10.6158 15.4925 10.4704C16.0109 10.3408 16.4637 10.2114 16.7873 10.1143C16.963 10.0616 17.1384 10.0077 17.3125 9.95015C17.8261 9.77972 18.1201 9.19822 17.9487 8.68402C17.7741 8.16012 17.2078 7.87697 16.6839 8.05151C16.5277 8.10318 16.3703 8.15138 16.2127 8.19867C15.9113 8.28907 15.4891 8.40969 15.0075 8.5301C14.0216 8.77657 12.8709 9.00024 12 9.00024C11.1291 9.00024 9.97843 8.77657 8.99254 8.5301C8.51089 8.40969 8.0887 8.28907 7.78735 8.19867C7.63167 8.15196 7.47632 8.10404 7.32186 8.05342C6.80235 7.88161 6.22544 8.16164 6.05132 8.68402Z"
+                    fill="#000"></path>
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M23 12.0002C23 18.0754 18.0751 23.0002 12 23.0002C5.92487 23.0002 1 18.0754 1 12.0002C1 5.92511 5.92487 1.00024 12 1.00024C18.0751 1.00024 23 5.92511 23 12.0002ZM3.00683 12.0002C3.00683 16.967 7.03321 20.9934 12 20.9934C16.9668 20.9934 20.9932 16.967 20.9932 12.0002C20.9932 7.03345 16.9668 3.00707 12 3.00707C7.03321 3.00707 3.00683 7.03345 3.00683 12.0002Z"
+                    fill="#000"></path>
+            </g>
+        </svg>
+        <div class="flex flex-row gap-4 items-center justify-between w-full p-2">
+            <div></div>
+            <h2 class="text-lg font-bold">Accessibilité</h2>
+            <button class="w-6 h-6" id="crossAccessibility" title="fermer le menu d'accessibilité"
+                alt="croix du menu d'accessibilité"><svg viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path
+                            d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z"
+                            fill="#000"></path>
+                    </g>
+                </svg></button>
+        </div>
+        <hr>
+        <div class="gap-4 items-center w-full flex flex-row justify-around py-2">
+            <div class="flex items-center">
+                <input class="switch switch-dislexia" type="checkbox" id="switch-dislexia" />
+                <label class="switch" for="switch-dislexia"></label>
+            </div>
+            <label for="switch-dislexia" class="switch-dislexia-label">Mode Dislexique</label>
+        </div>
+    </aside>
 
     <!-- Menu of the navbar -->
     <div id="menu" class="menu-hidden">
@@ -157,6 +210,15 @@ use app\core\Application;
             <li><a href="/recherche" title="accèder à la page de recherche">Rechercher</a></li>
             <li><a href="/connexion" title="se connecter">Connexion</a></li>
             <li><a href="/inscription" title="s'inscrire">Inscription</a></li>
+            <li class="flex xl:hidden items-center justify-center">
+                <div class="flex gap-4 items-center">
+                    <div class="flex items-center">
+                        <input class="switch switch-dislexia" type="checkbox" id="switch-dislexia" />
+                        <label class="switch" for="switch-dislexia"></label>
+                    </div>
+                    <label for="switch-dislexia" class="switch-dislexia-label">Mode Dislexique</label>
+                </div>
+            </li>
         </ul>
     </div>
 
@@ -285,7 +347,7 @@ use app\core\Application;
         </a>
     </nav>
 
-    <footer class="pb-24 md:pb-4">
+    <footer class="pb-24 md:pb-4 Dislexia-font">
         <!--        <svg class="footer-background" width="1069" height="751" viewBox="0 0 1069 751" fill="none" xmlns="http://www.w3.org/2000/svg">-->
         <!--            <path d="M788.2 742.861C791.298 750.143 800.442 752.533 806.707 747.699L818.623 738.506C821.973 735.922 825.953 734.28 830.151 733.752L889.211 726.322C894.524 725.654 899.324 722.819 902.475 718.489V718.489C908.842 709.74 921.136 707.891 929.795 714.381L944.412 725.338C957.137 734.876 974.5 735.328 987.702 726.464L1012.03 710.13C1023.61 702.358 1026.37 686.507 1018.11 675.277V675.277C1011.77 666.662 1011.75 654.931 1018.07 646.299L1051.82 600.162C1052.13 599.736 1052.7 599.598 1053.17 599.833V599.833C1053.81 600.149 1054.57 599.784 1054.71 599.093L1068.54 534.608C1070.89 523.646 1062.96 513.154 1051.77 512.428V512.428C1041.58 511.767 1033.88 502.917 1034.64 492.732L1035 487.923C1035.52 480.998 1032.17 474.354 1026.3 470.647V470.647C1016.12 464.219 1014.53 450.002 1023.05 441.489L1031.65 432.895C1032.72 431.821 1033.88 430.835 1035.11 429.946L1040.05 426.384C1047.37 421.1 1051.39 412.373 1050.65 403.376L1049.85 393.599C1049.49 389.238 1046.57 385.512 1042.42 384.129L1039.16 383.043C1029.97 379.982 1030.24 366.894 1039.55 364.218V364.218C1043.77 363.004 1046.68 359.14 1046.68 354.746V334.715C1046.68 326.759 1044.08 319.022 1039.27 312.683L1033.98 305.705C1026.45 295.779 1022.06 283.828 1021.37 271.387L1017.81 206.904C1017.46 200.678 1019.79 194.6 1024.2 190.192V190.192C1029.8 184.594 1031.94 176.411 1029.81 168.785L1026.48 156.875C1022.37 142.183 1010.79 130.762 996.045 126.852L980.989 122.86C973.82 120.959 968.364 115.134 966.937 107.856V107.856C965.265 99.3351 958.13 92.9658 949.474 92.2682L941.862 91.6546C935.558 91.1465 929.272 92.835 924.071 96.4335L920.444 98.9433C911.661 105.021 899.789 103.95 892.234 96.3999V96.3999C890.282 94.4491 887.982 92.8809 885.453 91.7764L859.246 80.3312C839.422 71.6732 816.73 72.5341 797.618 82.6693L786.634 88.4942C780.563 91.7141 775.664 96.7702 772.638 102.941V102.941C767.532 113.351 757.28 120.266 745.715 121.102L739.727 121.534C728.113 122.374 716.654 118.473 707.964 110.721L690.328 94.9906C679.825 85.6222 665.403 81.9839 651.713 85.2491V85.2491C637.084 88.7381 621.696 84.3343 611.127 73.6347L594.441 56.7416C590.584 52.8363 585.323 50.6383 579.834 50.6383V50.6383C573.522 50.6383 567.561 47.7348 563.669 42.7651L560.545 38.7754C554.682 31.2873 545.7 26.9125 536.189 26.9125H518.796C515.531 26.9125 512.472 28.5118 510.609 31.1937V31.1937C506.213 37.5199 496.609 36.6838 493.373 29.6932L487.66 17.3537C485.749 13.225 482.326 9.98717 478.098 8.30765L467.001 3.89973C452.82 -1.7331 436.8 -0.24113 423.903 7.91351L406.695 18.7941C398.702 23.8484 393.856 32.6461 393.856 42.1035V42.1035C393.856 53.7247 386.571 64.0988 375.64 68.0439L361.791 73.0419C358.422 74.2579 354.867 74.8798 351.285 74.8798V74.8798C339.984 74.8798 329.582 68.7206 324.148 58.8121L317.562 46.8009C308.812 30.8449 292.624 20.3588 274.485 18.8968L271.367 18.6455C251.481 17.0427 232.102 25.4478 219.684 41.0621L213.381 48.9868C209.511 53.8531 206.23 59.1599 203.605 64.7966L184.428 105.991C177.106 121.719 163.755 133.831 147.392 139.592L136.074 143.577C130.545 145.524 125.776 149.177 122.457 154.009L117.111 161.791C110.175 171.888 95.8103 173.289 87.0534 164.723V164.723C82.3739 160.146 75.7287 158.188 69.3147 159.496L58.28 161.747C40.8332 165.305 27.6846 179.729 25.7513 197.43L14.1274 303.86C13.3757 310.743 12.085 317.556 10.2673 324.237L1.6573 355.882C-1.34196 366.905 -0.174383 378.647 4.93691 388.864L7.73343 394.454C11.1203 401.224 16.9156 406.483 23.9814 409.199V409.199C33.8305 412.985 41.0053 421.616 42.9277 431.992L53.3776 488.389C55.217 498.316 67.668 501.787 74.3777 494.243V494.243C76.9882 491.308 80.8578 489.818 84.7627 490.244L120.284 494.122C131.342 495.33 141.435 487.738 143.342 476.779V476.779C144.991 467.304 152.844 460.145 162.432 459.379L162.94 459.338C175.001 458.374 185.529 467.442 186.361 479.512L186.733 484.901C187.462 495.468 194.654 504.481 204.796 507.538L214.038 510.324C217.949 511.503 222.188 510.293 224.887 507.227V507.227C231.248 500.004 243.164 504.502 243.164 514.127V523.253C243.164 534.681 256.197 541.217 265.355 534.382L275.028 527.164C279.397 523.904 284.91 522.574 290.285 523.486L309.649 526.769C327.502 529.796 345.248 520.852 353.436 504.7V504.7C357.241 497.196 363.244 491.031 370.645 487.028L467.817 434.476C474.393 430.919 478.491 424.044 478.491 416.568V409.111C478.491 401.985 484.267 396.209 491.392 396.209V396.209C498.518 396.209 504.294 401.985 504.294 409.111V431.895C504.294 445.693 512.248 458.254 524.721 464.154L542.593 472.608C560.143 480.909 570.525 499.401 568.473 518.708V518.708C566.759 534.838 573.733 550.667 586.792 560.29L609.658 577.14C620.312 584.991 626.602 597.438 626.602 610.673V621.776C626.602 634.917 635.772 646.276 648.617 649.048V649.048C662.078 651.953 671.407 664.246 670.581 677.992L669.961 688.328C669.381 697.986 676.592 706.352 686.23 707.202L687.002 707.27C696.4 708.099 703.35 716.383 702.532 725.781V725.781C701.663 735.77 709.537 744.359 719.563 744.359H758.317C762.541 744.359 766.269 741.602 767.507 737.564V737.564C770.136 728.991 782.032 728.367 785.543 736.618L788.2 742.861Z" fill="url(#paint0_radial_3490_10332)"/>-->
         <!--            <defs>-->
@@ -369,17 +431,22 @@ use app\core\Application;
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
     <?php } ?>
 
     <?php if ($this->threejs) { ?>
     <script type="importmap">
         {
-                                                                                                                                          "imports": {
-                                                                                                                                            "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
-                                                                                                                                          }
-                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "imports": {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
                                                                                                                 
-                        </script>
+                                                                                                                
+                                                                                                                
+                                                                                                                
+                                                                                                                
+                                                        </script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
     <?php } ?>
 
