@@ -23,6 +23,7 @@ class m0021_create_table_opinion
             offer_id INT NOT NULL,
             
             nb_reports INT NOT NULL,
+            blacklistage_possible BOOLEAN NOT NULL DEFAULT true,
 
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

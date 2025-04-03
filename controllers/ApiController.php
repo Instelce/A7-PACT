@@ -37,6 +37,7 @@ use app\core\Utils;
 use DateTime;
 use DateInterval;
 use Exception;
+use function Sodium\add;
 
 
 class ApiController extends Controller
@@ -128,6 +129,8 @@ class ApiController extends Controller
         $longitude = $request->getQueryParams('longitude');
         $type = $request->getQueryParams('type');
         $option = $request->getQueryParams('option');
+        $token_number = $request->getQueryParams('token_number');
+        $time_new_token = $request->getQueryParams('time_new_token');
 
         $data = [];
         $where = [];
@@ -175,6 +178,13 @@ class ApiController extends Controller
         }
         if ($option) {
             $where['option__type'] = $option;
+        }
+        if($token_number){
+            $where['token_number'] = $token_number;
+        }
+
+        if($time_new_token){
+            $where['time_new_token'] = $time_new_token;
         }
 
         if (in_array('price_asc', $order_by)) {
@@ -340,6 +350,7 @@ class ApiController extends Controller
                 // Opinion count
                 $data[$i]['opinion_count'] = $offer->opinionsCount();
                 $data[$i]['no_read_opinion_count'] = $offer->noReadOpinions();
+
             }
         }
 
@@ -382,6 +393,7 @@ class ApiController extends Controller
         $readOnLoad = $request->getQueryParams('read_on_load');
         $read = $request->getQueryParams('read');
         $blacklisted = $request->getQueryParams('blacklisted');
+        $blacklistage_possible = $request->getQueryParams('blacklistage_possible');
 
         $data = [];
         $where = [];
@@ -403,8 +415,16 @@ class ApiController extends Controller
             $where['read'] = $read;
         }
 
-        if($blacklisted && $blacklisted !== 'null'){
-            $where['blacklisted'] = $blacklisted;
+        if($blacklisted && $blacklisted === 'false'){
+            $where['blacklisted'] = '0';
+        }
+
+        if($blacklisted && $blacklisted === 'true'){
+            $where['blacklisted'] = 'true';
+        }
+
+        if($blacklistage_possible){
+            $where['blacklistage_possible'] = $blacklistage_possible;
         }
 
         /** @var Opinion[] $opinions */
@@ -729,30 +749,29 @@ class ApiController extends Controller
 
     //blacklistage
 
-    public function blacklist(Request $request, Response $response, $routeParams)
+    public function opinionBlacklist(Request $request, Response $response, $routeParams)
     {
-        $receivePk = $routeParams['opinion_id'];
+        $receivePk = $routeParams['opinion_pk'];
         $opinion = Opinion::findOneByPk($receivePk);
 
-        if (!$opinion) {
-            $response->setStatusCode(404);
-            return $response->json(['error' => 'Opinion not found']);
-        }
-
         $selected_offer = Offer::findOneByPk($opinion->offer_id);
-        if ($selected_offer->nbJetonsDispo > 0) { //si le professionnel a assez de jetons pour blacklister l'avis
+        if ($selected_offer->token_number > 0) { // Vérifie si le professionnel a des jetons
             $blacklisted = new OpinionBlackList();
-            $blacklisted->blacklisted_date = date('y-m-d');
+            $blacklisted->blacklisted_time = date('Y-m-d H:i:s');
             $blacklisted->opinion_id = $opinion->id;
             $blacklisted->save();
 
-            $opinion->blacklisted=true;
-            $opinion->update();
-
-            $selected_offer->nbJetonsDispo--; //on met à jour le nombre de blacklistages disponibles
+            $selected_offer->token_number--; // Décrémente le nombre de jetons
             $selected_offer->update();
-        } else {
-            return $response->json(['error' => 'Pas assez de jetons pour blacklister l\'avis']);
+
+            $opinion->blacklisted = true;
+            if ($selected_offer->token_number === 0) {
+                foreach ($selected_offer->opinions() as $opi) {
+                    $opi->blacklistage_possible = false;
+                    $opi->update();
+                }
+            }
+            $opinion->update();
         }
         return $response->json([]);
     }

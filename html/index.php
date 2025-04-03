@@ -116,11 +116,12 @@ $app->router->post('/api/opinions/<opinion_pk:int>', [ApiController::class, 'opi
 $app->router->post('/api/opinions/<opinion_pk:int>/likes', [ApiController::class, 'opinionLikes']);
 $app->router->post('/api/opinions/<opinion_pk:int>/dislikes', [ApiController::class, 'opinionDislikes']);
 $app->router->post('/api/opinions/<opinion_pk:int>/reports', [ApiController::class, 'opinionReports']);
-$app->router->get('/api/opinions/blacklisted/<opinion_pk:int>', [ApiController::class, 'opinionIsBlacklisted']);
+$app->router->get('/api/opinions/<opinion_pk:int>/blacklist', [ApiController::class, 'opinionBlacklist']);
 $app->router->get('/api/messages/<receiver_pk:int>', [ApiController::class, 'messages']);
 $app->router->get('/api/messages', [ApiController::class, 'conversations']);
 $app->router->get('/api/notifications', [ApiController::class, 'notifications']);
 $app->router->get('/api/read-notifications', [ApiController::class, 'notificationRead']);
+$app->router->get('/api/opinions/<opinion_pk:int>/time_new_token', [ApiController::class, 'getTimeNewToken']);
 
 $app->router->post('/test/pdf', [SiteController::class, 'testPdf']);
 $app->router->get('/test/pdf', [SiteController::class, 'testPdf']);

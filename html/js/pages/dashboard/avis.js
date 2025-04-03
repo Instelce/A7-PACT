@@ -29,6 +29,12 @@ for (let button of filterButtons) {
             read = null;
         }
 
+        if (input.value === "blacklisted" && input.checked){
+            blacklisted = true;
+        } else {
+            blacklisted = false;
+        }
+
         resetCards();
         loadCards();
     })
@@ -40,10 +46,13 @@ for (let button of filterButtons) {
 
 let offset = 0;
 let read = null;
+let blacklisted = false;
 let searchValue = "";
 let opinionsContainer = document.querySelector('.opinions-container');
 let loaderSection = document.querySelector('#loader-section');
 let user = null; // Represents the current authenticated user
+let isLoading = false;
+
 
 let filterGet = new URLSearchParams(window.location.search).get('filter');
 if (filterGet === "non-lu") {
@@ -74,7 +83,10 @@ getUser().then(u => {
 });
 
 function loadCards() {
-    fetch(`/api/opinions?offer_pro_id=${user.account_id}&limit=3&offset=${offset}&read_on_load=true&read=${read}&q=${searchValue}`)
+    if (isLoading) return;
+    isLoading = true;
+
+    fetch(`/api/opinions?offer_pro_id=${user.account_id}&limit=3&offset=${offset}&read_on_load=true&read=${read}&blacklisted=${blacklisted}&q=${searchValue}`)
         .then(response => response.json())
         .then(opinions => {
             if (opinions.length < 3) {
@@ -84,7 +96,6 @@ function loadCards() {
             for (let opinion of opinions) {
                 if (user) {
                     if (opinion.user.account_id !== user.account_id) {
-                        // insert before the loader button
                         opinionsContainer.insertBefore(createOpinionCard(opinion, true), loaderSection);
                     }
                 } else {
@@ -94,7 +105,11 @@ function loadCards() {
 
             offset += 3;
         })
+        .finally(() => {
+            isLoading = false;
+        });
 }
+
 
 function resetCards() {
     offset = 0;
@@ -117,14 +132,10 @@ function resetCards() {
 let searchInput = document.querySelector('#search-input');
 
 searchInput.addEventListener('input', debounce(() => {
-    offset = 0;
+    if (isLoading) return;
+    isLoading = true;
 
-    // Remove all opinion cards
-    let cards = document.querySelectorAll('.opinion-card');
-
-    for (let card of cards) {
-        card.remove();
-    }
+    resetCards();
 
     searchValue = searchInput.value.trim();
 
@@ -132,7 +143,7 @@ searchInput.addEventListener('input', debounce(() => {
         loaderSection.classList.remove('hidden');
     }
 
-    fetch(`/api/opinions?offer_pro_id=${user.account_id}&limit=3&offset=${offset}&q=${searchValue}&read_on_load=true&read=${read}`)
+    fetch(`/api/opinions?offer_pro_id=${user.account_id}&limit=3&offset=${offset}&q=${searchValue}&read_on_load=true&read=${read}&blacklisted=${blacklisted}`)
         .then(response => response.json())
         .then(opinions => {
             if (opinions.length < 3) {
@@ -152,30 +163,8 @@ searchInput.addEventListener('input', debounce(() => {
 
             offset += 3;
         })
+        .finally(() => {
+            isLoading = false;
+        });
 }, 300));
 
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const actionsOpinionButton = document.querySelector('.button-management-options');
-    const actionsOpinionOptions = document.querySelector('.management-options');
-
-    console.log(actionsOpinionOptions);
-    console.log(actionsOpinionButton);
-
-    if (actionsOpinionButton && actionsOpinionOptions) {
-        console.log("ok");
-
-        actionsOpinionButton.addEventListener('click', function (event) {
-            actionsOpinionOptions.classList.toggle('open');
-            event.stopPropagation();
-        });
-
-        // Ferme lorsque l'on clique à l'extérieur
-        document.addEventListener('click', function (event) {
-            if (!actionsOpinionOptions.contains(event.target) && !actionsOpinionButton.contains(event.target)) {
-                actionsOpinionOptions.classList.remove('open');
-            }
-        });
-    }
-});
