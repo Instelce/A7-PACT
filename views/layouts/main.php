@@ -421,7 +421,11 @@ use app\core\Application;
     </footer>
 
 
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <?php if ($_ENV['APP_ENVIRONMENT'] == 'dev') { ?>
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <?php } else { ?>
+        <script src="https://unpkg.com/lucide@latest"></script>
+    <?php } ?>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"
         integrity="sha512-8BHxHDLsOHx+flIrQ0DrZcea7MkHqRU5GbTHmbdzMRnAaoCIkZ97PqZcXJkKZckMMhqfoeaJE+DNUVuyoQsO3Q=="
@@ -437,16 +441,11 @@ use app\core\Application;
     <?php if ($this->threejs) { ?>
     <script type="importmap">
         {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "imports": {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                
-                                                                                                                
-                                                                                                                
-                                                                                                                
-                                                                                                                
-                                                        </script>
+         "imports": {
+           "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js"
+         }
+       }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
     <?php } ?>
 
