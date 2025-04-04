@@ -50,12 +50,17 @@ class AuthController extends Controller
             $loginForm->loadData($request->getBody());
 
             if ($loginForm->validate() && $loginForm->login()) {
-                if (Application::$app->user->isProfessional()) {
-                    $response->redirect("/dashboard/offres");
+                if(Application::$app->user->otp_secret != null){
+                    $response->redirect("/comptes/otp-login");
+                }
+                else{
+                    if (Application::$app->user->isProfessional()) {
+                        $response->redirect("/dashboard/offres");
+                        exit;
+                    }
+                    $response->redirect('/');
                     exit;
                 }
-                $response->redirect('/');
-                exit;
             }
         }
         return $this->render('auth/login', ['model' => $loginForm]);
@@ -416,15 +421,33 @@ class AuthController extends Controller
         return $this->render('auth/otp-activation', ['qrCodeUri' => $qrCodeImage->getDataUri()]);
     }
 
-    public function otpCodeVerification(Request $request, Response $response){
+    public function otpLogin(Request $request, Response $response){
 
-        $otpCode = "Test";
+        $user = Application::$app->user;
 
         if ($request->isPost()) {
-            $otpCode = $request->getBody()['otpCode'] ?? null;
+            $otpCode = preg_replace('/\s+/', '', $request->getBody()['otpLogin'] ?? '');
+            if ($user) {
+                $clock = new Clock();
+
+                $secret = $user->otp_secret;
+                $otp = TOTP::createFromSecret($secret, $clock);
+
+                $otp->setPeriod(30);
+
+                if ($otp->verify($otpCode, null, 15)) {
+                    if (Application::$app->user->isProfessional()) {
+                        $response->redirect("/dashboard/offres");
+                        exit;
+                    }
+                    $response->redirect('/');
+                    exit;               }
+            }
         }
 
-        return $this->render('auth/update-member-account', ['test' => $otpCode]);
+        return $this->render('auth/otp-login');
 
     }
+
+
 }

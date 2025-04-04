@@ -1,3 +1,50 @@
+#otpActivationContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centre verticalement */
+    align-items: center; /* Centre horizontalement */
+    padding: 0 20px; /* Ajoute un peu d'espace autour du conteneur */
+}
+
+#otpInputFields {
+    display: flex;
+    justify-content: space-evenly; /* Espacement égal entre les cases */
+    gap: 0.5rem; /* Réduit l'espacement entre les cases */
+    margin-top: 1rem; /* Marge au-dessus des cases */
+}
+
+.otp-input {
+    width: 50px; /* Taille de chaque case */
+    height: 50px; /* Hauteur de chaque case */
+    text-align: center; /* Centrer le texte à l'intérieur de la case */
+    font-size: 1.5rem; /* Taille du texte */
+    font-weight: bold;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border 0.2s ease-in-out;
+}
+
+.otp-input:focus {
+    border-color: #007bff; /* Change la bordure en bleu quand c'est sélectionné */
+}
+
+.otp-input:invalid {
+    border-color: red; /* Bordure rouge pour les chiffres invalides */
+}
+
+button {
+    margin-top: 1rem; /* Marge au-dessus du bouton */
+}
+
+.text-center {
+    text-align: center;
+}
+
+#otpCodeError {
+    text-align: center;
+}
+
 .activation-message {
     display: flex;
     align-items: center;
@@ -17,7 +64,6 @@
     justify-content: center;
     text-align: center;
 }
-
 
 .activation-text {
     font-size: 1.5rem;
