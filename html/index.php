@@ -105,8 +105,8 @@ $app->router->get('/deconnexion', [AuthController::class, 'logout']);
 $app->router->get('/comptes/<pk:int>', [AuthController::class, 'profile']);
 $app->router->get('/users', [SiteController::class, 'users']);
 $app->router->get('/comptes/activation-otp', [AuthController::class, 'otpActivation']);
-$app->router->post('/comptes/verification-code-otp', [AuthController::class, 'otpCodeVerification']);
-$app->router->get('/comptes/verification-code-otp', [AuthController::class, 'otpCodeVerification']);
+$app->router->post('/comptes/otp-login', [AuthController::class, 'otpLogin']);
+$app->router->get('/comptes/otp-login', [AuthController::class, 'otpLogin']);
 
 // Api routes
 $app->router->get('/api/auth/user', [ApiController::class, 'user']);

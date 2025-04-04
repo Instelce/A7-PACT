@@ -1,0 +1,68 @@
+.otp-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10vh;
+}
+
+/* Formulaire */
+.otp-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.otp-container h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.otp-container p {
+    color: #555;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Inputs */
+.otp-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.otp-box {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 0.5rem;
+    transition: border-color 0.2s;
+}
+
+.otp-box:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+
+/* Lien de renvoi */
+.resend {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.resend a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.resend a:hover {
+    text-decoration: underline;
+}
